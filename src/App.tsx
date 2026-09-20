@@ -53,8 +53,8 @@ export default function App() {
 
       <main id="conteudo-principal" className="flex-1">
         <Hero />
-        <ProcessSection />
         <PortfolioSection />
+        <ProcessSection />
         <ServicesSection />
         <DifferentialsSection />
         <FaqSection />
