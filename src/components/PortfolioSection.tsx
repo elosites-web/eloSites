@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExternalLink, CheckCircle } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ExternalLink, CheckCircle, AlertTriangle } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 
@@ -63,9 +63,11 @@ const PORTFOLIO_CASES: PortfolioCase[] = [
 
 function BrowserMockup({
   urlLabel,
+  href,
   children,
 }: {
   urlLabel: string;
+  href: string;
   children: React.ReactNode;
 }) {
   return (
@@ -79,6 +81,15 @@ function BrowserMockup({
         <div className="flex-1 min-w-0 bg-slate-950/90 rounded-md px-2.5 py-1 text-[11px] text-slate-400 font-mono border border-white/[0.07] truncate">
           {urlLabel}
         </div>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Abrir site completo: ${urlLabel}`}
+          className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-md text-slate-400 hover:text-white hover:bg-slate-700/70 transition-colors"
+        >
+          <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+        </a>
       </div>
       {children}
     </div>
@@ -94,7 +105,7 @@ function StructuralPlaceholder({
 }) {
   return (
     <div
-      className="relative h-56 sm:h-64 bg-[#0B101D] p-4 sm:p-5"
+      className="relative h-full bg-[#0B101D] p-4 sm:p-5"
       role="img"
       aria-label={label}
     >
@@ -138,6 +149,90 @@ function StructuralPlaceholder({
   );
 }
 
+function LivePreview({
+  url,
+  label,
+  variant,
+}: {
+  url: string;
+  label: string;
+  variant: 'landing' | 'institutional';
+}) {
+  const [status, setStatus] = useState<'loading' | 'ready' | 'blocked'>('loading');
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    timeoutRef.current = window.setTimeout(() => {
+      setStatus((current) => (current === 'loading' ? 'blocked' : current));
+    }, 9000);
+
+    return () => {
+      if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleLoad = () => {
+    if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+    setStatus('ready');
+  };
+
+  const handleError = () => {
+    if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+    setStatus('blocked');
+  };
+
+  return (
+    <div className="relative h-60 sm:h-72 bg-[#0B101D]">
+      {status !== 'blocked' && (
+        <iframe
+          src={url}
+          title={label}
+          loading="lazy"
+          onLoad={handleLoad}
+          onError={handleError}
+          referrerPolicy="no-referrer"
+          className={`absolute inset-0 w-full h-full border-0 bg-white transition-opacity duration-300 ${
+            status === 'ready' ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      )}
+
+      {status === 'loading' && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center p-6">
+          <span
+            className="w-8 h-8 rounded-full border-2 border-indigo-400/30 border-t-indigo-400 animate-spin motion-reduce:animate-none"
+            aria-hidden="true"
+          />
+          <p className="text-xs text-slate-400">Carregando prévia interativa…</p>
+        </div>
+      )}
+
+      {status === 'blocked' && (
+        <div className="absolute inset-0">
+          <StructuralPlaceholder variant={variant} label={label} />
+          <div className="absolute inset-0 bg-[#070A11]/93 backdrop-blur-sm flex flex-col items-center justify-center gap-3 text-center p-5">
+            <AlertTriangle className="w-5 h-5 text-amber-400" aria-hidden="true" />
+            <p className="text-sm font-semibold text-white">Prévia indisponível aqui</p>
+            <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
+              O site do cliente pode bloquear a exibição embutida por segurança. O site
+              completo continua acessível e abre normalmente em uma nova aba.
+            </p>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cta-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white min-h-11"
+            >
+              <span>Abrir site completo</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export const PortfolioSection: React.FC = () => {
   const whatsappInquiryUrl = whatsappUrl(SITE_CONFIG.portfolioWhatsappMessage);
 
@@ -156,8 +251,8 @@ export const PortfolioSection: React.FC = () => {
             Projetos reais, no ar
           </h2>
           <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-            Trabalhos concluídos para clientes reais. Os casos abaixo são o resultado final
-            dos projetos — sem versões alternativas nem prévia ao vivo embutida.
+            Cada projeto tem um objetivo comercial claro. Navegue pela prévia interativa
+            quando o site permitir ou abra o site completo em uma nova aba.
           </p>
         </div>
 
@@ -167,14 +262,14 @@ export const PortfolioSection: React.FC = () => {
               key={item.href}
               className="surface-card flex flex-col h-full rounded-2xl overflow-hidden"
             >
-              <div className="flex-1 p-6 sm:p-8 border-b border-white/[0.06] bg-slate-950/50 space-y-4">
+              <div className="flex-1 p-6 sm:p-7 border-b border-white/[0.06] bg-slate-950/50 space-y-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-mono uppercase bg-indigo-950/80 text-indigo-200 border border-indigo-400/25 px-2.5 py-1 rounded font-semibold">
                     {item.badge}
                   </span>
                   <span className="text-xs text-emerald-400 font-medium">{item.status}</span>
                 </div>
-                <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white">
                   {item.title}
                 </h3>
                 <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
@@ -200,12 +295,17 @@ export const PortfolioSection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 sm:p-6 bg-[#070A11]/90">
-                <BrowserMockup urlLabel={item.urlLabel}>
-                  <StructuralPlaceholder variant={item.variant} label={item.placeholderLabel} />
+              <div className="p-4 sm:p-5 bg-[#070A11]/90">
+                <BrowserMockup urlLabel={item.urlLabel} href={item.href}>
+                  <LivePreview
+                    url={item.href}
+                    label={item.placeholderLabel}
+                    variant={item.variant}
+                  />
                 </BrowserMockup>
                 <p className="mt-3 text-xs text-slate-500">
-                  Representação estrutural. O site real abre em outra aba.
+                  Prévia interativa quando o site permite exibição embutida. Se não carregar,
+                  abra o site completo em outra aba.
                 </p>
                 <a
                   href={item.href}
@@ -213,7 +313,7 @@ export const PortfolioSection: React.FC = () => {
                   rel="noopener noreferrer"
                   className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-300 hover:text-indigo-200 transition-colors min-h-11"
                 >
-                  <span>Abrir site ao vivo</span>
+                  <span>Abrir site completo</span>
                   <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                 </a>
               </div>

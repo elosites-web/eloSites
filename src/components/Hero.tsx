@@ -12,10 +12,10 @@ export const Hero: React.FC = () => {
   };
 
   const valuePoints = [
-    'Serviço apresentado com clareza',
-    'Mais credibilidade',
-    'Leitura objetiva',
-    'Caminho direto ao contato',
+    'Presença digital com credibilidade',
+    'Serviços explicados com clareza',
+    'Contato direto no WhatsApp',
+    'Feito para celular, tablet e desktop',
   ];
 
   return (
@@ -32,17 +32,18 @@ export const Hero: React.FC = () => {
           <div className="lg:col-span-7 text-left space-y-7 sm:space-y-8 min-w-0">
             <div className="inline-flex max-w-full min-w-0 items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-950/50 border border-indigo-400/20 text-indigo-200 text-xs sm:text-sm font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse shrink-0" />
-              <span className="min-w-0 leading-snug">O elo entre o seu negócio e a internet</span>
+              <span className="min-w-0 leading-snug">Sites profissionais que trabalham pelo seu negócio</span>
             </div>
 
             <h1 className="font-display text-[1.75rem] min-[360px]:text-[2.125rem] sm:text-5xl lg:text-[3.5rem] font-bold tracking-[-0.035em] text-white leading-[1.12] text-balance break-words">
-              Presença digital rápida e acessível para quem vive do próprio trabalho.
+              Um site profissional que apresenta o seu trabalho e faz o cliente chamar no WhatsApp.
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl text-slate-300/95 font-normal leading-relaxed max-w-2xl">
-              Criamos sites profissionais para personal trainers, salões, barbearias,
-              profissionais independentes e pequenos negócios locais — pensados para
-              apresentar o serviço e gerar conversa no WhatsApp.
+              A ēloSites cria landing pages e sites institucionais para personal trainers, salões,
+              barbearias, profissionais independentes e pequenos negócios locais. Você passa a ter
+              uma presença digital sólida, com o serviço explicado com clareza e um caminho direto
+              até o contato — sem depender apenas das redes sociais.
             </p>
 
             <div className="pt-1">

@@ -4,19 +4,45 @@ import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 import { X } from 'lucide-react';
 
-const PROMPT_DELAY_MS = 20000;
+const INITIAL_PROMPT_DELAY_MS = 30000;
+const RECURRING_PROMPT_DELAY_MS = 60000;
+const GLOW_ON_MS = 5000;
+const GLOW_OFF_MS = 10000;
 
 export const FloatingWhatsApp: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [promptDelay, setPromptDelay] = useState(INITIAL_PROMPT_DELAY_MS);
+  const [glowActive, setGlowActive] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (showTooltip) return;
+    if (showTooltip || prefersReducedMotion) return;
     const timer = window.setTimeout(() => {
       setShowTooltip(true);
-    }, PROMPT_DELAY_MS);
+    }, promptDelay);
     return () => window.clearTimeout(timer);
-  }, [showTooltip]);
+  }, [showTooltip, promptDelay, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setGlowActive(false);
+      return;
+    }
+
+    let timer: number;
+    const cycle = (active: boolean) => {
+      setGlowActive(active);
+      timer = window.setTimeout(() => cycle(!active), active ? GLOW_ON_MS : GLOW_OFF_MS);
+    };
+
+    cycle(true);
+    return () => window.clearTimeout(timer);
+  }, [prefersReducedMotion]);
+
+  const handleDismiss = () => {
+    setShowTooltip(false);
+    setPromptDelay(RECURRING_PROMPT_DELAY_MS);
+  };
 
   const floatingUrl = whatsappUrl(SITE_CONFIG.floatingWhatsappMessage);
 
@@ -52,7 +78,7 @@ export const FloatingWhatsApp: React.FC = () => {
             <button
               type="button"
               id="close-whatsapp-tooltip"
-              onClick={() => setShowTooltip(false)}
+              onClick={handleDismiss}
               className="absolute -top-1 -right-1 text-slate-400 hover:text-white p-2 rounded-md transition-colors min-h-11 min-w-11 flex items-center justify-center"
               aria-label="Fechar mensagem de atendimento"
             >
@@ -83,13 +109,25 @@ export const FloatingWhatsApp: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Falar no WhatsApp com a ēloSites"
-        className="cta-primary pointer-events-auto relative group flex items-center justify-center w-14 h-14 rounded-full text-white border-2 border-indigo-300/30 animate-subtle-pulse"
+        className="cta-primary pointer-events-auto relative group flex items-center justify-center w-14 h-14 rounded-full text-white border-2 border-indigo-300/30"
       >
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-br from-emerald-500/45 via-emerald-400/25 to-indigo-500/45 blur-xl transition-opacity duration-[900ms] ease-out motion-reduce:hidden ${
+            glowActive ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute -inset-1 rounded-full border border-emerald-300/50 transition-all duration-[900ms] ease-out motion-reduce:hidden ${
+            glowActive ? 'opacity-90 scale-105' : 'opacity-0 scale-95'
+          }`}
+        />
         <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5" aria-hidden="true">
           <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#090D16]" />
         </span>
-        <WhatsAppIcon className="w-7 h-7 transition-transform group-hover:scale-110" />
+        <WhatsAppIcon className="relative w-7 h-7 transition-transform group-hover:scale-110" />
       </a>
     </aside>
   );

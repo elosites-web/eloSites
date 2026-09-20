@@ -46,29 +46,31 @@ export const SITE_CONFIG = {
   whatsappNumber: '5511995722584',
   whatsappDisplay: '+55 (11) 99572-2584',
   heroWhatsappMessage:
-    'Olá! Conheci a ēloSites e gostaria de conversar sobre a criação de um site para o meu negócio.',
+    'Olá, ēloSites! 👋\n\nQuero criar um *site profissional* para o meu negócio e gerar mais contatos pelo WhatsApp.\n\nPode me explicar como funciona e me enviar um orçamento sem compromisso?',
   headerWhatsappMessage:
-    'Olá! Gostaria de saber mais sobre os serviços de criação de sites da ēloSites.',
+    'Olá, ēloSites! 👋\n\nEstou conhecendo o trabalho de vocês e gostaria de entender melhor os *serviços de criação de sites*.\n\nPode me contar como funciona o processo?',
   portfolioWhatsappMessage:
-    'Olá! Vi o portfólio da ēloSites e gostaria de criar um site para o meu negócio.',
+    'Olá, ēloSites! 👋\n\nVi o *portfólio* de vocês e gostei dos projetos apresentados. 🚀\n\nQuero um site com esse nível de qualidade para o meu negócio. Podemos conversar?',
   landingPageWhatsappMessage:
-    'Olá! Tenho interesse em criar uma Landing Page para divulgar meu negócio e gerar mais contatos.',
+    'Olá, ēloSites! 👋\n\nTenho interesse em uma *Landing Page* para divulgar meu negócio e converter mais contatos no WhatsApp. 🎯\n\nPode me enviar um orçamento e sugerir a melhor estrutura?',
   siteInstitucionalWhatsappMessage:
-    'Olá! Tenho interesse em criar um site institucional para o meu negócio.',
+    'Olá, ēloSites! 👋\n\nQuero um *site institucional completo* para apresentar minha empresa com credibilidade, com seções como sobre, serviços e contato. 🏢\n\nPode me explicar o que seria ideal para o meu caso?',
+  personalizadoWhatsappMessage:
+    'Olá, ēloSites! 👋\n\nMeu projeto não se encaixa exatamente em Landing Page ou Site Institucional e gostaria de um *projeto personalizado*. 🛠️\n\nPodemos conversar sobre o que eu preciso e definir escopo, prazo e orçamento?',
   finalCtaWhatsappMessage:
-    'Olá! Vi o portfólio da ēloSites e gostaria de criar um site para o meu negócio.',
+    'Olá, ēloSites! 👋\n\nQuero dar o próximo passo e criar o *site do meu negócio*.\n\nPodemos conversar sobre formato, conteúdo e orçamento agora?',
   floatingWhatsappMessage:
-    'Olá! Gostaria de saber mais sobre a criação de sites da ēloSites.',
+    'Olá, ēloSites! 👋\n\nTenho uma dúvida rápida sobre a criação de sites e gostaria de falar com vocês. 😊',
   mobileMenuWhatsappMessage:
-    'Olá! Gostaria de conversar sobre a criação de um site para o meu negócio.',
+    'Olá, ēloSites! 👋\n\nEstou no site e quero conversar sobre a criação de um *site profissional* para o meu negócio.\n\nPode me ajudar a escolher o melhor formato?',
   defaultWhatsappMessage:
-    'Olá! Gostaria de saber mais sobre a criação de sites da ēloSites.',
+    'Olá, ēloSites! 👋\n\nGostaria de saber mais sobre a criação de sites da ēloSites e receber um orçamento. 🙂',
 };
 
 export const NAVIGATION_ITEMS: NavItem[] = [
+  { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
   { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Como funciona', href: '#como-funciona', id: 'nav-processo' },
-  { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
   { label: 'Perguntas frequentes', href: '#faq', id: 'nav-faq' },
   { label: 'Contato', href: '#contato', id: 'nav-contato' },
 ];
