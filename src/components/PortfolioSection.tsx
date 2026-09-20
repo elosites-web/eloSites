@@ -3,6 +3,64 @@ import { ExternalLink, CheckCircle } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 
+interface PortfolioCase {
+  badge: string;
+  status: string;
+  title: string;
+  challenge: string;
+  solution: string;
+  tags: string[];
+  urlLabel: string;
+  href: string;
+  variant: 'landing' | 'institutional';
+  placeholderLabel: string;
+}
+
+const PORTFOLIO_CASES: PortfolioCase[] = [
+  {
+    badge: 'Landing page',
+    status: 'Projeto publicado',
+    title: 'JV Salvaia Personal Trainer',
+    challenge:
+      'Personal trainer com treino presencial, consultoria online e avaliação física. Precisava de uma landing page enxuta para converter tráfego pago do Instagram e do Facebook em conversas no WhatsApp.',
+    solution:
+      'Botão de WhatsApp para cada serviço, com mensagem pré-preenchida diferente em cada um; e galeria de exercícios.',
+    tags: ['Treino presencial', 'Consultoria online', 'Avaliação física'],
+    urlLabel: 'jvsalvaiapersonal.netlify.app',
+    href: 'https://jvsalvaiapersonal.netlify.app',
+    variant: 'landing',
+    placeholderLabel: 'Representação estrutural da landing page de JV Salvaia Personal Trainer',
+  },
+  {
+    badge: 'Site institucional',
+    status: 'Projeto publicado',
+    title: 'Toledo Segurança',
+    challenge:
+      'Empresa de segurança para eventos, portaria e rondas preventivas em Jundiaí/SP. Precisava de um site institucional que transmitisse credibilidade e gerasse contatos qualificados pelo WhatsApp.',
+    solution:
+      'Site institucional com identidade visual preto e dourado, seção de serviços, formulário de solicitação de orçamento e formulário de trabalhe conosco, ambos integrados ao WhatsApp.',
+    tags: ['Segurança para eventos', 'Portaria e controle de acesso', 'Rondas preventivas'],
+    urlLabel: 'toledoseguranca.netlify.app',
+    href: 'https://toledoseguranca.netlify.app/',
+    variant: 'institutional',
+    placeholderLabel: 'Representação estrutural do site institucional da Toledo Segurança',
+  },
+  {
+    badge: 'Landing page',
+    status: 'Projeto publicado',
+    title: 'Duelo de Fim de Ano — Amigos do Badem vs Amigos do Becala',
+    challenge:
+      'Grupo de amigos queria um site divertido para o racha de futebol amador de fim de ano, com escalações, histórico do clássico e resenha entre os times.',
+    solution:
+      "Campo tático interativo, votação da galera 'Bola Cheia vs Bola Murcha', galeria de fotos e mural da comunidade — tudo funcionando sem backend.",
+    tags: ['Evento social', 'Comunidade', 'Interatividade'],
+    urlLabel: 'jogodefimdeano.netlify.app',
+    href: 'https://jogodefimdeano.netlify.app',
+    variant: 'landing',
+    placeholderLabel: 'Representação estrutural da landing page do Duelo de Fim de Ano',
+  },
+];
+
 function BrowserMockup({
   urlLabel,
   children,
@@ -95,73 +153,72 @@ export const PortfolioSection: React.FC = () => {
             <span>Portfólio</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance">
-            Um projeto real, no ar
+            Projetos reais, no ar
           </h2>
           <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-            Trabalho concluído para um cliente real. O caso abaixo é o resultado final
-            do projeto — sem versões alternativas nem prévia ao vivo embutida.
+            Trabalhos concluídos para clientes reais. Os casos abaixo são o resultado final
+            dos projetos — sem versões alternativas nem prévia ao vivo embutida.
           </p>
         </div>
 
-        <div className="max-w-2xl mx-auto">
-          <article className="surface-card flex flex-col rounded-2xl overflow-hidden">
-            <div className="p-6 sm:p-8 border-b border-white/[0.06] bg-slate-950/50 space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono uppercase bg-indigo-950/80 text-indigo-200 border border-indigo-400/25 px-2.5 py-1 rounded font-semibold">
-                  Landing page
-                </span>
-                <span className="text-xs text-emerald-400 font-medium">Projeto publicado</span>
-              </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
-                JV Salvaia Personal Trainer
-              </h3>
-              <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
-                <p>
-                  <span className="text-white font-semibold">Desafio. </span>
-                  Personal trainer com treino presencial, consultoria online e avaliação física.
-                  Precisava de uma landing page enxuta para converter tráfego pago do
-                  Instagram e do Facebook em conversas no WhatsApp.
-                </p>
-                <p>
-                  <span className="text-white font-semibold">Solução. </span>
-                  Botão de WhatsApp para cada serviço, com mensagem pré-preenchida diferente
-                  em cada um; e galeria de exercícios.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {['Treino presencial', 'Consultoria online', 'Avaliação física'].map((item) => (
-                  <span
-                    key={item}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-950 border border-white/[0.07] text-xs font-medium text-slate-200"
-                  >
-                    <CheckCircle className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
-                    {item}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+          {PORTFOLIO_CASES.map((item) => (
+            <article
+              key={item.href}
+              className="surface-card flex flex-col h-full rounded-2xl overflow-hidden"
+            >
+              <div className="flex-1 p-6 sm:p-8 border-b border-white/[0.06] bg-slate-950/50 space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-mono uppercase bg-indigo-950/80 text-indigo-200 border border-indigo-400/25 px-2.5 py-1 rounded font-semibold">
+                    {item.badge}
                   </span>
-                ))}
+                  <span className="text-xs text-emerald-400 font-medium">{item.status}</span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                  {item.title}
+                </h3>
+                <div className="space-y-3 text-sm text-slate-300 leading-relaxed">
+                  <p>
+                    <span className="text-white font-semibold">Desafio. </span>
+                    {item.challenge}
+                  </p>
+                  <p>
+                    <span className="text-white font-semibold">Solução. </span>
+                    {item.solution}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-950 border border-white/[0.07] text-xs font-medium text-slate-200"
+                    >
+                      <CheckCircle className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="p-4 sm:p-6 bg-[#070A11]/90">
-              <BrowserMockup urlLabel="jvpersonal.netlify.app">
-                <StructuralPlaceholder
-                  variant="landing"
-                  label="Representação estrutural da landing page de JV Salvaia Personal Trainer"
-                />
-              </BrowserMockup>
-              <p className="mt-3 text-xs text-slate-500">
-                Representação estrutural. O site real abre em outra aba.
-              </p>
-              <a
-                href="https://jvpersonal.netlify.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-300 hover:text-indigo-200 transition-colors min-h-11"
-              >
-                <span>Abrir site ao vivo</span>
-                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-              </a>
-            </div>
-          </article>
+              <div className="p-4 sm:p-6 bg-[#070A11]/90">
+                <BrowserMockup urlLabel={item.urlLabel}>
+                  <StructuralPlaceholder variant={item.variant} label={item.placeholderLabel} />
+                </BrowserMockup>
+                <p className="mt-3 text-xs text-slate-500">
+                  Representação estrutural. O site real abre em outra aba.
+                </p>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-300 hover:text-indigo-200 transition-colors min-h-11"
+                >
+                  <span>Abrir site ao vivo</span>
+                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          ))}
         </div>
 
         <div className="mt-16 p-6 sm:p-8 rounded-2xl bg-indigo-950/25 border border-indigo-400/20 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">

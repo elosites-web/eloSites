@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import { PRICING, formatBRL } from '../types';
 
 interface LegalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: 'privacy' | 'terms' | null;
+  type: 'privacy' | 'terms' | 'cookies' | null;
 }
 
 const FOCUSABLE_SELECTOR =
@@ -88,7 +87,19 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
   if (!isOpen || !type) return null;
 
   const isPrivacy = type === 'privacy';
-  const titleId = isPrivacy ? 'privacy-dialog-title' : 'terms-dialog-title';
+  const isTerms = type === 'terms';
+  const titleId =
+    type === 'privacy'
+      ? 'privacy-dialog-title'
+      : type === 'terms'
+        ? 'terms-dialog-title'
+        : 'cookies-dialog-title';
+  const title =
+    type === 'privacy'
+      ? 'Política de Privacidade'
+      : type === 'terms'
+        ? 'Termos de Uso'
+        : 'Política de Cookies';
 
   return (
     <div
@@ -105,7 +116,7 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
       >
         <div className="flex items-center justify-between gap-3 p-4 sm:p-5 border-b border-white/[0.06] bg-slate-950/55 shrink-0">
           <h2 id={titleId} className="font-display text-lg sm:text-xl font-bold text-white min-w-0 pr-1">
-            {isPrivacy ? 'Política de Privacidade' : 'Termos de Uso'}
+            {title}
           </h2>
           <button
             ref={closeRef}
@@ -132,26 +143,50 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
                 </p>
               </section>
               <section className="space-y-1.5">
-                <h3 className="font-bold text-white text-sm">2. Finalidade</h3>
+                <h3 className="font-bold text-white text-sm">2. Cookies e tecnologias semelhantes</h3>
+                <p>
+                  Para informações sobre cookies, veja nossa Política de Cookies. Hoje o site não utiliza cookies de rastreamento, publicidade ou analytics.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">3. Finalidade</h3>
                 <p>
                   Suas informações são usadas somente para responder dúvidas, prestar atendimento
                   e elaborar propostas para o seu site.
                 </p>
               </section>
               <section className="space-y-1.5">
-                <h3 className="font-bold text-white text-sm">3. Não compartilhamento</h3>
+                <h3 className="font-bold text-white text-sm">4. Não compartilhamento</h3>
                 <p>
                   Seus dados não são vendidos nem compartilhados com terceiros para fins publicitários.
                 </p>
               </section>
               <section className="space-y-1.5">
-                <h3 className="font-bold text-white text-sm">4. Exclusão</h3>
+                <h3 className="font-bold text-white text-sm">5. Exclusão</h3>
                 <p>
                   Você pode pedir a exclusão dos seus dados pelo WhatsApp ou pelo e-mail institucional.
                 </p>
               </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">6. Seus direitos (LGPD)</h3>
+                <p>
+                  Conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018), você pode solicitar, a qualquer momento: confirmação de que tratamos seus dados; acesso aos dados; correção de dados incompletos ou desatualizados; anonimização, bloqueio ou eliminação de dados desnecessários; portabilidade; eliminação dos dados tratados com consentimento; e revogação do consentimento.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">Retenção</h3>
+                <p>
+                  Mantemos seus dados apenas pelo tempo necessário para responder seu contato e elaborar sua proposta, ou até você solicitar a exclusão.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">7. Contato sobre dados pessoais</h3>
+                <p>
+                  Para exercer esses direitos ou tirar dúvidas sobre o tratamento dos seus dados, entre em contato pelo e-mail elosites.br@gmail.com ou pelo WhatsApp +55 (11) 99572-2584.
+                </p>
+              </section>
             </>
-          ) : (
+          ) : isTerms ? (
             <>
               <section className="space-y-1.5">
                 <h3 className="font-bold text-white text-sm">1. Sobre a ēloSites</h3>
@@ -163,10 +198,7 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
               <section className="space-y-1.5">
                 <h3 className="font-bold text-white text-sm">2. Propostas</h3>
                 <p>
-                  Valores iniciais: Landing Page a partir de {formatBRL(PRICING.landingPageFrom)} e Site institucional
-                  a partir de {formatBRL(PRICING.professionalWebsiteFrom)}. O pagamento é 50% para iniciar o projeto e 50%
-                  na entrega final. Manutenção mensal é opcional. O domínio personalizado
-                  não está incluso. A publicação padrão é na URL do Netlify.
+                  O valor de cada projeto é definido em um orçamento específico, enviado antes do início do trabalho, com base no escopo combinado. O pagamento é dividido em duas etapas: 50% para iniciar o projeto e 50% na entrega final. Manutenção mensal é opcional e orçada separadamente. O domínio personalizado não está incluso. A publicação padrão é na URL do Netlify.
                 </p>
               </section>
               <section className="space-y-1.5">
@@ -174,6 +206,51 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
                 <p>
                   Após a entrega, o cliente é o titular do site. A ēloSites pode exibir o projeto
                   no portfólio como comprovação de trabalho realizado.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">4. Escopo e revisões</h3>
+                <p>
+                  O escopo de cada projeto (seções, funcionalidades, quantidade de revisões) é definido no orçamento aprovado antes do início do trabalho. Itens fora do escopo original — novas páginas, funcionalidades, integrações, produção de conteúdo além do fornecido pelo cliente ou identidade visual do zero — podem ser orçados separadamente.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">5. Prazos</h3>
+                <p>
+                  O prazo de entrega é combinado no orçamento e pode ser ajustado quando o conteúdo, as informações ou as aprovações do cliente atrasam o andamento do projeto.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">6. Propriedade e entrega</h3>
+                <p>
+                  Após a confirmação do pagamento final, o cliente é o titular do conteúdo e da configuração visual desenvolvidos especificamente para o seu projeto. A transferência de infraestrutura (repositório GitHub, conta de hospedagem, domínio) é feita apenas quando solicitada pelo cliente, podendo ser gratuita ou orçada à parte.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">7. Cancelamento</h3>
+                <p>
+                  Em caso de cancelamento após o início do desenvolvimento, os valores já pagos referentes a etapas efetivamente executadas não são reembolsados.
+                </p>
+              </section>
+            </>
+          ) : (
+            <>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">1. O que são cookies</h3>
+                <p>
+                  Cookies são pequenos arquivos que um site pode salvar no seu navegador para lembrar preferências ou fazer o site funcionar corretamente.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">2. Cookies utilizados neste site</h3>
+                <p>
+                  O site da <strong>ēloSites</strong> não utiliza cookies de rastreamento, publicidade ou analytics. Alguns recursos podem salvar preferências localmente no seu navegador (localStorage), sem enviar esses dados para servidores externos.
+                </p>
+              </section>
+              <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">3. Como gerenciar</h3>
+                <p>
+                  Você pode limpar ou bloquear esses dados a qualquer momento nas configurações do seu navegador, sem afetar a navegação básica pelo site.
                 </p>
               </section>
             </>

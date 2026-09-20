@@ -1,7 +1,7 @@
 import React from 'react';
-import { Target, Building2, Check, ArrowRight } from 'lucide-react';
+import { Target, Building2, Check, X, ArrowRight } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { SITE_CONFIG, whatsappUrl, PRICING, formatBRL } from '../types';
+import { SITE_CONFIG, whatsappUrl } from '../types';
 
 export const ServicesSection: React.FC = () => {
   const landingPageWhatsappUrl = whatsappUrl(SITE_CONFIG.landingPageWhatsappMessage);
@@ -23,7 +23,7 @@ export const ServicesSection: React.FC = () => {
           </h2>
           <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
             Escolhemos juntos o formato certo para o momento do seu negócio.
-            Valores iniciais claros, pagamento em duas etapas e publicação na URL do Netlify.
+            Orçamento sob medida para o seu projeto, pagamento em duas etapas e publicação na URL do Netlify.
           </p>
         </div>
 
@@ -75,13 +75,33 @@ export const ServicesSection: React.FC = () => {
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-300">
                   {[
-                    'Layout sob medida',
-                    'Foco em WhatsApp',
-                    'Apresentação dos serviços',
-                    'Publicação do site',
+                    'Página única com rolagem contínua (hero, serviços, prova social, contato)',
+                    'Botão de WhatsApp com mensagem pré-preenchida em cada chamada',
+                    'Apresentação detalhada dos seus serviços ou produtos',
+                    'Responsiva para celular, tablet e desktop',
+                    'Publicação no Netlify',
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2.5 pt-3 border-t border-white/[0.06]">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Não incluso:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-500">
+                  {[
+                    'Domínio próprio',
+                    'Hospedagem em outro provedor',
+                    'Criação de identidade visual (logo)',
+                    'Novas páginas fora do escopo combinado',
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <X className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -92,13 +112,10 @@ export const ServicesSection: React.FC = () => {
             <div className="mt-8 pt-6 border-t border-white/[0.06] space-y-3">
               <div className="space-y-1">
                 <p className="font-display text-2xl font-bold tracking-tight text-white">
-                  A partir de {formatBRL(PRICING.landingPageFrom)}
+                  Orçamento personalizado
                 </p>
-                <p className="text-sm text-indigo-300 font-medium">
-                  50% para iniciar · 50% na entrega
-                </p>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Manutenção opcional: {formatBRL(PRICING.maintenanceLanding)}/mês. Domínio personalizado não incluso.
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Cada projeto recebe um orçamento específico, considerando escopo, seções, conteúdo e prazo. Pagamento dividido em duas etapas: 50% para iniciar e 50% na entrega final.
                 </p>
               </div>
               <a
@@ -166,13 +183,35 @@ export const ServicesSection: React.FC = () => {
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-300">
                   {[
-                    'Várias seções',
-                    'Galeria',
-                    'Depoimentos',
-                    'Localização',
+                    'Múltiplas seções: início, serviços, sobre, galeria, depoimentos e localização',
+                    'Descrição detalhada de cada serviço oferecido',
+                    'Galeria de fotos do trabalho ou do espaço',
+                    'Seção de localização com endereço e/ou mapa',
+                    'Botão de WhatsApp integrado ao longo da página',
+                    'Responsiva para celular, tablet e desktop',
+                    'Publicação no Netlify',
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2.5 pt-3 border-t border-white/[0.07]">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Não incluso:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-500">
+                  {[
+                    'Domínio próprio',
+                    'Hospedagem em outro provedor',
+                    'Identidade visual do zero',
+                    'Integrações com sistemas de terceiros',
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <X className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -183,13 +222,10 @@ export const ServicesSection: React.FC = () => {
             <div className="mt-8 pt-6 border-t border-white/[0.07] space-y-3">
               <div className="space-y-1">
                 <p className="font-display text-2xl font-bold tracking-tight text-white">
-                  A partir de {formatBRL(PRICING.professionalWebsiteFrom)}
+                  Orçamento personalizado
                 </p>
-                <p className="text-sm text-indigo-300 font-medium">
-                  50% para iniciar · 50% na entrega
-                </p>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Manutenção opcional: {formatBRL(PRICING.maintenanceProfessional)}/mês. Domínio personalizado não incluso.
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Cada projeto recebe um orçamento específico, considerando escopo, seções, conteúdo e prazo. Pagamento dividido em duas etapas: 50% para iniciar e 50% na entrega final.
                 </p>
               </div>
               <a

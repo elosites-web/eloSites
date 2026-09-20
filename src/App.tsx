@@ -9,10 +9,11 @@ import { FaqSection } from './components/FaqSection';
 import { ContactCtaSection } from './components/ContactCtaSection';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { LegalModals } from './components/LegalModals';
 
 export default function App() {
-  const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
+  const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | 'cookies' | null>(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -63,9 +64,12 @@ export default function App() {
       <Footer
         onOpenPrivacy={() => setLegalModal('privacy')}
         onOpenTerms={() => setLegalModal('terms')}
+        onOpenCookies={() => setLegalModal('cookies')}
       />
 
       <FloatingWhatsApp />
+
+      <CookieConsentBanner />
 
       <LegalModals
         isOpen={legalModal !== null}

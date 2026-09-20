@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-import { FaqItem, PRICING, formatBRL, SITE_CONFIG, whatsappUrl } from '../types';
+import { FaqItem, SITE_CONFIG, whatsappUrl } from '../types';
 
 export const FaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -22,7 +22,7 @@ export const FaqSection: React.FC = () => {
       id: 'faq-3',
       question: 'Quanto custa e como é o pagamento?',
       answer:
-        `Landing Page a partir de ${formatBRL(PRICING.landingPageFrom)}. Site institucional a partir de ${formatBRL(PRICING.professionalWebsiteFrom)}. O pagamento é 50% para iniciar o projeto e 50% na entrega final.`,
+        'Cada projeto é diferente, então o valor é definido em um orçamento específico depois de entendermos seu negócio e o que você precisa no site. O pagamento é dividido em duas etapas: 50% para iniciar o projeto e 50% na entrega final. Fale com a gente pelo WhatsApp para receber sua proposta.',
     },
     {
       id: 'faq-4',
@@ -46,7 +46,7 @@ export const FaqSection: React.FC = () => {
       id: 'faq-7',
       question: 'Existe manutenção mensal?',
       answer:
-        `Sim, e é opcional. Landing Page: ${formatBRL(PRICING.maintenanceLanding)}/mês. Site institucional: ${formatBRL(PRICING.maintenanceProfessional)}/mês. Cobre até 5 solicitações simples por mês, como textos, imagens, contatos, links e pequenos ajustes. As solicitações não acumulam. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. A manutenção não inclui domínio nem hospedagem em outro provedor.`,
+        'Sim, e é opcional — o valor é definido junto com o orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 5 solicitações simples por mês (textos, imagens, contatos, links, pequenos ajustes), sem acúmulo entre meses. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. Não inclui domínio nem hospedagem em outro provedor.',
     },
   ];
 
@@ -71,7 +71,7 @@ export const FaqSection: React.FC = () => {
             Tire as dúvidas antes de começar
           </h2>
           <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-            Respostas diretas sobre valores, pagamento, publicação no Netlify, domínio, manutenção e controle do site.
+            Respostas diretas sobre pagamento, publicação no Netlify, domínio, manutenção e controle do site.
           </p>
         </div>
 

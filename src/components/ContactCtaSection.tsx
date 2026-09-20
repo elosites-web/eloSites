@@ -1,6 +1,6 @@
 import React from 'react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { SITE_CONFIG, whatsappUrl, PRICING, formatBRL } from '../types';
+import { SITE_CONFIG, whatsappUrl } from '../types';
 import { Mail } from 'lucide-react';
 
 export const ContactCtaSection: React.FC = () => {
@@ -25,9 +25,7 @@ export const ContactCtaSection: React.FC = () => {
         </h2>
 
         <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-          Conte sobre o seu trabalho pelo WhatsApp. Conversamos sobre o formato
-          e o conteúdo — Landing Page a partir de {formatBRL(PRICING.landingPageFrom)} ou Site institucional
-          a partir de {formatBRL(PRICING.professionalWebsiteFrom)}, com 50% para iniciar e 50% na entrega.
+          Conte sobre o seu trabalho pelo WhatsApp. Conversamos sobre o formato, o conteúdo e te enviamos um orçamento específico para o seu projeto, com pagamento em duas etapas: 50% para iniciar e 50% na entrega.
         </p>
 
         <div>

@@ -7,9 +7,10 @@ import { Mail, ArrowUp } from 'lucide-react';
 interface FooterProps {
   onOpenPrivacy: () => void;
   onOpenTerms: () => void;
+  onOpenCookies: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms, onOpenCookies }) => {
   const currentYear = new Date().getFullYear();
   const footerWhatsappUrl = whatsappUrl(SITE_CONFIG.defaultWhatsappMessage);
 
@@ -95,6 +96,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
             >
               Termos de Uso
             </button>
+            <button
+              type="button"
+              onClick={onOpenCookies}
+              className="text-slate-400 hover:text-indigo-300 transition-colors underline-offset-4 hover:underline min-h-11"
+            >
+              Política de Cookies
+            </button>
+            <span className="w-full inline-flex flex-wrap items-center gap-x-1 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-500">
+              CRIADO E DESENVOLVIDO POR
+              <EloLogo size="sm" className="inline-block mx-1.5 -mb-0.5" />
+              · O MELHOR SITE PELO MELHOR PREÇO!
+            </span>
           </div>
 
           <button
