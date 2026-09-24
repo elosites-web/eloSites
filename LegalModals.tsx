@@ -133,6 +133,14 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
           {isPrivacy ? (
             <>
               <section className="space-y-1.5">
+                <h3 className="font-bold text-white text-sm">Controlador dos dados</h3>
+                <p>
+                  O controlador dos dados pessoais tratados neste site é a <strong>ēloSites</strong>,
+                  de Everton Lopes de Oliveira, profissional autônomo. Contato: elosites.br@gmail.com
+                  ou WhatsApp +55 (11) 99572-2584.
+                </p>
+              </section>
+              <section className="space-y-1.5">
                 <h3 className="font-bold text-white text-sm">1. Dados coletados</h3>
                 <p>
                   A <strong>ēloSites</strong> coleta os dados que você envia ao entrar em contato
@@ -204,9 +212,10 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
               <section className="space-y-1.5">
                 <h3 className="font-bold text-white text-sm">3. Portfólio</h3>
                 <p>
-                  Após a confirmação do pagamento final, o cliente é o titular do conteúdo e da
-                  configuração visual desenvolvidos para o seu projeto (veja o item 6). A ēloSites
-                  pode exibir o projeto no portfólio como comprovação de trabalho realizado.
+                  Após a confirmação do pagamento final, o cliente é o titular do conteúdo, da
+                  configuração visual e do código desenvolvidos para o seu projeto (veja o item 6).
+                  A ēloSites pode exibir o projeto no portfólio como comprovação de trabalho
+                  realizado.
                 </p>
               </section>
               <section className="space-y-1.5">
@@ -224,7 +233,7 @@ export const LegalModals: React.FC<LegalModalProps> = ({ isOpen, onClose, type }
               <section className="space-y-1.5">
                 <h3 className="font-bold text-white text-sm">6. Propriedade e entrega</h3>
                 <p>
-                  Após a confirmação do pagamento final, o cliente é o titular do conteúdo e da configuração visual desenvolvidos especificamente para o seu projeto. A transferência de infraestrutura (repositório GitHub, conta de hospedagem, domínio) é feita apenas quando solicitada pelo cliente, podendo ser gratuita ou orçada à parte.
+                  Após a confirmação do pagamento final, o cliente é o titular do conteúdo, da configuração visual e do código desenvolvidos especificamente para o seu projeto. A transferência de infraestrutura (repositório GitHub, conta de hospedagem, domínio) é feita apenas quando solicitada pelo cliente, podendo ser gratuita ou orçada à parte.
                 </p>
               </section>
               <section className="space-y-1.5">
