@@ -60,6 +60,7 @@ export const NAVIGATION_ITEMS: NavItem[] = [
   { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
   { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Como funciona', href: '#como-funciona', id: 'nav-processo' },
+  { label: 'Diferenciais', href: '#diferenciais', id: 'nav-diferenciais' },
   { label: 'Perguntas frequentes', href: '#faq', id: 'nav-faq' },
   { label: 'Contato', href: '#contato', id: 'nav-contato' },
 ];
