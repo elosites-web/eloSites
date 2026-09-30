@@ -28,17 +28,6 @@ export interface FaqItem {
   answer: string;
 }
 
-export const PRICING = {
-  landingPageFrom: 500,
-  professionalWebsiteFrom: 850,
-  maintenanceLanding: 100,
-  maintenanceProfessional: 150,
-} as const;
-
-export function formatBRL(value: number): string {
-  return `R$\u00A0${value.toLocaleString('pt-BR')}`;
-}
-
 export const SITE_CONFIG = {
   name: 'ēloSites',
   tagline: 'O elo entre pequenos negócios e a presença digital profissional.',

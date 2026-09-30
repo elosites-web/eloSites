@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, User, Server, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Zap, User, Server, TrendingUp, CheckCircle2, Flame } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const DifferentialsSection: React.FC = () => {
@@ -32,6 +32,12 @@ export const DifferentialsSection: React.FC = () => {
       description:
         'Cada seção existe para um motivo comercial: apresentar o serviço com clareza e levar o visitante até o contato.',
       icon: TrendingUp,
+    },
+    {
+      title: 'Contato que já vem quente',
+      description:
+        'Quem chama pelo site já viu o que você faz, já conheceu o serviço e decidiu que tem interesse antes de falar com você. É um tipo de contato mais adiantado do que um lead frio — a etapa de conhecer o negócio já aconteceu sozinha, no próprio site.',
+      icon: Flame,
     },
     {
       title: 'WhatsApp em primeiro lugar',

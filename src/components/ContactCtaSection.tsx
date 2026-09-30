@@ -42,7 +42,7 @@ export const ContactCtaSection: React.FC = () => {
           <p className="text-xs text-slate-400 mt-3 font-medium">
             Atendimento direto com o fundador · sem compromisso
           </p>
-          <p className="text-xs text-slate-300 mt-2 font-medium select-all">
+          <p className="text-xs text-slate-300 mt-2 font-medium select-all" data-copy-allowed>
             {SITE_CONFIG.whatsappDisplay}
           </p>
         </div>
@@ -68,6 +68,7 @@ export const ContactCtaSection: React.FC = () => {
               <a
                 href={`mailto:${SITE_CONFIG.email}`}
                 className="inline-flex items-center min-h-11 font-medium text-white hover:text-indigo-300 transition-colors break-all"
+                data-copy-allowed
               >
                 {SITE_CONFIG.email}
               </a>

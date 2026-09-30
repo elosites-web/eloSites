@@ -40,6 +40,21 @@ body,
   overflow-x: clip;
 }
 
+/* Global protection against selection/copy of page content.
+   Contact details (phone, e-mail) opt back in via [data-copy-allowed],
+   since visitors need to be able to copy those to reach us. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+[data-copy-allowed] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
 .page-shell {
   width: 100%;
   max-width: var(--page-max);

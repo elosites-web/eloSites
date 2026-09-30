@@ -28,19 +28,19 @@ export const FaqSection: React.FC = () => {
       id: 'faq-4',
       question: 'A publicação e a hospedagem estão inclusas?',
       answer:
-        'A entrega padrão é o site publicado na URL do Netlify. Configurar ou migrar para outro provedor de hospedagem não está incluso e pode ser orçado à parte.',
+        'A publicação do site no endereço combinado faz parte do projeto. Hospedagem e domínio são serviços de terceiros, contratados e pagos por você diretamente no provedor de sua escolha (por exemplo, Netlify, Cloudflare ou uma empresa de hospedagem), e a ēloSites não revende esses serviços. Configurar a publicação e conectar o domínio, quando previstos no escopo aprovado, fazem parte do projeto; migrações fora desse escopo podem ser orçadas à parte.',
     },
     {
       id: 'faq-5',
       question: 'O domínio personalizado está incluso?',
       answer:
-        'Não. Domínio personalizado (.com.br, .com etc.) não está incluso e é pago separadamente pelo cliente. Se você quiser um, o registro deve permanecer na sua própria conta. A ēloSites não fica dona do domínio.',
+        'Não. O registro do domínio (.com.br, .com etc.) é pago por você ao provedor de sua escolha e fica sempre na sua conta; a ēloSites não fica dona do domínio. Recomendamos fortemente contratar um domínio próprio: ele passa mais credibilidade, é mais fácil de lembrar e divulgar, e continua seu mesmo que o site mude de hospedagem. Se quiser, indicamos opções de provedores.',
     },
     {
       id: 'faq-6',
       question: 'Depois do projeto eu continuo tendo controle do site?',
       answer:
-        'Sim. O site é seu. O domínio, se houver, permanece registrado na sua conta. A publicação padrão é na URL do Netlify. Se você optar por outro provedor, a conta também deve ficar no seu nome.',
+        'Sim. O site é seu: após a confirmação do pagamento final, o conteúdo, o layout e o código desenvolvidos para o seu projeto passam a ser seus. Quando você quiser, pode pedir a transferência do repositório e das informações de publicação para a sua conta. O domínio e a hospedagem ficam sempre no seu nome.',
     },
     {
       id: 'faq-7',
@@ -71,7 +71,7 @@ export const FaqSection: React.FC = () => {
             Tire as dúvidas antes de começar
           </h2>
           <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-            Respostas diretas sobre pagamento, publicação no Netlify, domínio, manutenção e controle do site.
+            Respostas diretas sobre pagamento, publicação, domínio, manutenção e controle do site.
           </p>
         </div>
 

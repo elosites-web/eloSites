@@ -45,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms, onOp
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900/80 border border-white/[0.07] text-slate-300 hover:text-white hover:border-indigo-400/40 transition-all duration-200 text-xs font-medium min-h-11 min-w-0 max-w-full"
               >
                 <Mail className="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true" />
-                <span className="break-all">{SITE_CONFIG.email}</span>
+                <span className="break-all" data-copy-allowed>{SITE_CONFIG.email}</span>
               </a>
             </div>
           </div>

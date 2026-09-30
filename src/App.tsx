@@ -16,6 +16,33 @@ export default function App() {
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | 'cookies' | null>(null);
 
   useEffect(() => {
+    const isCopyAllowed = (target: EventTarget | null) =>
+      target instanceof Element && target.closest('[data-copy-allowed]') !== null;
+
+    const blockContextMenu = (e: MouseEvent) => {
+      if (!isCopyAllowed(e.target)) e.preventDefault();
+    };
+    const blockCopy = (e: ClipboardEvent) => {
+      if (!isCopyAllowed(e.target)) e.preventDefault();
+    };
+    const blockDrag = (e: DragEvent) => {
+      if (!isCopyAllowed(e.target)) e.preventDefault();
+    };
+
+    document.addEventListener('contextmenu', blockContextMenu);
+    document.addEventListener('copy', blockCopy);
+    document.addEventListener('cut', blockCopy);
+    document.addEventListener('dragstart', blockDrag);
+
+    return () => {
+      document.removeEventListener('contextmenu', blockContextMenu);
+      document.removeEventListener('copy', blockCopy);
+      document.removeEventListener('cut', blockCopy);
+      document.removeEventListener('dragstart', blockDrag);
+    };
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
 
     const syncVisualViewport = () => {
