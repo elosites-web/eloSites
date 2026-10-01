@@ -129,33 +129,32 @@ export const Hero: React.FC = () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleScrollToPortfolio}
-              aria-label="Ver portfólio: JV Salvaia Personal Trainer"
-              className="w-full text-left rounded-xl border border-white/[0.07] bg-slate-950/70 p-3.5 hover:border-indigo-400/35 hover:bg-slate-950/90 transition-all duration-200 group shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
-            >
-              <span className="block text-[10px] uppercase tracking-wider text-indigo-300 font-semibold mb-1.5">
-                Caso real
+            <div className="rounded-xl border border-white/[0.07] bg-slate-950/70 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <span className="block text-[10px] uppercase tracking-wider text-indigo-300 font-semibold mb-2.5">
+                Mensagem já pronta
               </span>
-              <span className="block text-sm font-semibold text-white leading-snug group-hover:text-indigo-200 transition-colors">
-                JV Salvaia Personal Trainer
-              </span>
-              <span className="block text-xs text-slate-400 mt-1">Landing page de conversão</span>
-              <div className="mt-3 rounded-lg border border-white/[0.06] bg-[#070A11] overflow-hidden">
-                <div className="flex items-center gap-1 px-2 py-1.5 border-b border-white/[0.06] bg-slate-900/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                </div>
-                <div className="h-16 p-2.5 space-y-1.5" aria-hidden="true">
-                  <div className="h-1.5 w-2/3 rounded bg-indigo-500/30" />
-                  <div className="h-1.5 w-full rounded bg-slate-800" />
-                  <div className="h-1.5 w-4/5 rounded bg-slate-800" />
-                  <div className="h-4 w-20 rounded bg-emerald-500/25 mt-2" />
+              <div className="rounded-xl rounded-tl-sm bg-emerald-600/15 border border-emerald-500/20 px-3.5 py-3">
+                <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed">
+                  Olá, ēloSites! 👋
+                  <br />
+                  <br />
+                  Quero criar um{' '}
+                  <span className="font-semibold text-white">site profissional</span> para
+                  o meu negócio e gerar mais contatos pelo WhatsApp.
+                  <br />
+                  <br />
+                  Pode me explicar como funciona e me enviar um orçamento sem compromisso?
+                </p>
+                <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-emerald-300/70">
+                  <span>pronta para enviar</span>
+                  <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
                 </div>
               </div>
-            </button>
+              <p className="mt-2.5 text-xs text-slate-400">
+                Ao clicar em "Falar no WhatsApp", essa mensagem já vem preenchida — é só
+                apertar enviar.
+              </p>
+            </div>
           </div>
         </div>
       </div>

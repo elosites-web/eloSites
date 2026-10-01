@@ -8,6 +8,7 @@ export const DifferentialsSection: React.FC = () => {
     description: string;
     icon: React.ElementType;
     isWhatsApp?: boolean;
+    promise?: string;
   }[] = [
     {
       title: 'Entrega em dias, não em meses',
@@ -34,10 +35,12 @@ export const DifferentialsSection: React.FC = () => {
       icon: TrendingUp,
     },
     {
-      title: 'Contato que já vem quente',
+      title: 'Mais contexto antes da conversa',
       description:
-        'Quem chama pelo site já viu o que você faz, já conheceu o serviço e decidiu que tem interesse antes de falar com você. É um tipo de contato mais adiantado do que um lead frio — a etapa de conhecer o negócio já aconteceu sozinha, no próprio site.',
+        'O site apresenta seus serviços, explica seus diferenciais e reúne as informações que o cliente precisa para conhecer melhor seu negócio antes de entrar em contato. Com o WhatsApp integrado, fica mais fácil dar o próximo passo.',
       icon: Flame,
+      promise:
+        'O site apoia sua divulgação. Você continua responsável por atrair pessoas, atender os contatos e conduzir as vendas.',
     },
     {
       title: 'WhatsApp em primeiro lugar',
@@ -102,6 +105,15 @@ export const DifferentialsSection: React.FC = () => {
                   <p className="text-sm text-slate-300/95 leading-relaxed">
                     {item.description}
                   </p>
+                  {item.promise && (
+                    <p className="mt-3 flex items-start gap-1.5 text-sm text-indigo-200/90 leading-relaxed">
+                      <CheckCircle2
+                        className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
+                      <span>{item.promise}</span>
+                    </p>
+                  )}
                 </div>
                 <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-1.5 text-xs text-slate-400">
                   <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />

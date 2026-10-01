@@ -182,7 +182,7 @@ function LivePreview({
   };
 
   return (
-    <div className="relative h-60 sm:h-72 bg-[#0B101D]">
+    <div className="relative aspect-[9/16] w-full bg-[#0B101D]">
       {status !== 'blocked' && (
         <iframe
           src={url}
@@ -296,13 +296,15 @@ export const PortfolioSection: React.FC = () => {
               </div>
 
               <div className="p-4 sm:p-5 bg-[#070A11]/90">
-                <BrowserMockup urlLabel={item.urlLabel} href={item.href}>
-                  <LivePreview
-                    url={item.href}
-                    label={item.placeholderLabel}
-                    variant={item.variant}
-                  />
-                </BrowserMockup>
+                <div className="max-w-[260px] sm:max-w-[280px] mx-auto">
+                  <BrowserMockup urlLabel={item.urlLabel} href={item.href}>
+                    <LivePreview
+                      url={item.href}
+                      label={item.placeholderLabel}
+                      variant={item.variant}
+                    />
+                  </BrowserMockup>
+                </div>
                 <p className="mt-3 text-xs text-slate-500">
                   Prévia interativa quando o site permite exibição embutida. Se não carregar,
                   abra o site completo em outra aba.
