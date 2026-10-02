@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://elosites.netlify.app
+Sitemap: https://netlify.app
