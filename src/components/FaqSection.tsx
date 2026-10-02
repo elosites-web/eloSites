@@ -46,7 +46,7 @@ export const FaqSection: React.FC = () => {
       id: 'faq-7',
       question: 'Existe manutenção mensal?',
       answer:
-        'Sim, e é opcional — o valor é definido junto com o orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 5 solicitações simples por mês (textos, imagens, contatos, links, pequenos ajustes), sem acúmulo entre meses. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. Não inclui domínio nem hospedagem em outro provedor.',
+        'Sim, e é opcional — o valor é definido junto com o orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 4 solicitações simples por mês (textos, imagens, contatos, links, pequenos ajustes), sem acúmulo entre meses. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. Não inclui domínio nem hospedagem em outro provedor.',
     },
   ];
 
