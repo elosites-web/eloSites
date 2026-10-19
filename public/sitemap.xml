@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- Tela 01: Início & Apresentação -->
+  <url>
+    <loc>https://elosites.ia.br/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Tela 02: Portfólio de Projetos Reais -->
+  <url>
+    <loc>https://elosites.ia.br/#portfolio</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Tela 03: Serviços & Condições Comerciais -->
+  <url>
+    <loc>https://elosites.ia.br/#servicos</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Tela 04: Processo Ágil & Diferenciais -->
+  <url>
+    <loc>https://elosites.ia.br/#processo</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Tela 05: Orçamento & Agendamento de Reunião -->
+  <url>
+    <loc>https://elosites.ia.br/#orcamento</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Tela 06: Perguntas Frequentes & Contato -->
+  <url>
+    <loc>https://elosites.ia.br/#faq</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Tela 07: Parceria Estratégica | Tráfego Pago -->
+  <url>
+    <loc>https://elosites.ia.br/#parceria-trafego</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

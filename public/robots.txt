@@ -1,0 +1,8 @@
+# robots.txt para https://elosites.ia.br
+# Configurado para permitir a indexação de todo o site e apontar para o sitemap canônico
+
+User-agent: *
+Allow: /
+
+# Aponta para o sitemap canônico para indexação de motores de busca
+Sitemap: https://elosites.ia.br/sitemap.xml

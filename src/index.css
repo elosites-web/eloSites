@@ -1,0 +1,1585 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Space Grotesk', system-ui, -apple-system, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+:root {
+  /* Standardized Motion Easing Curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* entrances/exits */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* on-screen movement/morphing */
+  --ease: ease;                                    /* hover/color change */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);   /* drawer/sheet-like motion */
+
+  /* Durations */
+  --dur-press: 140ms;
+  --dur-hover: 180ms;
+  --dur-popover: 180ms;
+  --dur-screen: 220ms;
+  --dur-accordion: 260ms;
+  --dur-modal: 280ms;
+  --dur-reveal: 560ms;
+  --dur-hero: 520ms;
+
+  /* Ritmo de revelações (usado por Reveal e SplitLines) */
+  --reveal-y: 14px;
+  --reveal-delay: 0ms;
+  --stagger: 70ms;
+
+  /* Design Tokens Oficiais — Identidade Visual og-image.png & tokens.css */
+  --cor-fundo: #050814;
+  --cor-fundo-rgb: 5, 8, 20;
+  --cor-superficie: #090e23;
+  --cor-superficie-hover: #0e1738;
+  --cor-superficie-elevada: #111a3e;
+  --cor-primaria: #3b82f6;
+  --cor-primaria-hover: #2563eb;
+  --cor-acento: #6366f1;
+  --cor-acento-violet: #7c3aed;
+  --cor-glow: rgba(59, 130, 246, 0.4);
+  --cor-borda: rgba(59, 130, 246, 0.2);
+  --cor-borda-hover: rgba(59, 130, 246, 0.45);
+
+  /* Cor de destaque dinâmica e adaptativa por seção */
+  --accent-color: #3b82f6;
+  --accent-color-rgb: 59, 130, 246;
+  --accent-glow: rgba(59, 130, 246, 0.35);
+  --accent-border: rgba(59, 130, 246, 0.3);
+}
+
+/* Otimização de renderização e economia de GPU/memória com content-visibility */
+.section-auto-contain {
+  content-visibility: auto;
+  contain-intrinsic-size: 750px;
+  contain-intrinsic-size: auto 750px;
+}
+
+/* Aplicação sutil da variável --accent-color em bordas, gradientes e brilhos */
+.accent-border-subtle {
+  border-color: rgba(var(--accent-color-rgb, 6, 182, 212), 0.28);
+  transition: border-color 0.6s var(--ease);
+}
+
+.accent-glow-subtle {
+  box-shadow: 0 0 28px -6px rgba(var(--accent-color-rgb, 6, 182, 212), 0.2);
+  transition: box-shadow 0.6s var(--ease);
+}
+
+.accent-gradient-subtle {
+  background-image: linear-gradient(135deg, rgba(var(--accent-color-rgb, 6, 182, 212), 0.08), transparent 75%);
+  transition: background-image 0.6s var(--ease);
+}
+
+/* Configuração Global de Fontes: font-display swap para renderização imediata sem texto invisível (FOIT) */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'), local('PlusJakartaSans');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: local('Space Grotesk'), local('SpaceGrotesk');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: local('JetBrains Mono'), local('JetBrainsMono');
+}
+
+html {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Elimina atraso de 300ms no clique (double-tap zoom delay) em dispositivos de toque globalmente */
+html,
+body,
+button,
+a,
+input,
+select,
+textarea,
+label,
+summary,
+[role="button"],
+[role="link"],
+[role="tab"],
+[role="checkbox"],
+[role="radio"],
+[tabindex]:not([tabindex="-1"]),
+.pressable,
+.cta-primary {
+  touch-action: manipulation;
+}
+
+/* Garante rolagem vertical nativa livre com overscroll-behavior-y: contain em todos os cards e containers */
+.glass-card-interactive,
+.surface-card,
+.portfolio-card,
+.service-card,
+.interactive-3d-card-root,
+.card-solid,
+.scroll-perf-card,
+article,
+.nav-menu-modal-container,
+[role="dialog"],
+.overflow-y-auto,
+.overflow-auto {
+  touch-action: pan-y !important;
+  overscroll-behavior-y: contain;
+}
+
+/* Scroll snap vertical ancorado e fluido nos containers de cards */
+.card-snap-container,
+.portfolio-list,
+.service-list,
+.differentials-list,
+.process-list {
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: clamp(68px, 11vh, 96px);
+}
+
+/* Ancoragem de rolagem no topo para cada card individual */
+.card-snap-item,
+.portfolio-card,
+.service-card,
+.interactive-3d-card-root,
+.portfolio-list > div,
+.service-list > div,
+.differentials-list > div,
+.process-list > div {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.font-display {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glass panel floating aesthetic com aceleração por hardware e estética obsidian profunda */
+.glass-panel {
+  background-color: rgba(9, 14, 35, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(59, 130, 246, 0.16);
+  box-shadow:
+    0 12px 32px -10px rgba(0, 0, 0, 0.7),
+    0 0 20px -8px rgba(59, 130, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Superfície de vidro e obsidian "premium": realce superior, bordas finas com brilho elétrico e transições rápidas */
+.surface-card {
+  position: relative;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.surface-card:hover {
+  border-color: var(--cor-borda-hover);
+  box-shadow:
+    0 14px 40px -12px rgba(0, 0, 0, 0.8),
+    0 0 28px -6px rgba(59, 130, 246, 0.3);
+}
+
+.surface-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(59, 130, 246, 0.04) 20%, transparent 60%);
+  opacity: 0.95;
+}
+
+/* Superfície sólida (sem vidro/blur), identidade escura dos cartões de Serviços com fundo obsidian puro */
+.card-solid {
+  background-color: #090e23;
+  border: 1px solid rgba(59, 130, 246, 0.16);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Micro-etiqueta monoespaçada (usa apenas o texto já existente). */
+.section-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.14em;
+}
+
+/* Fio técnico de 1px. */
+.hairline {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(129, 140, 248, 0.35) 50%,
+    transparent 100%
+  );
+  border: 0;
+}
+
+/* Cantos técnicos (colchetes) em painéis destacados — puro CSS, sem palavras. */
+.bracket-panel {
+  position: relative;
+}
+
+.bracket-panel::before,
+.bracket-panel::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  border-style: solid;
+  border-width: 0;
+  border-color: rgba(165, 180, 252, 0.4);
+}
+
+.bracket-panel::before {
+  top: 8px;
+  left: 8px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-top-left-radius: 6px;
+}
+
+.bracket-panel::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Escala tipográfica em progressão geométrica (1.25 mobile). */
+:root {
+  --step--1: 0.8rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5625rem;
+  --step-3: 1.9531rem;
+  --step-4: 2.4414rem;
+}
+
+@media (max-width: 768px) {
+  .glass-panel {
+    background-color: rgba(11, 16, 29, 0.94);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+/* Interactive Card Elevation with Smooth Cyan & Indigo Glow + Hardware Optimization */
+.glass-card-interactive,
+.surface-card,
+.card-solid,
+.bracket-panel,
+.portfolio-card,
+.portfolio-list,
+.service-card,
+.service-list,
+.scroll-perf-card,
+.scroll-perf-list {
+  contain: layout style;
+}
+
+.glass-card-interactive,
+.surface-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glass-card-interactive:hover,
+  .surface-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(129, 140, 248, 0.5);
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7),
+                0 0 20px -2px rgba(99, 102, 241, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Ajuste específico para dispositivos tablet (640px - 1024px) para garantir hierarquia vertical e legibilidade sem sobreposição */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .glass-card-interactive,
+  .surface-card {
+    padding: 1.75rem !important;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Garante espaçamento vertical claro entre o bloco de texto e os botões de ação */
+  .glass-card-interactive .card-action-cluster,
+  .surface-card .card-action-cluster {
+    margin-top: 1.25rem;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-card-interactive:hover,
+  .glass-card-interactive,
+  .surface-card:hover,
+  .surface-card {
+    transform: none !important;
+  }
+}
+
+/* Subtle tech grid pattern for backdrop */
+.tech-grid-pattern {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Enhanced global focus-visible styles with subtle inner glow effect without layout boundary shifts */
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  box-shadow: inset 0 0 10px rgba(129, 140, 248, 0.35), inset 0 0 2px rgba(165, 180, 252, 0.5);
+  transition: box-shadow var(--dur-press) var(--ease-out), outline-color var(--dur-press) var(--ease-out);
+}
+
+/* Subtle continuous breathing pulse for floating WhatsApp button */
+@keyframes subtlePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35), 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.55), 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulse 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-subtle-pulse {
+    animation: none;
+  }
+}
+
+/* Hairline de progresso para auto-fechamento do balão do WhatsApp */
+@keyframes shrinkProgress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Efeito de shimmer suave para skeleton loaders */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Efeito de preenchimento gradual do ícone do WhatsApp refletindo a barra de progresso do balão */
+@keyframes whatsappIconFill {
+  0% {
+    clip-path: inset(100% 0 0 0);
+    filter: drop-shadow(0 0 0px rgba(52, 211, 153, 0));
+  }
+  30% {
+    filter: drop-shadow(0 0 3px rgba(52, 211, 153, 0.3));
+  }
+  100% {
+    clip-path: inset(0% 0 0 0);
+    filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.75));
+  }
+}
+
+/* Transição de cores sutil para usuários com preferência de movimento reduzido */
+@keyframes whatsappIconFadeReduced {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Efeito de elevação sutil no hover (apenas ponteiro fino) do balão */
+.whatsapp-bubble-interactive {
+  transition: transform var(--dur-hover) var(--ease-out),
+              border-color var(--dur-hover) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .whatsapp-bubble-interactive:hover {
+    transform: translateY(-2px);
+    border-color: rgba(129, 140, 248, 0.9);
+  }
+}
+
+.whatsapp-bubble-interactive:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-bubble-interactive:hover,
+  .whatsapp-bubble-interactive:active,
+  .whatsapp-bubble-interactive {
+    transform: none !important;
+  }
+}
+
+/* Efeito de pulso gradiente otimizado para GPU no botão flutuante e na bolinha de status */
+@keyframes pulseGradientButton {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45), 0 0 0 0 rgba(99, 102, 241, 0.55);
+  }
+  50% {
+    transform: scale(1.045) translateZ(0);
+    box-shadow: 0 8px 26px rgba(147, 51, 234, 0.6), 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+}
+
+@keyframes pulseGradientAura {
+  0%, 100% {
+    transform: scale(0.96) translateZ(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.22) translateZ(0);
+    opacity: 0.85;
+  }
+}
+
+@keyframes pulseGradientGreenDot {
+  0% {
+    transform: scale(1) translateZ(0);
+    opacity: 0.95;
+  }
+  70%, 100% {
+    transform: scale(2.4) translateZ(0);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGradientGreenGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5), 0 0 8px rgba(52, 211, 153, 0.85);
+  }
+}
+
+.animate-gradient-pulse-button {
+  backface-visibility: hidden;
+  animation: pulseGradientButton 2.8s ease-in-out infinite;
+}
+
+.animate-gradient-pulse-aura {
+  backface-visibility: hidden;
+  animation: pulseGradientAura 2.8s ease-in-out infinite;
+}
+
+.animate-gradient-dot-ping {
+  backface-visibility: hidden;
+  animation: pulseGradientGreenDot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-gradient-dot-glow {
+  backface-visibility: hidden;
+  animation: pulseGradientGreenGlow 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gradient-pulse-button,
+  .animate-gradient-pulse-aura,
+  .animate-gradient-dot-ping,
+  .animate-gradient-dot-glow {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Centralização de texto dos botões de ação (exceto botões com alinhamento explícito à esquerda) */
+button:not(.text-left):not([class*="text-left"]),
+a[role="button"]:not(.text-left):not([class*="text-left"]),
+.cta-primary,
+.cta-secondary,
+a.cta-primary,
+a.cta-secondary,
+button[type="button"]:not(.text-left):not([class*="text-left"]),
+button[type="submit"],
+button[type="reset"] {
+  text-align: center !important;
+}
+
+button:not(.text-left):not(.text-right):not([data-align="left"]):not([class*="text-left"]),
+a[role="button"]:not(.text-left):not([class*="text-left"]),
+.cta-primary,
+.cta-secondary,
+a.cta-primary,
+a.cta-secondary {
+  justify-content: center;
+  align-items: center;
+}
+
+button:not(.text-left):not([class*="text-left"]) > span:not(.text-left):not([class*="text-left"]),
+.cta-primary > span,
+.cta-secondary > span {
+  text-align: center;
+}
+
+/* Botões de CTA Principal - Gradiente Elétrico Cobalto & Azul com efeito Neon Glow Premium */
+.cta-primary {
+  background-image: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #6366f1 100%) !important;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(147, 197, 253, 0.5) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), 0 0 20px rgba(59, 130, 246, 0.35), 0 0 2px rgba(99, 102, 241, 0.3) !important;
+  letter-spacing: 0.015em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform var(--dur-press) var(--ease-out),
+              box-shadow var(--dur-hover) var(--ease-out),
+              border-color var(--dur-hover) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cta-primary:hover {
+    background-image: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4f46e5 100%) !important;
+    border-color: rgba(191, 219, 254, 0.9) !important;
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.6), 0 0 32px rgba(59, 130, 246, 0.7), 0 0 50px rgba(99, 102, 241, 0.45), 0 0 2px rgba(255, 255, 255, 0.6) !important;
+    transform: translateY(-2px);
+  }
+}
+
+.cta-primary:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.5), 0 0 36px rgba(59, 130, 246, 0.9), 0 0 54px rgba(99, 102, 241, 0.6) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-primary:hover,
+  .cta-primary:active {
+    transform: none !important;
+  }
+}
+
+/* Botões Verdes WhatsApp - Alta Legibilidade e Efeito Neon Glow Premium */
+a[href*="wa.me"],
+a[href*="whatsapp.com"],
+button[id*="whatsapp"],
+a[id*="whatsapp"] {
+  letter-spacing: 0.015em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Efeito neon premium em ícones interativos */
+@media (hover: hover) and (pointer: fine) {
+  button:hover > svg,
+  a:hover > svg {
+    filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.65));
+    transition: filter 0.25s ease;
+  }
+
+  a[href*="wa.me"]:hover > svg,
+  a[href*="whatsapp.com"]:hover > svg,
+  button[id*="whatsapp"]:hover > svg,
+  a[id*="whatsapp"]:hover > svg {
+    filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.85));
+  }
+}
+
+/* Rotação dinâmica do ícone dentro de #floating-whatsapp-btn (500ms ease-out exclusivamente no hover ou ao clicar) */
+#floating-whatsapp-btn svg {
+  transition: transform 500ms ease-out;
+  transform-origin: center center;
+}
+
+#floating-whatsapp-btn:active svg {
+  transform: rotate(360deg) scale(1.1);
+  transition: transform 500ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #floating-whatsapp-btn:hover svg {
+    transform: rotate(360deg) scale(1.1);
+    transition: transform 500ms ease-out;
+  }
+}
+
+/* Modo de Alto Contraste para acessibilidade visual */
+.high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.high-contrast header,
+.high-contrast footer,
+.high-contrast nav,
+.high-contrast section,
+.high-contrast main,
+.high-contrast article,
+.high-contrast aside,
+.high-contrast div[class*="bg-"] {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.high-contrast p,
+.high-contrast span,
+.high-contrast li,
+.high-contrast label {
+  color: #f1f5f9 !important;
+}
+
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast strong {
+  color: #ffffff !important;
+}
+
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500,
+.high-contrast .text-slate-300 {
+  color: #e2e8f0 !important;
+}
+
+.high-contrast button:not([class*="bg-"]):not([class*="cta-"]),
+.high-contrast a:not([class*="bg-"]):not([class*="cta-"]) {
+  color: #ffffff !important;
+}
+
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+.high-contrast input:focus,
+.high-contrast textarea:focus,
+.high-contrast select:focus {
+  outline: 3px solid #facc15 !important;
+  outline-offset: 2px !important;
+}
+
+/* ===== Espaçamento e contenção lateral de segurança ===== */
+.page-shell {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.page-x {
+  padding-left: 1rem; /* 16px (px-4) */
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .page-x {
+    padding-left: 1.25rem; /* 20px (px-5) */
+    padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .page-x {
+    padding-left: 1.5rem; /* 24px (px-6) */
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-x {
+    padding-left: 2rem; /* 32px (px-8) */
+    padding-right: 2rem;
+  }
+}
+
+@supports (padding: max(0px)) {
+  .page-x {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  @media (min-width: 640px) {
+    .page-x {
+      padding-left: max(1.25rem, env(safe-area-inset-left));
+      padding-right: max(1.25rem, env(safe-area-inset-right));
+    }
+  }
+  @media (min-width: 768px) {
+    .page-x {
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
+    }
+  }
+  @media (min-width: 1024px) {
+    .page-x {
+      padding-left: max(2rem, env(safe-area-inset-left));
+      padding-right: max(2rem, env(safe-area-inset-right));
+    }
+  }
+}
+
+/* ===== Revelações compartilhadas (Reveal / SplitLines) ===== */
+/* Entrada de blocos: apenas opacity + translateY (sem layout). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-y), 0);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out) var(--reveal-delay),
+    transform var(--dur-reveal) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Títulos com revelação linha a linha: cada palavra sobe de dentro da máscara. */
+.split-lines {
+  --stagger: 70ms;
+}
+
+.sl-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Evita cortar descidas (g, j, p) mantendo o alinhamento da linha. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.sl-inner {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+  opacity: 0;
+  transition:
+    transform var(--dur-reveal) var(--ease-out),
+    opacity var(--dur-reveal) var(--ease-out);
+  transition-delay: calc(var(--d, 0) * var(--stagger));
+}
+
+.split-lines.is-visible .sl-inner {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .sl-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Revelação em máscara (clip-path + opacity), uma vez por elemento. */
+.mask-reveal {
+  clip-path: inset(8% 8% 8% 8%);
+  opacity: 0;
+  transition:
+    clip-path var(--dur-reveal) var(--ease-out),
+    opacity var(--dur-reveal) var(--ease-out);
+}
+
+.mask-reveal.is-visible {
+  clip-path: inset(0% 0% 0% 0%);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mask-reveal {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}
+
+/* Tipografia e cores responsivas dos itens do Menu de Navegação:
+/* ============================================================
+   ITEM 1 & 2 — MENU EM TELA CHEIA (Home, Início, Portfólio, Serviços, Como funciona, Orçamento, FAQ & Contato)
+   Layout:
+   - Botão 'X' ACIMA da lista
+   - Logotipo ABAIXO da lista
+   - Espaçamento entre X/lista e lista/logotipo: no mínimo 2x o espaçamento entre links (--menu-outer-gap)
+   - Logotipo reduzido em 1/1,5 em todas as faixas
+   ============================================================ */
+
+/* Container do modal com adaptação para barras dinâmicas de navegadores mobile (100dvh/svh) */
+.nav-menu-modal-container {
+  min-height: 100dvh;
+  min-height: 100svh;
+  overscroll-behavior: contain;
+}
+
+/* --- Celular (< 768px): conjunto vertical proporcional com escala tipográfica fluida e coesa --- */
+.nav-menu-list-wrap {
+  width: 100%;
+  max-width: 92vw;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: clamp(0.2rem, 1dvh, 0.65rem);
+  padding-bottom: clamp(0.2rem, 1dvh, 0.65rem);
+  box-sizing: border-box;
+  /* Escala tipográfica fluida ancorada dinamicamente na altura e largura para eliminar transbordamento */
+  --menu-font-size: clamp(0.9375rem, min(3.2dvh, 4.2vw), 1.35rem);
+  --menu-line-height: clamp(1.15, calc(1 + 0.3dvh), 1.25);
+  --menu-link-gap: clamp(0.25rem, min(1.25dvh, 1.25vh), 0.7rem);
+  --menu-outer-gap: calc(var(--menu-link-gap) * 2.2); /* no mínimo 2x o espaçamento entre links */
+}
+
+/* Lista de links centralizada em cascata */
+.nav-menu-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--menu-link-gap);
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  width: 100%;
+}
+
+.nav-menu-link-item {
+  padding: clamp(0.15rem, 0.6dvh, 0.38rem) clamp(0.75rem, 2.5vw, 1.25rem);
+  color: #e2e8f0;
+  transition: color 280ms cubic-bezier(0.23, 1, 0.32, 1),
+              filter 280ms cubic-bezier(0.23, 1, 0.32, 1),
+              transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nav-menu-link-item:focus-visible,
+.nav-menu-link-item:active {
+  color: #818cf8;
+  filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.65));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-menu-link-item:hover {
+    color: #818cf8;
+    filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.65));
+  }
+}
+
+.nav-menu-link-item.is-active {
+  color: #818cf8;
+  font-weight: 700;
+  filter: drop-shadow(0 0 16px rgba(129, 140, 248, 0.85));
+}
+
+.nav-menu-link-text {
+  font-size: var(--menu-font-size, clamp(0.9375rem, min(3.2dvh, 4.2vw), 1.35rem));
+  line-height: var(--menu-line-height, clamp(1.15, 2.2dvh, 1.25));
+  letter-spacing: clamp(-0.02em, 0.04vw, -0.01em);
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Logotipo centralizado no pé da página */
+.nav-menu-logo-wrap {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding-bottom: clamp(0.5rem, 2dvh, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Logotipo aumentado em 3px adicionais (anterior +6px, total +9px) */
+.nav-menu-logo-img {
+  height: calc(clamp(1.23rem, 2.9vh, 1.56rem) + 9px);
+  width: auto;
+  object-fit: contain;
+}
+
+/* Proteção específica para celulares com altura severamente restrita em modo retrato (telas <= 600px) */
+@media (max-height: 600px) and (orientation: portrait) {
+  .nav-menu-list-wrap {
+    --menu-font-size: clamp(0.875rem, 3dvh, 1.1rem);
+    --menu-line-height: 1.18;
+    --menu-link-gap: clamp(0.2rem, 1dvh, 0.42rem);
+    --menu-outer-gap: calc(var(--menu-link-gap) * 2.1);
+    padding-top: 0.15rem !important;
+    padding-bottom: 0.15rem !important;
+  }
+
+  .nav-menu-link-item {
+    padding-top: clamp(0.08rem, 0.4dvh, 0.2rem) !important;
+    padding-bottom: clamp(0.08rem, 0.4dvh, 0.2rem) !important;
+    min-height: clamp(28px, 4.8dvh, 34px) !important;
+  }
+}
+
+/* --- Tablet (768px a 1279px): conjunto proporcional com clamp sensível à altura restrita --- */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .nav-menu-list-wrap {
+    max-width: min(90vw, 42rem);
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-top: clamp(0.35rem, 1.2vh, 1rem);
+    padding-bottom: clamp(0.35rem, 1.2vh, 1rem);
+    --menu-font-size: clamp(1.2rem, min(3vh, 2.6vw), 1.85rem);
+    --menu-line-height: clamp(1.2, 2.4vh, 1.35);
+    --menu-link-gap: clamp(0.5rem, 1.6vh, 1.15rem);
+    --menu-outer-gap: calc(var(--menu-link-gap) * 2.2);
+  }
+
+  .nav-menu-list {
+    gap: var(--menu-link-gap);
+  }
+
+  .nav-menu-link-item {
+    padding: clamp(0.28rem, 0.8vh, 0.55rem) clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .nav-menu-link-text {
+    font-size: var(--menu-font-size, clamp(1.25rem, min(3.2vh, 2.8vw), 2rem));
+    line-height: clamp(1.25, 2.5vh, 1.35);
+  }
+
+  .nav-menu-logo-wrap {
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-bottom: clamp(0.75rem, 2.5vh, 2rem);
+  }
+
+  /* Logotipo aumentado em 3px adicionais (+9px total) */
+  .nav-menu-logo-img {
+    height: calc(clamp(1.67rem, 3.2vh, 2.17rem) + 9px);
+  }
+}
+
+/* --- Desktop (>= 1280px): tamanho de referência preservado, logo / 1.5 e X no topo --- */
+@media (min-width: 1280px) {
+  .nav-menu-list-wrap {
+    max-width: 32rem; /* max-w-lg */
+    margin-top: auto;
+    margin-bottom: auto;
+    --menu-font-size: 18px;
+    --menu-link-gap: 0.625rem; /* 10px */
+    --menu-outer-gap: calc(var(--menu-link-gap) * 2.2); /* 22px (>= 2x do gap entre links) */
+  }
+
+  .nav-menu-list {
+    gap: var(--menu-link-gap);
+  }
+
+  .nav-menu-link-item {
+    padding: 0.375rem 1rem;
+  }
+
+  .nav-menu-link-text {
+    font-size: 18px; /* tamanho exato de referência */
+    line-height: 1.5;
+  }
+
+  .nav-menu-logo-wrap {
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-bottom: 1.5rem;
+  }
+
+  /* Logotipo aumentado em 3px adicionais (+9px total) */
+  .nav-menu-logo-img {
+    height: calc(1.333rem + 9px);
+  }
+}
+
+/* ============================================================
+   ITEM 3 — CELULAR NA HORIZONTAL (Modo Paisagem com altura <= 500px)
+   Identificado exclusivamente por ALTURA para evitar conflito com tablets
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 500px) {
+  .nav-menu-modal-container {
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    justify-content: center !important;
+  }
+
+  .nav-menu-list-wrap {
+    max-width: min(92vw, 36rem) !important;
+    padding-top: 0.15rem !important;
+    padding-bottom: 0.15rem !important;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+    --menu-font-size: clamp(0.925rem, calc(0.55rem + 2vh), 1.15rem);
+    --menu-line-height: clamp(1.2, calc(1.1 + 0.3vh), 1.3);
+    --menu-link-gap: clamp(0.25rem, 1.2vh, 0.5rem);
+    --menu-outer-gap: calc(var(--menu-link-gap) * 2.2);
+  }
+
+  /* 2. Lista de links em DUAS COLUNAS para legibilidade, área de toque e altura perfeita sem rolagem */
+  .nav-menu-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: 1.25rem !important;
+    row-gap: var(--menu-link-gap) !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    width: 100% !important;
+    max-width: 32rem !important;
+  }
+
+  /* Grade equilibrada de 8 itens em 2 colunas */
+  .nav-menu-list-item {
+    grid-column: span 1 !important;
+  }
+
+  .nav-menu-link-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-top: clamp(0.2rem, 1vh, 0.35rem) !important;
+    padding-bottom: clamp(0.2rem, 1vh, 0.35rem) !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    min-height: clamp(36px, calc(28px + 2vh), 40px) !important;
+  }
+
+  .nav-menu-link-text {
+    font-size: var(--menu-font-size, clamp(0.925rem, calc(0.55rem + 2vh), 1.15rem)) !important;
+    line-height: var(--menu-line-height, 1.25) !important;
+    letter-spacing: -0.015em;
+  }
+
+  /* Logotipo centralizado no pé da página */
+  .nav-menu-logo-wrap {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0.35rem !important;
+  }
+
+  .nav-menu-logo-img {
+    height: calc(0.9rem + 9px) !important;
+  }
+}
+
+/* Otimização refinada de clamp() e área de toque consistente para celulares em modo paisagem com altura entre 350px e 500px */
+@media (orientation: landscape) and (min-height: 350px) and (max-height: 500px) {
+  .nav-menu-list-wrap {
+    --menu-font-size: clamp(0.95rem, calc(0.55rem + 2vh), 1.15rem);
+    --menu-line-height: 1.25;
+    --menu-link-gap: clamp(0.28rem, 1.2vh, 0.48rem);
+    --menu-outer-gap: calc(var(--menu-link-gap) * 2.2);
+  }
+
+  .nav-menu-link-item {
+    min-height: clamp(36px, calc(28px + 2vh), 40px) !important;
+    padding-top: clamp(0.22rem, 0.9vh, 0.36rem) !important;
+    padding-bottom: clamp(0.22rem, 0.9vh, 0.36rem) !important;
+    padding-left: clamp(0.6rem, 2vw, 1rem) !important;
+    padding-right: clamp(0.6rem, 2vw, 1rem) !important;
+  }
+
+  .nav-menu-link-text {
+    font-size: var(--menu-font-size, clamp(0.95rem, calc(0.55rem + 2vh), 1.15rem)) !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* ============================================================
+   ITEM 2 — LOGOTIPO DA PÁGINA INICIAL (HERO)
+   Tamanhos base no código original e multiplicadores exatos:
+   - Celular (< 768px): base h-6 (24px) -> Multiplicador 3x = 72px
+   - Tablet (768px a 1279px): base md:h-8 (32px) -> Multiplicador 3,5x = 112px
+   - Desktop (>= 1280px): base md:h-8 (32px) -> Multiplicador 5x = 160px
+   ============================================================ */
+
+/* Celular (< 768px): reduzido em 8px (72px -> 64px) */
+.hero-home-logo {
+  height: 64px;
+  width: auto;
+  max-width: min(85vw, 320px);
+  max-height: 18vh;
+  object-fit: contain;
+  /* Glow minimalista e refinado alinhado às cores do logo e botão de menu (roxo e índigo) */
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.22)) drop-shadow(0 0 22px rgba(99, 102, 241, 0.15));
+  transition: filter 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .hero-home-logo {
+    filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.35)) drop-shadow(0 0 28px rgba(99, 102, 241, 0.22));
+  }
+}
+
+/* Tablet (768px a 1279px): reduzido em 8px (112px -> 104px) */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .hero-home-logo {
+    height: 104px;
+    max-width: min(80vw, 520px);
+    max-height: 22vh;
+  }
+}
+
+/* Desktop (>= 1280px): reduzido em 8px (160px -> 152px) */
+@media (min-width: 1280px) {
+  .hero-home-logo {
+    height: 152px;
+    max-width: min(70vw, 680px);
+    max-height: 28vh;
+  }
+}
+
+/* Celulares pequenos ou no modo paisagem (pouca altura): reduzido em 8px */
+@media (max-height: 540px) {
+  .hero-home-logo {
+    height: clamp(32px, 16vh, 52px);
+    max-width: 75vw;
+  }
+}
+
+/* ===== P3: interações de cartões e botões ===== */
+
+/* Feedback de pressão (usado por Faq, ProjectBriefBooking, ContactCta).
+   Só transform, então não há layout/paint caro. */
+.pressable {
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable:active {
+    transform: none;
+  }
+}
+
+
+
+/* Borda em gradiente girando lentamente — só um cartão em destaque, tier full.
+   Usa máscara para manter apenas o anel de 1px (não cobre o conteúdo). */
+.featured-border {
+  position: relative;
+}
+
+.featured-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  opacity: 0;
+  background: conic-gradient(
+    from var(--fb-angle, 0deg),
+    rgba(52, 211, 153, 0) 0deg,
+    rgba(52, 211, 153, 0.85) 90deg,
+    rgba(99, 102, 241, 0.7) 180deg,
+    rgba(52, 211, 153, 0) 310deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.motion-full .featured-border::before {
+    opacity: 1;
+  }
+}
+
+@property --fb-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.motion-full .featured-border::before {
+    animation: featured-spin 10s linear infinite;
+  }
+}
+
+.featured-border.is-paused::before {
+  animation-play-state: paused;
+}
+
+@keyframes featured-spin {
+  to {
+    --fb-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-border::before {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Faixa de nichos com deslocamento contínuo horizontal da direita para a esquerda - exatamente 85s linear infinite */
+@keyframes niche-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@-webkit-keyframes niche-marquee {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.niche-marquee {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  will-change: transform;
+  contain: content;
+  touch-action: pan-y;
+  animation-name: niche-marquee;
+  animation-duration: 48s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: niche-marquee;
+  -webkit-animation-duration: 48s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.niche-marquee:hover,
+.audience-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Suporte de compatibilidade para a classe audience-marquee */
+.audience-marquee {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  will-change: transform;
+  contain: content;
+  touch-action: pan-y;
+  animation-name: niche-marquee;
+  animation-duration: 48s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: niche-marquee;
+  -webkit-animation-duration: 48s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+/* Badge estilizado, chamativo e atraente visualmente do banner de nichos */
+.audience-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(11, 16, 29, 0.97) 50%, rgba(30, 27, 75, 0.45) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.28s ease,
+              box-shadow 0.28s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  contain: content;
+  touch-action: pan-y;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .audience-pill:hover {
+    transform: translateY(-2px);
+    border-color: rgba(165, 180, 252, 0.6);
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.35),
+                0 0 18px -2px rgba(129, 140, 248, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .niche-marquee,
+  .audience-marquee {
+    animation: none !important;
+    -webkit-animation: none !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    overflow-x: auto;
+  }
+}
+
+/* View Transitions API: crossfade entre telas (fallback = transição suave atual). */
+::view-transition-old(root) {
+  animation: vt-fade-out var(--dur-screen) var(--ease) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in var(--dur-screen) var(--ease) both;
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
+/* ===== Fundo estático azul marinho (#080D1A) com grade tecnológica sutil ===== */
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: #080D1A;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center top;
+  color: #f1f5f9;
+}
+
+
+
+
+/* ===== Compatibilidade de viewport e preferências de movimento ===== */
+/* 100dvh evita o "salto" da barra de endereço em navegadores móveis. */
+.hero-home-viewport {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.min-h-screen-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===== Gating de backdrop-filter por capacidade do dispositivo ===== */
+/* Sem tier "full" (ou dentro de navegador in-app), remove o custo de blur em toda a árvore. */
+html[data-motion-tier="none"] *,
+html[data-in-app="true"] * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Tier "lite": manter blur apenas em elementos pequenos; desligar em camadas grandes/tela cheia. */
+html[data-motion-tier="lite"] :where(
+  header[class*="backdrop-blur"],
+  footer[class*="backdrop-blur"],
+  section[class*="backdrop-blur"],
+  .section-auto-contain[class*="backdrop-blur"],
+  .nav-menu-modal-container,
+  [class*="backdrop-blur"].fixed.inset-0,
+  .glass-panel[class*="backdrop-blur"]
+) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Fallback de contraste quando o blur é removido em superfícies translúcidas. */
+html[data-motion-tier="none"] .nav-menu-modal-container,
+html[data-in-app="true"] .nav-menu-modal-container {
+  background-color: rgba(0, 0, 0, 0.84);
+}
+
+html[data-motion-tier="none"] .glass-panel[class*="backdrop-blur"],
+html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
+  background-color: rgba(11, 16, 29, 0.94);
+}
+
+/* Efeito de rolagem contínua para InfiniteMarquee */
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.333333%, 0, 0);
+  }
+}
+
+/* 3D Breakout layers e perspectiva cinematográfica com refinamento para tablets e mobile */
+.breakout-perspective {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.breakout-layer-front {
+  transform: translateZ(36px);
+}
+
+.breakout-layer-back {
+  transform: translateZ(-20px);
+}
+
+/* Breakpoints refinados para tablets pequenos (evita estouro horizontal de layout) */
+@media (max-width: 1024px) {
+  .breakout-perspective {
+    perspective: 800px;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  .breakout-layer-front {
+    transform: translateZ(16px);
+  }
+  .breakout-layer-back {
+    transform: translateZ(-8px);
+  }
+}
+
+@media (max-width: 768px) {
+  .breakout-perspective {
+    perspective: none;
+    transform: none !important;
+  }
+  .breakout-layer-front,
+  .breakout-layer-back {
+    transform: none !important;
+  }
+}
+
+/* Trilha de brilho e borda animada com conic gradient */
+.glow-border-animated {
+  position: relative;
+}
+
+.glow-border-animated::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 0deg,
+    rgba(6, 182, 212, 0.7) 120deg,
+    rgba(99, 102, 241, 0.8) 220deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: borderRotate 6s linear infinite;
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes borderRotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-border-animated::before {
+    animation: none !important;
+  }
+}
+
+/* ===== Rolagem Vertical Ancorada e Fluida (CSS Scroll Snap) ===== */
+/* Containers de listas de cards com rolagem vertical ancorada e fluida */
+.scroll-snap-y-container,
+.card-list-container,
+.service-list,
+.portfolio-list,
+.differentials-list,
+.process-list,
+.benefits-list,
+.faq-list {
+  scroll-snap-type: y mandatory;
+  -webkit-scroll-snap-type: y mandatory;
+  scroll-padding-top: clamp(4.5rem, 12vh, 6.5rem);
+}
+
+/* Cards individuais com alinhamento ao topo ancorado */
+.scroll-snap-card,
+.card-snap-item,
+.service-card,
+.portfolio-card,
+.differential-card,
+.process-card,
+.benefit-card,
+.interactive-3d-card-root {
+  scroll-snap-align: start;
+  -webkit-scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  scroll-margin-top: clamp(4.5rem, 12vh, 6.5rem);
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+}
+
+

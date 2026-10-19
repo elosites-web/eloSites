@@ -1,0 +1,20 @@
+# Hashed build assets (JS/CSS) never change for a given filename.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Stable image/document URLs: medium cache, always revalidated after it expires.
+/*.webp
+  Cache-Control: public, max-age=604800
+
+/*.png
+  Cache-Control: public, max-age=604800
+
+/*.ico
+  Cache-Control: public, max-age=604800
+
+# The HTML entry point must be revalidated so new asset hashes are picked up.
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate

@@ -1,0 +1,6 @@
+{
+  "name": "ēloSites",
+  "description": "Estúdio digital especializado em sites institucionais e landing pages de alta conversão para profissionais liberais e pequenos negócios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
