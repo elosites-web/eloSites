@@ -253,7 +253,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-white/[0.08] text-indigo-300 text-xs sm:text-sm font-semibold uppercase">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Formatos de Serviços & Condições Comerciais</span>
+              <span>Serviços & Condições Comerciais</span>
             </div>
             <SplitLines
               as="h2"
@@ -265,13 +265,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             </p>
           </div>
 
-          {/* Grid dos 3 Serviços com transição de entrada dinâmica e fluida ao rolar — Subgrid no desktop para alinhamento uniforme das linhas e seções */}
+          {/* Grid dos 3 Serviços */}
           <div
-            className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 min-w-0 items-stretch lg:grid-rows-[repeat(5,auto)] service-list scroll-perf-list scroll-snap-y-container card-list-container p-0.5 overflow-visible"
-            style={{
-              scrollSnapType: 'y mandatory',
-              scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-            }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 min-w-0 items-stretch lg:grid-rows-[repeat(5,auto)] service-list p-0.5 overflow-visible"
           >
             {SERVICES.map((service, index) => {
               const Icon = service.icon;
@@ -282,12 +278,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   key={service.id}
                   direction={index === 0 ? 'left' : index === 1 ? 'right' : 'up'}
                   index={index}
-                  className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid scroll-snap-card card-snap-item"
-                  style={{
-                    scrollSnapAlign: 'start',
-                    scrollSnapStop: 'normal',
-                    scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                  }}
+                  className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid"
                 >
                   <Interactive3DCard maxTilt={5} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid">
                     <article

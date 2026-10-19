@@ -20,6 +20,8 @@ import {
 import { Interactive3DCard } from './Interactive3DCard';
 import { InfiniteMarquee } from './InfiniteMarquee';
 import { BiReveal } from './BiReveal';
+import { FluidRippleBackground } from './FluidRippleBackground';
+import { TypewriterSlogan } from './TypewriterSlogan';
 
 interface HeroProps {
   mode?: 'home' | 'inicio' | 'all';
@@ -92,12 +94,15 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <div className="w-full bg-[#050814]">
-      {/* 1. TELA HOME: Apenas a logo flutuante da ēloSites centralizada sobre o fundo obsidian */}
+      {/* 1. TELA HOME: Apenas a logo flutuante da ēloSites centralizada sobre o fundo de espaço-tempo com grade azul distorcida */}
       {(mode === 'home' || mode === 'all') && (
         <section
           id="home"
-          className="hero-home-viewport min-h-[580px] w-full flex flex-col items-center justify-center relative select-none px-4 overflow-hidden pointer-events-none"
+          className="hero-home-viewport min-h-[320px] sm:min-h-[460px] md:min-h-[560px] h-[100dvh] w-full flex flex-col items-center justify-center relative select-none px-4 overflow-hidden pointer-events-none"
         >
+          {/* Fundo de grade azul de espaço-tempo com distorção contínua (exatamente igual ao fundo do menu aberto) */}
+          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-75 pointer-events-none" />
+
           {/* Halos luminosos elétricos inspirados na og-image.png */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none" />
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[250px] bg-indigo-600/20 blur-[100px] rounded-full pointer-events-none" />
@@ -152,9 +157,6 @@ export const Hero: React.FC<HeroProps> = ({
                     height={337}
                     className="hero-home-logo w-auto object-contain relative z-10 drop-shadow-[0_0_35px_rgba(59,130,246,0.35)]"
                   />
-                  <span className="mt-3 text-xs sm:text-sm font-semibold tracking-wider text-blue-300/80 group-hover:text-blue-200 transition-colors uppercase font-mono">
-                    Toque para explorar &darr;
-                  </span>
                 </a>
               </motion.div>
             )}
@@ -192,14 +194,9 @@ export const Hero: React.FC<HeroProps> = ({
                   </div>
                 </BiReveal>
 
-                {/* Headline Oficial extraída exatamente da og-image.png */}
+                {/* Headline Oficial com efeito Typewriter dinâmico */}
                 <BiReveal direction="left" delay={120}>
-                  <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-white leading-[1.1] text-balance">
-                    Tecnologia que transforma{' '}
-                    <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(59,130,246,0.4)]">
-                      ideias em sites.
-                    </span>
-                  </h1>
+                  <TypewriterSlogan mode={mode} />
                 </BiReveal>
 
                 {/* Subtítulo Oficial extraído exatamente da og-image.png */}
@@ -528,8 +525,73 @@ export const Hero: React.FC<HeroProps> = ({
 
             </div>
 
-            {/* FAIXA MARQUEE DE TECNOLOGIAS E CERTIFICAÇÕES */}
+            {/* BANNER DESLIZANTE DA DIREITA PARA A ESQUERDA EM 85S DOS NICHOS */}
             <div className="mt-14 pt-8 border-t border-blue-500/15">
+              <div className="text-center mb-4">
+                <span className="text-[11px] sm:text-xs font-mono uppercase tracking-widest text-blue-300/80">
+                  Sites de alta conversão sob medida para o seu nicho de atuação
+                </span>
+              </div>
+              <div
+                className="relative overflow-hidden select-none py-2 group"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+                }}
+              >
+                <div
+                  className="niche-marquee flex items-center gap-4 whitespace-nowrap"
+                  style={{ animationDuration: '85s' }}
+                >
+                  {[
+                    { text: 'Barbearias & Barbeiros', icon: '💈', badge: 'Alta Conversão' },
+                    { text: 'Salões de Beleza & Cabeleireiros', icon: '💇‍♀️', badge: 'Estética' },
+                    { text: 'Personal Trainers & Consultoria Fitness', icon: '🏋️‍♂️', badge: 'Treinos' },
+                    { text: 'Clínicas de Estética & Biomédicas', icon: '✨', badge: 'Procedimentos' },
+                    { text: 'Manicures & Nail Designers', icon: '💅', badge: 'Agendamentos' },
+                    { text: 'Nutricionistas & Saúde Integrativa', icon: '🥗', badge: 'Consultas' },
+                    { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: '🧠', badge: 'Acolhimento' },
+                    { text: 'Estúdios de Tatuagem & Piercing', icon: '🖋️', badge: 'Galeria' },
+                    { text: 'Segurança & Portaria Privada', icon: '🛡️', badge: 'Corporativo' },
+                    { text: 'Empresas de Limpeza & Conservação', icon: '🧹', badge: 'Serviços' },
+                    { text: 'Arquitetura & Design de Interiores', icon: '📐', badge: 'Portfólio' },
+                    { text: 'Professores & Cursos Particulares', icon: '📚', badge: 'Aulas' },
+                    { text: 'Advogados & Escritórios de Advocacia', icon: '⚖️', badge: 'Autoridade' },
+                    { text: 'Estética Automotiva & Detalhamento', icon: '🚗', badge: 'Local' },
+                    { text: 'Clínicas Médicas & Odontológicas', icon: '🩺', badge: 'Saúde' },
+                    { text: 'Fisioterapia & Reabilitação', icon: '🌿', badge: 'Bem-Estar' },
+                    // Duplicado para loop infinito 100% contínuo
+                    { text: 'Barbearias & Barbeiros', icon: '💈', badge: 'Alta Conversão' },
+                    { text: 'Salões de Beleza & Cabeleireiros', icon: '💇‍♀️', badge: 'Estética' },
+                    { text: 'Personal Trainers & Consultoria Fitness', icon: '🏋️‍♂️', badge: 'Treinos' },
+                    { text: 'Clínicas de Estética & Biomédicas', icon: '✨', badge: 'Procedimentos' },
+                    { text: 'Manicures & Nail Designers', icon: '💅', badge: 'Agendamentos' },
+                    { text: 'Nutricionistas & Saúde Integrativa', icon: '🥗', badge: 'Consultas' },
+                    { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: '🧠', badge: 'Acolhimento' },
+                    { text: 'Estúdios de Tatuagem & Piercing', icon: '🖋️', badge: 'Galeria' },
+                    { text: 'Segurança & Portaria Privada', icon: '🛡️', badge: 'Corporativo' },
+                    { text: 'Empresas de Limpeza & Conservação', icon: '🧹', badge: 'Serviços' },
+                    { text: 'Arquitetura & Design de Interiores', icon: '📐', badge: 'Portfólio' },
+                    { text: 'Professores & Cursos Particulares', icon: '📚', badge: 'Aulas' },
+                    { text: 'Advogados & Escritórios de Advocacia', icon: '⚖️', badge: 'Autoridade' },
+                    { text: 'Estética Automotiva & Detalhamento', icon: '🚗', badge: 'Local' },
+                    { text: 'Clínicas Médicas & Odontológicas', icon: '🩺', badge: 'Saúde' },
+                    { text: 'Fisioterapia & Reabilitação', icon: '🌿', badge: 'Bem-Estar' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="audience-pill cursor-default">
+                      <span className="text-base sm:text-lg shrink-0">{item.icon}</span>
+                      <span className="text-xs sm:text-sm font-semibold text-slate-100">{item.text}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-300 border border-blue-500/30 font-mono font-medium">
+                        {item.badge}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* FAIXA MARQUEE DE TECNOLOGIAS E CERTIFICAÇÕES */}
+            <div className="mt-8 pt-6 border-t border-blue-500/10">
               <InfiniteMarquee
                 items={[
                   { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5" />, badge: 'Core' },

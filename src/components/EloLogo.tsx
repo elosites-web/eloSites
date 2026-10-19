@@ -3,11 +3,12 @@ import { useLogoTaglineWidth } from './useLogoTaglineWidth';
 
 interface EloLogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'menu';
   showTagline?: boolean;
   taglineClassName?: string;
   onClick?: () => void;
   isFooter?: boolean;
+  buttonClassName?: string;
 }
 
 export const EloLogo: React.FC<EloLogoProps> = ({
@@ -17,12 +18,20 @@ export const EloLogo: React.FC<EloLogoProps> = ({
   taglineClassName = '',
   onClick,
   isFooter = false,
+  buttonClassName,
 }) => {
-  const heights = { sm: 'h-6', md: 'h-8', lg: 'h-10' }[size];
+  const heights = {
+    sm: 'h-6',
+    md: 'h-8',
+    lg: 'h-10',
+    menu: 'nav-menu-logo-img',
+  }[size];
+
   const taglineSizes = {
     sm: 'text-[7px] min-[360px]:text-[7.5px]',
     md: 'text-[7.5px] min-[380px]:text-[8.5px]',
     lg: 'text-[9px] min-[380px]:text-[10px]',
+    menu: 'text-[6.5px] min-[360px]:text-[7px] sm:text-[7.5px] md:text-[8px] tracking-[0.08em] sm:tracking-[0.11em]',
   }[size];
 
   const { logoRef, logoWidth, handleImageLoad } = useLogoTaglineWidth<HTMLImageElement>();
@@ -53,7 +62,10 @@ export const EloLogo: React.FC<EloLogoProps> = ({
         <button
           type="button"
           onClick={onClick}
-          className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center shrink-0 cursor-pointer"
+          className={
+            buttonClassName ||
+            'group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center shrink-0 cursor-pointer'
+          }
           aria-label="ēloSites — Ir para a Página Inicial (Home)"
         >
           {footerContent}
@@ -62,6 +74,9 @@ export const EloLogo: React.FC<EloLogoProps> = ({
     }
     return footerContent;
   }
+
+  const isMenu = size === 'menu';
+  const effectiveTaglineWidth = logoWidth ? logoWidth + 2 : undefined;
 
   const imgElement = (
     <img
@@ -72,22 +87,28 @@ export const EloLogo: React.FC<EloLogoProps> = ({
       height={337}
       fetchPriority="high"
       onLoad={handleImageLoad}
-      className={`${heights} w-auto shrink-0 object-contain ${className}`}
+      className={`${heights} w-auto shrink-0 object-contain ${
+        isMenu ? 'drop-shadow-[0_0_24px_rgba(59,130,246,0.45)]' : ''
+      } ${className}`}
     />
   );
 
   const content = showTagline ? (
-    <div className="inline-flex flex-col items-center leading-tight">
+    <div className="inline-flex flex-col items-center leading-tight overflow-visible">
       {imgElement}
       <div
         style={{
-          width: logoWidth ? `${logoWidth}px` : undefined,
-          maxWidth: logoWidth ? `${logoWidth}px` : '100%',
+          width: effectiveTaglineWidth ? `${effectiveTaglineWidth}px` : undefined,
+          minWidth: effectiveTaglineWidth ? `${effectiveTaglineWidth}px` : 'auto',
         }}
-        className="flex flex-col items-center justify-center text-center overflow-hidden"
+        className="flex flex-col items-center justify-center text-center overflow-visible mt-1"
       >
         <span
-          className={`w-full text-center font-semibold uppercase text-slate-400 select-none tracking-wider mt-0.5 leading-tight ${taglineSizes} ${taglineClassName}`}
+          className={`inline-block w-max max-w-none text-center font-bold uppercase select-none whitespace-nowrap leading-none ${
+            isMenu
+              ? 'bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#38bdf8] bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(129,140,248,0.45)]'
+              : 'text-slate-300'
+          } ${taglineSizes} ${taglineClassName}`}
         >
           O melhor site pelo melhor preço
         </span>
@@ -98,11 +119,15 @@ export const EloLogo: React.FC<EloLogoProps> = ({
   );
 
   if (onClick) {
+    const defaultBtnClass = isMenu
+      ? 'group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg p-1.5 transition-transform hover:scale-105 active:scale-95 cursor-pointer flex flex-col items-center justify-center'
+      : 'group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center shrink-0 cursor-pointer';
+
     return (
       <button
         type="button"
         onClick={onClick}
-        className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center shrink-0 cursor-pointer"
+        className={buttonClassName || defaultBtnClass}
         aria-label="ēloSites — Ir para a Página Inicial (Home)"
       >
         {content}

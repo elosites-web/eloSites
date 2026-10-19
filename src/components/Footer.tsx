@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { EloLogo } from './EloLogo';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { FluidRippleBackground } from './FluidRippleBackground';
 import { NAVIGATION_ITEMS, SITE_CONFIG, whatsappUrl } from '../types';
 import { Mail, ArrowUp } from 'lucide-react';
 
@@ -10,7 +11,7 @@ import { ScreenId } from '../types';
 interface FooterProps {
   onOpenPrivacy: () => void;
   onOpenTerms: () => void;
-  onSelectScreen?: (screen: ScreenId) => void;
+  onSelectScreen?: (screenId: ScreenId) => void;
   currentScreen?: ScreenId;
   isWhatsAppBubbleOpen?: boolean;
 }
@@ -60,8 +61,11 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="bg-[#050814]/95 backdrop-blur-[4px] border-t border-blue-500/20 text-slate-400 text-sm pb-[3px]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
+    <footer className="relative bg-[#050814] border-t border-blue-500/20 text-slate-400 text-sm pb-[3px] overflow-hidden">
+      {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua */}
+      <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-40 pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           {/* Marca e Posicionamento */}
           <div className="md:col-span-5 space-y-4">
@@ -102,17 +106,18 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Links Rápidos */}
+          {/* Links Rápidos com efeito de textos flutuantes */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-200">
               Navegação
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
-              {NAVIGATION_ITEMS.map((item) => {
+              {NAVIGATION_ITEMS.map((item, index) => {
                 const getScreenFromHref = (href: string): ScreenId => {
                   if (href === '#home') return 'home';
-                  if (href.includes('portfolio')) return 'portfolio';
                   if (href.includes('servico')) return 'servicos';
+                  if (href.includes('portfolio')) return 'portfolio';
+                  if (href.includes('avaliacao') || href.includes('depoimento') || href.includes('testemunho')) return 'avaliacoes';
                   if (href.includes('processo') || href.includes('como-funciona') || href.includes('diferencia')) return 'processo';
                   if (href.includes('briefing') || href.includes('orcamento')) return 'orcamento';
                   if (href.includes('parceria') || href.includes('trafego')) return 'parceria-trafego';
@@ -125,7 +130,34 @@ export const Footer: React.FC<FooterProps> = ({
                 const isActive = currentScreen === screenId;
 
                 return (
-                  <li key={`footer-${item.id}`}>
+                  <motion.li
+                    key={`footer-${item.id}`}
+                    animate={{
+                      y: [-2.5, 2.5, -2.5],
+                      x: [1.2, -1.2, 1.2],
+                      rotate: [-0.18, 0.18, -0.18],
+                    }}
+                    transition={{
+                      y: {
+                        duration: 6.2 + (index % 3) * 0.7,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.12,
+                      },
+                      x: {
+                        duration: 7.0 + (index % 2) * 0.8,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.12,
+                      },
+                      rotate: {
+                        duration: 7.8,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.1,
+                      },
+                    }}
+                  >
                     <button
                       type="button"
                       onClick={() => {
@@ -151,7 +183,7 @@ export const Footer: React.FC<FooterProps> = ({
                       )}
                       <span className="transition-transform duration-200">{item.label}</span>
                     </button>
-                  </li>
+                  </motion.li>
                 );
               })}
             </ul>

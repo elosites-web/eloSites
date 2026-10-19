@@ -489,13 +489,9 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             </div>
           </div>
 
-          {/* Grade de Projetos Reais — Espaçamento entre cards reduzido em exatamente 50% (de gap-6/sm:gap-8 para gap-3/sm:gap-4) */}
+          {/* Grade de Projetos Reais */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch lg:grid-rows-[repeat(8,auto)] portfolio-list scroll-perf-list scroll-snap-y-container card-list-container"
-            style={{
-              scrollSnapType: 'y mandatory',
-              scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch lg:grid-rows-[repeat(8,auto)] portfolio-list"
           >
             {filteredProjects.map((project, index) => {
               const isOddLastOnTwoCols =
@@ -505,16 +501,11 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   key={project.id}
                   direction={index % 2 === 0 ? 'left' : 'right'}
                   index={index}
-                  className={`h-full lg:row-span-8 lg:grid lg:grid-rows-subgrid scroll-snap-card card-snap-item ${
+                  className={`h-full lg:row-span-8 lg:grid lg:grid-rows-subgrid ${
                     isOddLastOnTwoCols
                       ? 'md:col-span-2 md:w-[calc(50%-0.5rem)] md:mx-auto lg:col-span-1 lg:w-full lg:mx-0'
                       : ''
                   }`}
-                  style={{
-                    scrollSnapAlign: 'start',
-                    scrollSnapStop: 'normal',
-                    scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                  }}
                 >
                   <Interactive3DCard maxTilt={5} className="h-full w-full">
                     <ProjectCard

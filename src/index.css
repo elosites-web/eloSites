@@ -135,7 +135,7 @@ summary,
   touch-action: manipulation;
 }
 
-/* Garante rolagem vertical nativa livre com overscroll-behavior-y: contain em todos os cards e containers */
+/* Garante rolagem vertical nativa livre e fluida sem retenção indesejada de overscroll */
 .glass-card-interactive,
 .surface-card,
 .portfolio-card,
@@ -143,22 +143,23 @@ summary,
 .interactive-3d-card-root,
 .card-solid,
 .scroll-perf-card,
-article,
+article {
+  touch-action: pan-y !important;
+  overscroll-behavior-y: auto !important;
+}
+
 .nav-menu-modal-container,
-[role="dialog"],
-.overflow-y-auto,
-.overflow-auto {
+[role="dialog"] {
   touch-action: pan-y !important;
   overscroll-behavior-y: contain;
 }
 
-/* Scroll snap vertical ancorado e fluido nos containers de cards */
+/* Rolagem livre e natural nos containers de cards */
 .card-snap-container,
 .portfolio-list,
 .service-list,
 .differentials-list,
 .process-list {
-  scroll-snap-type: y mandatory;
   scroll-padding-top: clamp(68px, 11vh, 96px);
 }
 
@@ -529,6 +530,27 @@ article,
   .animate-gradient-dot-glow {
     animation: none !important;
     transform: none !important;
+  }
+}
+
+/* Cursor de digitação (Typewriter) com pulsação neon */
+@keyframes typewriterCursorBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-typewriter-cursor {
+  animation: typewriterCursorBlink 0.8s steps(2, start) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-typewriter-cursor {
+    animation: none !important;
+    opacity: 1 !important;
   }
 }
 
@@ -926,9 +948,9 @@ a[id*="whatsapp"] {
   width: 100%;
 }
 
-/* Logotipo aumentado em 3px adicionais (anterior +6px, total +9px) */
+/* Logotipo aumentado em 2px adicionais (+13px total) para comportar a frase oficial */
 .nav-menu-logo-img {
-  height: calc(clamp(1.23rem, 2.9vh, 1.56rem) + 9px);
+  height: calc(clamp(1.23rem, 2.9vh, 1.56rem) + 13px);
   width: auto;
   object-fit: contain;
 }
@@ -984,9 +1006,9 @@ a[id*="whatsapp"] {
     padding-bottom: clamp(0.75rem, 2.5vh, 2rem);
   }
 
-  /* Logotipo aumentado em 3px adicionais (+9px total) */
+  /* Logotipo aumentado em 2px adicionais (+13px total) */
   .nav-menu-logo-img {
-    height: calc(clamp(1.67rem, 3.2vh, 2.17rem) + 9px);
+    height: calc(clamp(1.67rem, 3.2vh, 2.17rem) + 13px);
   }
 }
 
@@ -1020,17 +1042,17 @@ a[id*="whatsapp"] {
     padding-bottom: 1.5rem;
   }
 
-  /* Logotipo aumentado em 3px adicionais (+9px total) */
+  /* Logotipo aumentado em 2px adicionais (+13px total) */
   .nav-menu-logo-img {
-    height: calc(1.333rem + 9px);
+    height: calc(1.333rem + 13px);
   }
 }
 
 /* ============================================================
-   ITEM 3 — CELULAR NA HORIZONTAL (Modo Paisagem com altura <= 500px)
+   ITEM 3 — CELULAR NA HORIZONTAL (Modo Paisagem com altura <= 600px)
    Identificado exclusivamente por ALTURA para evitar conflito com tablets
    ============================================================ */
-@media (orientation: landscape) and (max-height: 500px) {
+@media (orientation: landscape) and (max-height: 600px) {
   .nav-menu-modal-container {
     padding-top: 0.35rem !important;
     padding-bottom: 0.35rem !important;
@@ -1063,9 +1085,20 @@ a[id*="whatsapp"] {
     max-width: 32rem !important;
   }
 
-  /* Grade equilibrada de 8 itens em 2 colunas */
+  /* Grade equilibrada de 9 itens em 2 colunas: o 9º item (FAQ & Contato) rigorosamente centralizado na mesma linha */
   .nav-menu-list-item {
     grid-column: span 1 !important;
+  }
+
+  .nav-menu-list-item:last-child {
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
   }
 
   .nav-menu-link-item {
@@ -1093,12 +1126,12 @@ a[id*="whatsapp"] {
   }
 
   .nav-menu-logo-img {
-    height: calc(0.9rem + 9px) !important;
+    height: calc(0.9rem + 13px) !important;
   }
 }
 
-/* Otimização refinada de clamp() e área de toque consistente para celulares em modo paisagem com altura entre 350px e 500px */
-@media (orientation: landscape) and (min-height: 350px) and (max-height: 500px) {
+/* Otimização refinada de clamp() e área de toque consistente para celulares em modo paisagem com altura entre 350px e 600px */
+@media (orientation: landscape) and (min-height: 350px) and (max-height: 600px) {
   .nav-menu-list-wrap {
     --menu-font-size: clamp(0.95rem, calc(0.55rem + 2vh), 1.15rem);
     --menu-line-height: 1.25;
@@ -1284,11 +1317,11 @@ a[id*="whatsapp"] {
   contain: content;
   touch-action: pan-y;
   animation-name: niche-marquee;
-  animation-duration: 48s;
+  animation-duration: 85s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   -webkit-animation-name: niche-marquee;
-  -webkit-animation-duration: 48s;
+  -webkit-animation-duration: 85s;
   -webkit-animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
 }
@@ -1307,11 +1340,11 @@ a[id*="whatsapp"] {
   contain: content;
   touch-action: pan-y;
   animation-name: niche-marquee;
-  animation-duration: 48s;
+  animation-duration: 85s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   -webkit-animation-name: niche-marquee;
-  -webkit-animation-duration: 48s;
+  -webkit-animation-duration: 85s;
   -webkit-animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
 }

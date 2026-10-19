@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { EloLogo } from './EloLogo';
+import { FluidRippleBackground } from './FluidRippleBackground';
 import { ScreenId, SCREENS, SITE_CONFIG, whatsappUrl } from '../types';
 import { preloadScreen } from '../preloadScreens';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -85,7 +86,9 @@ export const Header: React.FC<HeaderProps> = ({
 
   const currentMeta = SCREENS.find((s) => s.id === currentScreen) || SCREENS[0];
 
-  // Componente do Botão de Menu com 3 barras na identidade visual elétrica azul da og-image.png
+  // Componente do Botão de Menu com a identidade visual do logotipo ēloSites
+  // Traço superior e inferior com degradê de "ēlo" (púrpura ao azul elétrico)
+  // Traço do meio alinhado à esquerda com degradê de "Sites" (branco prateado puro)
   const renderMenuButton = () => (
     <button
       id="menu-de-navegacao-btn"
@@ -94,30 +97,32 @@ export const Header: React.FC<HeaderProps> = ({
       aria-expanded={isMenuOpen}
       aria-controls="multi-screen-navigation-modal"
       aria-label={isMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
-      className="relative group w-10 h-10 flex items-center justify-center bg-slate-900/80 border border-blue-500/25 shadow-md active:scale-95 transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-xl hover:border-blue-400/50"
+      className="relative group p-2.5 flex items-center justify-center bg-transparent border-0 shadow-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 rounded-lg transition-transform duration-200 hover:scale-108 active:scale-95"
     >
-      {/* Ícone com 3 traços que se transformam suavemente no X */}
-      <div className="relative w-5 h-5 flex items-center justify-center pointer-events-none">
-        {/* Traço superior: tom de azul cobalto elétrico oficial da ēloSites */}
+      {/* Container com largura exata dos traços oficiais */}
+      <div className="relative w-7 h-5 flex items-center pointer-events-none">
+        {/* Traço superior (degradê púrpura para azul de 'ēlo') / Diagonal 1 do X */}
         <span
-          className={`absolute left-1/2 -translate-x-1/2 top-[9px] h-[2px] rounded-full transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`absolute left-0 top-1/2 w-full h-[3.5px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isMenuOpen
-              ? 'w-4 translate-y-0 rotate-45 bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 shadow-[0_0_10px_rgba(59,130,246,0.85)]'
-              : 'w-4 -translate-y-[5px] rotate-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 shadow-[0_0_8px_rgba(59,130,246,0.7)]'
+              ? '-translate-y-1/2 rotate-45 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_16px_rgba(168,85,247,0.85),0_0_20px_rgba(59,130,246,0.7)]'
+              : '-translate-y-[8.5px] rotate-0 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_12px_rgba(168,85,247,0.7),0_0_16px_rgba(59,130,246,0.6)]'
           }`}
         />
-        {/* Traço do meio: branco */}
+
+        {/* Traço do meio (degradê branco de 'Sites', alinhado estritamente à esquerda) */}
         <span
-          className={`absolute left-[2px] top-[9px] h-[2px] rounded-full bg-slate-100 transition-all duration-200 ease-out shadow-[0_0_6px_rgba(255,255,255,0.4)] origin-left ${
-            isMenuOpen ? 'w-0 opacity-0 scale-x-0' : 'w-3 opacity-100 scale-x-100 translate-y-0 group-hover:w-4'
+          className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3.5px] rounded-full origin-left bg-gradient-to-r from-white via-slate-100 to-slate-300 shadow-[0_0_12px_rgba(255,255,255,0.95),0_0_20px_rgba(255,255,255,0.5)] transition-all duration-200 ease-out ${
+            isMenuOpen ? 'w-0 opacity-0 scale-x-0' : 'w-[17px] opacity-100 scale-x-100 group-hover:w-[20px]'
           }`}
         />
-        {/* Traço inferior: tom de azul cobalto elétrico oficial */}
+
+        {/* Traço inferior (degradê azul para púrpura de 'ēlo') / Diagonal 2 do X */}
         <span
-          className={`absolute left-1/2 -translate-x-1/2 top-[9px] h-[2px] rounded-full transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`absolute left-0 top-1/2 w-full h-[3.5px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isMenuOpen
-              ? 'w-4 translate-y-0 -rotate-45 bg-gradient-to-r from-indigo-400 via-blue-400 to-sky-400 shadow-[0_0_10px_rgba(59,130,246,0.85)]'
-              : 'w-4 translate-y-[5px] rotate-0 bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-400 shadow-[0_0_8px_rgba(59,130,246,0.7)]'
+              ? '-translate-y-1/2 -rotate-45 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_16px_rgba(59,130,246,0.85),0_0_20px_rgba(168,85,247,0.7)]'
+              : 'translate-y-[5.5px] rotate-0 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_12px_rgba(59,130,246,0.7),0_0_16px_rgba(168,85,247,0.6)]'
           }`}
         />
       </div>
@@ -133,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
       {isMenuOpen && (
         <header
           id="header-nav-active"
-          className="fixed top-4 sm:top-6 left-0 right-0 z-50 pointer-events-none flex justify-center items-center"
+          className="fixed top-4 sm:top-6 left-0 right-0 z-[110] pointer-events-none flex justify-center items-center"
         >
           <div className="pointer-events-auto">
             {renderMenuButton()}
@@ -141,22 +146,13 @@ export const Header: React.FC<HeaderProps> = ({
         </header>
       )}
 
-      {/* Menu Fechado na Home: Botão de menu flutuante discreto no topo */}
+      {/* Menu Fechado na Home: Botão de menu flutuante rigorosamente centralizado no topo */}
       {isHome && !isMenuOpen && (
         <header
           id="header-nav"
-          className="fixed top-4 sm:top-6 right-4 sm:right-8 z-50 pointer-events-none flex justify-end items-center"
+          className="fixed top-5 sm:top-7 left-0 right-0 z-50 pointer-events-none flex justify-center items-center"
         >
-          <div className="pointer-events-auto flex items-center gap-3">
-            <a
-              href={headerWhatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cta-primary hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold shadow-[0_0_14px_rgba(37,99,235,0.4)]"
-            >
-              <span>Orçamento</span>
-              <ArrowRight className="w-3 h-3" />
-            </a>
+          <div className="pointer-events-auto flex items-center justify-center">
             {renderMenuButton()}
           </div>
         </header>
@@ -229,52 +225,87 @@ export const Header: React.FC<HeaderProps> = ({
         </header>
       )}
 
-      {/* MODAL DO MENU DE NAVEGAÇÃO COMPLETO */}
+      {/* MODAL DO MENU DE NAVEGAÇÃO COMPLETO COM BACKGROUND DE ESPAÇO-TEMPO E MOVIMENTO FLUTUANTE */}
       {isMenuOpen && (
         <div
           id="multi-screen-navigation-modal"
           role="dialog"
           aria-modal="true"
           aria-label="Menu de Navegação das Seções ēloSites"
-          className="nav-menu-modal-container fixed inset-0 z-40 flex flex-col items-center justify-between pt-16 sm:pt-20 pb-6 sm:pb-8 px-4 bg-[#050814]/96 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto"
+          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-16 sm:pt-20 pb-6 sm:pb-8 px-4 bg-[#050814]/96 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto"
           onClick={handleCloseMenuWithoutNav}
         >
-          <div className="shrink-0 h-2" aria-hidden="true" />
+          {/* Fundo de grade azul de espaço-tempo com bolha em movimento contínuo e aleatório */}
+          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-75" />
 
-          {/* Lista centralizada em cascata com estética obsidian e azul elétrico */}
+          <div className="shrink-0 h-2 relative z-10" aria-hidden="true" />
+
+          {/* Lista de seções minimalista com movimento flutuante igual ao logotipo da Home */}
           <div
-            className="nav-menu-list-wrap relative w-full flex flex-col items-center justify-center text-center my-auto px-4 pointer-events-auto"
+            className="nav-menu-list-wrap relative z-20 w-full flex flex-col items-center justify-center text-center my-auto px-4 pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <ul className="nav-menu-list flex flex-col items-center justify-center py-0.5 w-full gap-1">
+            <ul className="nav-menu-list flex flex-col items-center justify-center py-1 w-full gap-0.5 sm:gap-1">
               {SCREENS.map((screen, index) => {
                 const isActive = screen.id === currentScreen;
 
                 return (
                   <motion.li
                     key={screen.id}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: 0.03 * index,
-                      duration: 0.28,
-                      ease: [0.16, 1, 0.3, 1],
+                    animate={{
+                      y: [-4, 4, -4],
+                      x: [2, -2, 2],
+                      rotate: [-0.25, 0.25, -0.25],
                     }}
-                    className="nav-menu-list-item w-full flex justify-center"
+                    transition={{
+                      y: {
+                        duration: 6.5 + (index % 3) * 0.8,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.12,
+                      },
+                      x: {
+                        duration: 7.2 + (index % 2) * 0.9,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.12,
+                      },
+                      rotate: {
+                        duration: 8.0,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.1,
+                      },
+                    }}
+                    className={`nav-menu-list-item w-full flex justify-center py-0.5 ${
+                      screen.id === 'faq' ? 'landscape:col-span-2 landscape:justify-self-center landscape:mx-auto text-center' : ''
+                    }`}
                   >
                     <button
                       type="button"
-                      onClick={() => onSelectScreen(screen.id)}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        onSelectScreen(screen.id);
+                      }}
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
                       onTouchStart={() => preloadScreen(screen.id)}
-                      className={`nav-menu-link-item group relative px-6 py-2.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center cursor-pointer transition-all ${
+                      className={`nav-menu-link-item group relative px-4 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
                         isActive
-                          ? 'bg-blue-600/25 border border-blue-500/40 text-blue-300 shadow-[0_0_20px_rgba(37,99,235,0.3)]'
-                          : 'hover:bg-white/5 text-slate-300 hover:text-white'
+                          ? 'text-white'
+                          : 'text-slate-400 hover:text-white'
                       }`}
                     >
-                      <span className="font-display text-xl sm:text-2xl font-bold tracking-tight transition-transform duration-200 group-hover:scale-105">
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+                      )}
+                      <span
+                        className={`font-display text-lg sm:text-xl md:text-2xl tracking-tight transition-all duration-300 ${
+                          isActive
+                            ? 'text-white font-bold drop-shadow-[0_0_18px_rgba(59,130,246,0.9)]'
+                            : 'font-medium group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]'
+                        }`}
+                      >
                         {screen.shortTitle}
                       </span>
                     </button>
@@ -284,31 +315,24 @@ export const Header: React.FC<HeaderProps> = ({
             </ul>
           </div>
 
-          {/* Logotipo centralizado no rodapé do modal */}
+          {/* Logotipo oficial centralizado no rodapé do modal com a frase oficial embaixo */}
           <div
-            className="nav-menu-logo-wrap shrink-0 flex flex-col items-center justify-center pointer-events-auto mt-auto"
+            className="nav-menu-logo-wrap shrink-0 flex flex-col items-center justify-center pointer-events-auto mt-auto pb-4 sm:pb-6 relative z-20 overflow-visible"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              type="button"
-              onClick={() => onSelectScreen('home')}
-              className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg p-1 transition-transform hover:scale-105 cursor-pointer flex flex-col items-center justify-center"
-              aria-label="ēloSites — Ir para a Página Inicial (Home)"
-            >
-              <img
-                src="/logo-elosites-1360.png"
-                alt="ēloSites"
-                width={1360}
-                height={337}
-                className="nav-menu-logo-img w-auto object-contain drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]"
-              />
-              <span className="w-full text-center mt-1 text-[8px] sm:text-[9.5px] font-semibold tracking-wider uppercase text-blue-300/80 select-none leading-tight whitespace-nowrap">
-                Tecnologia que transforma ideias em sites
-              </span>
-            </button>
+            <EloLogo
+              size="menu"
+              showTagline={true}
+              taglineClassName="whitespace-nowrap"
+              onClick={() => {
+                setIsMenuOpen(false);
+                onSelectScreen('home');
+              }}
+            />
           </div>
         </div>
       )}
     </>
   );
 };
+

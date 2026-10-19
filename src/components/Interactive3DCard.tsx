@@ -103,15 +103,11 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
       onClick={onClick}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className={`interactive-3d-card-root scroll-snap-card card-snap-item relative rounded-2xl ${animatedBorder ? 'glow-border-animated' : ''} ${className}`}
+      className={`interactive-3d-card-root relative rounded-2xl ${animatedBorder ? 'glow-border-animated' : ''} ${className}`}
       style={{
         transformStyle: tiltEnabled ? 'preserve-3d' : undefined,
         touchAction: 'pan-y',
-        overscrollBehaviorY: 'contain',
-        scrollSnapAlign: 'start',
-        scrollSnapStop: 'normal',
-        scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-        WebkitUserSelect: 'none',
+        overscrollBehaviorY: 'auto',
         ...style,
       }}
     >

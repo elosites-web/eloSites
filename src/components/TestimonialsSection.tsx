@@ -294,9 +294,9 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
   return (
     <section
-      id="testemunhos"
+      id="avaliacoes"
       aria-label="Avaliações de Clientes e Prova Social"
-      className="section-auto-contain pt-8 pb-14 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-hidden"
+      className="section-auto-contain pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-hidden"
     >
       {/* Luzes ambiente de fundo azul elétrico e cobalto */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
@@ -320,7 +320,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             duration: prefersReduced ? 0 : 0.45,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="max-w-3xl mx-auto text-center space-y-3.5 mb-8 sm:mb-12"
+          className="max-w-3xl mx-auto text-center space-y-3 mb-8 sm:mb-10"
         >
           <div className="section-kicker inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
@@ -333,13 +333,13 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
           />
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
             Depoimentos autênticos de quem confiou na ēloSites para construir sua presença digital com código profissional, performance máxima e foco em conversão.
           </p>
 
           {/* Destaque de métricas de confiabilidade */}
           <div className="pt-1 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-slate-300">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
               <div className="flex text-amber-400">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
@@ -349,7 +349,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
               <span className="text-slate-400">• Avaliação máxima</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
               <span className="text-slate-300">Projetos reais entregues no Netlify</span>
             </div>
@@ -357,7 +357,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         </motion.div>
 
         {/* Filtro por Formato de Serviço */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-8 px-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6 px-2">
           {TESTIMONIAL_TAGS.map((tag) => {
             const isTagActive = selectedTag === tag.id;
             const count =
@@ -375,9 +375,9 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 key={tag.id}
                 type="button"
                 onClick={() => setSelectedTag(tag.id)}
-                className={`relative px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 ${
+                className={`relative px-3 sm:px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 ${
                   isTagActive
-                    ? 'bg-gradient-to-r from-cyan-500/25 via-indigo-500/30 to-purple-500/25 text-cyan-200 border border-cyan-400/50 shadow-[0_0_16px_rgba(6,182,212,0.3)]'
+                    ? 'bg-blue-600/30 text-blue-200 border border-blue-400/50 shadow-[0_0_14px_rgba(59,130,246,0.3)]'
                     : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.08] hover:border-white/20'
                 }`}
                 aria-pressed={isTagActive}
@@ -392,7 +392,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         </div>
 
         {/* =========================================================================
-            ESTÁGIO EMBLA CAROUSEL COM ROTAÇÃO 3D E ACELERAÇÃO POR GPU
+            ESTÁGIO EMBLA CAROUSEL COM EFEITO GIRATÓRIO EM FORMA DE CILINDRO 3D
            ========================================================================= */}
         <motion.div
           variants={cardVariants}
@@ -406,24 +406,24 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             data-testimonials-carousel
             role="region"
             aria-roledescription="carousel"
-            aria-label="Carrossel Giratório de Depoimentos"
+            aria-label="Carrossel Cilíndrico de Depoimentos"
             tabIndex={0}
             onKeyDown={handleKeyDown}
             onFocusCapture={handleFocusCapture}
             onBlurCapture={handleBlurCapture}
-            className="relative max-w-5xl mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 rounded-2xl"
+            className="relative max-w-5xl mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 rounded-2xl"
           >
-          {/* Viewport do Embla Carousel com suporte nativo a toque/swipe */}
+          {/* Viewport do Embla Carousel com perspectiva cilíndrica */}
           <div
-            className="overflow-hidden py-4 cursor-grab active:cursor-grabbing"
+            className="overflow-hidden py-3 cursor-grab active:cursor-grabbing"
             ref={emblaRef}
             style={{
-              perspective: prefersReduced ? 'none' : '1200px',
+              perspective: prefersReduced ? 'none' : '1400px',
               perspectiveOrigin: 'center center',
             }}
           >
             <div
-              className="flex -mx-2.5 sm:-mx-3.5"
+              className="flex -mx-2 sm:-mx-3"
               style={{
                 transformStyle: prefersReduced ? 'flat' : 'preserve-3d',
               }}
@@ -431,47 +431,21 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
               {testimonials.map((item, idx) => {
                 const offset = getRelativeOffset(idx);
                 const isActive = offset === 0;
-                const isPrev = offset === -1;
-                const isNext = offset === 1;
 
-                // Parâmetros de profundidade, escala e rotação 3D calculados
-                let rotateY = 0;
-                let scale = 1;
-                let opacity = 1;
-                let translateZ = 0;
-
-                if (!prefersReduced) {
-                  if (isActive) {
-                    rotateY = 0;
-                    scale = 1;
-                    opacity = 1;
-                    translateZ = 0;
-                  } else if (isPrev) {
-                    rotateY = isMobile ? 14 : 22;
-                    scale = isMobile ? 0.88 : 0.9;
-                    opacity = 0.55;
-                    translateZ = isMobile ? -40 : -70;
-                  } else if (isNext) {
-                    rotateY = isMobile ? -14 : -22;
-                    scale = isMobile ? 0.88 : 0.9;
-                    opacity = 0.55;
-                    translateZ = isMobile ? -40 : -70;
-                  } else {
-                    scale = 0.82;
-                    opacity = 0.3;
-                    translateZ = -90;
-                  }
-                } else {
-                  scale = isActive ? 1 : 0.92;
-                  opacity = isActive ? 1 : 0.45;
-                }
+                // Efeito giratório em cilindro 3D
+                const cylinderAngle = offset * (isMobile ? 26 : 34);
+                const translateZ = isActive ? 0 : -(isMobile ? 55 : 80) * Math.min(2, Math.abs(offset));
+                const scale = isActive ? 1 : 0.88 - Math.max(0, Math.abs(offset) - 1) * 0.08;
+                const opacity = isActive ? 1 : 0.52 - Math.max(0, Math.abs(offset) - 1) * 0.22;
+                const zIndex = isActive ? 30 : 20 - Math.abs(offset);
 
                 return (
                   <div
                     key={item.id}
-                    className="flex-[0_0_86%] sm:flex-[0_0_72%] md:flex-[0_0_62%] lg:flex-[0_0_52%] max-w-[560px] min-w-0 px-2.5 sm:px-3.5"
+                    className="flex-[0_0_88%] sm:flex-[0_0_72%] md:flex-[0_0_60%] lg:flex-[0_0_50%] max-w-[520px] min-w-0 px-2 sm:px-3"
                     style={{
                       transformStyle: prefersReduced ? 'flat' : 'preserve-3d',
+                      zIndex,
                     }}
                     onFocus={() => {
                       if (selectedIndex !== idx) {
@@ -479,34 +453,34 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                       }
                     }}
                   >
-                    {/* Card do carrossel: transição apenas de transform/opacity (sem camada permanente) */}
+                    {/* Card compacto de depoimento com rotação em cilindro e centralização ao clicar */}
                     <div
                       onClick={() => {
-                        if (!isActive) scrollTo(idx);
+                        scrollTo(idx);
                       }}
                       style={{
                         transform: prefersReduced
-                          ? `scale(${scale})`
-                          : `scale(${scale}) rotateY(${rotateY}deg) translateZ(${translateZ}px)`,
+                          ? `scale(${isActive ? 1 : 0.92})`
+                          : `rotateY(${cylinderAngle}deg) translateZ(${translateZ}px) scale(${scale})`,
                         opacity,
                         backfaceVisibility: 'hidden',
                         WebkitBackfaceVisibility: 'hidden',
                         transformStyle: prefersReduced ? 'flat' : 'preserve-3d',
                         transition: prefersReduced
                           ? 'opacity 0.2s ease, transform 0.2s ease'
-                          : 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+                          : 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease, border-color 0.3s ease, box-shadow 0.3s ease',
                       }}
-                      className={`relative rounded-2xl bracket-panel overflow-hidden [backface-visibility:hidden] select-none h-full flex flex-col justify-between ${
+                      className={`relative rounded-2xl bracket-panel overflow-hidden [backface-visibility:hidden] select-none flex flex-col justify-between ${
                         isActive
-                          ? 'bg-[#090E23] border border-blue-500/50 shadow-[0_14px_40px_-6px_rgba(59,130,246,0.35)] ring-1 ring-blue-400/30 cursor-default'
+                          ? 'bg-[#090E23] border border-blue-500/60 shadow-[0_12px_36px_-6px_rgba(59,130,246,0.4)] ring-1 ring-blue-400/40 cursor-default'
                           : 'bg-[#060A1A]/90 border border-blue-500/15 hover:border-blue-400/40 shadow-xl cursor-pointer hover:opacity-85'
                       }`}
                       aria-label={`Depoimento de ${item.name}`}
                     >
-                      {/* Brilho no topo do card ativo */}
+                      {/* Brilho sutil no topo do card ativo */}
                       {isActive && (
                         <div
-                          className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-blue-500/[0.14] via-indigo-500/[0.04] to-transparent"
+                          className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-blue-500/[0.14] via-indigo-500/[0.04] to-transparent"
                           aria-hidden="true"
                         />
                       )}
@@ -516,27 +490,28 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                         <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/40 backdrop-blur-[1px] opacity-0 hover:opacity-100 transition-opacity rounded-2xl">
                           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-blue-400/50 text-blue-300 text-xs font-semibold shadow-lg">
                             <RotateCw className="w-3.5 h-3.5 text-blue-400" />
-                            Girar para este depoimento
+                            Girar e centralizar
                           </span>
                         </div>
                       )}
 
-                      <div className="p-5 sm:p-6 md:p-7 flex flex-col justify-between flex-1 space-y-4 sm:space-y-5 relative z-10">
-                        {/* Top Bar do Card: Categoria, Validação Real, Estrelas e Contador */}
-                        <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 border-b border-white/[0.08]">
+                      {/* Conteúdo compacto com altura otimizada */}
+                      <div className="p-4 sm:p-5 flex flex-col justify-between space-y-3 relative z-10">
+                        {/* Top Bar do Card: Categoria, Estrelas e Contador */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/[0.08]">
                           <div className="flex items-center gap-2">
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-950/80 border border-blue-400/30 text-blue-300 text-[11px] font-semibold">
-                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-950/80 border border-blue-400/30 text-blue-300 text-[10px] sm:text-[11px] font-semibold">
+                              <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" aria-hidden="true" />
                               <span>{item.category}</span>
                             </div>
 
-                            <div className="hidden min-[420px]:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <div className="hidden min-[420px]:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[9px] font-mono">
+                              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
                               <span>VERIFICADO</span>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-2">
                             {/* 5 Estrelas Douradas */}
                             <div
                               className="flex items-center gap-0.5 text-amber-400"
@@ -545,56 +520,54 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               {[...Array(item.rating)].map((_, starIdx) => (
                                 <Star
                                   key={starIdx}
-                                  className="w-3.5 h-3.5 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]"
+                                  className="w-3 h-3 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]"
                                   aria-hidden="true"
                                 />
                               ))}
                             </div>
 
                             {/* Contador de Slides */}
-                            <div className="font-mono text-[11px] text-blue-300 px-2 py-0.5 rounded-md bg-slate-900/90 border border-blue-500/20">
+                            <div className="font-mono text-[10px] text-blue-300 px-1.5 py-0.5 rounded bg-slate-900/90 border border-blue-500/20">
                               0{idx + 1} / 0{total}
                             </div>
                           </div>
                         </div>
 
-                        {/* Citação do Cliente com Formatação e Destaque */}
-                        <div className="relative pt-0.5 flex-1 flex flex-col justify-center">
-                          <Quote className="w-6 h-6 text-blue-400/30 mb-1.5 shrink-0" aria-hidden="true" />
-                          <blockquote className="text-sm sm:text-[15px] md:text-base text-slate-100 leading-relaxed italic border-l-2 border-blue-500/40 pl-3.5">
+                        {/* Citação compacta e elegante */}
+                        <div className="relative flex-1 flex flex-col justify-center">
+                          <Quote className="w-4 h-4 text-blue-400/30 mb-1 shrink-0" aria-hidden="true" />
+                          <blockquote className="text-xs sm:text-[13px] md:text-sm text-slate-100 leading-snug italic border-l-2 border-blue-500/40 pl-3">
                             "{item.quote}"
                           </blockquote>
                         </div>
 
-                        {/* Rodapé do Card com Dados do Cliente */}
-                        <div className="pt-3.5 border-t border-white/[0.08] flex items-center justify-between gap-3">
-                          {/* Identidade do Cliente */}
-                          <div className="flex items-center gap-3 min-w-0">
+                        {/* Rodapé compacto com Dados do Cliente */}
+                        <div className="pt-2.5 border-t border-white/[0.08] flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2.5 min-w-0">
                             <div className="relative shrink-0">
-                              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-cyan-600/30 via-indigo-600/30 to-purple-600/30 border border-cyan-400/40 flex items-center justify-center text-cyan-200 font-bold font-mono text-sm shadow-inner">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/40 flex items-center justify-center text-blue-200 font-bold font-mono text-xs shadow-inner">
                                 {getInitials(item.name)}
                               </div>
                               <CheckCircle2
-                                className="w-3.5 h-3.5 text-emerald-400 absolute -bottom-1 -right-1 bg-slate-950 rounded-full"
+                                className="w-3 h-3 text-emerald-400 absolute -bottom-1 -right-1 bg-slate-950 rounded-full"
                                 aria-hidden="true"
                               />
                             </div>
 
                             <div className="min-w-0">
-                              <h3 className="font-display text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                              <h3 className="font-display text-xs sm:text-sm font-bold text-white tracking-tight truncate">
                                 {item.name}
                               </h3>
-                              <p className="text-xs text-cyan-300 font-medium truncate">
+                              <p className="text-[11px] text-blue-300 font-medium truncate">
                                 {item.role}
                               </p>
-                              <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                                <span className="text-slate-300">{item.companyOrProject}</span>
+                              <p className="text-[10px] text-slate-400 truncate">
+                                {item.companyOrProject}
                               </p>
                             </div>
                           </div>
 
-                          {/* Tag de Validação do Cliente */}
-                          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[11px] text-slate-400 shrink-0">
+                          <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             <span>Cliente Verificado</span>
                           </div>

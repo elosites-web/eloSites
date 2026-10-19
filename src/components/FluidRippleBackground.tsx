@@ -4,9 +4,13 @@ import { getMotionTier, shouldReduceMedia, webglSupported } from '../mediaPrefs'
 
 interface FluidRippleBackgroundProps {
   className?: string;
+  variant?: 'fullscreen' | 'contained';
 }
 
-export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ className = '' }) => {
+export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
+  className = '',
+  variant = 'fullscreen',
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [useCssFallback, setUseCssFallback] = useState<boolean>(() => {
@@ -25,8 +29,13 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ cl
     let camera: THREE.PerspectiveCamera | null = null;
     let animationFrameId: number | null = null;
     let isPaused = false;
+    let resizeObserver: ResizeObserver | null = null;
 
     try {
+      const isContained = variant === 'contained';
+      const initialWidth = isContained ? (container.clientWidth || 300) : window.innerWidth;
+      const initialHeight = isContained ? (container.clientHeight || 300) : window.innerHeight;
+
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
@@ -34,78 +43,99 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ cl
         powerPreference: 'low-power',
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(initialWidth, initialHeight);
 
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.z = 24;
+      camera = new THREE.PerspectiveCamera(45, initialWidth / initialHeight, 0.1, 100);
+      camera.position.z = 22;
 
-      // 1. Orbes fluidos com materiais customizados de gradiente aditivo
-      const orbsGroup = new THREE.Group();
-      scene.add(orbsGroup);
+      // 1. Grade Azul de Espaço-Tempo ortogonal (exclusivamente linhas horizontais e verticais, sem diagonais)
+      // Dimensões base superdimensionadas para cobrir 100% de desktop widescreen, ultrawide e mobile horizontal sem bordas pretas
+      const gridSegmentsX = isContained ? 54 : 64;
+      const gridSegmentsY = isContained ? 38 : 46;
+      const baseGridWidth = isContained ? 96 : 112;
+      const baseGridHeight = isContained ? 64 : 76;
 
-      const orbColors = [
-        { color: 0x2563eb, x: -6, y: 4, z: -4, radius: 4.8, speed: 0.0006 }, // Azul Cobalto Elétrico
-        { color: 0x3b82f6, x: 7, y: -3, z: -5, radius: 5.5, speed: 0.0008 }, // Azul Primário
-        { color: 0x4f46e5, x: 2, y: 5, z: -8, radius: 6.0, speed: 0.0005 },  // Índigo
-        { color: 0x1d4ed8, x: -4, y: -5, z: -6, radius: 4.2, speed: 0.0007 }, // Azul Escuro
-      ];
+      const numVertsX = gridSegmentsX + 1;
+      const numVertsY = gridSegmentsY + 1;
+      const totalVertices = numVertsX * numVertsY;
 
-      const orbMeshes: { mesh: THREE.Mesh; initial: { x: number; y: number; z: number; speed: number } }[] = [];
+      const positions = new Float32Array(totalVertices * 3);
+      const initialPositions = new Float32Array(totalVertices * 3);
 
-      orbColors.forEach((orbData) => {
-        const geometry = new THREE.SphereGeometry(orbData.radius, 24, 24);
-        const material = new THREE.MeshBasicMaterial({
-          color: orbData.color,
-          transparent: true,
-          opacity: 0.20,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-        });
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(orbData.x, orbData.y, orbData.z);
-        orbsGroup.add(mesh);
-        orbMeshes.push({ mesh, initial: orbData });
-      });
+      let vIdx = 0;
+      for (let j = 0; j < numVertsY; j++) {
+        const y = (j / gridSegmentsY - 0.5) * baseGridHeight;
+        for (let i = 0; i < numVertsX; i++) {
+          const x = (i / gridSegmentsX - 0.5) * baseGridWidth;
+          positions[vIdx * 3] = x;
+          positions[vIdx * 3 + 1] = y;
+          positions[vIdx * 3 + 2] = 0;
+          initialPositions[vIdx * 3] = x;
+          initialPositions[vIdx * 3 + 1] = y;
+          initialPositions[vIdx * 3 + 2] = 0;
+          vIdx++;
+        }
+      }
 
-      // 2. Malha de Ondulação Fluida (Fluid Ripple Mesh)
-      const planeGeometry = new THREE.PlaneGeometry(36, 26, 32, 32);
-      const positionAttr = planeGeometry.attributes.position;
-      const initialPositions = new Float32Array(positionAttr.array);
+      // Conexões estritamente horizontais e verticais (sem traços diagonais)
+      const indices: number[] = [];
 
-      const planeMaterial = new THREE.MeshBasicMaterial({
+      // Segmentos horizontais
+      for (let j = 0; j < numVertsY; j++) {
+        for (let i = 0; i < gridSegmentsX; i++) {
+          const a = j * numVertsX + i;
+          const b = a + 1;
+          indices.push(a, b);
+        }
+      }
+
+      // Segmentos verticais
+      for (let i = 0; i < numVertsX; i++) {
+        for (let j = 0; j < gridSegmentsY; j++) {
+          const a = j * numVertsX + i;
+          const b = (j + 1) * numVertsX + i;
+          indices.push(a, b);
+        }
+      }
+
+      const gridGeometry = new THREE.BufferGeometry();
+      gridGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      gridGeometry.setIndex(indices);
+
+      const lineMaterial = new THREE.LineBasicMaterial({
         color: 0x3b82f6,
-        wireframe: true,
         transparent: true,
-        opacity: 0.05,
+        opacity: isContained ? 0.32 : 0.22,
         blending: THREE.AdditiveBlending,
+        depthWrite: false,
       });
 
-      const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-      planeMesh.position.z = -2;
-      scene.add(planeMesh);
+      const gridMesh = new THREE.LineSegments(gridGeometry, lineMaterial);
+      gridMesh.position.z = 0;
+      scene.add(gridMesh);
 
-      // 3. Partículas flutuantes de profundidade (stardust sutil)
-      const particleCount = 70;
+      // 2. Poeira estelar sutil de profundidade
+      const particleCount = isContained ? 36 : 50;
       const particleGeo = new THREE.BufferGeometry();
       const particlePos = new Float32Array(particleCount * 3);
       for (let i = 0; i < particleCount * 3; i += 3) {
-        particlePos[i] = (Math.random() - 0.5) * 40;
-        particlePos[i + 1] = (Math.random() - 0.5) * 30;
-        particlePos[i + 2] = (Math.random() - 0.5) * 20;
+        particlePos[i] = (Math.random() - 0.5) * baseGridWidth;
+        particlePos[i + 1] = (Math.random() - 0.5) * baseGridHeight;
+        particlePos[i + 2] = (Math.random() - 0.5) * 16 - 2;
       }
       particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
       const particleMat = new THREE.PointsMaterial({
         color: 0x60a5fa,
-        size: 0.14,
+        size: 0.12,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.35,
         blending: THREE.AdditiveBlending,
       });
       const particleSystem = new THREE.Points(particleGeo, particleMat);
       scene.add(particleSystem);
 
-      // Interação do mouse / toque para ripple
+      // Interação suave de mouse/toque
       let targetMouseX = 0;
       let targetMouseY = 0;
       let currentMouseX = 0;
@@ -128,60 +158,134 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ cl
       window.addEventListener('mousemove', handlePointer, { passive: true });
       window.addEventListener('touchmove', handlePointer, { passive: true });
 
-      // Resize observer
-      const handleResize = () => {
+      // Atualizador de tamanho responsivo com overscan garantido
+      const updateSize = (w: number, h: number) => {
         if (!renderer || !camera) return;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = Math.max(w, 100);
+        const height = Math.max(h, 100);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
-      };
-      window.addEventListener('resize', handleResize);
 
-      // Visibility change para poupar bateria quando aba minimizada
+        // Calcular frustum real visível na profundidade z = 0
+        const vFovRad = ((camera.fov || 45) * Math.PI) / 180;
+        const visibleH = 2 * Math.tan(vFovRad / 2) * camera.position.z;
+        const visibleW = visibleH * camera.aspect;
+
+        // Escala adaptativa para cobrir 100% da tela em desktop widescreen e mobile horizontal
+        // com folga de 65% nas bordas para absorver as deformações harmônicas e da bolha
+        const scaleX = (visibleW * 1.65) / baseGridWidth;
+        const scaleY = (visibleH * 1.65) / baseGridHeight;
+        const targetScale = Math.max(1.35, scaleX, scaleY);
+
+        gridMesh.scale.set(targetScale, targetScale, 1);
+        particleSystem.scale.set(targetScale, targetScale, 1);
+      };
+
+      // Aplica dimensionamento inicial imediato
+      updateSize(initialWidth, initialHeight);
+
+      // Timers para garantir sincronização de tamanho em modais animados ou virada de tela
+      const timerA = setTimeout(() => {
+        const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
+        const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
+        updateSize(curW, curH);
+      }, 50);
+
+      const timerB = setTimeout(() => {
+        const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
+        const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
+        updateSize(curW, curH);
+      }, 180);
+
+      const handleWindowResize = () => {
+        const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
+        const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
+        updateSize(curW, curH);
+      };
+      window.addEventListener('resize', handleWindowResize);
+      window.addEventListener('orientationchange', handleWindowResize);
+
+      if (isContained && typeof ResizeObserver !== 'undefined') {
+        resizeObserver = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const { width, height } = entry.contentRect;
+            if (width > 0 && height > 0) {
+              updateSize(width, height);
+            }
+          }
+        });
+        resizeObserver.observe(container);
+      }
+
+      // Visibility change para pausar quando minimizado
       const handleVisibilityChange = () => {
         isPaused = document.hidden;
       };
       document.addEventListener('visibilitychange', handleVisibilityChange);
 
-      // Loop de animação
+      // Loop de animação contínua e aleatória
       let clock = 0;
       const animate = () => {
         animationFrameId = requestAnimationFrame(animate);
         if (isPaused || !renderer || !scene || !camera) return;
 
-        clock += 0.015;
+        clock += 0.016;
 
-        // Suave interpolação do cursor
-        currentMouseX += (targetMouseX - currentMouseX) * 0.04;
-        currentMouseY += (targetMouseY - currentMouseY) * 0.04;
+        // Cursor suavizado
+        currentMouseX += (targetMouseX - currentMouseX) * 0.035;
+        currentMouseY += (targetMouseY - currentMouseY) * 0.035;
 
-        // Movimento harmônico dos orbes
-        orbMeshes.forEach(({ mesh, initial }, idx) => {
-          const t = clock * initial.speed * 1000 + idx;
-          mesh.position.x = initial.x + Math.sin(t * 0.8) * 1.8 + currentMouseX * 1.2;
-          mesh.position.y = initial.y + Math.cos(t * 0.6) * 1.6 + currentMouseY * 1.2;
-          mesh.scale.setScalar(1 + Math.sin(t * 0.5) * 0.12);
-        });
+        // Trajetória multi-harmônica orgânica e constante da bolha de espaço-tempo
+        const t = clock * 0.55;
+        const bubbleX =
+          Math.sin(t * 0.72) * 8.5 +
+          Math.cos(t * 0.38 + 1.2) * 5.0 +
+          Math.sin(t * 1.15 + 2.5) * 2.8 +
+          currentMouseX * 3.5;
 
-        // Ondulação da malha baseada em tempo e cursor (fluid ripples)
-        const pos = planeGeometry.attributes.position;
+        const bubbleY =
+          Math.cos(t * 0.65) * 5.8 +
+          Math.sin(t * 0.44 + 0.8) * 3.8 +
+          Math.cos(t * 0.98 + 1.8) * 2.2 +
+          currentMouseY * 3.0;
+
+        // Deformação da Grade Azul pura (curvatura de espaço-tempo por onde o centro de distorção passa)
+        const pos = gridGeometry.attributes.position;
         const arr = pos.array as Float32Array;
+        const sigmaSq = 28; // Raio de influência da distorção
+
         for (let i = 0; i < arr.length; i += 3) {
           const vx = initialPositions[i];
           const vy = initialPositions[i + 1];
-          // Distância ao cursor
-          const distToCursor = Math.hypot(vx - currentMouseX * 12, vy - currentMouseY * 10);
-          const ripple = Math.sin(distToCursor * 0.8 - clock * 2.2) * 0.45;
-          const harmonic = Math.sin(vx * 0.3 + clock) * Math.cos(vy * 0.3 + clock) * 0.35;
-          arr[i + 2] = ripple + harmonic;
+          const vz = initialPositions[i + 2];
+
+          const dx = vx - bubbleX;
+          const dy = vy - bubbleY;
+          const distSq = dx * dx + dy * dy;
+          const dist = Math.sqrt(distSq);
+
+          // Gaussiana da curvatura espacial
+          const gauss = Math.exp(-distSq / sigmaSq);
+
+          // Efeito de curvatura 3D + ondas gravitacionais
+          const zCurvature = 3.6 * gauss * Math.cos(dist * 0.85 - clock * 2.2);
+
+          // Ondulação harmônica suave no tecido de fundo
+          const harmonic = 0.25 * Math.sin(vx * 0.3 + clock * 0.8) * Math.cos(vy * 0.3 + clock * 0.8);
+
+          // Deformação lateral/radial das linhas da grade ao redor da distorção
+          const lateralWarp = (2.0 * gauss) / (1 + dist * 0.4);
+
+          arr[i] = vx + dx * lateralWarp * 0.35;
+          arr[i + 1] = vy + dy * lateralWarp * 0.35;
+          arr[i + 2] = vz + zCurvature + harmonic;
         }
         pos.needsUpdate = true;
 
-        // Rotação suave do sistema de partículas
-        particleSystem.rotation.y = clock * 0.02;
-        particleSystem.rotation.x = clock * 0.01;
+        // Rotação suave da poeira estelar
+        particleSystem.rotation.y = clock * 0.015;
+        particleSystem.rotation.x = clock * 0.008;
 
         renderer.render(scene, camera);
       };
@@ -189,38 +293,35 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ cl
       animate();
 
       return () => {
+        clearTimeout(timerA);
+        clearTimeout(timerB);
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         window.removeEventListener('mousemove', handlePointer);
         window.removeEventListener('touchmove', handlePointer);
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('resize', handleWindowResize);
+        window.removeEventListener('orientationchange', handleWindowResize);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
+        if (resizeObserver) resizeObserver.disconnect();
 
-        // Desalocação Three.js
-        planeGeometry.dispose();
-        planeMaterial.dispose();
+        gridGeometry.dispose();
+        lineMaterial.dispose();
         particleGeo.dispose();
         particleMat.dispose();
-        orbMeshes.forEach(({ mesh }) => {
-          mesh.geometry.dispose();
-          if (Array.isArray(mesh.material)) {
-            mesh.material.forEach((m) => m.dispose());
-          } else {
-            mesh.material.dispose();
-          }
-        });
         renderer?.dispose();
       };
     } catch {
-      // Fallback gracioso para gradiente CSS
       setUseCssFallback(true);
     }
-  }, [useCssFallback]);
+  }, [useCssFallback, variant]);
 
   if (useCssFallback) {
+    const isContained = variant === 'contained';
     return (
       <div
         aria-hidden="true"
-        className={`pointer-events-none fixed inset-0 -z-20 overflow-hidden ${className}`}
+        className={`pointer-events-none ${
+          isContained ? 'absolute inset-0' : 'fixed inset-0 -z-20'
+        } overflow-hidden ${className}`}
       >
         <div className="absolute top-[-15%] left-[-10%] w-[65vw] h-[65vw] rounded-full bg-blue-600/10 blur-[130px] animate-pulse duration-[8000ms]" />
         <div className="absolute bottom-[-15%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/10 blur-[140px] animate-pulse duration-[10000ms]" />
@@ -229,11 +330,14 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({ cl
     );
   }
 
+  const isContained = variant === 'contained';
   return (
     <div
       ref={containerRef}
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 -z-20 overflow-hidden ${className}`}
+      className={`pointer-events-none ${
+        isContained ? 'absolute inset-0 z-0' : 'fixed inset-0 -z-20'
+      } overflow-hidden ${className}`}
     >
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>

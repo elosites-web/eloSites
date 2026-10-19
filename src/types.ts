@@ -11,12 +11,14 @@ export interface NavItem {
 export type ScreenId =
   | 'home'
   | 'inicio'
-  | 'portfolio'
   | 'servicos'
+  | 'portfolio'
+  | 'avaliacoes'
   | 'processo'
   | 'orcamento'
-  | 'faq'
-  | 'parceria-trafego';
+  | 'parceria-trafego'
+  | 'trafego-pago'
+  | 'faq';
 
 export interface ScreenMeta {
   id: ScreenId;
@@ -48,8 +50,17 @@ export const SCREENS: ScreenMeta[] = [
     iconName: 'Sparkles',
   },
   {
-    id: 'portfolio',
+    id: 'servicos',
     number: '03',
+    title: 'Serviços & Condições Comerciais',
+    shortTitle: 'Serviços',
+    badge: 'Serviços & Condições Comerciais',
+    description: 'Formatos de sites, orçamento sob medida, 20% à vista e parcelamento em até 12x.',
+    iconName: 'Briefcase',
+  },
+  {
+    id: 'portfolio',
+    number: '04',
     title: 'Portfólio de Projetos Reais',
     shortTitle: 'Portfólio',
     badge: 'Projetos no Ar',
@@ -57,17 +68,17 @@ export const SCREENS: ScreenMeta[] = [
     iconName: 'LayoutGrid',
   },
   {
-    id: 'servicos',
-    number: '04',
-    title: 'Serviços & Condições Comerciais',
-    shortTitle: 'Serviços',
-    badge: 'Formatos & Pagamento',
-    description: '3 formatos de sites, orçamento sob medida, 20% à vista e parcelamento em até 12x.',
-    iconName: 'Briefcase',
+    id: 'avaliacoes',
+    number: '05',
+    title: 'Avaliações de Clientes Reais',
+    shortTitle: 'Avaliações',
+    badge: 'Social Proof & Clientes Reais',
+    description: 'Depoimentos autênticos e avaliações 5 estrelas de clientes que colocaram o site no ar.',
+    iconName: 'Star',
   },
   {
     id: 'processo',
-    number: '05',
+    number: '06',
     title: 'Como Funciona o Processo & Diferenciais',
     shortTitle: 'Como funciona',
     badge: 'Processo & Diferenciais',
@@ -76,7 +87,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'orcamento',
-    number: '06',
+    number: '07',
     title: 'Briefing & Agendamento',
     shortTitle: 'Orçamento',
     badge: 'Simulação Rápida',
@@ -84,22 +95,22 @@ export const SCREENS: ScreenMeta[] = [
     iconName: 'CalendarCheck',
   },
   {
+    id: 'parceria-trafego',
+    number: '08',
+    title: 'Tráfego Pago & Gestão de Leads',
+    shortTitle: 'Tráfego Pago',
+    badge: 'Tráfego Pago',
+    description: 'Parceria recomendada com Thomaz (TrueThomaz.BM) para Meta Ads, geração de leads e consultoria comercial.',
+    iconName: 'TrendingUp',
+  },
+  {
     id: 'faq',
-    number: '07',
+    number: '09',
     title: 'Perguntas Frequentes (FAQ) & Contato',
     shortTitle: 'FAQ & Contato',
     badge: 'Dúvidas & Contato',
     description: 'Respostas diretas sobre prazos, domínio, hospedagem, pagamentos e canais de atendimento.',
     iconName: 'HelpCircle',
-  },
-  {
-    id: 'parceria-trafego',
-    number: '08',
-    title: 'Parceria Estratégica | Tráfego Pago & Gestão de Leads',
-    shortTitle: 'Parceria | Tráfego Pago',
-    badge: 'Tráfego Pago',
-    description: 'Parceria recomendada com Thomaz (TrueThomaz.BM) para Meta Ads, geração de leads e consultoria comercial.',
-    iconName: 'TrendingUp',
   },
 ];
 
@@ -260,12 +271,13 @@ export const SITE_CONFIG = {
 export const NAVIGATION_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home', id: 'nav-home' },
   { label: 'Início', href: '#inicio', id: 'nav-inicio' },
-  { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
+  { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
+  { label: 'Avaliações', href: '#avaliacoes', id: 'nav-avaliacoes' },
   { label: 'Como funciona', href: '#processo', id: 'nav-processo' },
   { label: 'Orçamento', href: '#orcamento', id: 'nav-orcamento' },
+  { label: 'Tráfego Pago', href: '#parceria-trafego', id: 'nav-parceria-trafego' },
   { label: 'FAQ & Contato', href: '#faq', id: 'nav-faq' },
-  { label: 'Parceria | Tráfego Pago', href: '#parceria-trafego', id: 'nav-parceria-trafego' },
 ];
 
 export {

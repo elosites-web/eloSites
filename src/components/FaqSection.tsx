@@ -86,13 +86,7 @@ export const FaqSection: React.FC = () => {
             </div>
           </BiReveal>
 
-          <div
-            className="space-y-4 faq-list scroll-perf-list scroll-snap-y-container card-list-container"
-            style={{
-              scrollSnapType: 'y mandatory',
-              scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-            }}
-          >
+          <div className="space-y-4 faq-list">
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index;
               const panelId = `faq-content-${index}`;
@@ -102,15 +96,10 @@ export const FaqSection: React.FC = () => {
                   key={faq.id}
                   direction={index % 2 === 0 ? 'left' : 'right'}
                   index={index}
-                  className="h-full scroll-snap-card card-snap-item"
-                  style={{
-                    scrollSnapAlign: 'start',
-                    scrollSnapStop: 'normal',
-                    scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                  }}
+                  className="h-full"
                 >
                   <div
-                    className={`rounded-2xl overflow-hidden transition-all duration-300 border bracket-panel relative scroll-snap-card card-snap-item bg-[#090E23] ${
+                    className={`rounded-2xl overflow-hidden transition-all duration-300 border bracket-panel relative bg-[#090E23] ${
                       isOpen
                         ? 'border-blue-400/60 shadow-[0_0_24px_rgba(59,130,246,0.25)]'
                         : 'border-blue-500/15 hover:border-blue-400/40'
