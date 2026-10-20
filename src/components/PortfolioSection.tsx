@@ -47,18 +47,18 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
     challenge:
-      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Necessitava de uma landing page de alta conversão para transformar visitantes de tráfego pago (Instagram e Facebook Ads) em mensagens imediatas no WhatsApp.',
+      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Necessitava de uma landing page ágil para apresentar suas modalidades e conduzir interessados ao contato direto no WhatsApp.',
     solution:
-      'Desenvolvimento de landing page ágil, com botões de WhatsApp parametrizados para cada modalidade de treino, galeria de treinos, tabela de benefícios e prova social destacada.',
-    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Foco em Tráfego Pago'],
+      'Desenvolvimento de landing page responsiva, com chamadas de WhatsApp parametrizadas por modalidade de treino, galeria de resultados, apresentação de benefícios e prova social em destaque.',
+    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Foco em Conversão'],
     urlLabel: 'jvsalvaiapersonal.netlify.app',
     href: 'https://jvsalvaiapersonal.netlify.app',
     desktopImage: '/portifolio-jvsalvaia-desktop.webp',
     mobileImage: '/portifolio-jvsalvaia-mobile.webp',
     features: [
-      'Gatilho direto para WhatsApp em cada plano',
-      'Layout 100% responsivo para smartphone',
-      'Tempo de carregamento ultrarrápido (< 1.2s)',
+      'Gatilho direto para WhatsApp com mensagem personalizada para cada plano',
+      'Interface responsiva adaptada para smartphone, tablet e desktop',
+      'Otimização de carregamento de imagens e fundamentos de SEO técnico',
     ],
     resultsNote: 'Leads direcionados com mensagem específica do serviço de interesse.',
   },
@@ -69,20 +69,20 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Toledo Segurança',
     category: 'institutional',
     challenge:
-      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de presença institucional imponente para transmitir autoridade corporativa e receber pedidos de cotação.',
+      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de presença institucional clara para transmitir autoridade e receber solicitações de cotação.',
     solution:
-      'Site institucional com paleta executiva dark & gold, detalhamento de serviços e certificações, formulário direto de cotação empresarial e canal de recrutamento integrado ao WhatsApp.',
+      'Site institucional com paleta corporativa dark & gold, estruturação detalhada dos serviços prestados, formulário direto de cotação empresarial e canal de recrutamento integrado ao WhatsApp.',
     tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'B2B & Condomínios'],
     urlLabel: 'toledoseguranca.netlify.app',
     href: 'https://toledoseguranca.netlify.app/',
     desktopImage: '/portifolio-toledoseguranca-desktop.webp',
     mobileImage: '/portifolio-toledoseguranca-mobile.webp',
     features: [
-      'Apresentação corporativa de alta credibilidade',
-      'Seções estruturadas para eventos e condomínios',
-      'Canal duplo no WhatsApp (Orçamento + Vagas)',
+      'Apresentação institucional estruturada com foco em credibilidade',
+      'Seções organizadas para serviços de eventos, condomínios e empresas',
+      'Fluxo duplo de atendimento no WhatsApp (Orçamento comercial e Banco de talentos)',
     ],
-    resultsNote: 'Autoridade imediata para propostas corporativas e eventos de médio a grande porte.',
+    resultsNote: 'Presença institucional consolidada para apresentação corporativa e atendimento ágil de cotações.',
   },
   {
     id: 'duelo-fim-de-ano',
@@ -91,20 +91,20 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Duelo de Fim de Ano — Badem vs Becala',
     category: 'landing',
     challenge:
-      'Organização de clássico esportivo comunitário e beneficente de fim de ano que exigia engajamento interativo da torcida, votações dos melhores do jogo e mural de fotos dinâmico sem custo de servidores complexos.',
+      'Organização de clássico esportivo comunitário e beneficente de fim de ano que necessitava de engajamento dos torcedores, votação dos melhores da partida e mural de fotos dinâmico sem complexidade de infraestrutura.',
     solution:
-      'Aplicação web com campo tático animado, votação interativa em tempo real ("Bola Cheia vs Bola Murcha"), cronologia de partidas anteriores e integração com comunidade esportiva.',
-    tags: ['Interatividade', 'Engajamento Comunitário', 'Futebol Amador', 'UX Gamificada'],
+      'Aplicação web com campo tático interativo, votação no navegador ("Bola Cheia vs Bola Murcha") com persistência local, cronologia de edições e integração com a comunidade esportiva.',
+    tags: ['Interatividade', 'Engajamento Comunitário', 'Futebol Amador', 'UX Interativa'],
     urlLabel: 'jogodefimdeano.netlify.app',
     href: 'https://jogodefimdeano.netlify.app',
     desktopImage: '/portifolio-jogodefimdeano-desktop.webp',
     mobileImage: '/portifolio-jogodefimdeano-mobile.webp',
     features: [
-      'Escalações em campo tático interativo',
-      'Votação popular sem necessidade de login',
-      'Galeria de fotos com carregamento otimizado',
+      'Escalações em campo tático interativo de futebol',
+      'Votação no navegador com persistência no armazenamento local (localStorage)',
+      'Galeria de fotos com carregamento sob demanda',
     ],
-    resultsNote: 'Mais de 1.000 acessos simultâneos na data do evento com nota máxima de performance.',
+    resultsNote: 'Engajamento comunitário interativo com interface leve, dinâmica e sem necessidade de login.',
   },
 ];
 
@@ -124,7 +124,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const [viewMode, setViewMode] = useState<ViewMode>('composite');
 
   return (
-    <Interactive3DCard maxTilt={3.5} animatedBorder={true} className="h-full">
+    <Interactive3DCard maxTilt={1.2} animatedBorder={true} className="h-full">
       <article className="glass-card-interactive surface-card portfolio-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 flex flex-col h-full overflow-hidden group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all">
         {/* Top Header / Informações */}
         <div className="p-6 sm:p-7 border-b border-white/[0.06] bg-[#070B1A]/80 space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">

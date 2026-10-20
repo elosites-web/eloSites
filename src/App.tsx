@@ -28,6 +28,9 @@ const TestimonialsSection = lazy(() =>
 const ServicesSection = lazy(() =>
   import('./components/ServicesSection').then((mod) => ({ default: mod.ServicesSection }))
 );
+const SpecialtiesSection = lazy(() =>
+  import('./components/SpecialtiesSection').then((mod) => ({ default: mod.SpecialtiesSection }))
+);
 const DifferentialsSection = lazy(() =>
   import('./components/DifferentialsSection').then((mod) => ({ default: mod.DifferentialsSection }))
 );
@@ -126,6 +129,7 @@ export default function App() {
       'home',
       'inicio',
       'servicos',
+      'solucoes-web',
       'portfolio',
       'avaliacoes',
       'processo',
@@ -137,7 +141,19 @@ export default function App() {
 
     const handleHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
-      if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
+      if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
+        setCurrentScreen((prev) => {
+          if (prev !== 'solucoes-web') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'solucoes-web');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'solucoes-web';
+        });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
         setCurrentScreen((prev) => {
           if (prev !== 'avaliacoes') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -506,13 +522,24 @@ export default function App() {
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
-              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
+              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('solucoes-web')} />
             </Suspense>
           </SectionErrorBoundary>
         </div>
       )}
 
-      {/* TELA 04: Portfólio de Projetos Reais */}
+      {/* TELA 04: Soluções Web (Página Independente de Especialidades Web) */}
+      {currentScreen === 'solucoes-web' && (
+        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+          <SectionErrorBoundary>
+            <Suspense fallback={<ServicesSkeleton />}>
+              <SpecialtiesSection onNavigateToContact={() => navigateToScreen('portfolio')} />
+            </Suspense>
+          </SectionErrorBoundary>
+        </div>
+      )}
+
+      {/* TELA 05: Portfólio de Projetos Reais */}
       {currentScreen === 'portfolio' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
@@ -525,7 +552,7 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 05: Avaliações de Clientes Reais (Social Proof & Carrossel Cilíndrico) */}
+      {/* TELA 06: Avaliações de Clientes Reais (Social Proof & Carrossel Cilíndrico) */}
       {currentScreen === 'avaliacoes' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
@@ -538,7 +565,7 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 06: Processo em 4 Etapas & Diferenciais como continuidade */}
+      {/* TELA 07: Processo em 4 Etapas & Diferenciais como continuidade */}
       {currentScreen === 'processo' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
           <SectionErrorBoundary>
@@ -552,7 +579,7 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 07: Briefing & Agendamento */}
+      {/* TELA 08: Briefing & Agendamento */}
       {currentScreen === 'orcamento' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
@@ -563,7 +590,7 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 08: Tráfego Pago & Gestão de Leads */}
+      {/* TELA 09: Tráfego Pago & Gestão de Leads */}
       {(currentScreen === 'parceria-trafego' || currentScreen === 'trafego-pago') && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
           <SectionErrorBoundary>
@@ -574,7 +601,7 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 09: Perguntas Frequentes (FAQ) & Contato */}
+      {/* TELA 10: Perguntas Frequentes (FAQ) & Contato */}
       {currentScreen === 'faq' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
           <SectionErrorBoundary>

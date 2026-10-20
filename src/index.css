@@ -1593,12 +1593,12 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 .process-list,
 .benefits-list,
 .faq-list {
-  scroll-snap-type: y mandatory;
-  -webkit-scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
+  -webkit-scroll-snap-type: y proximity;
   scroll-padding-top: clamp(4.5rem, 12vh, 6.5rem);
 }
 
-/* Cards individuais com alinhamento ao topo ancorado */
+/* Cards individuais no desktop: alinhamento ao topo com margem de segurança */
 .scroll-snap-card,
 .card-snap-item,
 .service-card,
@@ -1611,8 +1611,74 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   -webkit-scroll-snap-align: start;
   scroll-snap-stop: normal;
   scroll-margin-top: clamp(4.5rem, 12vh, 6.5rem);
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
   touch-action: pan-y;
+}
+
+/* ============================================================
+   OTIMIZAÇÃO ESPECÍFICA PARA DISPOSITIVOS MÓVEIS (<= 1024px)
+   Garante que os cards de 'Serviços' e 'Processo' fiquem rigorosamente
+   centralizados na viewport móvel, compensando o cabeçalho fixo
+   e o safe-area inferior para eliminar qualquer corte de conteúdo.
+   ============================================================ */
+@media (max-width: 1024px) {
+  html {
+    scroll-snap-type: y proximity;
+    -webkit-scroll-snap-type: y proximity;
+    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
+    scroll-padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Seções e listas de cards com rolagem vertical ancorada no centro */
+  #servicos,
+  #como-funciona,
+  .service-list,
+  .process-list,
+  .scroll-snap-y-container,
+  .card-list-container {
+    scroll-snap-type: y proximity !important;
+    -webkit-scroll-snap-type: y proximity !important;
+    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px)) !important;
+    scroll-padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Cards perfeitamente centralizados sem margens que causem deslocamento */
+  .scroll-snap-card,
+  .card-snap-item,
+  .service-card,
+  .process-card {
+    scroll-snap-align: center !important;
+    -webkit-scroll-snap-align: center !important;
+    scroll-snap-stop: normal !important;
+    scroll-margin: 0 !important;
+    scroll-margin-top: 0 !important;
+    scroll-margin-bottom: 0 !important;
+  }
+
+  /* Prevenção de recortes: garante que cards nunca ultrapassem a altura visível */
+  .service-card,
+  .process-card {
+    max-height: calc(100dvh - 7.5rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    scrollbar-width: none;
+  }
+
+  .service-card::-webkit-scrollbar,
+  .process-card::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Celulares compactos (<= 640px): refinamento de espaçamento interno para respiração total */
+@media (max-width: 640px) {
+  .service-card {
+    padding: clamp(1.15rem, 4vw, 1.5rem) !important;
+  }
+
+  .process-card {
+    padding: clamp(1.25rem, 4.5vw, 1.65rem) !important;
+  }
 }
 
 

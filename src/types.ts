@@ -12,6 +12,8 @@ export type ScreenId =
   | 'home'
   | 'inicio'
   | 'servicos'
+  | 'solucoes-web'
+  | 'solucoes'
   | 'portfolio'
   | 'avaliacoes'
   | 'processo'
@@ -54,13 +56,22 @@ export const SCREENS: ScreenMeta[] = [
     number: '03',
     title: 'Serviços & Condições Comerciais',
     shortTitle: 'Serviços',
-    badge: 'Serviços & Condições Comerciais',
+    badge: 'Serviços Comerciais',
     description: 'Formatos de sites, orçamento sob medida, 20% à vista e parcelamento em até 12x.',
     iconName: 'Briefcase',
   },
   {
-    id: 'portfolio',
+    id: 'solucoes-web',
     number: '04',
+    title: 'Soluções Web & Especialidades',
+    shortTitle: 'Soluções Web',
+    badge: 'Soluções Web',
+    description: 'Especialidades em desenvolvimento frontend, UI/UX, interatividade, SEO técnico e integrações.',
+    iconName: 'Cpu',
+  },
+  {
+    id: 'portfolio',
+    number: '05',
     title: 'Portfólio de Projetos Reais',
     shortTitle: 'Portfólio',
     badge: 'Projetos no Ar',
@@ -69,7 +80,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'avaliacoes',
-    number: '05',
+    number: '06',
     title: 'Avaliações de Clientes Reais',
     shortTitle: 'Avaliações',
     badge: 'Social Proof & Clientes Reais',
@@ -78,7 +89,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'processo',
-    number: '06',
+    number: '07',
     title: 'Como Funciona o Processo & Diferenciais',
     shortTitle: 'Como funciona',
     badge: 'Processo & Diferenciais',
@@ -87,7 +98,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'orcamento',
-    number: '07',
+    number: '08',
     title: 'Briefing & Agendamento',
     shortTitle: 'Orçamento',
     badge: 'Simulação Rápida',
@@ -96,7 +107,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'parceria-trafego',
-    number: '08',
+    number: '09',
     title: 'Tráfego Pago & Gestão de Leads',
     shortTitle: 'Tráfego Pago',
     badge: 'Tráfego Pago',
@@ -105,7 +116,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'faq',
-    number: '09',
+    number: '10',
     title: 'Perguntas Frequentes (FAQ) & Contato',
     shortTitle: 'FAQ & Contato',
     badge: 'Dúvidas & Contato',
@@ -272,6 +283,7 @@ export const NAVIGATION_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home', id: 'nav-home' },
   { label: 'Início', href: '#inicio', id: 'nav-inicio' },
   { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
+  { label: 'Soluções Web', href: '#solucoes-web', id: 'nav-solucoes-web' },
   { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Avaliações', href: '#avaliacoes', id: 'nav-avaliacoes' },
   { label: 'Como funciona', href: '#processo', id: 'nav-processo' },

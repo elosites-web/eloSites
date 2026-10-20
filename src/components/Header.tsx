@@ -2,9 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { EloLogo } from './EloLogo';
 import { FluidRippleBackground } from './FluidRippleBackground';
-import { ScreenId, SCREENS, SITE_CONFIG, whatsappUrl } from '../types';
+import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
-import { ArrowRight } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -23,7 +22,6 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const isHome = currentScreen === 'home';
   const savedScrollPositionRef = useRef<number>(0);
-  const headerWhatsappUrl = whatsappUrl(SITE_CONFIG.headerWhatsappMessage);
 
   // Tecla de atalho: Escape para fechar o menu, 'm' ou 'M' para abrir/fechar o menu
   useEffect(() => {
@@ -129,9 +127,6 @@ export const Header: React.FC<HeaderProps> = ({
     </button>
   );
 
-  // Principais links visíveis na barra superior para desktop (Top Bar Contract)
-  const navScreens = SCREENS.filter((s) => s.id !== 'home');
-
   return (
     <>
       {/* Menu Aberto em qualquer tela: 'X' posicionado centralizado no topo */}
@@ -158,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
         </header>
       )}
 
-      {/* Menu Fechado nas demais telas: Top Bar Contract com Brand, Links e CTA */}
+      {/* Menu Fechado nas demais telas: Cabeçalho minimalista (apenas Logo e Menu Hambúrguer) */}
       {!isHome && !isMenuOpen && (
         <header
           id="header-nav"
@@ -166,8 +161,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="flex items-center justify-between gap-4 sm:gap-6 min-h-[46px]">
-              
-              {/* Zona 1: Logo Wordmark oficial */}
+              {/* Logo Wordmark oficial */}
               <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-10">
                 <button
                   type="button"
@@ -180,46 +174,10 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               </div>
 
-              {/* Zona 2: Links de navegação desktop limpos (Top Bar Contract) */}
-              <nav
-                className="hidden md:flex items-center gap-1 lg:gap-2 px-3 py-1 rounded-full bg-slate-900/60 border border-blue-500/15 backdrop-blur-sm"
-                aria-label="Navegação Principal"
-              >
-                {navScreens.map((screen) => {
-                  const isActive = screen.id === currentScreen;
-                  return (
-                    <button
-                      key={screen.id}
-                      type="button"
-                      onClick={() => onSelectScreen(screen.id)}
-                      onPointerEnter={() => preloadScreen(screen.id)}
-                      className={`relative px-3 py-1.5 text-xs font-semibold rounded-full transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-                        isActive
-                          ? 'text-white bg-blue-600/90 shadow-[0_0_12px_rgba(37,99,235,0.6)]'
-                          : 'text-slate-300 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      {screen.shortTitle}
-                    </button>
-                  );
-                })}
-              </nav>
-
-              {/* Zona 3: CTA Principal + Botão do Menu Mobile */}
-              <div className="flex items-center gap-2.5 sm:gap-3 ml-auto shrink-0 z-10 pointer-events-auto">
-                <a
-                  href={headerWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-primary hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold shadow-[0_0_14px_rgba(37,99,235,0.45)] whitespace-nowrap"
-                >
-                  <span>Orçamento</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-
+              {/* Apenas o Botão do Menu Hambúrguer */}
+              <div className="flex items-center ml-auto shrink-0 z-10 pointer-events-auto">
                 {renderMenuButton()}
               </div>
-
             </div>
           </div>
         </header>

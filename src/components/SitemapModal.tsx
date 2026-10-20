@@ -35,40 +35,52 @@ export const generateSitemapXml = (baseUrl: string): string => {
       comment: 'Tela 01: Início & Apresentação',
     },
     {
-      loc: `${cleanBase}/#portfolio`,
-      priority: '0.9',
-      changefreq: 'weekly',
-      comment: 'Tela 02: Portfólio de Projetos Reais',
-    },
-    {
       loc: `${cleanBase}/#servicos`,
       priority: '0.9',
       changefreq: 'weekly',
       comment: 'Tela 03: Serviços & Condições Comerciais',
     },
     {
+      loc: `${cleanBase}/#solucoes-web`,
+      priority: '0.9',
+      changefreq: 'weekly',
+      comment: 'Tela 04: Soluções Web & Especialidades',
+    },
+    {
+      loc: `${cleanBase}/#portfolio`,
+      priority: '0.9',
+      changefreq: 'weekly',
+      comment: 'Tela 05: Portfólio de Projetos Reais',
+    },
+    {
+      loc: `${cleanBase}/#avaliacoes`,
+      priority: '0.8',
+      changefreq: 'monthly',
+      comment: 'Tela 06: Avaliações de Clientes Reais',
+    },
+    {
       loc: `${cleanBase}/#processo`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 04: Processo Ágil & Diferenciais',
+      comment: 'Tela 07: Processo Ágil & Diferenciais',
     },
     {
       loc: `${cleanBase}/#orcamento`,
       priority: '0.9',
       changefreq: 'weekly',
-      comment: 'Tela 05: Orçamento & Agendamento de Reunião',
-    },
-    {
-      loc: `${cleanBase}/#faq`,
-      priority: '0.8',
-      changefreq: 'monthly',
-      comment: 'Tela 06: Perguntas Frequentes & Contato',
+      comment: 'Tela 08: Orçamento & Agendamento de Reunião',
     },
     {
       loc: `${cleanBase}/#parceria-trafego`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 07: Parceria Estratégica | Tráfego Pago',
+      comment: 'Tela 09: Parceria Estratégica | Tráfego Pago',
+    },
+    {
+      loc: `${cleanBase}/#faq`,
+      priority: '0.8',
+      changefreq: 'monthly',
+      comment: 'Tela 10: Perguntas Frequentes & Contato',
     },
   ];
 

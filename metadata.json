@@ -1,6 +1,6 @@
 {
   "name": "ēloSites",
-  "description": "Estúdio digital especializado em sites institucionais e landing pages de alta conversão para profissionais liberais e pequenos negócios.",
+  "description": "Estúdio de desenvolvimento web especializado em landing pages e sites institucionais responsivos, interfaces personalizadas, integração com WhatsApp e SEO técnico.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

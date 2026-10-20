@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              Tecnologia que transforma ideias em sites. Criação de sites profissionais com SEO técnico e foco em conversão para pequenos negócios e profissionais liberais.
+              A ēloSites é um estúdio de desenvolvimento web especializado em landing pages e sites institucionais responsivos. Criamos interfaces personalizadas com tecnologias modernas, funcionalidades interativas, integração com WhatsApp e SEO técnico, com foco em clareza, experiência de navegação e objetivos comerciais.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a
@@ -116,6 +116,7 @@ export const Footer: React.FC<FooterProps> = ({
                 const getScreenFromHref = (href: string): ScreenId => {
                   if (href === '#home') return 'home';
                   if (href.includes('servico')) return 'servicos';
+                  if (href.includes('solucoes') || href.includes('especialidade')) return 'solucoes-web';
                   if (href.includes('portfolio')) return 'portfolio';
                   if (href.includes('avaliacao') || href.includes('depoimento') || href.includes('testemunho')) return 'avaliacoes';
                   if (href.includes('processo') || href.includes('como-funciona') || href.includes('diferencia')) return 'processo';
@@ -189,21 +190,32 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Segmentos e Foco */}
+          {/* Especialidades e Foco Técnico */}
           <div className="md:col-span-4 space-y-3">
-            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-200">
-              Especialidades
-            </h4>
+            <button
+              type="button"
+              onClick={() => {
+                if (onSelectScreen) {
+                  onSelectScreen('solucoes-web');
+                } else {
+                  window.location.hash = 'solucoes-web';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-left text-xs font-mono font-semibold uppercase tracking-wider text-slate-200 hover:text-cyan-300 transition-colors cursor-pointer group flex items-center gap-1.5"
+            >
+              <span>Especialidades & Soluções Web</span>
+              <span className="text-cyan-400 group-hover:translate-x-1 transition-transform">→</span>
+            </button>
             <p className="text-[13px] text-slate-300/90 leading-relaxed">
-              Sites institucionais e landing pages desenvolvidos especificamente para prestadores de serviços:
-              Personal trainers, advogados, salões de beleza, barbearias, clínicas e profissionais autônomos.
+              Desenvolvimento de landing pages focadas em conversão, sites institucionais responsivos, componentes interativos de frontend, SEO técnico e integrações com WhatsApp e ferramentas de mensuração.
             </p>
             <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-2">
               <span className="relative flex h-2 w-2 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
               </span>
-              <span>Código limpo • Sem templates prontos genéricos</span>
+              <span>Engenharia frontend moderna • Código limpo e sob medida</span>
             </div>
           </div>
         </div>

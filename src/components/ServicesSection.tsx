@@ -23,6 +23,44 @@ import { Interactive3DCard } from './Interactive3DCard';
 import { MagneticButton } from './MagneticButton';
 import { BiReveal } from './BiReveal';
 
+interface FadeInBlockProps {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  yOffset?: number;
+}
+
+// Transição de desvanecimento suave (fade-in) nos blocos de texto conforme o usuário faz a rolagem vertical
+const FadeInBlock: React.FC<FadeInBlockProps> = ({
+  children,
+  delay = 0,
+  className = '',
+  yOffset = 12,
+}) => {
+  const systemPrefersReduced = useReducedMotion();
+  const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
+
+  if (prefersReduced) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: yOffset }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-24px' }}
+      transition={{
+        duration: 0.48,
+        delay: delay * 0.001,
+        ease: [0.23, 1, 0.32, 1],
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 interface ServiceCategory {
   id: string;
   badge: string;
@@ -278,13 +316,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   key={service.id}
                   direction={index === 0 ? 'left' : index === 1 ? 'right' : 'up'}
                   index={index}
-                  className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid"
+                  className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid scroll-snap-card card-snap-item"
                 >
-                  <Interactive3DCard maxTilt={5} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+                  <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid">
                     <article
                       className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col space-y-5 lg:space-y-0 lg:row-span-5 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all h-full w-full min-w-0 max-w-full box-border"
                     >
-                      {/* Linha 1: Topo do card + Título + Descrição */}
+                      {/* Linha 1: Topo do card + Título + Descrição com Fade-In suave */}
                       <div className="space-y-4 lg:pb-4">
                         <div className="flex items-center justify-between gap-2.5 min-w-0">
                           <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)]">
@@ -295,18 +333,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                           </span>
                         </div>
 
-                        <div>
+                        <FadeInBlock delay={40}>
                           <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white mb-2">
                             {service.title}
                           </h3>
                           <p className="text-sm text-slate-300 leading-relaxed font-normal">
                             {service.description}
                           </p>
-                        </div>
+                        </FadeInBlock>
                       </div>
 
-                      {/* Linha 2: Bloco INCLUI */}
-                      <div className="space-y-2.5 pt-4 border-t border-white/[0.06] lg:pb-4">
+                      {/* Linha 2: Bloco INCLUI com Fade-In suave */}
+                      <FadeInBlock delay={80} className="space-y-2.5 pt-4 border-t border-white/[0.06] lg:pb-4">
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">
                           INCLUI:
                         </span>
@@ -318,17 +356,17 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                             </div>
                           ))}
                         </div>
-                      </div>
+                      </FadeInBlock>
 
-                      {/* Linha 3: Caixa de Nota Sutil */}
-                      <div className="lg:py-3">
+                      {/* Linha 3: Caixa de Nota Sutil com Fade-In suave */}
+                      <FadeInBlock delay={110} className="lg:py-3">
                         <p className="text-xs text-slate-400 leading-relaxed rounded-lg border border-white/[0.08] bg-slate-950/70 p-3">
                           ℹ️ {service.scopeNote}
                         </p>
-                      </div>
+                      </FadeInBlock>
 
-                      {/* Linha 4: Bloco NÃO INCLUSO */}
-                      <div className="space-y-2 pt-4 border-t border-white/[0.06] lg:pb-4">
+                      {/* Linha 4: Bloco NÃO INCLUSO com Fade-In suave */}
+                      <FadeInBlock delay={130} className="space-y-2 pt-4 border-t border-white/[0.06] lg:pb-4">
                         {service.excluded && (
                           <>
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
@@ -344,11 +382,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                             </div>
                           </>
                         )}
-                      </div>
+                      </FadeInBlock>
 
                       {/* Linha 5: Orçamento Personalizado & CTA (inicia na mesma posição vertical) */}
                       <div className="pt-4 border-t border-white/[0.08] space-y-4 flex flex-col justify-end">
-                        <div className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.06] space-y-1">
+                        <FadeInBlock delay={150} className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.06] space-y-1">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wide">
                               Proposta Comercial
@@ -360,13 +398,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                           <p className="text-xs text-slate-300 leading-relaxed">
                             Definido por escopo, páginas e urgência. Pagamento facilitado em até 5x sem juros ou desconto no PIX.
                           </p>
-                        </div>
+                        </FadeInBlock>
 
                         <MagneticButton
                           href={ctaUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          strength={10}
+                          strength={3}
                           glowColor="rgba(99, 102, 241, 0.4)"
                           className="cta-primary w-full inline-flex items-center justify-center text-center gap-1.5 sm:gap-2 py-3.5 px-3 sm:px-4 rounded-xl text-xs sm:text-[13px] md:text-sm font-semibold text-white transition-all shadow-lg shadow-indigo-600/25 min-h-12"
                           ariaLabel={service.ctaLabel}
@@ -380,6 +418,25 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 </BiReveal>
               );
             })}
+          </div>
+
+          {/* Navegação para a Página Soluções Web */}
+          <div className="mt-8 sm:mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => {
+                if (onNavigateToOrcamento) {
+                  onNavigateToOrcamento();
+                } else {
+                  window.location.hash = 'solucoes-web';
+                }
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Conhecer nossas especialidades na página Soluções Web</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
           {/* SEÇÃO DESTACADA: CONDIÇÕES DE PAGAMENTO ATUALIZADAS */}
@@ -401,25 +458,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             {/* 4 Blocos de Regras Comerciais com transição de entrada dinâmica ao rolar */}
             <div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 service-list scroll-perf-list scroll-snap-y-container card-list-container"
-              style={{
-                scrollSnapType: 'y mandatory',
-                scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-              }}
             >
               {/* Regra 1: 50% Entrada + 50% Final */}
               <BiReveal
                 direction="left"
                 index={0}
                 className="h-full scroll-snap-card card-snap-item"
-                style={{
-                  scrollSnapAlign: 'start',
-                  scrollSnapStop: 'normal',
-                  scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                }}
               >
-                <Interactive3DCard maxTilt={5} className="h-full">
+                <Interactive3DCard maxTilt={1.0} className="h-full">
                   <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
-                    <div className="space-y-3">
+                    <FadeInBlock delay={40} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <Split className="w-5 h-5" />
                       </div>
@@ -427,7 +475,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                         50% no momento da contratação para iniciar imediatamente o desenvolvimento e 50% restante após a entrega e aprovação final (via PIX).
                       </p>
-                    </div>
+                    </FadeInBlock>
                     <div className="mt-auto pt-4">
                       <div className="text-[11px] font-mono text-blue-300 bg-blue-950/40 px-2.5 py-1 rounded border border-blue-500/20 text-center">
                         Ideal para fluxo de caixa
@@ -442,15 +490,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 direction="right"
                 index={1}
                 className="h-full scroll-snap-card card-snap-item"
-                style={{
-                  scrollSnapAlign: 'start',
-                  scrollSnapStop: 'normal',
-                  scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                }}
               >
-                <Interactive3DCard maxTilt={5} className="h-full">
+                <Interactive3DCard maxTilt={1.0} className="h-full">
                   <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-emerald-500/40 hover:border-emerald-400/70 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all bg-gradient-to-b from-emerald-950/20 to-[#090E23]">
-                    <div className="space-y-3">
+                    <FadeInBlock delay={60} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-emerald-950/90 border border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                         <Percent className="w-5 h-5" />
                       </div>
@@ -463,7 +506,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                         Pagamento integral à vista no momento do fechamento garante 20% de desconto direto sobre o valor total do projeto orçado.
                       </p>
-                    </div>
+                    </FadeInBlock>
                     <div className="mt-auto pt-4">
                       <div className="text-[11px] font-mono text-emerald-300 bg-emerald-950/40 px-2.5 py-1 rounded border border-emerald-500/20 text-center">
                         Economize 1/5 do investimento
@@ -478,15 +521,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 direction="left"
                 index={2}
                 className="h-full scroll-snap-card card-snap-item"
-                style={{
-                  scrollSnapAlign: 'start',
-                  scrollSnapStop: 'normal',
-                  scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                }}
               >
-                <Interactive3DCard maxTilt={5} className="h-full">
+                <Interactive3DCard maxTilt={1.0} className="h-full">
                   <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
-                    <div className="space-y-3">
+                    <FadeInBlock delay={80} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <CreditCard className="w-5 h-5" />
                       </div>
@@ -494,7 +532,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                         Aceitamos cartão de crédito em até 5 vezes sem nenhum juro para você (sendo 1 entrada + 4 parcelas mensais fixas).
                       </p>
-                    </div>
+                    </FadeInBlock>
                     <div className="mt-auto pt-4">
                       <div className="text-[11px] font-mono text-blue-300 bg-blue-950/40 px-2.5 py-1 rounded border border-blue-500/20 text-center">
                         1 Entrada + 4 Parcelas Fixas
@@ -509,15 +547,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 direction="right"
                 index={3}
                 className="h-full scroll-snap-card card-snap-item"
-                style={{
-                  scrollSnapAlign: 'start',
-                  scrollSnapStop: 'normal',
-                  scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                }}
               >
-                <Interactive3DCard maxTilt={5} className="h-full">
+                <Interactive3DCard maxTilt={1.0} className="h-full">
                   <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
-                    <div className="space-y-3">
+                    <FadeInBlock delay={100} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <Calendar className="w-5 h-5" />
                       </div>
@@ -525,7 +558,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                         Para parcelamentos mais longos, viabilizamos de 6x até 12x no cartão de crédito, com repasse das taxas de juros da operadora para o cliente.
                       </p>
-                    </div>
+                    </FadeInBlock>
                     <div className="mt-auto pt-4">
                       <div className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded border border-white/[0.05] text-center">
                         Parcelas mínimas mensais
@@ -536,12 +569,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
               </BiReveal>
             </div>
 
-            {/* SIMULADOR INTERATIVO DE CONDIÇÕES */}
+            {/* SIMULADOR INTERATIVO DE CONDIÇÕES (100% estável para cliques e slider) */}
             <BiReveal direction="up" delay={150} className="mt-8 w-full">
-              <Interactive3DCard maxTilt={3} className="w-full">
+              <Interactive3DCard maxTilt={0} className="w-full">
                 <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 shadow-2xl shadow-black/80 bracket-panel transition-all">
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-6 border-b border-white/[0.08]">
-                  <div className="space-y-1 text-center lg:text-left">
+                  <FadeInBlock delay={30} className="space-y-1 text-center lg:text-left">
                     <div className="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold uppercase">
                       <Calculator className="w-4 h-4" />
                       <span>Simulador de Condições de Pagamento</span>
@@ -552,7 +585,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                     <p className="text-xs sm:text-sm text-slate-400">
                       Arraste o controle ou escolha um valor de referência para visualizar a economia à vista e as parcelas.
                     </p>
-                  </div>
+                  </FadeInBlock>
 
                   <div className="flex flex-wrap items-center gap-2 justify-center">
                     {[650, 1000, 1500, 2200].map((preset) => (
@@ -560,7 +593,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         key={preset}
                         type="button"
                         onClick={() => setSimulatedValue(preset)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer ${
                           simulatedValue === preset
                             ? 'bg-indigo-600 text-white shadow'
                             : 'bg-slate-900 text-slate-400 hover:text-white border border-white/[0.06]'

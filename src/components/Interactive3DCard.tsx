@@ -16,7 +16,7 @@ interface Interactive3DCardProps {
 export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
   children,
   className = '',
-  maxTilt = 4.5,
+  maxTilt = 1.5,
   glare = true,
   animatedBorder = false,
   style = {},
@@ -30,7 +30,7 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
   const tier = getMotionTier();
-  const tiltEnabled = !prefersReduced && tier === 'full';
+  const tiltEnabled = !prefersReduced && tier === 'full' && maxTilt > 0;
 
   useEffect(() => {
     return () => {
@@ -40,12 +40,29 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
   }, []);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    // IMPORTANTE: Tilt 3D ativado ESTRITAMENTE para mouse de desktop.
-    // Toques de dedo (touch) NUNCA são capturados nem processados aqui,
-    // garantindo que o scroll vertical nativo da página seja 100% fluido e livre.
+    // Tilt 3D ativado ESTRITAMENTE para mouse de desktop.
+    // Toques de dedo (touch) nunca sofrem tilt, garantindo scroll nativo 100% fluido e livre.
     if (!tiltEnabled || e.pointerType !== 'mouse') return;
     const card = cardRef.current;
     if (!card) return;
+
+    // ESTABILIZAÇÃO DE CLIQUES E BOTÕES:
+    // Se o ponteiro estiver sobre botões de CTA, links, inputs ou controles interativos,
+    // o cartão repousa plano (0deg), garantindo cliques firmes e sem balanço instável.
+    const target = e.target as HTMLElement | null;
+    const isOverInteractive = Boolean(
+      target?.closest(
+        'button, a, input, select, textarea, label, [role="button"], .cta-primary, .cta-secondary, .pressable, [data-interactive]'
+      )
+    );
+
+    if (isOverInteractive) {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      card.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      if (glareRef.current) glareRef.current.style.opacity = '0';
+      return;
+    }
 
     const clientX = e.clientX;
     const clientY = e.clientY;
@@ -68,14 +85,14 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
         window.clearTimeout(settleTimerRef.current);
         settleTimerRef.current = null;
       }
-      el.style.transition = 'none';
+      el.style.transition = 'transform 0.16s cubic-bezier(0.16, 1, 0.3, 1)';
       el.style.willChange = 'transform';
       el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
       if (glare && glareRef.current) {
         const gx = Math.round((x / rect.width) * 100);
         const gy = Math.round((y / rect.height) * 100);
-        glareRef.current.style.background = `radial-gradient(circle 320px at ${gx}% ${gy}%, rgba(6, 182, 212, 0.18), transparent 75%)`;
+        glareRef.current.style.background = `radial-gradient(circle 280px at ${gx}% ${gy}%, rgba(59, 130, 246, 0.12), transparent 70%)`;
         glareRef.current.style.opacity = '1';
       }
     });
@@ -85,14 +102,14 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     const card = cardRef.current;
     if (card) {
-      card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
       card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
       if (settleTimerRef.current) window.clearTimeout(settleTimerRef.current);
       settleTimerRef.current = window.setTimeout(() => {
         if (!cardRef.current) return;
         cardRef.current.style.willChange = 'auto';
         cardRef.current.style.transition = '';
-      }, 620);
+      }, 420);
     }
     if (glareRef.current) glareRef.current.style.opacity = '0';
   };

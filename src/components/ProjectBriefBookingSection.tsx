@@ -23,6 +23,8 @@ import {
   Download,
   Sparkles,
   ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { getDynamicCardVariants } from '../motionVariants';
@@ -70,6 +72,79 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   });
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
+
+  const handleFieldBlur = (fieldKey: string) => {
+    setTouchedFields((prev) => ({ ...prev, [fieldKey]: true }));
+  };
+
+  // Helper de validação em tempo real para os campos do formulário de agendamento
+  const getBookingValidationStatus = (
+    field: 'bookingName' | 'bookingContact' | 'bookingDate' | 'bookingBusiness' | 'bookingAgreed'
+  ) => {
+    const isTouched = Boolean(touchedFields[field] || formErrors[field]);
+    if (!isTouched) {
+      return { status: 'idle' as const, message: '' };
+    }
+
+    if (field === 'bookingName') {
+      const val = bookingData.name.trim();
+      if (!val) {
+        return { status: 'error' as const, message: 'Por favor, informe seu nome.' };
+      }
+      if (val.length < 2) {
+        return { status: 'error' as const, message: 'O nome deve ter pelo menos 2 caracteres.' };
+      }
+      return { status: 'success' as const, message: 'Nome preenchido corretamente.' };
+    }
+
+    if (field === 'bookingContact') {
+      const val = bookingData.whatsappOrEmail.trim();
+      if (!val) {
+        return { status: 'error' as const, message: 'Informe seu WhatsApp com DDD ou e-mail.' };
+      }
+      const digitsOnly = val.replace(/\D/g, '');
+      const isPhone = digitsOnly.length >= 10 && digitsOnly.length <= 13;
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      if (!isPhone && !isEmail) {
+        return {
+          status: 'error' as const,
+          message: 'Digite um WhatsApp com DDD (10-11 dígitos) ou um e-mail válido.',
+        };
+      }
+      return {
+        status: 'success' as const,
+        message: isPhone ? 'WhatsApp válido.' : 'E-mail válido.',
+      };
+    }
+
+    if (field === 'bookingDate') {
+      if (!bookingData.preferredDate) {
+        return { status: 'error' as const, message: 'Selecione uma data para a reunião.' };
+      }
+      return { status: 'success' as const, message: 'Data selecionada.' };
+    }
+
+    if (field === 'bookingBusiness') {
+      const val = bookingData.businessName.trim();
+      if (val.length > 0 && val.length < 2) {
+        return { status: 'error' as const, message: 'O nome deve ter ao menos 2 caracteres.' };
+      }
+      if (val.length >= 2) {
+        return { status: 'success' as const, message: 'Nome do negócio registrado.' };
+      }
+      return { status: 'idle' as const, message: '' };
+    }
+
+    if (field === 'bookingAgreed') {
+      if (!bookingData.agreedToLgpd) {
+        return { status: 'error' as const, message: 'É obrigatório concordar com os termos de privacidade.' };
+      }
+      return { status: 'success' as const, message: 'Termos aceitos.' };
+    }
+
+    return { status: 'idle' as const, message: '' };
+  };
 
   const segmentsList = [
     'Barbearia',
@@ -150,13 +225,25 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   // Booking handlers
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setTouchedFields({
+      bookingName: true,
+      bookingContact: true,
+      bookingDate: true,
+      bookingAgreed: true,
+      bookingBusiness: true,
+    });
+
     const errors: { [key: string]: string } = {};
 
-    if (!bookingData.name.trim()) {
-      errors.bookingName = 'Informe seu nome.';
+    if (!bookingData.name.trim() || bookingData.name.trim().length < 2) {
+      errors.bookingName = 'Por favor, informe seu nome (mínimo 2 caracteres).';
     }
-    if (!bookingData.whatsappOrEmail.trim()) {
-      errors.bookingContact = 'Informe seu WhatsApp ou E-mail para contato.';
+    const contactVal = bookingData.whatsappOrEmail.trim();
+    const digitsOnly = contactVal.replace(/\D/g, '');
+    const isPhone = digitsOnly.length >= 10 && digitsOnly.length <= 13;
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactVal);
+    if (!contactVal || (!isPhone && !isEmail)) {
+      errors.bookingContact = 'Informe um WhatsApp com DDD (10-11 dígitos) ou um e-mail válido.';
     }
     if (!bookingData.preferredDate) {
       errors.bookingDate = 'Selecione uma data para a reunião.';
@@ -167,7 +254,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      error('Preencha os dados de contato', 'Verifique as informações da reunião.');
+      error('Preencha os dados destacados', 'Verifique os campos com aviso no formulário de agendamento.');
       return;
     }
 
@@ -514,198 +601,351 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                   </div>
 
                   <form onSubmit={handleBookingSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Seu Nome *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={bookingData.name}
-                          onChange={(e) =>
-                            setBookingData({ ...bookingData, name: e.target.value })
-                          }
-                          placeholder="Ex: Juliana Mendes"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                        {formErrors.bookingName && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.bookingName}</p>
-                        )}
-                      </div>
+                    {/* Instâncias de validação em tempo real para os campos do agendamento */}
+                    {(() => {
+                      const nameVal = getBookingValidationStatus('bookingName');
+                      const contactVal = getBookingValidationStatus('bookingContact');
+                      const dateVal = getBookingValidationStatus('bookingDate');
+                      const businessVal = getBookingValidationStatus('bookingBusiness');
+                      const agreedVal = getBookingValidationStatus('bookingAgreed');
 
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Nome do Negócio / Empresa
-                        </label>
-                        <input
-                          type="text"
-                          value={bookingData.businessName}
-                          onChange={(e) =>
-                            setBookingData({ ...bookingData, businessName: e.target.value })
-                          }
-                          placeholder="Ex: Studio Bella Estética"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                      </div>
-                    </div>
+                      return (
+                        <>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            {/* Campo: Nome */}
+                            <div>
+                              <label
+                                htmlFor="booking-name"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Seu Nome *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="booking-name"
+                                  type="text"
+                                  required
+                                  value={bookingData.name}
+                                  onBlur={() => handleFieldBlur('bookingName')}
+                                  onChange={(e) => {
+                                    setBookingData({ ...bookingData, name: e.target.value });
+                                    if (touchedFields.bookingName) handleFieldBlur('bookingName');
+                                  }}
+                                  placeholder="Ex: Juliana Mendes"
+                                  aria-required="true"
+                                  aria-invalid={nameVal.status === 'error'}
+                                  aria-describedby={nameVal.status === 'error' ? 'booking-name-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    nameVal.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : nameVal.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {nameVal.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Nome válido" />
+                                  )}
+                                  {nameVal.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Nome inválido" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {nameVal.status === 'error' && (
+                                  <p id="booking-name-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{nameVal.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          WhatsApp / E-mail *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={bookingData.whatsappOrEmail}
-                          onChange={(e) =>
-                            setBookingData({ ...bookingData, whatsappOrEmail: e.target.value })
-                          }
-                          placeholder="(11) 98888-8888"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                        {formErrors.bookingContact && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.bookingContact}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Data de Preferência *
-                        </label>
-                        <input
-                          type="date"
-                          required
-                          value={bookingData.preferredDate}
-                          min={defaultDateStr}
-                          onChange={(e) =>
-                            setBookingData({ ...bookingData, preferredDate: e.target.value })
-                          }
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer"
-                        />
-                        {formErrors.bookingDate && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.bookingDate}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Turno Preferido
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={bookingData.preferredTimeSlot}
-                            onChange={(e) =>
-                              setBookingData({ ...bookingData, preferredTimeSlot: e.target.value })
-                            }
-                            className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] appearance-none cursor-pointer"
-                          >
-                            {timeSlotsList.map((slot) => (
-                              <option key={slot} value={slot} className="bg-slate-900 text-white">
-                                {slot}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                            ▼
+                            {/* Campo: Nome do Negócio */}
+                            <div>
+                              <label
+                                htmlFor="booking-business"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Nome do Negócio / Empresa
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="booking-business"
+                                  type="text"
+                                  value={bookingData.businessName}
+                                  onBlur={() => handleFieldBlur('bookingBusiness')}
+                                  onChange={(e) => {
+                                    setBookingData({ ...bookingData, businessName: e.target.value });
+                                    if (touchedFields.bookingBusiness) handleFieldBlur('bookingBusiness');
+                                  }}
+                                  placeholder="Ex: Studio Bella Estética"
+                                  aria-invalid={businessVal.status === 'error'}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    businessVal.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {businessVal.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Negócio preenchido" />
+                                  )}
+                                </div>
+                              </div>
+                              <div className="min-h-[18px] mt-1.5">
+                                {businessVal.status === 'error' && (
+                                  <p role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{businessVal.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Plataforma de Preferência
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setBookingData({ ...bookingData, platform: 'Google Meet' })
-                            }
-                            className={`px-3.5 py-3 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-center gap-2 pressable ${
-                              bookingData.platform === 'Google Meet'
-                                ? 'bg-indigo-600/25 border-indigo-400 text-white shadow-sm'
-                                : 'bg-slate-950/80 border-white/[0.08] text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            <Video className="w-4 h-4 text-indigo-400" />
-                            <span>Google Meet</span>
-                          </button>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            {/* Campo: WhatsApp ou E-mail */}
+                            <div>
+                              <label
+                                htmlFor="booking-contact"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                WhatsApp / E-mail *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="booking-contact"
+                                  type="text"
+                                  required
+                                  value={bookingData.whatsappOrEmail}
+                                  onBlur={() => handleFieldBlur('bookingContact')}
+                                  onChange={(e) => {
+                                    setBookingData({ ...bookingData, whatsappOrEmail: e.target.value });
+                                    if (touchedFields.bookingContact) handleFieldBlur('bookingContact');
+                                  }}
+                                  placeholder="(11) 98888-8888"
+                                  aria-required="true"
+                                  aria-invalid={contactVal.status === 'error'}
+                                  aria-describedby={contactVal.status === 'error' ? 'booking-contact-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    contactVal.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : contactVal.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {contactVal.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Contato válido" />
+                                  )}
+                                  {contactVal.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Contato com erro" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {contactVal.status === 'error' && (
+                                  <p id="booking-contact-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{contactVal.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setBookingData({ ...bookingData, platform: 'WhatsApp Vídeo' })
-                            }
-                            className={`px-3.5 py-3 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-center gap-2 pressable ${
-                              bookingData.platform === 'WhatsApp Vídeo'
-                                ? 'bg-emerald-600/25 border-emerald-400 text-white shadow-sm'
-                                : 'bg-slate-950/80 border-white/[0.08] text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            <WhatsAppIcon className="w-4 h-4 text-emerald-400" />
-                            <span>WhatsApp Vídeo</span>
-                          </button>
-                        </div>
-                      </div>
+                            {/* Campo: Data de Preferência */}
+                            <div>
+                              <label
+                                htmlFor="booking-date"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Data de Preferência *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="booking-date"
+                                  type="date"
+                                  required
+                                  value={bookingData.preferredDate}
+                                  min={defaultDateStr}
+                                  onBlur={() => handleFieldBlur('bookingDate')}
+                                  onChange={(e) => {
+                                    setBookingData({ ...bookingData, preferredDate: e.target.value });
+                                    if (touchedFields.bookingDate) handleFieldBlur('bookingDate');
+                                  }}
+                                  aria-required="true"
+                                  aria-invalid={dateVal.status === 'error'}
+                                  aria-describedby={dateVal.status === 'error' ? 'booking-date-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm focus:outline-none transition-all cursor-pointer ${
+                                    dateVal.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : dateVal.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {dateVal.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Data válida" />
+                                  )}
+                                  {dateVal.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Data inválida" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {dateVal.status === 'error' && (
+                                  <p id="booking-date-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{dateVal.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Foco Principal da Conversa
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={bookingData.meetingTopic}
-                            onChange={(e) =>
-                              setBookingData({ ...bookingData, meetingTopic: e.target.value })
-                            }
-                            className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] appearance-none cursor-pointer"
-                          >
-                            {meetingTopicsList.map((topic) => (
-                              <option key={topic} value={topic} className="bg-slate-900 text-white">
-                                {topic}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                            ▼
+                            {/* Campo: Turno Preferido */}
+                            <div>
+                              <label
+                                htmlFor="booking-slot"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Turno Preferido
+                              </label>
+                              <div className="relative">
+                                <select
+                                  id="booking-slot"
+                                  value={bookingData.preferredTimeSlot}
+                                  onChange={(e) =>
+                                    setBookingData({ ...bookingData, preferredTimeSlot: e.target.value })
+                                  }
+                                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                                >
+                                  {timeSlotsList.map((slot) => (
+                                    <option key={slot} value={slot} className="bg-slate-900 text-white">
+                                      {slot}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                  ▼
+                                </div>
+                              </div>
+                              <div className="min-h-[18px] mt-1.5" />
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* LGPD Consent */}
-                    <div className="flex items-start gap-3 pt-2">
-                      <input
-                        type="checkbox"
-                        id="lgpd-consent-booking"
-                        checked={bookingData.agreedToLgpd}
-                        onChange={(e) =>
-                          setBookingData({ ...bookingData, agreedToLgpd: e.target.checked })
-                        }
-                        className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                      />
-                      <label
-                        htmlFor="lgpd-consent-booking"
-                        className="text-xs text-slate-400 leading-relaxed cursor-pointer"
-                      >
-                        Concordo com o uso dos dados para agendamento da reunião e contato prévio pela ēloSites, conforme a{' '}
-                        <button
-                          type="button"
-                          onClick={onOpenPrivacy}
-                          className="text-indigo-400 underline hover:text-indigo-300 inline"
-                        >
-                          Política de Privacidade
-                        </button>
-                        .
-                      </label>
-                    </div>
-                    {formErrors.bookingAgreed && (
-                      <p className="text-xs text-rose-400">{formErrors.bookingAgreed}</p>
-                    )}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                                Plataforma de Preferência
+                              </label>
+                              <div className="grid grid-cols-2 gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setBookingData({ ...bookingData, platform: 'Google Meet' })
+                                  }
+                                  className={`px-3.5 py-3 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-center gap-2 pressable ${
+                                    bookingData.platform === 'Google Meet'
+                                      ? 'bg-indigo-600/25 border-indigo-400 text-white shadow-sm'
+                                      : 'bg-slate-950/80 border-white/[0.08] text-slate-400 hover:text-white'
+                                  }`}
+                                >
+                                  <Video className="w-4 h-4 text-indigo-400" />
+                                  <span>Google Meet</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setBookingData({ ...bookingData, platform: 'WhatsApp Vídeo' })
+                                  }
+                                  className={`px-3.5 py-3 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-center gap-2 pressable ${
+                                    bookingData.platform === 'WhatsApp Vídeo'
+                                      ? 'bg-emerald-600/25 border-emerald-400 text-white shadow-sm'
+                                      : 'bg-slate-950/80 border-white/[0.08] text-slate-400 hover:text-white'
+                                  }`}
+                                >
+                                  <WhatsAppIcon className="w-4 h-4 text-emerald-400" />
+                                  <span>WhatsApp Vídeo</span>
+                                </button>
+                              </div>
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor="booking-topic"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Foco Principal da Conversa
+                              </label>
+                              <div className="relative">
+                                <select
+                                  id="booking-topic"
+                                  value={bookingData.meetingTopic}
+                                  onChange={(e) =>
+                                    setBookingData({ ...bookingData, meetingTopic: e.target.value })
+                                  }
+                                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                                >
+                                  {meetingTopicsList.map((topic) => (
+                                    <option key={topic} value={topic} className="bg-slate-900 text-white">
+                                      {topic}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                  ▼
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* LGPD Consent com validação em tempo real e aria-live */}
+                          <div className="pt-2">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                id="lgpd-consent-booking"
+                                checked={bookingData.agreedToLgpd}
+                                onChange={(e) => {
+                                  setBookingData({ ...bookingData, agreedToLgpd: e.target.checked });
+                                  handleFieldBlur('bookingAgreed');
+                                }}
+                                aria-invalid={agreedVal.status === 'error'}
+                                aria-describedby={agreedVal.status === 'error' ? 'booking-lgpd-error' : undefined}
+                                className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                              />
+                              <label
+                                htmlFor="lgpd-consent-booking"
+                                className="text-xs text-slate-400 leading-relaxed cursor-pointer"
+                              >
+                                Concordo com o uso dos dados para agendamento da reunião e contato prévio pela ēloSites, conforme a{' '}
+                                <button
+                                  type="button"
+                                  onClick={onOpenPrivacy}
+                                  className="text-indigo-400 underline hover:text-indigo-300 inline"
+                                >
+                                  Política de Privacidade
+                                </button>
+                                .
+                              </label>
+                            </div>
+                            <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                              {agreedVal.status === 'error' && (
+                                <p id="booking-lgpd-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                  <span>{agreedVal.message}</span>
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })()}
 
                     {/* Booking Actions */}
                     <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">

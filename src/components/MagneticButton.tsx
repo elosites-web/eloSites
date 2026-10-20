@@ -21,7 +21,7 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   target,
   rel,
   className = '',
-  strength = 14,
+  strength = 4, // Suavizado para que o botão nunca fuja do cursor
   glowColor = 'rgba(6, 182, 212, 0.35)',
   ariaLabel,
 }) => {
