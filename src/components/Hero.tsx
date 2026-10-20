@@ -204,7 +204,7 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
                     </span>
                     <span className="text-xs sm:text-sm font-medium text-blue-200">
-                      Engenharia Web de Alta Performance
+                      ēloSites | Estúdio de Desenvolvimento Web
                     </span>
                   </div>
                 </BiReveal>
@@ -214,11 +214,38 @@ export const Hero: React.FC<HeroProps> = ({
                   <TypewriterSlogan mode={mode} />
                 </BiReveal>
 
-                {/* Subtítulo Oficial extraído exatamente da og-image.png */}
+                {/* Apresentação Oficial do Fundador: Everton Lopes e Retrato /eu.png */}
                 <BiReveal direction="left" delay={180}>
-                  <p className="text-base sm:text-lg lg:text-xl text-slate-300 font-normal leading-relaxed max-w-xl text-balance">
-                    Sites institucionais e landing pages com estratégia, performance e SEO técnico para o seu negócio crescer.
-                  </p>
+                  <div className="w-full max-w-xl p-4 sm:p-5 rounded-2xl bg-slate-900/75 border border-blue-500/20 backdrop-blur-md shadow-xl shadow-black/50 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left transition-all duration-300 hover:border-blue-400/35">
+                    {/* Retrato oficial com moldura circular original preservada */}
+                    <div className="relative shrink-0">
+                      <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 opacity-30 blur-sm pointer-events-none" />
+                      <img
+                        src="/eu.png"
+                        alt="Everton Lopes — Fundador da ēloSites | Estúdio de Desenvolvimento Web"
+                        width={112}
+                        height={112}
+                        loading="eager"
+                        decoding="async"
+                        className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full object-cover border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.25)]"
+                      />
+                    </div>
+
+                    {/* Texto de Apresentação e Posicionamento */}
+                    <div className="space-y-1.5 flex-1">
+                      <div className="inline-flex items-center gap-2">
+                        <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-cyan-400">
+                          QUEM ESTÁ POR TRÁS DA ēloSites
+                        </span>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight leading-snug">
+                        Tecnologia, criatividade e propósito em cada projeto.
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Sou <strong className="text-white font-semibold">Everton Lopes</strong>, fundador da <span className="text-blue-300 font-medium">ēloSites</span>. Desenvolvo landing pages, sites institucionais e experiências web interativas, combinando tecnologia, design de interfaces e SEO técnico para ajudar negócios a fortalecer sua presença digital.
+                      </p>
+                    </div>
+                  </div>
                 </BiReveal>
 
                 {/* Faixa dos 4 Pilares da og-image.png */}
