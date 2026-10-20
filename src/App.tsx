@@ -141,7 +141,19 @@ export default function App() {
 
     const handleHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
-      if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
+      if (rawHash === 'sobre') {
+        setCurrentScreen((prev) => {
+          if (prev !== 'inicio') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'inicio';
+        });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
         setCurrentScreen((prev) => {
           if (prev !== 'solucoes-web') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -507,33 +519,33 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 02: Início (Apresentação Completa, Marquee 85s dos Nichos, CTAs e Terminal 3D) */}
+      {/* TELA 02: Sobre (Apresentação Completa, Marquee 85s dos Nichos, CTAs e Terminal 3D) */}
       {currentScreen === 'inicio' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <Hero
             mode="inicio"
-            onNavigateToPortfolio={() => navigateToScreen('servicos')}
+            onNavigateToPortfolio={() => navigateToScreen('solucoes-web')}
           />
         </div>
       )}
 
-      {/* TELA 03: Serviços & Condições Comerciais */}
-      {currentScreen === 'servicos' && (
+      {/* TELA 03: Soluções Web (Página Independente de Especialidades Web) */}
+      {currentScreen === 'solucoes-web' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
-              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('solucoes-web')} />
+              <SpecialtiesSection onNavigateToContact={() => navigateToScreen('servicos')} />
             </Suspense>
           </SectionErrorBoundary>
         </div>
       )}
 
-      {/* TELA 04: Soluções Web (Página Independente de Especialidades Web) */}
-      {currentScreen === 'solucoes-web' && (
+      {/* TELA 04: Serviços & Condições Comerciais */}
+      {currentScreen === 'servicos' && (
         <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
-              <SpecialtiesSection onNavigateToContact={() => navigateToScreen('portfolio')} />
+              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
             </Suspense>
           </SectionErrorBoundary>
         </div>

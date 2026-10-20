@@ -203,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="nav-menu-list-wrap relative z-20 w-full flex flex-col items-center justify-center text-center my-auto px-4 pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <ul className="nav-menu-list flex flex-col items-center justify-center py-1 w-full gap-0.5 sm:gap-1">
+            <ul className="nav-menu-list flex flex-col items-center justify-center py-1 w-full gap-[1px] sm:gap-[3px]">
               {SCREENS.map((screen, index) => {
                 const isActive = screen.id === currentScreen;
 
@@ -235,9 +235,7 @@ export const Header: React.FC<HeaderProps> = ({
                         delay: index * 0.1,
                       },
                     }}
-                    className={`nav-menu-list-item w-full flex justify-center py-0.5 ${
-                      screen.id === 'faq' ? 'landscape:col-span-2 landscape:justify-self-center landscape:mx-auto text-center' : ''
-                    }`}
+                    className="nav-menu-list-item w-full flex justify-center py-[1px]"
                   >
                     <button
                       type="button"
@@ -248,7 +246,7 @@ export const Header: React.FC<HeaderProps> = ({
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
                       onTouchStart={() => preloadScreen(screen.id)}
-                      className={`nav-menu-link-item group relative px-4 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
+                      className={`nav-menu-link-item group relative px-4 py-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
                         isActive
                           ? 'text-white'
                           : 'text-slate-400 hover:text-white'
@@ -258,7 +256,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
                       )}
                       <span
-                        className={`font-display text-lg sm:text-xl md:text-2xl tracking-tight transition-all duration-300 ${
+                        className={`font-display text-[17px] sm:text-[19px] md:text-[23px] tracking-tight transition-all duration-300 ${
                           isActive
                             ? 'text-white font-bold drop-shadow-[0_0_18px_rgba(59,130,246,0.9)]'
                             : 'font-medium group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]'
