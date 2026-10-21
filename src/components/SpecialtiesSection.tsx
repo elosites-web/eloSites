@@ -342,8 +342,8 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
               { text: 'Landing Pages de Conversão', icon: <Layout className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Conversão' },
               { text: 'Sites Institucionais', icon: <Cpu className="w-3.5 h-3.5 text-blue-400" />, badge: 'Autoridade' },
             ]}
-            speed={60}
-            reverse={true}
+            speed={85}
+            reverse={false}
             ariaLabel="Banner deslizante interativo das especialidades e tecnologias web"
           />
         </div>
