@@ -61,9 +61,9 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="relative bg-[#050814] border-t border-blue-500/20 text-slate-400 text-sm pb-[3px] overflow-hidden">
+    <footer className="relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] border-t border-blue-400/30 text-slate-300 text-sm pb-[3px] overflow-hidden">
       {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua */}
-      <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-40 pointer-events-none" />
+      <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-50 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">

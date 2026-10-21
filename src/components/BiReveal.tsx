@@ -70,8 +70,8 @@ export const BiReveal: React.FC<BiRevealProps> = ({
         }
       },
       {
-        threshold: 0.12,
-        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px',
       }
     );
 
@@ -128,15 +128,16 @@ export const BiReveal: React.FC<BiRevealProps> = ({
     <Tag
       ref={elementRef}
       id={id}
-      className={className}
+      className={`${className} scroll-fade-in`}
       style={{
         ...style,
         opacity: isInView || isReduced ? 1 : 0,
         transform: isInView || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
-        willChange: !isInView && !isReduced ? 'transform, opacity' : 'auto',
+        filter: isReduced ? 'none' : isInView ? 'blur(0px)' : 'blur(2px)',
+        willChange: !isInView && !isReduced ? 'transform, opacity, filter' : 'auto',
         transition: isReduced
           ? 'opacity 0.2s ease-out'
-          : `opacity ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+          : `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, filter ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
       }}
     >
       {children}

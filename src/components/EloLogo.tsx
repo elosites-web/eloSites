@@ -40,7 +40,7 @@ export const EloLogo: React.FC<EloLogoProps> = ({
   // é rigorosamente preservado conforme especificação
   if (isFooter && showTagline) {
     const footerContent = (
-      <div className="inline-flex flex-col items-start leading-tight">
+      <div className="elo-logo-floating inline-flex flex-col items-start leading-tight">
         <img
           src="/logo-elosites-1360.png"
           alt="ēloSites — Logotipo Oficial"
@@ -118,6 +118,12 @@ export const EloLogo: React.FC<EloLogoProps> = ({
     imgElement
   );
 
+  const floatingContent = (
+    <div className="elo-logo-floating inline-flex flex-col items-center justify-center">
+      {content}
+    </div>
+  );
+
   if (onClick) {
     const defaultBtnClass = isMenu
       ? 'group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg p-1.5 transition-transform hover:scale-105 active:scale-95 cursor-pointer flex flex-col items-center justify-center'
@@ -130,10 +136,10 @@ export const EloLogo: React.FC<EloLogoProps> = ({
         className={buttonClassName || defaultBtnClass}
         aria-label="ēloSites — Ir para a Página Inicial (Home)"
       >
-        {content}
+        {floatingContent}
       </button>
     );
   }
 
-  return content;
+  return floatingContent;
 };

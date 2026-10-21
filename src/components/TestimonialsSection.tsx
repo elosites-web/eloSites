@@ -334,7 +334,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           />
 
           <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Depoimentos autênticos de quem confiou na ēloSites para construir sua presença digital com código profissional, performance máxima e foco em conversão.
+            Depoimentos autênticos de quem confiou na ēloSites para construir sua presença digital com <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">código profissional</span>, performance máxima e foco em conversão.
           </p>
 
           {/* Destaque de métricas de confiabilidade */}

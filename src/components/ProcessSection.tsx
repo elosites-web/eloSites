@@ -115,7 +115,7 @@ export const ProcessSection: React.FC = () => {
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              O processo é direto e acompanhado de perto. Usamos tecnologia de ponta para ganhar velocidade — mas o site nunca é entregue de forma totalmente automática.
+              O processo é direto e acompanhado de perto. Usamos <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">tecnologia de ponta</span> para ganhar velocidade — mas o site nunca é entregue de forma totalmente automática.
             </p>
           </div>
         </BiReveal>

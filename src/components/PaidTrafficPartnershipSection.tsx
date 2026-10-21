@@ -105,7 +105,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
 
               <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed font-normal max-w-2xl mx-auto">
                 Ter um site profissional é um passo importante para fortalecer sua presença digital.
-                Com uma estratégia de tráfego pago e um processo comercial bem estruturado, seu
+                Com uma <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">estratégia de tráfego pago</span> e um processo comercial bem estruturado, seu
                 negócio pode alcançar novas pessoas, gerar oportunidades e transformar conversas em
                 possíveis vendas.
               </p>

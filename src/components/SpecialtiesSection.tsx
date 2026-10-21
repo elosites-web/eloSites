@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Smartphone,
   ExternalLink,
+  Zap,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SplitLines } from './SplitLines';
@@ -22,6 +23,7 @@ import { shouldReduceMedia } from '../mediaPrefs';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 import { FounderCard } from './FounderCard';
 import { TechStackCard } from './TechStackCard';
+import { InfiniteMarquee } from './InfiniteMarquee';
 
 interface SpecialtyItem {
   id: string;
@@ -182,7 +184,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              A <strong>ēloSites</strong> desenvolve landing pages, sites institucionais e experiências web interativas, combinando interfaces responsivas, navegação intuitiva, funcionalidades de frontend e SEO técnico para apresentar negócios com clareza e facilitar o contato com seus clientes.
+              A <strong>ēloSites</strong> desenvolve landing pages, sites institucionais e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">experiências web interativas</span>, combinando interfaces responsivas, navegação intuitiva, funcionalidades de frontend e SEO técnico para apresentar negócios com clareza e facilitar o contato com seus clientes.
             </p>
           </div>
         </BiReveal>
@@ -298,8 +300,29 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
           <FounderCard />
         </div>
 
+        {/* Banner Deslizante Interativo das Especialidades (Abaixo do Card do Fundador e antes do CTA) */}
+        <div className="mt-8 sm:mt-10 py-1">
+          <InfiniteMarquee
+            items={[
+              { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Core' },
+              { text: 'Vite & Tailwind CSS', icon: <Zap className="w-3.5 h-3.5 text-sky-400" />, badge: 'Frontend' },
+              { text: 'SEO Técnico & Schema.org', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Estrutura' },
+              { text: 'Google Analytics 4 & GTM', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Tracking' },
+              { text: 'Boas Práticas de Carregamento', icon: <Zap className="w-3.5 h-3.5 text-amber-300" />, badge: 'Otimização' },
+              { text: 'Arquitetura Semântica', icon: <Code2 className="w-3.5 h-3.5 text-teal-400" />, badge: 'Clean Code' },
+              { text: 'Mobile-First Responsivo', icon: <Smartphone className="w-3.5 h-3.5 text-fuchsia-400" />, badge: '360px-4K' },
+              { text: 'Canal Direto no WhatsApp', icon: <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Contato' },
+              { text: 'Landing Pages de Conversão', icon: <Layout className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Conversão' },
+              { text: 'Sites Institucionais', icon: <Cpu className="w-3.5 h-3.5 text-blue-400" />, badge: 'Autoridade' },
+            ]}
+            speed={60}
+            reverse={true}
+            ariaLabel="Banner deslizante interativo das especialidades e tecnologias web"
+          />
+        </div>
+
         {/* CTA para Alinhamento Comercial */}
-        <div className="mt-8 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="mt-8 sm:mt-10 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href={ctaUrl}
             target="_blank"

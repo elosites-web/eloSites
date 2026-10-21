@@ -172,6 +172,10 @@ export const Hero: React.FC<HeroProps> = ({
                     height={337}
                     className="hero-home-logo w-auto object-contain relative z-10 drop-shadow-[0_0_35px_rgba(59,130,246,0.35)]"
                   />
+                  {/* Texto minimalista proporcional ao espaço do logotipo e do contêiner */}
+                  <span className="hero-home-subtitle text-slate-400 group-hover:text-blue-300 select-none transition-colors duration-300 relative z-10">
+                    Web Development Studio
+                  </span>
                 </a>
               </motion.div>
             )}
@@ -198,7 +202,7 @@ export const Hero: React.FC<HeroProps> = ({
                 
                 {/* Brand Wordmark & Tagline Kicker */}
                 <BiReveal direction="left" delay={50}>
-                  <div className="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-blue-950/50 border border-blue-500/25 shadow-[0_0_20px_-4px_rgba(59,130,246,0.3)] backdrop-blur-md">
+                  <div className="floating-badge inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-blue-950/50 border border-blue-500/25 shadow-[0_0_20px_-4px_rgba(59,130,246,0.3)] backdrop-blur-md">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
@@ -490,88 +494,36 @@ export const Hero: React.FC<HeroProps> = ({
 
             </div>
 
-            {/* BANNER DESLIZANTE DA DIREITA PARA A ESQUERDA EM 85S DOS NICHOS (Ícones Premium Personalizados) */}
-            <div className="mt-14 pt-8 border-t border-blue-500/15">
-              <div className="text-center mb-4">
-                <span className="text-[11px] sm:text-xs font-mono uppercase tracking-widest text-blue-300/80">
-                  Sites de alta conversão sob medida para o seu nicho de atuação
+            {/* BANNER DESLIZANTE INTERATIVO (MOUSE OU TOUCH) DOS NICHOS */}
+            <div className="mt-14 pt-8 border-t border-blue-500/15 scroll-fade-card">
+              <div className="text-center mb-5 flex items-center justify-center">
+                <span className="floating-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-950/90 border border-cyan-400/50 text-cyan-300 text-xs sm:text-sm font-semibold tracking-wider uppercase font-mono shadow-[0_0_22px_rgba(34,211,238,0.35)] backdrop-blur-md">
+                  <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse shrink-0" aria-hidden="true" />
+                  <span>Sites sob medida para o seu negócio</span>
                 </span>
               </div>
-              <div
-                className="relative overflow-hidden select-none py-2 group"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-                }}
-              >
-                <div
-                  className="niche-marquee flex items-center gap-4 whitespace-nowrap"
-                  style={{ animationDuration: '85s' }}
-                >
-                  {[
-                    { text: 'Barbearias & Barbeiros', icon: <Scissors className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Alta Conversão' },
-                    { text: 'Salões de Beleza & Cabeleireiros', icon: <Sparkles className="w-3.5 h-3.5 text-sky-400" />, badge: 'Estética' },
-                    { text: 'Personal Trainers & Consultoria Fitness', icon: <Dumbbell className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Treinos' },
-                    { text: 'Clínicas de Estética & Biomédicas', icon: <HeartPulse className="w-3.5 h-3.5 text-rose-400" />, badge: 'Procedimentos' },
-                    { text: 'Manicures & Nail Designers', icon: <Gem className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Agendamentos' },
-                    { text: 'Nutricionistas & Saúde Integrativa', icon: <Apple className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Consultas' },
-                    { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: <Brain className="w-3.5 h-3.5 text-violet-400" />, badge: 'Acolhimento' },
-                    { text: 'Estúdios de Tatuagem & Piercing', icon: <PenTool className="w-3.5 h-3.5 text-amber-400" />, badge: 'Galeria' },
-                    { text: 'Segurança & Portaria Privada', icon: <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />, badge: 'Corporativo' },
-                    { text: 'Empresas de Limpeza & Conservação', icon: <SprayCan className="w-3.5 h-3.5 text-teal-400" />, badge: 'Serviços' },
-                    { text: 'Arquitetura & Design de Interiores', icon: <Compass className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Portfólio' },
-                    { text: 'Professores & Cursos Particulares', icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Aulas' },
-                    { text: 'Advogados & Escritórios de Advocacia', icon: <Scale className="w-3.5 h-3.5 text-amber-300" />, badge: 'Autoridade' },
-                    { text: 'Estética Automotiva & Detalhamento', icon: <Car className="w-3.5 h-3.5 text-sky-400" />, badge: 'Local' },
-                    { text: 'Clínicas Médicas & Odontológicas', icon: <Stethoscope className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Saúde' },
-                    { text: 'Fisioterapia & Reabilitação', icon: <Activity className="w-3.5 h-3.5 text-teal-300" />, badge: 'Bem-Estar' },
-                    // Duplicado para loop infinito 100% contínuo
-                    { text: 'Barbearias & Barbeiros', icon: <Scissors className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Alta Conversão' },
-                    { text: 'Salões de Beleza & Cabeleireiros', icon: <Sparkles className="w-3.5 h-3.5 text-sky-400" />, badge: 'Estética' },
-                    { text: 'Personal Trainers & Consultoria Fitness', icon: <Dumbbell className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Treinos' },
-                    { text: 'Clínicas de Estética & Biomédicas', icon: <HeartPulse className="w-3.5 h-3.5 text-rose-400" />, badge: 'Procedimentos' },
-                    { text: 'Manicures & Nail Designers', icon: <Gem className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Agendamentos' },
-                    { text: 'Nutricionistas & Saúde Integrativa', icon: <Apple className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Consultas' },
-                    { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: <Brain className="w-3.5 h-3.5 text-violet-400" />, badge: 'Acolhimento' },
-                    { text: 'Estúdios de Tatuagem & Piercing', icon: <PenTool className="w-3.5 h-3.5 text-amber-400" />, badge: 'Galeria' },
-                    { text: 'Segurança & Portaria Privada', icon: <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />, badge: 'Corporativo' },
-                    { text: 'Empresas de Limpeza & Conservação', icon: <SprayCan className="w-3.5 h-3.5 text-teal-400" />, badge: 'Serviços' },
-                    { text: 'Arquitetura & Design de Interiores', icon: <Compass className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Portfólio' },
-                    { text: 'Professores & Cursos Particulares', icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Aulas' },
-                    { text: 'Advogados & Escritórios de Advocacia', icon: <Scale className="w-3.5 h-3.5 text-amber-300" />, badge: 'Autoridade' },
-                    { text: 'Estética Automotiva & Detalhamento', icon: <Car className="w-3.5 h-3.5 text-sky-400" />, badge: 'Local' },
-                    { text: 'Clínicas Médicas & Odontológicas', icon: <Stethoscope className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Saúde' },
-                    { text: 'Fisioterapia & Reabilitação', icon: <Activity className="w-3.5 h-3.5 text-teal-300" />, badge: 'Bem-Estar' },
-                  ].map((item, idx) => (
-                    <div key={idx} className="audience-pill cursor-default group/pill flex items-center gap-2.5">
-                      <span className="w-6 h-6 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(59,130,246,0.25)] group-hover/pill:border-cyan-400/50 group-hover/pill:scale-105 transition-all">
-                        {item.icon}
-                      </span>
-                      <span className="text-xs sm:text-sm font-semibold text-slate-100">{item.text}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-300 border border-blue-500/30 font-mono font-medium">
-                        {item.badge}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* FAIXA MARQUEE DE TECNOLOGIAS E ARQUITETURA WEB (Desliza da esquerda para a direita em 85s) */}
-            <div className="mt-8 pt-6 border-t border-blue-500/10">
               <InfiniteMarquee
                 items={[
-                  { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5" />, badge: 'Core' },
-                  { text: 'Vite & Tailwind CSS', icon: <Zap className="w-3.5 h-3.5" />, badge: 'Frontend' },
-                  { text: 'SEO Técnico & Schema.org', icon: <Sparkles className="w-3.5 h-3.5" />, badge: 'Estrutura' },
-                  { text: 'Google Analytics 4 & GTM', icon: <Shield className="w-3.5 h-3.5" />, badge: 'Tracking' },
-                  { text: 'Boas Práticas de Carregamento', icon: <Zap className="w-3.5 h-3.5" />, badge: 'Otimização' },
-                  { text: 'Arquitetura Semântica', icon: <Code2 className="w-3.5 h-3.5" />, badge: 'Clean Code' },
-                  { text: 'Mobile-First Responsivo', icon: <Smartphone className="w-3.5 h-3.5" />, badge: '360px-4K' },
-                  { text: 'Canal Direto no WhatsApp', icon: <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Contato' },
+                  { text: 'Barbearias & Barbeiros', icon: <Scissors className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Alta Conversão' },
+                  { text: 'Salões de Beleza & Cabeleireiros', icon: <Sparkles className="w-3.5 h-3.5 text-sky-400" />, badge: 'Estética' },
+                  { text: 'Personal Trainers & Consultoria Fitness', icon: <Dumbbell className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Treinos' },
+                  { text: 'Clínicas de Estética & Biomédicas', icon: <HeartPulse className="w-3.5 h-3.5 text-rose-400" />, badge: 'Procedimentos' },
+                  { text: 'Manicures & Nail Designers', icon: <Gem className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Agendamentos' },
+                  { text: 'Nutricionistas & Saúde Integrativa', icon: <Apple className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Consultas' },
+                  { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: <Brain className="w-3.5 h-3.5 text-violet-400" />, badge: 'Acolhimento' },
+                  { text: 'Estúdios de Tatuagem & Piercing', icon: <PenTool className="w-3.5 h-3.5 text-amber-400" />, badge: 'Galeria' },
+                  { text: 'Segurança & Portaria Privada', icon: <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />, badge: 'Corporativo' },
+                  { text: 'Empresas de Limpeza & Conservação', icon: <SprayCan className="w-3.5 h-3.5 text-teal-400" />, badge: 'Serviços' },
+                  { text: 'Arquitetura & Design de Interiores', icon: <Compass className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Portfólio' },
+                  { text: 'Professores & Cursos Particulares', icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Aulas' },
+                  { text: 'Advogados & Escritórios de Advocacia', icon: <Scale className="w-3.5 h-3.5 text-amber-300" />, badge: 'Autoridade' },
+                  { text: 'Estética Automotiva & Detalhamento', icon: <Car className="w-3.5 h-3.5 text-sky-400" />, badge: 'Local' },
+                  { text: 'Clínicas Médicas & Odontológicas', icon: <Stethoscope className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Saúde' },
+                  { text: 'Fisioterapia & Reabilitação', icon: <Activity className="w-3.5 h-3.5 text-teal-300" />, badge: 'Bem-Estar' },
                 ]}
-                speed={85}
-                reverse={true}
+                speed={70}
+                ariaLabel="Banner deslizante interativo dos nichos atendidos pela ēloSites"
               />
             </div>
 

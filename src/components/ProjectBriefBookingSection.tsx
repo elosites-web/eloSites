@@ -325,7 +325,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-              Preencha um briefing rápido para receber uma proposta personalizada ou escolha um horário para alinharmos tudo em uma chamada online de 30 minutos sem compromisso.
+              Preencha um briefing rápido para receber uma <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">proposta personalizada</span> ou escolha um horário para alinharmos tudo em uma chamada online de 30 minutos sem compromisso.
             </p>
           </div>
 

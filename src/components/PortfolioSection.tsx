@@ -457,7 +457,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Explore nossos trabalhos recentes com alternador de tela Desktop e Mobile ou visualize o mockup composto sobreposto. Todos os projetos contam com código limpo, SEO técnico e carregamento instantâneo.
+              Explore nossos trabalhos recentes com alternador de tela Desktop e Mobile ou visualize o mockup composto sobreposto. Todos os projetos contam com código limpo, SEO técnico e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">carregamento instantâneo</span>.
             </p>
 
             {/* Filtros de Categoria */}

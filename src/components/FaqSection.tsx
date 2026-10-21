@@ -81,7 +81,7 @@ export const FaqSection: React.FC = () => {
                 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance"
               />
               <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-                Respostas diretas sobre pagamento, publicação, domínio, manutenção e controle do site.
+                Respostas diretas sobre pagamento, publicação, domínio, manutenção e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">controle do site</span>.
               </p>
             </div>
           </BiReveal>

@@ -230,10 +230,54 @@ article {
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-/* Micro-etiqueta monoespaçada (usa apenas o texto já existente). */
+/* Animação suave e orgânica de levitação/flutuação com oscilação sutil de opacidade (0.9 a 1.0) */
+@keyframes floatingSoft {
+  0%, 100% {
+    transform: translate3d(0, -3.5px, 0) rotate(-0.25deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(1.5px, 3.5px, 0) rotate(0.25deg);
+    opacity: 0.9;
+  }
+}
+
+.floating-badge,
+.section-kicker,
+.founder-badge,
+.elo-logo-floating {
+  animation: floatingSoft 6.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 .section-kicker {
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.14em;
+  animation-duration: 6.8s;
+}
+
+.founder-badge {
+  animation-duration: 6.2s;
+  animation-delay: -1.2s;
+}
+
+.floating-badge {
+  animation-duration: 7.1s;
+  animation-delay: -2.4s;
+}
+
+.elo-logo-floating {
+  animation-duration: 7.4s;
+  animation-delay: -3.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-badge,
+  .section-kicker,
+  .founder-badge,
+  .elo-logo-floating {
+    animation: none !important;
+  }
 }
 
 /* Fio técnico de 1px. */
@@ -681,8 +725,9 @@ a[id*="whatsapp"] {
 .high-contrast p,
 .high-contrast span,
 .high-contrast li,
-.high-contrast label {
-  color: #f1f5f9 !important;
+.high-contrast label,
+.high-contrast small {
+  color: #f1f5f9 !important; /* Contraste 18.9:1 contra #000000 (WCAG AAA >= 7:1) */
 }
 
 .high-contrast h1,
@@ -690,14 +735,30 @@ a[id*="whatsapp"] {
 .high-contrast h3,
 .high-contrast h4,
 .high-contrast h5,
-.high-contrast strong {
-  color: #ffffff !important;
+.high-contrast strong,
+.high-contrast b {
+  color: #ffffff !important; /* Contraste 21:1 contra #000000 (WCAG AAA >= 7:1) */
 }
 
+/* Textos secundários, legendas e rótulos auxiliares com garantia de contraste >= 7:1 (WCAG AAA) contra #000000 */
 .high-contrast .text-slate-400,
 .high-contrast .text-slate-500,
-.high-contrast .text-slate-300 {
-  color: #e2e8f0 !important;
+.high-contrast .text-slate-600,
+.high-contrast .text-slate-300,
+.high-contrast .text-slate-200,
+.high-contrast .text-gray-400,
+.high-contrast .text-gray-500,
+.high-contrast .text-gray-600,
+.high-contrast .text-zinc-400,
+.high-contrast .text-zinc-500,
+.high-contrast [class*="text-slate-"],
+.high-contrast [class*="text-gray-"],
+.high-contrast [class*="text-zinc-"],
+.high-contrast .hero-home-subtitle,
+.high-contrast [class*="text-muted"],
+.high-contrast caption,
+.high-contrast figcaption {
+  color: #e2e8f0 !important; /* Contraste 16.9:1 contra fundo #000000 (supera com folga o critério 7:1 do WCAG AAA) */
 }
 
 .high-contrast button:not([class*="bg-"]):not([class*="cta-"]),
@@ -1143,9 +1204,9 @@ a[id*="whatsapp"] {
    - Desktop (>= 1280px): base md:h-8 (32px) -> Multiplicador 5x = 160px
    ============================================================ */
 
-/* Celular (< 768px): reduzido em 8px (72px -> 64px) */
+/* Celular (< 768px): reduzido em 4px (64px -> 60px) */
 .hero-home-logo {
-  height: 64px;
+  height: 60px;
   width: auto;
   max-width: min(85vw, 320px);
   max-height: 18vh;
@@ -1161,29 +1222,62 @@ a[id*="whatsapp"] {
   }
 }
 
-/* Tablet (768px a 1279px): reduzido em 8px (112px -> 104px) */
+/* Tablet (768px a 1279px): reduzido em 4px (104px -> 100px) */
 @media (min-width: 768px) and (max-width: 1279.98px) {
   .hero-home-logo {
-    height: 104px;
+    height: 100px;
     max-width: min(80vw, 520px);
     max-height: 22vh;
   }
 }
 
-/* Desktop (>= 1280px): reduzido em 8px (160px -> 152px) */
+/* Desktop (>= 1280px): reduzido em 3px adicionais (148px -> 145px) apenas no modo desktop */
 @media (min-width: 1280px) {
   .hero-home-logo {
-    height: 152px;
+    height: 145px;
     max-width: min(70vw, 680px);
     max-height: 28vh;
   }
 }
 
-/* Celulares pequenos ou no modo paisagem (pouca altura): reduzido em 8px */
+/* Celulares pequenos ou no modo paisagem (pouca altura): reduzido em 4px */
 @media (max-height: 540px) {
   .hero-home-logo {
-    height: clamp(32px, 16vh, 52px);
+    height: clamp(28px, 16vh, 48px);
     max-width: 75vw;
+  }
+}
+
+/* Subtítulo minimalista abaixo do logotipo na Home ("Web Development Studio")
+   Ajustado proporcionalmente ao tamanho do espaço e do logotipo em cada tela */
+.hero-home-subtitle {
+  display: block;
+  text-transform: uppercase;
+  text-align: center;
+  user-select: none;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-weight: 500;
+  /* Celular (< 768px): proporcional ao logo de 60px */
+  font-size: clamp(9.5px, 2.7vw, 11px);
+  letter-spacing: clamp(0.18em, 0.5vw, 0.24em);
+  margin-top: 8px;
+}
+
+/* Tablet (768px a 1279px): proporcional ao logo de 100px */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .hero-home-subtitle {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    margin-top: 10px;
+  }
+}
+
+/* Desktop (>= 1280px): proporcional ao logo de 145px e ao espaço nobre do desktop */
+@media (min-width: 1280px) {
+  .hero-home-subtitle {
+    font-size: 15px;
+    letter-spacing: 0.44em;
+    margin-top: 12px;
   }
 }
 
@@ -1647,6 +1741,72 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 
   .process-card {
     padding: clamp(1.25rem, 4.5vw, 1.65rem) !important;
+  }
+}
+
+/* ============================================================
+   EFEITO DE FADE-IN PROGRESSIVO AO ROLAR A PÁGINA
+   (Scroll-Driven Animations Nativas + Transição Orgânica em Cards e Textos)
+   ============================================================ */
+
+@keyframes scrollProgressiveFadeInCard {
+  0% {
+    opacity: 0.15;
+    transform: translate3d(0, 24px, 0) scale(0.985);
+    filter: blur(2.5px);
+  }
+  65% {
+    opacity: 0.88;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes scrollProgressiveFadeInText {
+  0% {
+    opacity: 0.18;
+    transform: translate3d(0, 16px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Suporte nativo à rolagem progressiva via CSS Scroll-Driven Animations */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Cards com desvanecimento progressivo na rolagem */
+    .scroll-fade-card,
+    article.surface-card,
+    .glass-card-interactive:not(.hero-home-logo):not([role="dialog"] *),
+    .service-card:not([role="dialog"] *),
+    .process-card:not([role="dialog"] *),
+    .portfolio-card:not([role="dialog"] *),
+    .differential-card:not([role="dialog"] *),
+    .benefit-card:not([role="dialog"] *),
+    .tech-stack-card {
+      animation: scrollProgressiveFadeInCard linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 28%;
+      will-change: transform, opacity, filter;
+    }
+
+    /* Elementos de texto e títulos com revelação progressiva suave */
+    .scroll-fade-text,
+    .page-shell .section-kicker:not(.floating-badge):not(.founder-badge),
+    .page-shell h2:not([role="dialog"] *),
+    .page-shell h3:not([role="dialog"] *),
+    .page-shell p.leading-relaxed:not([role="dialog"] *) {
+      animation: scrollProgressiveFadeInText linear both;
+      animation-timeline: view();
+      animation-range: entry 6% cover 25%;
+      will-change: transform, opacity;
+    }
   }
 }
 

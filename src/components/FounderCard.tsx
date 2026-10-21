@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { whatsappUrl } from '../types';
@@ -14,7 +15,13 @@ interface FounderCardProps {
  * foto circular com halo luminoso, badge de fundador, headline de impacto, bio e botão de WhatsApp direto.
  */
 export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
+  const [isPulsing, setIsPulsing] = useState(false);
   const whatsappHref = whatsappUrl('Olá Everton, vi seu perfil na ēloSites e quero tirar dúvidas.');
+
+  const handlePortraitClick = () => {
+    setIsPulsing(true);
+    setTimeout(() => setIsPulsing(false), 900);
+  };
 
   return (
     <BiReveal direction="up" delay={80} className={`w-full ${className}`}>
@@ -39,11 +46,27 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
           aria-hidden="true"
         />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 lg:gap-10">
-          {/* COLUNA ESQUERDA: Retrato Circular do Fundador com Halo e Badge */}
-          <div className="flex flex-col items-center shrink-0">
-            {/* Foto circular com halo gradiente e brilho índigo/púrpura */}
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] flex items-center justify-center">
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 sm:gap-8 lg:gap-10 my-auto">
+          {/* COLUNA ESQUERDA: Retrato Circular do Fundador com Halo e Badge (sempre centralizado) */}
+          <div className="flex flex-col items-center justify-center shrink-0 self-center pb-3 md:pb-0">
+            {/* Foto circular com halo gradiente e brilho com zoom/motion/pulse ao passar o mouse ou clicar */}
+            <motion.div
+              whileHover={{ scale: 1.07 }}
+              whileTap={{ scale: 0.95 }}
+              animate={
+                isPulsing
+                  ? {
+                      scale: [1, 1.12, 1.04, 1.08, 1],
+                      rotate: [0, -1.2, 1.2, -0.4, 0],
+                      transition: { duration: 0.85, ease: 'easeOut' },
+                    }
+                  : undefined
+              }
+              transition={{ type: 'spring', stiffness: 280, damping: 18 }}
+              onClick={handlePortraitClick}
+              title="Clique para interagir com o fundador"
+              className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center cursor-pointer transition-shadow duration-300 group/avatar select-none"
+            >
               <img
                 src="/eu.png"
                 alt="Everton Lopes — Fundador da ēloSites"
@@ -51,18 +74,18 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
                 height={192}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full rounded-full object-cover"
+                className="w-full h-full rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-102"
               />
 
-              {/* Selo 'Fundador' posicionado 75% mais abaixo da sobreposição anterior e centralizado horizontalmente */}
-              <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10">
+              {/* Selo 'Fundador' posicionado na borda inferior do retrato, flutuando suavemente */}
+              <div className="founder-badge absolute -bottom-3.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10 transition-transform duration-200 group-hover/avatar:scale-105">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
                 <span>Fundador</span>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* COLUNA DIREITA: Kicker, Headline, Bio e Ações */}
