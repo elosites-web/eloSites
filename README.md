@@ -83,10 +83,11 @@ O site é publicado a partir da branch `main`. Configuração esperada:
 - Comando de build: `npm run build`
 - Pasta de publicação: `dist`
 - Cache: regras em `public/_headers` (assets com hash em cache longo; `index.html` e `sw.js` sempre revalidados)
+- Rotas: `netlify.toml` garante que `/cartao/` sirva a página estática do cartão, sem cair no fallback da SPA
 
 Depois de publicar, confira no celular a Home, o menu, o Portfólio, os Serviços, o FAQ e o botão do WhatsApp.
 
-**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v3`) para os visitantes receberem a versão nova.
+**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v4`) para os visitantes receberem a versão nova.
 
 ## Fluxo de trabalho com Git
 

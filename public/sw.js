@@ -1,10 +1,14 @@
 // Service Worker básico para ēloSites — Caching e Suporte Offline
-const CACHE_NAME = 'elosites-cache-v3';
+const CACHE_NAME = 'elosites-cache-v4';
+const CARD_PAGE_PATH = '/cartao/index.html';
 
 // Recursos estáticos essenciais do shell
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  CARD_PAGE_PATH,
+  '/cartao/eu.webp',
+  '/cartao/logo.webp',
   '/manifest.json',
   '/favicon.ico',
   '/favicon-32x32.png',
@@ -12,6 +16,11 @@ const STATIC_ASSETS = [
   '/apple-touch-icon.png',
   '/logo-elosites-1360.png',
 ];
+
+function isCardPage(url) {
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+  return path === '/cartao' || path === CARD_PAGE_PATH;
+}
 
 // Instalação do Service Worker e pré-cache do shell
 self.addEventListener('install', (event) => {
@@ -58,16 +67,28 @@ self.addEventListener('fetch', (event) => {
 
   // Navegações de página
   if (request.mode === 'navigate') {
+    const isCard = isCardPage(new URL(request.url));
+
     event.respondWith(
       fetch(request)
         .then((response) => {
           if (response && response.status === 200) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            const cacheKey = isCard ? CARD_PAGE_PATH : request;
+            caches.open(CACHE_NAME).then((cache) => cache.put(cacheKey, clone));
           }
           return response;
         })
         .catch(async () => {
+          if (isCard) {
+            const cachedCard = await caches.match(CARD_PAGE_PATH);
+            if (cachedCard) return cachedCard;
+            return new Response('Cartão digital indisponível sem conexão.', {
+              status: 503,
+              headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+            });
+          }
+
           const cached = await caches.match(request);
           if (cached) return cached;
           return caches.match('/index.html');
