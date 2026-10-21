@@ -84,7 +84,7 @@ O site é publicado a partir da branch `main`. Configuração esperada:
 - Comando de build: `npm run build`
 - Pasta de publicação: `dist`
 - Cache: regras em `public/_headers` (assets com hash em cache longo; `index.html` e `sw.js` sempre revalidados)
-- Rotas: o `netlify.toml` só redireciona `/cartao` para `/cartao/`; a página é servida direto pelo `dist/cartao/index.html`. Não use rewrite para esse caminho, por causa do loop de redirecionamento.
+- Rotas: o `netlify.toml` não define redirect nem rewrite para `/cartao`. A Netlify serve `dist/cartao/index.html` em `/cartao/` e usa a Pretty URLs para levar `/cartao` a `/cartao/`. Não adicione regra para esse caminho: a Netlify normaliza a barra final antes de aplicar redirects e isso causa loop.
 
 Depois de publicar, confira no celular a Home, o menu, o Portfólio, os Serviços, o FAQ e o botão do WhatsApp.
 
