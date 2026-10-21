@@ -268,6 +268,36 @@ export default function App() {
           const el = document.getElementById('apresentacao');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 150);
+      } else if (rawHash === 'fundador' || rawHash === 'card-do-fundador' || rawHash === 'sobre-fundador') {
+        setCurrentScreen((prev) => {
+          if (prev !== 'inicio') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'inicio';
+        });
+        let founderScrollAttempts = 0;
+        const scrollToFounder = () => {
+          const el = document.getElementById('fundador');
+          if (!el) {
+            if (founderScrollAttempts < 30) {
+              founderScrollAttempts += 1;
+              setTimeout(scrollToFounder, 150);
+            }
+            return;
+          }
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => {
+            const target = document.getElementById('fundador');
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 700);
+        };
+        setTimeout(scrollToFounder, 120);
       } else if (rawHash === 'sitemap' || rawHash === 'mapa-do-site') {
         setIsSitemapOpen(true);
       }

@@ -297,7 +297,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
         </div>
 
         {/* Card Oficial do Fundador (Everton Lopes) posicionado abaixo do conteúdo das especialidades */}
-        <div className="mt-12 sm:mt-16 lg:mt-20">
+        <div id="fundador" className="mt-12 sm:mt-16 lg:mt-20 scroll-mt-24">
           <FounderCard onNavigateToCartao={onNavigateToCartao} />
         </div>
 

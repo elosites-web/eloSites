@@ -36,6 +36,15 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;min-height:100vh;min-height:100dvh;background:#050814;color:#f1f5f9;font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;display:flex;justify-content:center;overflow-x:hidden}
+.card-close{position:fixed;top:16px;top:max(16px,env(safe-area-inset-top));right:16px;right:max(16px,env(safe-area-inset-right));z-index:20;display:flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;border:1px solid rgba(96,165,250,.22);border-radius:14px;background:rgba(5,8,20,.58);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(2,6,23,.35);text-decoration:none;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.card-close:hover{background:rgba(15,24,52,.82);border-color:rgba(96,165,250,.45);transform:scale(1.05)}
+.card-close:active{transform:scale(.95)}
+.card-close-lines{position:relative;display:block;width:28px;height:20px}
+.card-close-lines span{position:absolute;left:0;top:50%;width:100%;height:3px;border-radius:999px;transform-origin:center;transition:transform .3s cubic-bezier(.23,1,.32,1),width .2s ease,opacity .2s ease}
+.card-close-lines .line-top{transform:translateY(-50%) rotate(45deg);background:linear-gradient(90deg,#a855f7,#818cf8,#3b82f6);box-shadow:0 0 8px rgba(168,85,247,.5)}
+.card-close-lines .line-mid{width:0;opacity:0;transform:translateY(-50%);background:linear-gradient(90deg,#fff,#f1f5f9,#e2e8f0)}
+.card-close-lines .line-bottom{transform:translateY(-50%) rotate(-45deg);background:linear-gradient(90deg,#3b82f6,#818cf8,#a855f7);box-shadow:0 0 8px rgba(59,130,246,.5)}
+.card-close:focus-visible{outline:3px solid #f1f5f9;outline-offset:3px}
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
 .o1{top:-110px;right:-120px;width:360px;height:360px;background:radial-gradient(circle,rgba(59,130,246,.38),rgba(59,130,246,0) 70%);animation:float1 9s ease-in-out infinite}
 .o2{bottom:-130px;left:-130px;width:380px;height:380px;background:radial-gradient(circle,rgba(124,58,237,.34),rgba(124,58,237,0) 70%);animation:float2 11s ease-in-out infinite}
@@ -113,6 +122,13 @@ body.share-open{overflow:hidden}
 <div class="orb o1" aria-hidden="true"></div>
 <div class="orb o2" aria-hidden="true"></div>
 <main>
+<a class="card-close" href="/#fundador" aria-label="Fechar cartão e ir para o card do fundador" title="Fechar cartão">
+<span class="card-close-lines" aria-hidden="true">
+<span class="line-top"></span>
+<span class="line-mid"></span>
+<span class="line-bottom"></span>
+</span>
+</a>
 <img class="logo rise" src="/cartao/logo.webp" width="150" height="37" alt="ēloSites" />
 
 <div class="photo rise" style="animation-delay:.1s">
