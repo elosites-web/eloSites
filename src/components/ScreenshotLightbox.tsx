@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { getPortfolioImageSource } from '../portfolioResponsiveImages';
 
 export interface ScreenshotLightboxProps {
   isOpen: boolean;
@@ -130,13 +131,52 @@ export const ScreenshotLightbox: React.FC<ScreenshotLightboxProps> = ({
           {isMobileScreenshot && (
             <div className="w-12 h-1 bg-slate-700/80 mx-auto rounded-full mb-2" />
           )}
-          <img
-            src={src}
-            alt={title}
-            className="w-full h-auto object-contain block rounded-lg sm:rounded-xl"
-            loading="eager"
-            decoding="async"
-          />
+          {(() => {
+            const responsiveSource = getPortfolioImageSource(src);
+            if (responsiveSource) {
+              return (
+                <picture className="w-full block">
+                  <source
+                    type="image/avif"
+                    srcSet={responsiveSource.avifSrcSet}
+                    sizes={
+                      isMobileScreenshot
+                        ? '(max-width: 640px) 100vw, 448px'
+                        : '(max-width: 1024px) 100vw, 1024px'
+                    }
+                  />
+                  <source
+                    type="image/webp"
+                    srcSet={responsiveSource.webpSrcSet}
+                    sizes={
+                      isMobileScreenshot
+                        ? '(max-width: 640px) 100vw, 448px'
+                        : '(max-width: 1024px) 100vw, 1024px'
+                    }
+                  />
+                  <img
+                    src={responsiveSource.fallbackSrc}
+                    alt={title}
+                    width={responsiveSource.width}
+                    height={responsiveSource.height}
+                    className="w-full h-auto object-contain block rounded-lg sm:rounded-xl"
+                    loading="eager"
+                    decoding="sync"
+                    fetchPriority="high"
+                  />
+                </picture>
+              );
+            }
+            return (
+              <img
+                src={src}
+                alt={title}
+                className="w-full h-auto object-contain block rounded-lg sm:rounded-xl"
+                loading="eager"
+                decoding="async"
+              />
+            );
+          })()}
         </div>
 
         {/* Dica de rolagem no rodapé para capturas longas */}

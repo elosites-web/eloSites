@@ -54,13 +54,13 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
                 className="w-full h-full rounded-full object-cover"
               />
 
-              {/* Selo 'Fundador da ēloSites' posicionado com bottom: 1px e centralizado horizontalmente */}
-              <div className="absolute bottom-[1px] left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10">
+              {/* Selo 'Fundador' posicionado 75% mais abaixo da sobreposição anterior e centralizado horizontalmente */}
+              <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
-                <span>Fundador da ēloSites</span>
+                <span>Fundador</span>
               </div>
             </div>
           </div>

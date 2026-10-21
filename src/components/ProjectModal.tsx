@@ -13,6 +13,7 @@ import {
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { PortfolioProjectData } from './PortfolioSection';
 import { whatsappUrl } from '../types';
+import { getPortfolioImageSource } from '../portfolioResponsiveImages';
 
 export interface ProjectModalProps {
   project: PortfolioProjectData | null;
@@ -141,7 +142,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
           {/* Conteúdo com fluxo de rolagem natural (sem área de scroll interna aninhada) */}
           <div className="p-5 sm:p-7 space-y-6 sm:space-y-8 text-slate-300">
-            {/* Banner de Preview do Projeto */}
+            {/* Banner de Preview do Projeto com <picture> e WebP/AVIF otimizados */}
             <div className="relative rounded-xl overflow-hidden border border-white/[0.08] bg-slate-950/70 p-2 sm:p-3">
               <div
                 className={`rounded-lg overflow-hidden aspect-[16/9] sm:aspect-[21/9] bg-slate-900 ${
@@ -150,13 +151,43 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                 onClick={() => onOpenZoom?.(project.desktopImage, `${project.title} - Desktop`)}
                 title={onOpenZoom ? 'Clique para ampliar captura em alta resolução' : undefined}
               >
-                <img
-                  src={project.desktopImage}
-                  alt={`Screenshot de ${project.title}`}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
-                  loading="lazy"
-                  decoding="async"
-                />
+                {(() => {
+                  const previewSource = getPortfolioImageSource(project.desktopImage);
+                  if (previewSource) {
+                    return (
+                      <picture className="w-full h-full block">
+                        <source
+                          type="image/avif"
+                          srcSet={previewSource.avifSrcSet}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 860px"
+                        />
+                        <source
+                          type="image/webp"
+                          srcSet={previewSource.webpSrcSet}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 860px"
+                        />
+                        <img
+                          src={previewSource.fallbackSrc}
+                          alt={`Screenshot de ${project.title}`}
+                          width={previewSource.width}
+                          height={previewSource.height}
+                          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    );
+                  }
+                  return (
+                    <img
+                      src={project.desktopImage}
+                      alt={`Screenshot de ${project.title}`}
+                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  );
+                })()}
                 {onOpenZoom && (
                   <div className="absolute bottom-2.5 right-2.5 hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-950/85 backdrop-blur-sm border border-white/[0.15] text-[11px] font-medium text-slate-200 group-hover:text-white shadow-md transition-colors">
                     <ZoomIn className="w-3.5 h-3.5 text-indigo-400" />

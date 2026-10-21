@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getPortfolioImageSource } from '../portfolioResponsiveImages';
 
-interface LazyPortfolioImageProps {
+export interface LazyPortfolioImageProps {
   src: string;
   alt: string;
   className?: string;
@@ -8,12 +9,15 @@ interface LazyPortfolioImageProps {
   rootMargin?: string;
   onClick?: () => void;
   priority?: boolean;
+  sizes?: string;
+  width?: number;
+  height?: number;
 }
 
 /**
- * LazyPortfolioImage: Carregador agressivo e performático baseado na API IntersectionObserver.
- * Adia a requisição de rede do arquivo de imagem até que o elemento esteja a 500px da viewport
- * (ou margem configurada), eliminando sobrecarga inicial de rede em conexões móveis.
+ * LazyPortfolioImage: Carregador agressivo e performático baseado na API IntersectionObserver
+ * e suporte nativo a elementos <picture> com variantes otimizadas em WebP e AVIF com srcset responsivo.
+ * Reduz drasticamente o tempo de LCP servindo imagens proporcionais à largura da viewport.
  */
 export const LazyPortfolioImage: React.FC<LazyPortfolioImageProps> = ({
   src,
@@ -23,11 +27,17 @@ export const LazyPortfolioImage: React.FC<LazyPortfolioImageProps> = ({
   rootMargin = '500px 0px 500px 0px',
   onClick,
   priority = false,
+  sizes,
+  width,
+  height,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isInView, setIsInView] = useState<boolean>(priority);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
+
+  const responsive = getPortfolioImageSource(src);
+  const effectiveSizes = sizes || responsive?.defaultSizes;
 
   useEffect(() => {
     if (priority) {
@@ -95,20 +105,39 @@ export const LazyPortfolioImage: React.FC<LazyPortfolioImageProps> = ({
         </div>
       )}
 
-      {/* Elemento de imagem real: renderizado somente quando dentro da margem de 500px */}
+      {/* Elemento <picture> responsivo com WebP / AVIF otimizados para reduzir o LCP */}
       {isInView && !hasError && (
-        <img
-          src={src}
-          alt={alt}
-          referrerPolicy="no-referrer"
-          decoding="async"
-          loading="lazy"
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setHasError(true)}
-          className={`${className} transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
+        <picture className="w-full h-full block">
+          {responsive?.avifSrcSet && (
+            <source
+              type="image/avif"
+              srcSet={responsive.avifSrcSet}
+              sizes={effectiveSizes}
+            />
+          )}
+          {responsive?.webpSrcSet && (
+            <source
+              type="image/webp"
+              srcSet={responsive.webpSrcSet}
+              sizes={effectiveSizes}
+            />
+          )}
+          <img
+            src={responsive?.fallbackSrc || src}
+            alt={alt}
+            width={width || responsive?.width}
+            height={height || responsive?.height}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding={priority ? 'sync' : 'async'}
+            fetchPriority={priority ? 'high' : 'auto'}
+            referrerPolicy="no-referrer"
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+            className={`${className} transition-opacity duration-300 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        </picture>
       )}
     </div>
   );

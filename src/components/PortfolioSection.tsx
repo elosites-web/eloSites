@@ -115,12 +115,14 @@ interface ProjectCardProps {
   project: PortfolioProjectData;
   onOpenZoom: (imgSrc: string, title: string) => void;
   onOpenDetails: (project: PortfolioProjectData) => void;
+  priority?: boolean;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   onOpenZoom,
   onOpenDetails,
+  priority = false,
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('composite');
 
@@ -282,6 +284,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
                     rootMargin="500px 0px 500px 0px"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                    priority={priority}
                   />
                 </div>
               </div>
@@ -301,6 +305,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top"
                     rootMargin="500px 0px 500px 0px"
+                    sizes="(max-width: 640px) 140px, 170px"
                   />
                 </div>
                 {/* Badge visual */}
@@ -335,6 +340,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   wrapperClassName="relative w-full h-full overflow-hidden"
                   className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
                   rootMargin="500px 0px 500px 0px"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                  priority={priority}
                 />
               </div>
             </div>
@@ -356,6 +363,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top"
                     rootMargin="500px 0px 500px 0px"
+                    sizes="(max-width: 640px) 210px, 240px"
                   />
                 </div>
               </div>
@@ -511,6 +519,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   <Interactive3DCard maxTilt={5} className="h-full w-full">
                     <ProjectCard
                       project={project}
+                      priority={index === 0}
                       onOpenZoom={(src, title) => setZoomModal({ src, title })}
                       onOpenDetails={(p) => setSelectedProject(p)}
                     />
