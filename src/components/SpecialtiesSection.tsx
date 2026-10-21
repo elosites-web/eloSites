@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
   Code2,
@@ -152,6 +152,32 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
     activeCategory === 'all'
       ? SPECIALTIES
       : SPECIALTIES.filter((s) => s.id === activeCategory);
+
+  useEffect(() => {
+    if (window.location.hash !== '#fundador') return;
+
+    let cancelled = false;
+    const scrollToFounder = () => {
+      if (cancelled) return;
+      const element = document.getElementById('fundador');
+      if (!element) return;
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => {
+        if (!cancelled) {
+          document.getElementById('fundador')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 600);
+    };
+
+    const frame = window.requestAnimationFrame(scrollToFounder);
+    const timer = window.setTimeout(scrollToFounder, 400);
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   const specialtiesWhatsappMessage =
     'Olá! ⚡ Estive analisando a seção de *Especialidades e Soluções Web* da *ēloSites*.\n\nGostaria de entender como essas soluções em desenvolvimento frontend, SEO técnico e integração com WhatsApp podem ser aplicadas ao meu negócio!';
