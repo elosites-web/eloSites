@@ -128,11 +128,12 @@ export const BiReveal: React.FC<BiRevealProps> = ({
     <Tag
       ref={elementRef}
       id={id}
-      className={`will-change-[transform,opacity] ${className}`}
+      className={className}
       style={{
         ...style,
         opacity: isInView || isReduced ? 1 : 0,
         transform: isInView || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
+        willChange: !isInView && !isReduced ? 'transform, opacity' : 'auto',
         transition: isReduced
           ? 'opacity 0.2s ease-out'
           : `opacity ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,

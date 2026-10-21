@@ -4,6 +4,7 @@ import type { ScreenId } from './types';
 type Loader = () => Promise<unknown>;
 
 const screenLoaders: Partial<Record<ScreenId, Loader>> = {
+  inicio: () => import('./components/SpecialtiesSection'),
   servicos: () => import('./components/ServicesSection'),
   'solucoes-web': () => import('./components/SpecialtiesSection'),
   portfolio: () => import('./components/PortfolioSection'),

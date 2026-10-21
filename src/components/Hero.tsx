@@ -214,77 +214,43 @@ export const Hero: React.FC<HeroProps> = ({
                   <TypewriterSlogan mode={mode} />
                 </BiReveal>
 
-                {/* Apresentação Oficial do Fundador: Everton Lopes e Retrato /eu.png */}
-                <BiReveal direction="left" delay={180}>
-                  <div className="w-full max-w-xl p-4 sm:p-5 rounded-2xl bg-slate-900/75 border border-blue-500/20 backdrop-blur-md shadow-xl shadow-black/50 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left transition-all duration-300 hover:border-blue-400/35">
-                    {/* Retrato oficial com moldura circular original preservada */}
-                    <div className="relative shrink-0">
-                      <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 opacity-30 blur-sm pointer-events-none" />
-                      <img
-                        src="/eu.png"
-                        alt="Everton Lopes — Fundador da ēloSites | Estúdio de Desenvolvimento Web"
-                        width={112}
-                        height={112}
-                        loading="eager"
-                        decoding="async"
-                        className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full object-cover border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.25)]"
-                      />
-                    </div>
-
-                    {/* Texto de Apresentação e Posicionamento */}
-                    <div className="space-y-1.5 flex-1">
-                      <div className="inline-flex items-center gap-2">
-                        <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-cyan-400">
-                          QUEM ESTÁ POR TRÁS DA ēloSites
-                        </span>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight leading-snug">
-                        Tecnologia, criatividade e propósito em cada projeto.
-                      </h3>
-                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Sou <strong className="text-white font-semibold">Everton Lopes</strong>, fundador da <span className="text-blue-300 font-medium">ēloSites</span>. Desenvolvo landing pages, sites institucionais e experiências web interativas, combinando tecnologia, design de interfaces e SEO técnico para ajudar negócios a fortalecer sua presença digital.
-                      </p>
-                    </div>
-                  </div>
-                </BiReveal>
-
                 {/* Faixa dos 4 Pilares da og-image.png */}
-                <BiReveal direction="up" delay={240}>
+                <BiReveal direction="up" delay={200}>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2 w-full max-w-xl">
                     {/* Pilar 1 */}
-                    <div className="flex flex-col items-center lg:items-start p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
+                    <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Monitor className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white">Design moderno</span>
-                      <span className="text-[10px] text-slate-400">Estética autoral</span>
+                      <span className="text-xs font-semibold text-white text-center">Design moderno</span>
+                      <span className="text-[10px] text-slate-400 text-center">Estética autoral</span>
                     </div>
 
                     {/* Pilar 2 */}
-                    <div className="flex flex-col items-center lg:items-start p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
+                    <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Zap className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white">Performance</span>
-                      <span className="text-[10px] text-slate-400">Velocidade real</span>
+                      <span className="text-xs font-semibold text-white text-center">Performance</span>
+                      <span className="text-[10px] text-slate-400 text-center">Velocidade real</span>
                     </div>
 
                     {/* Pilar 3 */}
-                    <div className="flex flex-col items-center lg:items-start p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
+                    <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Search className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white">SEO técnico</span>
-                      <span className="text-[10px] text-slate-400">Google Schema</span>
+                      <span className="text-xs font-semibold text-white text-center">SEO técnico</span>
+                      <span className="text-[10px] text-slate-400 text-center">Google Schema</span>
                     </div>
 
                     {/* Pilar 4 */}
-                    <div className="flex flex-col items-center lg:items-start p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
+                    <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white">100% responsivo</span>
-                      <span className="text-[10px] text-slate-400">Mobile First</span>
+                      <span className="text-xs font-semibold text-white text-center">100% responsivo</span>
+                      <span className="text-[10px] text-slate-400 text-center">Mobile First</span>
                     </div>
                   </div>
                 </BiReveal>
@@ -418,7 +384,7 @@ export const Hero: React.FC<HeroProps> = ({
                                   <span className="font-bold text-xs tracking-tight text-white">ēloSites</span>
                                 </div>
                                 <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
-                                  <span className="text-blue-400 font-semibold">Início</span>
+                                  <span className="text-blue-400 font-semibold">Sobre</span>
                                   <span>Serviços</span>
                                   <span>Projetos</span>
                                   <span>Contato</span>
@@ -518,49 +484,6 @@ export const Hero: React.FC<HeroProps> = ({
                         </div>
                       </div>
                     </Interactive3DCard>
-
-                    {/* CARD FLUTUANTE SUPERIOR DIREITO: Código Limpo & Boas Práticas (da og-image.png) */}
-                    <div className="hidden sm:flex absolute -top-5 -right-3 z-20 flex-col gap-1.5 p-3 rounded-xl bg-[#090E23]/95 border border-blue-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md text-xs text-slate-200">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                        <span className="font-medium">Código limpo e organizado</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                        <span className="font-medium">Boas práticas de desenvolvimento</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                        <span className="font-medium">Site otimizado para buscadores</span>
-                      </div>
-                    </div>
-
-                    {/* BADGE FLUTUANTE INFERIOR DIREITO: A+ Performance (da og-image.png) */}
-                    <div className="hidden sm:flex absolute -bottom-5 -right-4 z-20 flex-col items-center justify-center p-3.5 rounded-2xl bg-[#090E23]/95 border border-blue-500/40 shadow-[0_0_28px_rgba(37,99,235,0.4)] backdrop-blur-md">
-                      <div className="w-12 h-12 rounded-full border-2 border-blue-500 flex items-center justify-center text-blue-400 font-bold text-base shadow-[0_0_14px_#3b82f6]">
-                        A+
-                      </div>
-                      <span className="text-[10px] font-semibold tracking-wider text-slate-300 mt-1 uppercase">
-                        Performance
-                      </span>
-                    </div>
-
-                    {/* MINI MOCKUP DE CELULAR FLUTUANTE (da og-image.png) */}
-                    <div className="hidden md:flex absolute -bottom-8 -left-6 z-20 w-36 rounded-2xl bg-[#090E23]/95 border border-blue-500/35 p-1.5 shadow-2xl backdrop-blur-md">
-                      <div className="w-full rounded-xl bg-[#030712] p-2 border border-white/10 space-y-1.5">
-                        <div className="flex justify-between items-center text-[7px] text-slate-400 pb-1 border-b border-white/10">
-                          <span className="font-bold text-white">ēloSites</span>
-                          <span className="text-blue-400">☰</span>
-                        </div>
-                        <p className="text-[8px] font-bold text-white leading-tight">
-                          Sites que geram resultados.
-                        </p>
-                        <div className="p-1 rounded bg-blue-600 text-white text-[7px] text-center font-semibold">
-                          Orçamento &rarr;
-                        </div>
-                      </div>
-                    </div>
-
                   </div>
                 </BiReveal>
               </div>

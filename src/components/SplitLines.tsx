@@ -59,7 +59,7 @@ export const SplitLines: React.FC<SplitLinesProps> = ({ text, as, className = ''
       });
     }
     const onResize = () => measure();
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
     return () => {
       cancelled = true;
       window.removeEventListener('resize', onResize);

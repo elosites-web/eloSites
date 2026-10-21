@@ -15,6 +15,7 @@ import {
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 import { ProjectModal } from './ProjectModal';
+import { LazyPortfolioImage } from './LazyPortfolioImage';
 import { SplitLines } from './SplitLines';
 import { Reveal } from './Reveal';
 import { BiReveal } from './BiReveal';
@@ -275,12 +276,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   className="aspect-[16/10] overflow-hidden bg-slate-900 cursor-zoom-in"
                   onClick={() => onOpenZoom(project.desktopImage, `${project.title} - Desktop`)}
                 >
-                  <img
+                  <LazyPortfolioImage
                     src={project.desktopImage}
                     alt={`Versão Desktop do site ${project.title}`}
+                    wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
+                    rootMargin="500px 0px 500px 0px"
                   />
                 </div>
               </div>
@@ -294,12 +295,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               >
                 {/* Phone screen */}
                 <div className="rounded-[14px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
-                  <img
+                  <LazyPortfolioImage
                     src={project.mobileImage}
                     alt={`Versão Mobile do site ${project.title}`}
+                    wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top"
-                    loading="lazy"
-                    decoding="async"
+                    rootMargin="500px 0px 500px 0px"
                   />
                 </div>
                 {/* Badge visual */}
@@ -328,12 +329,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 className="aspect-[16/10] overflow-hidden bg-slate-950 cursor-zoom-in"
                 onClick={() => onOpenZoom(project.desktopImage, `${project.title} - Desktop`)}
               >
-                <img
+                <LazyPortfolioImage
                   src={project.desktopImage}
                   alt={`Captura Desktop completa de ${project.title}`}
+                  wrapperClassName="relative w-full h-full overflow-hidden"
                   className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
+                  rootMargin="500px 0px 500px 0px"
                 />
               </div>
             </div>
@@ -349,12 +350,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 {/* Speaker pill */}
                 <div className="w-12 h-1.5 bg-slate-700 mx-auto rounded-full mb-1.5" />
                 <div className="rounded-[20px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
-                  <img
+                  <LazyPortfolioImage
                     src={project.mobileImage}
                     alt={`Captura Mobile completa de ${project.title}`}
+                    wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top"
-                    loading="lazy"
-                    decoding="async"
+                    rootMargin="500px 0px 500px 0px"
                   />
                 </div>
               </div>

@@ -32,7 +32,13 @@ export const generateSitemapXml = (baseUrl: string): string => {
       loc: `${cleanBase}/`,
       priority: '1.0',
       changefreq: 'weekly',
-      comment: 'Tela 01: Início & Apresentação',
+      comment: 'Tela 01: Home',
+    },
+    {
+      loc: `${cleanBase}/#inicio`,
+      priority: '1.0',
+      changefreq: 'weekly',
+      comment: 'Tela 02: Sobre a ēloSites (Apresentação, Especialidades & Fundador)',
     },
     {
       loc: `${cleanBase}/#servicos`,
@@ -41,46 +47,40 @@ export const generateSitemapXml = (baseUrl: string): string => {
       comment: 'Tela 03: Serviços & Condições Comerciais',
     },
     {
-      loc: `${cleanBase}/#solucoes-web`,
-      priority: '0.9',
-      changefreq: 'weekly',
-      comment: 'Tela 04: Soluções Web & Especialidades',
-    },
-    {
       loc: `${cleanBase}/#portfolio`,
       priority: '0.9',
       changefreq: 'weekly',
-      comment: 'Tela 05: Portfólio de Projetos Reais',
+      comment: 'Tela 04: Portfólio de Projetos Reais',
     },
     {
       loc: `${cleanBase}/#avaliacoes`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 06: Avaliações de Clientes Reais',
+      comment: 'Tela 05: Avaliações de Clientes Reais',
     },
     {
       loc: `${cleanBase}/#processo`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 07: Processo Ágil & Diferenciais',
+      comment: 'Tela 06: Processo Ágil & Diferenciais',
     },
     {
       loc: `${cleanBase}/#orcamento`,
       priority: '0.9',
       changefreq: 'weekly',
-      comment: 'Tela 08: Orçamento & Agendamento de Reunião',
+      comment: 'Tela 07: Orçamento & Agendamento de Reunião',
     },
     {
       loc: `${cleanBase}/#parceria-trafego`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 09: Parceria Estratégica | Tráfego Pago',
+      comment: 'Tela 08: Parceria Estratégica | Tráfego Pago',
     },
     {
       loc: `${cleanBase}/#faq`,
       priority: '0.8',
       changefreq: 'monthly',
-      comment: 'Tela 10: Perguntas Frequentes & Contato',
+      comment: 'Tela 09: Perguntas Frequentes & Contato',
     },
   ];
 
@@ -133,14 +133,14 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
     const today = new Date().toISOString().split('T')[0];
     const cleanBase = baseUrl.replace(/\/+$/, '');
     return SCREENS.map((s) => {
-      const isHome = s.id === 'inicio';
+      const isHome = s.id === 'home';
       return {
         path: isHome ? '/' : `/#${s.id}`,
         url: isHome ? `${cleanBase}/` : `${cleanBase}/#${s.id}`,
         screenId: s.id,
         title: s.title,
-        priority: isHome ? '1.0' : s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? '0.9' : '0.8',
-        changefreq: isHome || s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? 'weekly' : 'monthly',
+        priority: isHome || s.id === 'inicio' ? '1.0' : s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? '0.9' : '0.8',
+        changefreq: isHome || s.id === 'inicio' || s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? 'weekly' : 'monthly',
         lastmod: today,
       };
     });

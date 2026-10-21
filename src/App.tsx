@@ -129,7 +129,6 @@ export default function App() {
       'home',
       'inicio',
       'servicos',
-      'solucoes-web',
       'portfolio',
       'avaliacoes',
       'processo',
@@ -155,16 +154,19 @@ export default function App() {
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
         setCurrentScreen((prev) => {
-          if (prev !== 'solucoes-web') {
+          if (prev !== 'inicio') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'solucoes-web');
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
             if (nextIdx !== -1 && prevIdx !== -1) {
               setDirection(nextIdx > prevIdx ? 1 : -1);
             }
           }
-          return 'solucoes-web';
+          return 'inicio';
         });
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        setTimeout(() => {
+          const el = document.getElementById('solucoes-web');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
       } else if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
         setCurrentScreen((prev) => {
           if (prev !== 'avaliacoes') {
@@ -511,7 +513,7 @@ export default function App() {
     <>
       {/* TELA 01: Home (Background-only Hero com Menu Centralizado e Logo Flutuante) */}
       {currentScreen === 'home' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full">
           <Hero
             mode="home"
             isMenuOpen={isMenuOpen}
@@ -519,19 +521,16 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 02: Sobre (Apresentação Completa, Marquee 85s dos Nichos, CTAs e Terminal 3D) */}
+      {/* TELA 02: Sobre (Apresentação Completa, Especialidades & Soluções Web e Card Oficial do Fundador) */}
       {currentScreen === 'inicio' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full space-y-0">
           <Hero
             mode="inicio"
-            onNavigateToPortfolio={() => navigateToScreen('solucoes-web')}
+            onNavigateToPortfolio={() => {
+              const el = document.getElementById('solucoes-web');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
           />
-        </div>
-      )}
-
-      {/* TELA 03: Soluções Web (Página Independente de Especialidades Web) */}
-      {currentScreen === 'solucoes-web' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
               <SpecialtiesSection onNavigateToContact={() => navigateToScreen('servicos')} />
@@ -542,7 +541,7 @@ export default function App() {
 
       {/* TELA 04: Serviços & Condições Comerciais */}
       {currentScreen === 'servicos' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
               <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
@@ -553,7 +552,7 @@ export default function App() {
 
       {/* TELA 05: Portfólio de Projetos Reais */}
       {currentScreen === 'portfolio' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full">
           <SectionErrorBoundary>
             <Suspense fallback={<PortfolioSkeleton />}>
               <PortfolioSection
@@ -566,7 +565,7 @@ export default function App() {
 
       {/* TELA 06: Avaliações de Clientes Reais (Social Proof & Carrossel Cilíndrico) */}
       {currentScreen === 'avaliacoes' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full">
           <SectionErrorBoundary>
             <Suspense fallback={<PortfolioSkeleton />}>
               <TestimonialsSection
@@ -579,7 +578,7 @@ export default function App() {
 
       {/* TELA 07: Processo em 4 Etapas & Diferenciais como continuidade */}
       {currentScreen === 'processo' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
+        <div className="w-full space-y-0">
           <SectionErrorBoundary>
             <Suspense fallback={<DifferentialsSkeleton />}>
               <ProcessSection />
@@ -593,7 +592,7 @@ export default function App() {
 
       {/* TELA 08: Briefing & Agendamento */}
       {currentScreen === 'orcamento' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style]">
+        <div className="w-full">
           <SectionErrorBoundary>
             <Suspense fallback={<BookingSkeleton />}>
               <ProjectBriefBookingSection onOpenPrivacy={() => setLegalModal('privacy')} />
@@ -604,7 +603,7 @@ export default function App() {
 
       {/* TELA 09: Tráfego Pago & Gestão de Leads */}
       {(currentScreen === 'parceria-trafego' || currentScreen === 'trafego-pago') && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
+        <div className="w-full space-y-0">
           <SectionErrorBoundary>
             <Suspense fallback={<SimpleSectionSkeleton />}>
               <PaidTrafficPartnershipSection />
@@ -615,7 +614,7 @@ export default function App() {
 
       {/* TELA 10: Perguntas Frequentes (FAQ) & Contato */}
       {currentScreen === 'faq' && (
-        <div style={{ contain: 'layout style' }} className="w-full [contain:layout_style] space-y-0">
+        <div className="w-full space-y-0">
           <SectionErrorBoundary>
             <Suspense fallback={<SimpleSectionSkeleton />}>
               <FaqSection />

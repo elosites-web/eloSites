@@ -114,16 +114,16 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs sm:text-sm">
               {NAVIGATION_ITEMS.map((item, index) => {
                 const getScreenFromHref = (href: string): ScreenId => {
-                  if (href === '#home') return 'home';
-                  if (href.includes('servico')) return 'servicos';
-                  if (href.includes('solucoes') || href.includes('especialidade')) return 'solucoes-web';
-                  if (href.includes('portfolio')) return 'portfolio';
-                  if (href.includes('avaliacao') || href.includes('depoimento') || href.includes('testemunho')) return 'avaliacoes';
-                  if (href.includes('processo') || href.includes('como-funciona') || href.includes('diferencia')) return 'processo';
-                  if (href.includes('briefing') || href.includes('orcamento')) return 'orcamento';
-                  if (href.includes('parceria') || href.includes('trafego')) return 'parceria-trafego';
-                  if (href.includes('faq') || href.includes('contato')) return 'faq';
-                  if (href.includes('inicio')) return 'inicio';
+                  const clean = href.replace('#', '').toLowerCase().trim();
+                  if (clean === 'avaliacoes' || clean.includes('avalia') || clean.includes('depoimento') || clean.includes('testemunho')) return 'avaliacoes';
+                  if (clean === 'home') return 'home';
+                  if (clean === 'inicio' || clean === 'sobre') return 'inicio';
+                  if (clean === 'servicos' || clean.includes('servico')) return 'servicos';
+                  if (clean === 'portfolio' || clean.includes('portfolio')) return 'portfolio';
+                  if (clean === 'processo' || clean.includes('processo') || clean.includes('como-funciona') || clean.includes('diferencia')) return 'processo';
+                  if (clean === 'orcamento' || clean.includes('orcamento') || clean.includes('briefing')) return 'orcamento';
+                  if (clean === 'parceria-trafego' || clean.includes('parceria') || clean.includes('trafego')) return 'parceria-trafego';
+                  if (clean === 'faq' || clean.includes('faq') || clean.includes('contato')) return 'faq';
                   return 'home';
                 };
 
@@ -196,9 +196,13 @@ export const Footer: React.FC<FooterProps> = ({
               type="button"
               onClick={() => {
                 if (onSelectScreen) {
-                  onSelectScreen('solucoes-web');
+                  onSelectScreen('inicio');
+                  setTimeout(() => {
+                    const el = document.getElementById('solucoes-web');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }, 120);
                 } else {
-                  window.location.hash = 'solucoes-web';
+                  window.location.hash = 'inicio';
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}

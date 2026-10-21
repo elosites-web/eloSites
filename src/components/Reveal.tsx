@@ -128,13 +128,14 @@ export const Reveal: React.FC<RevealProps> = ({
     ...style,
     opacity: visible || isReduced ? 1 : 0,
     transform: visible || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
+    willChange: !visible && !isReduced ? 'transform, opacity' : 'auto',
     transition: isReduced
       ? 'opacity 0.2s ease-out'
       : `opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
   };
 
   return (
-    <Tag ref={ref} id={id} className={`will-change-[transform,opacity] ${className}`} style={mergedStyle}>
+    <Tag ref={ref} id={id} className={className} style={mergedStyle}>
       {children}
     </Tag>
   );

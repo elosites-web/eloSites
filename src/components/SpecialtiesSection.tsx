@@ -20,6 +20,8 @@ import { Interactive3DCard } from './Interactive3DCard';
 import { BiReveal } from './BiReveal';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { SITE_CONFIG, whatsappUrl } from '../types';
+import { FounderCard } from './FounderCard';
+import { TechStackCard } from './TechStackCard';
 
 interface SpecialtyItem {
   id: string;
@@ -286,42 +288,14 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
           })}
         </div>
 
-        {/* Faixa Inferior de Tecnologias em Destaque */}
-        <div className="mt-12 sm:mt-16 p-6 sm:p-8 rounded-2xl bg-[#090E23]/80 border border-blue-500/25 backdrop-blur-md">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center lg:text-left max-w-2xl">
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-300 uppercase tracking-wider">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>Base Tecnológica Selecionada</span>
-              </div>
-              <h4 className="text-lg sm:text-xl font-bold text-white">
-                Engenharia moderna aplicada ao objetivo real da sua empresa
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Utilizamos <strong>React</strong>, <strong>TypeScript</strong>, <strong>JavaScript</strong>, <strong>HTML5 semântico</strong>, <strong>CSS</strong>, <strong>Tailwind CSS</strong> e <strong>Vite</strong>. Cada projeto adota a combinação adequada de recursos para garantir leveza e clareza, sem complexidade desnecessária.
-              </p>
-            </div>
+        {/* Card Premium da Base Tecnológica Oficial */}
+        <div className="mt-12 sm:mt-16 lg:mt-20">
+          <TechStackCard />
+        </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {[
-                'React',
-                'TypeScript',
-                'Vite',
-                'Tailwind CSS',
-                'HTML5 Semântico',
-                'SEO Técnico',
-                'WhatsApp API Flow',
-                'Google Analytics 4',
-              ].map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1.5 rounded-lg bg-slate-900 border border-blue-500/20 text-slate-200 text-xs font-mono font-medium shadow-sm hover:border-cyan-400/50 transition-colors"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Card Oficial do Fundador (Everton Lopes) posicionado abaixo do conteúdo das especialidades */}
+        <div className="mt-12 sm:mt-16 lg:mt-20">
+          <FounderCard />
         </div>
 
         {/* CTA para Alinhamento Comercial */}

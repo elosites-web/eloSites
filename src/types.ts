@@ -48,21 +48,12 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Sobre a ēloSites',
     shortTitle: 'Sobre',
     badge: 'Sobre',
-    description: 'Proposta de valor, demonstração interativa e o padrão de engenharia da ēloSites.',
+    description: 'Apresentação institucional, especialidades em desenvolvimento web e o fundador da ēloSites.',
     iconName: 'Sparkles',
   },
   {
-    id: 'solucoes-web',
-    number: '03',
-    title: 'Soluções Web & Especialidades',
-    shortTitle: 'Soluções Web',
-    badge: 'Soluções Web',
-    description: 'Especialidades em desenvolvimento frontend, UI/UX, interatividade, SEO técnico e integrações.',
-    iconName: 'Cpu',
-  },
-  {
     id: 'servicos',
-    number: '04',
+    number: '03',
     title: 'Serviços & Condições Comerciais',
     shortTitle: 'Serviços',
     badge: 'Serviços Comerciais',
@@ -71,7 +62,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'portfolio',
-    number: '05',
+    number: '04',
     title: 'Portfólio de Projetos Reais',
     shortTitle: 'Portfólio',
     badge: 'Projetos no Ar',
@@ -80,7 +71,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'avaliacoes',
-    number: '06',
+    number: '05',
     title: 'Avaliações de Clientes Reais',
     shortTitle: 'Avaliações',
     badge: 'Social Proof & Clientes Reais',
@@ -89,7 +80,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'processo',
-    number: '07',
+    number: '06',
     title: 'Como Funciona o Processo & Diferenciais',
     shortTitle: 'Como Funciona',
     badge: 'Processo & Diferenciais',
@@ -98,7 +89,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'orcamento',
-    number: '08',
+    number: '07',
     title: 'Briefing & Agendamento',
     shortTitle: 'Orçamento',
     badge: 'Simulação Rápida',
@@ -107,7 +98,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'parceria-trafego',
-    number: '09',
+    number: '08',
     title: 'Tráfego Pago & Gestão de Leads',
     shortTitle: 'Tráfego Pago',
     badge: 'Tráfego Pago',
@@ -116,7 +107,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'faq',
-    number: '10',
+    number: '09',
     title: 'Perguntas Frequentes (FAQ) & Contato',
     shortTitle: 'FAQ & Contato',
     badge: 'Dúvidas & Contato',
@@ -282,7 +273,6 @@ export const SITE_CONFIG = {
 export const NAVIGATION_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home', id: 'nav-home' },
   { label: 'Sobre', href: '#inicio', id: 'nav-inicio' },
-  { label: 'Soluções Web', href: '#solucoes-web', id: 'nav-solucoes-web' },
   { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
   { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Avaliações', href: '#avaliacoes', id: 'nav-avaliacoes' },

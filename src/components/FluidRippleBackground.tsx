@@ -203,8 +203,8 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
         updateSize(curW, curH);
       };
-      window.addEventListener('resize', handleWindowResize);
-      window.addEventListener('orientationchange', handleWindowResize);
+      window.addEventListener('resize', handleWindowResize, { passive: true });
+      window.addEventListener('orientationchange', handleWindowResize, { passive: true });
 
       if (isContained && typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver((entries) => {

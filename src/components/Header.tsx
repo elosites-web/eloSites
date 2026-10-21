@@ -101,26 +101,26 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="relative w-7 h-5 flex items-center pointer-events-none">
         {/* Traço superior (degradê púrpura para azul de 'ēlo') / Diagonal 1 do X */}
         <span
-          className={`absolute left-0 top-1/2 w-full h-[3.5px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`absolute left-0 top-1/2 w-full h-[3px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isMenuOpen
-              ? '-translate-y-1/2 rotate-45 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_16px_rgba(168,85,247,0.85),0_0_20px_rgba(59,130,246,0.7)]'
-              : '-translate-y-[8.5px] rotate-0 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_12px_rgba(168,85,247,0.7),0_0_16px_rgba(59,130,246,0.6)]'
+              ? '-translate-y-1/2 rotate-45 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_8px_rgba(168,85,247,0.5)]'
+              : '-translate-y-[8.5px] rotate-0 bg-gradient-to-r from-[#a855f7] via-[#818cf8] to-[#3b82f6] shadow-[0_0_8px_rgba(168,85,247,0.4)]'
           }`}
         />
 
         {/* Traço do meio (degradê branco de 'Sites', alinhado estritamente à esquerda) */}
         <span
-          className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3.5px] rounded-full origin-left bg-gradient-to-r from-white via-slate-100 to-slate-300 shadow-[0_0_12px_rgba(255,255,255,0.95),0_0_20px_rgba(255,255,255,0.5)] transition-all duration-200 ease-out ${
+          className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full origin-left bg-gradient-to-r from-white via-slate-100 to-slate-200 shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all duration-200 ease-out ${
             isMenuOpen ? 'w-0 opacity-0 scale-x-0' : 'w-[17px] opacity-100 scale-x-100 group-hover:w-[20px]'
           }`}
         />
 
         {/* Traço inferior (degradê azul para púrpura de 'ēlo') / Diagonal 2 do X */}
         <span
-          className={`absolute left-0 top-1/2 w-full h-[3.5px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`absolute left-0 top-1/2 w-full h-[3px] rounded-full origin-center transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isMenuOpen
-              ? '-translate-y-1/2 -rotate-45 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_16px_rgba(59,130,246,0.85),0_0_20px_rgba(168,85,247,0.7)]'
-              : 'translate-y-[5.5px] rotate-0 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_12px_rgba(59,130,246,0.7),0_0_16px_rgba(168,85,247,0.6)]'
+              ? '-translate-y-1/2 -rotate-45 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_8px_rgba(59,130,246,0.5)]'
+              : 'translate-y-[5.5px] rotate-0 bg-gradient-to-r from-[#3b82f6] via-[#818cf8] to-[#a855f7] shadow-[0_0_8px_rgba(59,130,246,0.4)]'
           }`}
         />
       </div>
@@ -129,18 +129,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Menu Aberto em qualquer tela: 'X' posicionado centralizado no topo */}
-      {isMenuOpen && (
-        <header
-          id="header-nav-active"
-          className="fixed top-4 sm:top-6 left-0 right-0 z-[110] pointer-events-none flex justify-center items-center"
-        >
-          <div className="pointer-events-auto">
-            {renderMenuButton()}
-          </div>
-        </header>
-      )}
-
       {/* Menu Fechado na Home: Botão de menu flutuante rigorosamente centralizado no topo */}
       {isHome && !isMenuOpen && (
         <header
@@ -190,15 +178,24 @@ export const Header: React.FC<HeaderProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label="Menu de Navegação das Seções ēloSites"
-          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-16 sm:pt-20 pb-6 sm:pb-8 px-4 bg-[#050814]/96 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto"
+          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 bg-[#050814]/92 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto overscroll-contain"
           onClick={handleCloseMenuWithoutNav}
         >
           {/* Fundo de grade azul de espaço-tempo com bolha em movimento contínuo e aleatório */}
-          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-75" />
+          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-70 pointer-events-none" />
 
-          <div className="shrink-0 h-2 relative z-10" aria-hidden="true" />
+          {/* Botão de Fechar ('X') que sobe e desce junto com o scroll das seções */}
+          <header
+            id="header-nav-active"
+            className="w-full shrink-0 relative z-20 flex justify-center items-center pt-2 sm:pt-3 pb-2 sm:pb-3 pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center">
+              {renderMenuButton()}
+            </div>
+          </header>
 
-          {/* Lista de seções minimalista com movimento flutuante igual ao logotipo da Home */}
+          {/* Lista de seções minimalista com movimento flutuante suave */}
           <div
             className="nav-menu-list-wrap relative z-20 w-full flex flex-col items-center justify-center text-center my-auto px-4 pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
@@ -246,20 +243,20 @@ export const Header: React.FC<HeaderProps> = ({
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
                       onTouchStart={() => preloadScreen(screen.id)}
-                      className={`nav-menu-link-item group relative px-4 py-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
+                      className={`nav-menu-link-item group relative px-4 py-1 sm:py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80 rounded-lg flex items-center justify-center gap-2.5 cursor-pointer transition-colors duration-200 ${
                         isActive
                           ? 'text-white'
                           : 'text-slate-400 hover:text-white'
                       }`}
                     >
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 shadow-[0_0_8px_#3b82f6]" />
                       )}
                       <span
-                        className={`font-display text-[17px] sm:text-[19px] md:text-[23px] tracking-tight transition-all duration-300 ${
+                        className={`font-display text-[17px] sm:text-[19px] md:text-[22px] tracking-tight transition-colors duration-200 ${
                           isActive
-                            ? 'text-white font-bold drop-shadow-[0_0_18px_rgba(59,130,246,0.9)]'
-                            : 'font-medium group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]'
+                            ? 'text-white font-bold'
+                            : 'font-medium text-slate-300 group-hover:text-white'
                         }`}
                       >
                         {screen.shortTitle}
@@ -271,9 +268,9 @@ export const Header: React.FC<HeaderProps> = ({
             </ul>
           </div>
 
-          {/* Logotipo oficial centralizado no rodapé do modal com a frase oficial embaixo */}
+          {/* Logotipo oficial centralizado no rodapé do modal sem sobreposição */}
           <div
-            className="nav-menu-logo-wrap shrink-0 flex flex-col items-center justify-center pointer-events-auto mt-auto pb-4 sm:pb-6 relative z-20 overflow-visible"
+            className="nav-menu-logo-wrap shrink-0 flex flex-col items-center justify-center pointer-events-auto mt-auto pt-4 pb-4 sm:pb-6 relative z-20 min-h-[56px] overflow-visible"
             onClick={(e) => e.stopPropagation()}
           >
             <EloLogo

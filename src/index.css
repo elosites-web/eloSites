@@ -26,7 +26,7 @@
   /* Ritmo de revelações (usado por Reveal e SplitLines) */
   --reveal-y: 14px;
   --reveal-delay: 0ms;
-  --stagger: 70ms;
+  --stagger: 45ms;
 
   /* Design Tokens Oficiais — Identidade Visual og-image.png & tokens.css */
   --cor-fundo: #050814;
@@ -798,7 +798,7 @@ a[id*="whatsapp"] {
 
 /* Títulos com revelação linha a linha: cada palavra sobe de dentro da máscara. */
 .split-lines {
-  --stagger: 70ms;
+  --stagger: 45ms;
 }
 
 .sl-mask {
@@ -903,29 +903,25 @@ a[id*="whatsapp"] {
 
 .nav-menu-link-item {
   padding: clamp(0.15rem, 0.6dvh, 0.38rem) clamp(0.75rem, 2.5vw, 1.25rem);
-  color: #e2e8f0;
-  transition: color 280ms cubic-bezier(0.23, 1, 0.32, 1),
-              filter 280ms cubic-bezier(0.23, 1, 0.32, 1),
-              transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+  color: #cbd5e1;
+  transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .nav-menu-link-item:focus-visible,
 .nav-menu-link-item:active {
-  color: #818cf8;
-  filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.65));
+  color: #ffffff;
+  outline: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .nav-menu-link-item:hover {
-    color: #818cf8;
-    filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.65));
+    color: #ffffff;
   }
 }
 
 .nav-menu-link-item.is-active {
-  color: #818cf8;
+  color: #ffffff;
   font-weight: 700;
-  filter: drop-shadow(0 0 16px rgba(129, 140, 248, 0.85));
 }
 
 .nav-menu-link-text {
@@ -940,12 +936,15 @@ a[id*="whatsapp"] {
 .nav-menu-logo-wrap {
   margin-top: auto;
   margin-bottom: 0;
+  padding-top: clamp(0.5rem, 1.5dvh, 1.25rem);
   padding-bottom: clamp(0.5rem, 2dvh, 1.5rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
+  flex-shrink: 0;
+  min-height: clamp(52px, 8dvh, 72px);
 }
 
 /* Logotipo aumentado em 2px adicionais (+13px total) para comportar a frase oficial */
@@ -1623,32 +1622,20 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
     scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px)) !important;
     scroll-padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px)) !important;
   }
-
-  /* Cards perfeitamente centralizados sem margens que causem deslocamento */
-  .scroll-snap-card,
-  .card-snap-item,
+  /* Eliminação total de scroll interno e de limites de altura nos cards:
+     Garante que todos os cards expandam naturalmente com seu conteúdo completo,
+     sem criar rolagem separada dentro do card. */
   .service-card,
-  .process-card {
-    scroll-snap-align: center !important;
-    -webkit-scroll-snap-align: center !important;
-    scroll-snap-stop: normal !important;
-    scroll-margin: 0 !important;
-    scroll-margin-top: 0 !important;
-    scroll-margin-bottom: 0 !important;
-  }
-
-  /* Prevenção de recortes: garante que cards nunca ultrapassem a altura visível */
-  .service-card,
-  .process-card {
-    max-height: calc(100dvh - 7.5rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-    overflow-y: auto;
-    overscroll-behavior-y: auto;
-    scrollbar-width: none;
-  }
-
-  .service-card::-webkit-scrollbar,
-  .process-card::-webkit-scrollbar {
-    display: none;
+  .process-card,
+  .portfolio-card,
+  .differential-card,
+  .benefit-card,
+  .surface-card {
+    max-height: none !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+    scroll-snap-align: none !important;
+    -webkit-scroll-snap-align: none !important;
   }
 }
 

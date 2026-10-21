@@ -32,7 +32,7 @@ export function useLogoTaglineWidth<T extends HTMLElement = HTMLImageElement>() 
       ro.observe(logoRef.current);
     }
 
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', updateWidth, { passive: true });
     return () => {
       clearTimeout(timer);
       clearTimeout(timer2);
