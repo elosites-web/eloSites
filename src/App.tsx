@@ -50,6 +50,11 @@ const ContactCtaSection = lazy(() =>
     default: mod.ContactCtaSection,
   }))
 );
+const DigitalCardSection = lazy(() =>
+  import('./components/DigitalCardSection').then((mod) => ({
+    default: mod.DigitalCardSection,
+  }))
+);
 const PaidTrafficPartnershipSection = lazy(() =>
   import('./components/PaidTrafficPartnershipSection').then((mod) => ({
     default: mod.PaidTrafficPartnershipSection,
@@ -619,6 +624,7 @@ export default function App() {
             <Suspense fallback={<SimpleSectionSkeleton />}>
               <FaqSection />
               <ContactCtaSection onNavigateToOrcamento={() => navigateToScreen('orcamento')} />
+              <DigitalCardSection />
             </Suspense>
           </SectionErrorBoundary>
         </div>

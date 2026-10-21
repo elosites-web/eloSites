@@ -21,6 +21,7 @@ const screenLoaders: Partial<Record<ScreenId, Loader>> = {
     Promise.all([
       import('./components/FaqSection'),
       import('./components/ContactCtaSection'),
+      import('./components/DigitalCardSection'),
     ]),
 };
 
