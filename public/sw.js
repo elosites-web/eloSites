@@ -1,5 +1,5 @@
 // Service Worker básico para ēloSites — Caching e Suporte Offline
-const CACHE_NAME = 'elosites-cache-v5';
+const CACHE_NAME = 'elosites-cache-v6';
 const CARD_PAGE_PATH = '/cartao/index.html';
 
 // Recursos estáticos essenciais do shell
