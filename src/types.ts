@@ -202,8 +202,8 @@ export const SITE_CONFIG = {
   name: 'ēloSites',
   domain: 'elosites.ia.br',
   canonicalUrl: 'https://elosites.ia.br',
-  tagline: 'Criação de sites profissionais com SEO técnico, foco em conversão e arquitetura de alta performance.',
-  subtagline: 'Desenvolvemos a presença digital completa e estratégica para pequenos negócios e profissionais liberais.',
+  tagline: 'ēloSites | Estúdio de Desenvolvimento Web — Landing pages e sites institucionais responsivos com interfaces sob medida, integração com WhatsApp e SEO técnico.',
+  subtagline: 'Desenvolvemos a presença digital estratégica para pequenos negócios e profissionais liberais.',
   email: 'contato@elosites.ia.br',
   // Número oficial da ēloSites
   whatsappNumber: '5511995722584',
@@ -223,7 +223,7 @@ export const SITE_CONFIG = {
 
   // 4) Serviços - Landing Page (Tela 03)
   landingPageWhatsappMessage:
-    'Olá! 🎯 Tenho interesse no formato *Landing Page de Alta Conversão* da *ēloSites*.\n\nPreciso de uma página única estratégica, veloz e otimizada para campanhas e captação de clientes no WhatsApp. Como podemos iniciar?',
+    'Olá! 🎯 Tenho interesse no formato *Landing Page* da *ēloSites*.\n\nPreciso de uma página única estratégica, veloz e otimizada para captação de clientes no WhatsApp. Como podemos iniciar?',
 
   // 5) Serviços - Site Institucional (Tela 03)
   siteInstitucionalWhatsappMessage:
@@ -231,7 +231,7 @@ export const SITE_CONFIG = {
 
   // 6) Serviços - Projeto Personalizado (Tela 03)
   personalizadoWhatsappMessage:
-    'Olá! ⚡ Gostaria de conversar sobre um *Projeto Sob Medida / Personalizado* com a *ēloSites*.\n\nTenho requisitos específicos para o meu negócio e busco uma solução web exclusiva de alta performance.',
+    'Olá! ⚡ Gostaria de conversar sobre um *Projeto Personalizado* com a *ēloSites*.\n\nTenho requisitos específicos de frontend para o meu negócio e busco uma solução web sob medida.',
 
   // 7) Processo / Como Funciona (Tela 04)
   processoWhatsappMessage:
@@ -251,7 +251,7 @@ export const SITE_CONFIG = {
 
   // 11) Balão Flutuante e Botão WhatsApp Fixo
   floatingWhatsappMessage:
-    'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com a equipe da *ēloSites*!',
+    'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com o fundador da *ēloSites*!',
 
   // 12) Modal de Navegação
   mobileMenuWhatsappMessage:

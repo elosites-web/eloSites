@@ -118,9 +118,9 @@ const TECHNOLOGIES: TechItem[] = [
     renderIcon: () => <Search className="w-6 h-6 text-emerald-400" aria-hidden="true" />,
   },
   {
-    id: 'whatsapp-api',
-    name: 'WhatsApp API Flow',
-    description: 'Gatilhos de conversão e contato direto',
+    id: 'whatsapp-integracao',
+    name: 'Integração com WhatsApp',
+    description: 'Links diretos, CTAs contextuais e mensagens personalizadas',
     category: 'Conversão Comercial',
     tagColor: 'text-emerald-300 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
@@ -176,13 +176,13 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
               Tecnologias modernas aplicadas a cada entrega
             </h3>
 
-            {/* Parágrafo de Fusão com Conteúdo Atual */}
+            {/* Parágrafo de Apresentação Técnica */}
             <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-normal">
-              Utilizamos uma base técnica sólida de desenvolvimento frontend combinando <strong className="text-white font-medium">React</strong>, <strong className="text-white font-medium">TypeScript</strong>, <strong className="text-white font-medium">Vite</strong> e <strong className="text-white font-medium">Tailwind CSS</strong> para garantir estabilidade, alta velocidade de resposta, segurança de código e compatibilidade entre todos os navegadores, sem dependência de plataformas lentas ou templates engessados.
+              Utilizamos uma base técnica sólida de desenvolvimento frontend combinando tecnologias modernas como <strong className="text-white font-medium">React</strong>, <strong className="text-white font-medium">TypeScript</strong>, <strong className="text-white font-medium">Vite</strong> e <strong className="text-white font-medium">Tailwind CSS</strong> para entregar código limpo, interfaces fluidas e alta fidelidade visual, sem dependência de plataformas lentas ou templates engessados.
             </p>
           </div>
 
-          {/* Badge no Canto Superior Direito: Arquitetura Jamstack & Edge */}
+          {/* Badge no Canto Superior Direito: Frontend Moderno e Responsivo */}
           <div className="shrink-0 self-start lg:self-center">
             <div className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2.5 px-4 py-2.5 rounded-2xl bg-[#050814]/90 border border-cyan-500/30 text-xs font-mono text-cyan-300 shadow-lg shadow-cyan-950/40">
               <div className="flex items-center gap-2">
@@ -190,10 +190,10 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
-                <span className="font-semibold text-white">Arquitetura Jamstack &amp; Edge</span>
+                <span className="font-semibold text-white">Frontend moderno e responsivo</span>
               </div>
               <span className="hidden sm:inline text-slate-600" aria-hidden="true">•</span>
-              <span className="text-slate-400 text-[11px]">Sem dependência de servidores pesados</span>
+              <span className="text-slate-400 text-[11px]">Código limpo e interfaces ágeis</span>
             </div>
           </div>
         </div>

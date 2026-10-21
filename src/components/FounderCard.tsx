@@ -46,22 +46,22 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
             <div className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] flex items-center justify-center">
               <img
                 src="/eu.png"
-                alt="Everton Lopes — Owner da ēloSites"
+                alt="Everton Lopes — Fundador da ēloSites"
                 width={192}
                 height={192}
                 loading="lazy"
                 decoding="async"
                 className="w-full h-full rounded-full object-cover"
               />
-            </div>
 
-            {/* Badge inferior com ponto verde neon */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs mt-3.5 shadow-md shadow-black/40">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-              </span>
-              <span>Owner da ēloSites</span>
+              {/* Selo 'Fundador da ēloSites' posicionado com bottom: 1px e centralizado horizontalmente */}
+              <div className="absolute bottom-[1px] left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                </span>
+                <span>Fundador da ēloSites</span>
+              </div>
             </div>
           </div>
 
@@ -80,7 +80,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
 
             {/* Parágrafo de Apresentação e Posicionamento */}
             <p className="text-sm sm:text-base text-slate-300/90 leading-relaxed max-w-2xl">
-              Sou <strong className="font-bold text-white">Everton Lopes</strong>, owner da{' '}
+              Sou <strong className="font-bold text-white">Everton Lopes</strong>, fundador da{' '}
               <strong className="font-bold text-white">ēloSites</strong>. Desenvolvo landing pages, sites institucionais e
               experiências web interativas, combinando tecnologia, design de interfaces e SEO técnico para ajudar negócios a
               fortalecer sua presença digital.

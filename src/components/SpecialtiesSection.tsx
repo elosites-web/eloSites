@@ -64,7 +64,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Microinterações, transições suaves e feedback visual adequados à experiência',
     ],
     technicalClarification:
-      'Foco em design prático de interface e arquitetura de informação clara para facilitar a decisão do visitante, sem alegações de estudos acadêmicos ou certificações teóricas.',
+      'Foco em design prático de interface e arquitetura de informação clara para valorizar os serviços apresentados e facilitar a decisão de contato do visitante.',
     tagColor: 'from-purple-500/20 to-indigo-500/10 text-purple-300 border-purple-500/30',
   },
   {
@@ -80,7 +80,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Carrosséis fluidos, galerias de fotos, modais de zoom e cartões interativos',
     ],
     technicalClarification:
-      'Os dados de formulários e orçamentos são validados no próprio navegador do visitante e transmitidos diretamente via WhatsApp, sem armazenamento em banco de dados ou backend proprietário.',
+      'Formulários com validação no navegador e mensagens personalizadas para facilitar o contato pelo WhatsApp, proporcionando agilidade e uma experiência fluida para o cliente.',
     tagColor: 'from-emerald-500/20 to-teal-500/10 text-emerald-300 border-emerald-500/30',
   },
   {
@@ -98,7 +98,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Revisão técnica de links internos e conformidade de indexabilidade',
     ],
     technicalClarification:
-      'O SEO é conduzido como preparação técnica e boas práticas de implementação web. Não oferecemos promessas irreais de primeira posição garantida ou notas arbitrárias.',
+      'Implementação de boas práticas estruturais e semânticas para facilitar a leitura e indexação pelos mecanismos de busca, com transparência e critérios técnicos.',
     tagColor: 'from-amber-500/20 to-yellow-500/10 text-amber-300 border-amber-500/30',
   },
   {
@@ -307,7 +307,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-300/40 shadow-lg shadow-emerald-950/50 hover:shadow-[0_0_24px_rgba(37,211,102,0.6)] transition-all cursor-pointer text-sm sm:text-base group"
           >
             <WhatsAppIcon className="w-4 h-4 text-white" />
-            <span>Consultar viabilidade e formatos no WhatsApp</span>
+            <span>Conversar sobre meu projeto</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </a>
 

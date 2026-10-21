@@ -3,9 +3,8 @@ import { motion, useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
   ExternalLink,
-  CheckCircle,
+  CheckCircle2,
   Maximize2,
-  X,
   Monitor,
   Smartphone,
   Layers,
@@ -15,6 +14,7 @@ import {
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
 import { ProjectModal } from './ProjectModal';
+import { ScreenshotLightbox } from './ScreenshotLightbox';
 import { LazyPortfolioImage } from './LazyPortfolioImage';
 import { SplitLines } from './SplitLines';
 import { Reveal } from './Reveal';
@@ -43,7 +43,7 @@ export interface PortfolioProjectData {
 export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   {
     id: 'jv-salvaia',
-    badge: 'Landing page de alta conversão',
+    badge: 'Landing page responsiva',
     status: 'Publicado & Ativo',
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
@@ -181,7 +181,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               key={tag}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/90 border border-blue-500/15 text-[11px] font-medium text-slate-300"
             >
-              <CheckCircle className="w-3 h-3 text-blue-400" aria-hidden="true" />
+              <CheckCircle2 className="w-3 h-3 text-blue-400" aria-hidden="true" />
               {tag}
             </span>
           ))}
@@ -574,44 +574,16 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
         project={selectedProject}
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
+        onOpenZoom={(src, title) => setZoomModal({ src, title })}
       />
 
-      {/* Modal de Zoom em Alta Resolução */}
-      {zoomModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={zoomModal.title}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/90 animate-in fade-in duration-200"
-          onClick={() => setZoomModal(null)}
-        >
-          <div
-            className="relative max-w-5xl w-full max-h-[90vh] bg-slate-950 rounded-2xl border border-white/[0.15] overflow-hidden flex flex-col shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 bg-slate-900 border-b border-white/[0.08] flex items-center justify-between">
-              <span className="text-sm font-semibold text-white">{zoomModal.title}</span>
-              <button
-                type="button"
-                onClick={() => setZoomModal(null)}
-                aria-label="Fechar ampliação"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-3 sm:p-5 overflow-auto flex items-center justify-center bg-slate-950/80">
-              <img
-                src={zoomModal.src}
-                alt={zoomModal.title}
-                className="max-h-[78vh] w-auto object-contain rounded-lg border border-white/[0.05]"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal de Zoom / Lightbox de Capturas em Alta Resolução */}
+      <ScreenshotLightbox
+        isOpen={!!zoomModal}
+        src={zoomModal?.src || ''}
+        title={zoomModal?.title || ''}
+        onClose={() => setZoomModal(null)}
+      />
     </section>
   );
 };

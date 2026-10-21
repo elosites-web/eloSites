@@ -5,8 +5,9 @@ import {
   Target,
   Building2,
   Sparkles,
-  Check,
-  X,
+  CheckCircle2,
+  XCircle,
+  Info,
   CreditCard,
   Percent,
   Split,
@@ -149,30 +150,28 @@ const SERVICES: ServiceCategory[] = [
     badge: 'Solução Sob Medida',
     title: 'Projeto Personalizado',
     description:
-      'Para projetos que não se encaixam exatamente nos dois formatos anteriores. Combinamos o que faz sentido para o seu caso, com escopo definido junto com você.',
+      'Desenvolvimento frontend sob medida para requisitos específicos. Estruturação exclusiva de páginas, componentes interativos, formulários personalizados e integrações aprovadas em escopo.',
     icon: Sparkles,
     includes: [
-      'Estrutura sob medida, combinando elementos de landing page e site institucional',
-      'Navegação por abas, múltiplas telas ou página única — conforme o que fizer mais sentido para o projeto',
-      'Funcionalidades específicas combinadas com você durante o orçamento',
-      'Seções, integrações e fluxos personalizados para o seu caso',
-      'Depoimentos, prova social e galeria quando fornecidos',
-      'Formulários quando incluídos no escopo',
-      'Integração com WhatsApp e informações de contato',
-      'Links para redes sociais',
-      'Layout responsivo para celular, tablet e desktop',
-      'SEO técnico básico, metadados e favicon',
-      'Publicação e revisão final de funcionamento',
+      'Estruturas de páginas e seções personalizadas para o seu modelo de negócio',
+      'Interfaces responsivas e fluxos de navegação fluidos (abas, telas ou página única)',
+      'Componentes interativos e recursos dinâmicos executados no navegador',
+      'Formulários customizados, galerias, modais e calculadoras quando previstos no escopo',
+      'Integrações com WhatsApp e ferramentas de mensuração previstas no escopo',
+      'Depoimentos, prova social e apresentação institucional sob medida',
+      'SEO técnico básico, metadados semânticos e otimização de imagens',
+      'Layout responsivo adaptado com precisão para celular, tablet e desktop',
+      'Publicação e revisão técnica final de funcionamento',
     ],
     scopeNote:
-      'Preço, escopo e prazo são definidos conforme a complexidade e os requisitos do projeto.',
+      'Preço, escopo e prazo são definidos conforme a complexidade e os requisitos de frontend aprovados na proposta.',
     excluded: [
       'Domínio próprio',
       'Hospedagem em outro provedor',
       'Criação de identidade visual (logo) do zero',
-      'Funcionalidades fora do escopo combinado no orçamento',
+      'Funcionalidades fora do escopo aprovado no orçamento',
     ],
-    ctaLabel: 'Pedir proposta de Projeto Personalizado',
+    ctaLabel: 'Solicitar proposta personalizada',
     ctaId: 'service-cta-personalizado',
     ctaMessage: SITE_CONFIG.personalizadoWhatsappMessage,
   },
@@ -345,13 +344,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
 
                       {/* Linha 2: Bloco INCLUI com Fade-In suave */}
                       <FadeInBlock delay={80} className="space-y-2.5 pt-4 border-t border-white/[0.06] lg:pb-4">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">
+                        <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
                           INCLUI:
                         </span>
                         <div className="grid grid-cols-1 gap-2 text-sm text-slate-300 service-list scroll-perf-list">
                           {service.includes.map((item) => (
                             <div key={item} className="flex items-start gap-2">
-                              <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+                              <CheckCircle2
+                                className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"
+                                aria-hidden="true"
+                              />
                               <span className="text-xs sm:text-sm leading-snug">{item}</span>
                             </div>
                           ))}
@@ -360,22 +362,28 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
 
                       {/* Linha 3: Caixa de Nota Sutil com Fade-In suave */}
                       <FadeInBlock delay={110} className="lg:py-3">
-                        <p className="text-xs text-slate-400 leading-relaxed rounded-lg border border-white/[0.08] bg-slate-950/70 p-3">
-                          ℹ️ {service.scopeNote}
-                        </p>
+                        <div className="rounded-xl border border-white/[0.06] bg-slate-950/70 p-3">
+                          <div className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                            <Info className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
+                            <span>{service.scopeNote}</span>
+                          </div>
+                        </div>
                       </FadeInBlock>
 
                       {/* Linha 4: Bloco NÃO INCLUSO com Fade-In suave */}
                       <FadeInBlock delay={130} className="space-y-2 pt-4 border-t border-white/[0.06] lg:pb-4">
                         {service.excluded && (
                           <>
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
                               NÃO INCLUSO:
                             </span>
                             <div className="grid grid-cols-1 gap-1.5 text-xs text-slate-400 service-list scroll-perf-list">
                               {service.excluded.map((item) => (
                                 <div key={item} className="flex items-start gap-2">
-                                  <X className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" aria-hidden="true" />
+                                  <XCircle
+                                    className="w-4 h-4 text-slate-500 shrink-0 mt-0.5"
+                                    aria-hidden="true"
+                                  />
                                   <span className="leading-snug">{item}</span>
                                 </div>
                               ))}
