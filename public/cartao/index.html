@@ -14,9 +14,21 @@
 <meta property="og:url" content="https://elosites.ia.br/cartao/" />
 <meta property="og:title" content="Everton Lopes | Cartão digital — ēloSites" />
 <meta property="og:description" content="Fale com o fundador da ēloSites pelo WhatsApp e peça um orçamento de site." />
-<meta property="og:image" content="https://elosites.ia.br/og-image.png" />
+<meta property="og:image" content="https://elosites.ia.br/cartao/og-cartao.png" />
+<meta property="og:image:secure_url" content="https://elosites.ia.br/cartao/og-cartao.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Cartão digital de Everton Lopes, fundador da ēloSites" />
 <meta property="og:site_name" content="ēloSites" />
 <meta property="og:locale" content="pt_BR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Everton Lopes | Cartão digital — ēloSites" />
+<meta name="twitter:description" content="Fale com o fundador da ēloSites pelo WhatsApp e peça um orçamento de site." />
+<meta name="twitter:image" content="https://elosites.ia.br/cartao/og-cartao.png" />
+<meta name="twitter:image:width" content="1200" />
+<meta name="twitter:image:height" content="630" />
+<meta name="twitter:image:alt" content="Cartão digital de Everton Lopes, fundador da ēloSites" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" />
@@ -56,6 +68,35 @@ a:focus-visible{outline:3px solid #f1f5f9;outline-offset:3px}
 .qrbox h2{margin:0;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700}
 .qrbox p{margin:6px 0 0;color:#a5b0c8;font-size:13px;line-height:1.45}
 .rise{opacity:0;transform:translateY(18px);animation:rise .7s cubic-bezier(.23,1,.32,1) forwards}
+body.share-open{overflow:hidden}
+.share-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.share-overlay[hidden]{display:none}
+.share-backdrop{position:absolute;inset:0;background:rgba(2,6,23,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:shareFade .2s ease-out}
+.share-sheet{position:relative;z-index:1;width:100%;max-width:460px;max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px);overflow-y:auto;-webkit-overflow-scrolling:touch;background:#0b1228;border:1px solid rgba(59,130,246,.28);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px rgba(0,0,0,.55);animation:shareUp .26s cubic-bezier(.23,1,.32,1)}
+.share-handle{width:42px;height:4px;margin:0 auto 12px;border-radius:999px;background:rgba(148,163,184,.45)}
+.share-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.share-head h2{margin:0;font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700}
+.share-close{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -8px -6px 0;padding:0;border:0;border-radius:12px;background:rgba(148,163,184,.1);color:#e2e8f0;font:inherit;cursor:pointer}
+.share-close:hover{background:rgba(148,163,184,.18)}
+.share-sub{margin:6px 0 16px;color:#a5b0c8;font-size:14px;line-height:1.5}
+.share-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.share-opt{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:10px;border:1px solid rgba(148,163,184,.22);border-radius:14px;background:#0f1834;color:#f1f5f9;font:inherit;font-size:14px;font-weight:700;text-decoration:none;text-align:center;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.share-opt:hover{background:rgba(59,130,246,.16);border-color:rgba(59,130,246,.45);transform:translateY(-1px)}
+.share-opt:active{transform:scale(.98)}
+.share-opt svg{flex:none}
+.share-opt-whatsapp{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.35)}
+.share-opt-whatsapp:hover{background:rgba(37,211,102,.18);border-color:rgba(37,211,102,.55)}
+.share-opt-facebook{background:rgba(24,119,242,.12);border-color:rgba(24,119,242,.4)}
+.share-opt-facebook:hover{background:rgba(24,119,242,.2);border-color:rgba(24,119,242,.6)}
+.share-opt-instagram{background:linear-gradient(135deg,rgba(245,133,41,.14),rgba(221,42,123,.16),rgba(129,52,175,.18));border-color:rgba(221,42,123,.35)}
+.share-opt-instagram:hover{background:linear-gradient(135deg,rgba(245,133,41,.22),rgba(221,42,123,.24),rgba(129,52,175,.26));border-color:rgba(221,42,123,.55)}
+.share-label{display:block;margin:16px 0 6px;color:#cbd5e1;font-size:13px;font-weight:600}
+.share-url{width:100%;min-height:48px;padding:0 14px;border:1px solid rgba(59,130,246,.35);border-radius:12px;background:#050814;color:#dbeafe;font-family:inherit;font-size:16px;line-height:1.4}
+.share-status{min-height:20px;margin:8px 0 0;color:#86efac;font-size:13px;line-height:1.45}
+.share-close:focus-visible,.share-opt:focus-visible,.share-url:focus-visible{outline:3px solid #f1f5f9;outline-offset:3px}
+@keyframes shareFade{from{opacity:0}to{opacity:1}}
+@keyframes shareUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@media (min-width:560px){.share-overlay{align-items:center;padding:24px}.share-sheet{max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);border-radius:22px;padding-bottom:22px}.share-handle{display:none}}
 @keyframes rise{to{opacity:1;transform:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(24px,30px)}}
@@ -99,6 +140,10 @@ Conversar com o fundador
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#050814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
 Visitar elosites.ia.br
 </a>
+<a class="btn b2" id="share-card" href="https://api.whatsapp.com/send?text=Confira%20o%20cart%C3%A3o%20digital%20de%20Everton%20Lopes%3A%20https%3A%2F%2Felosites.ia.br%2Fcartao%2F" target="_blank" rel="noopener noreferrer" aria-haspopup="dialog" aria-controls="share-overlay" aria-expanded="false">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>
+Compartilhar cartão
+</a>
 </nav>
 
 <div class="stack rows rise" style="animation-delay:.5s">
@@ -127,5 +172,276 @@ elosites.ia.br
 </div>
 </section>
 </main>
+
+<div class="share-overlay" id="share-overlay" hidden>
+<div class="share-backdrop" data-share-close></div>
+<div class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title" tabindex="-1">
+<div class="share-handle" aria-hidden="true"></div>
+<div class="share-head">
+<h2 id="share-title">Compartilhar cartão</h2>
+<button type="button" class="share-close" data-share-close aria-label="Fechar compartilhamento">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+</button>
+</div>
+<p class="share-sub">Escolha onde compartilhar o cartão digital de Everton Lopes.</p>
+<div class="share-actions">
+<a class="share-opt share-opt-whatsapp" href="https://api.whatsapp.com/send?text=Confira%20o%20cart%C3%A3o%20digital%20de%20Everton%20Lopes%3A%20https%3A%2F%2Felosites.ia.br%2Fcartao%2F" target="_blank" rel="noopener noreferrer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.5L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2L9 9.5z"/></svg>
+<span>WhatsApp</span>
+</a>
+<a class="share-opt share-opt-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Felosites.ia.br%2Fcartao%2F" target="_blank" rel="noopener noreferrer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5v4h3v7h4v-7h3.5l.5-4H12V7.5c0-.6.4-1 1-1h2V3z"/></svg>
+<span>Facebook</span>
+</a>
+<a class="share-opt share-opt-instagram" id="share-instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#f472b6" stroke="none"/></svg>
+<span>Instagram</span>
+</a>
+<button type="button" class="share-opt share-opt-copy" id="share-copy">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+<span>Copiar link</span>
+</button>
+</div>
+<label class="share-label" for="share-url">Link do cartão</label>
+<input class="share-url" id="share-url" type="text" value="https://elosites.ia.br/cartao/" readonly inputmode="url" autocomplete="off" spellcheck="false" aria-describedby="share-status">
+<p class="share-status" id="share-status" role="status" aria-live="polite"></p>
+</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CARD_URL = 'https://elosites.ia.br/cartao/';
+  var SHARE_TITLE = 'Everton Lopes | Cartão digital — ēloSites';
+  var SHARE_TEXT = 'Fale com o fundador da ēloSites pelo WhatsApp e peça um orçamento de site.';
+  var INSTAGRAM_PROFILE_URL = 'https://www.instagram.com/';
+
+  var trigger = document.getElementById('share-card');
+  var overlay = document.getElementById('share-overlay');
+  var sheet = overlay ? overlay.querySelector('.share-sheet') : null;
+  var closeButton = overlay ? overlay.querySelector('.share-close') : null;
+  var copyButton = document.getElementById('share-copy');
+  var instagramLink = document.getElementById('share-instagram');
+  var urlInput = document.getElementById('share-url');
+  var status = document.getElementById('share-status');
+  var main = document.querySelector('main');
+  var lastFocused = null;
+
+  if (!trigger || !overlay || !sheet || !closeButton || !copyButton || !instagramLink || !urlInput || !status) {
+    return;
+  }
+
+  function setStatus(message) {
+    status.textContent = message || '';
+  }
+
+  function setExpanded(expanded) {
+    trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  }
+
+  function openPanel() {
+    if (!overlay.hidden) {
+      return;
+    }
+
+    lastFocused = document.activeElement;
+    setStatus('');
+    overlay.hidden = false;
+    document.body.classList.add('share-open');
+    if (main) {
+      main.setAttribute('inert', '');
+      try { main.inert = true; } catch (error) {}
+    }
+    setExpanded(true);
+    closeButton.focus();
+  }
+
+  function closePanel() {
+    if (overlay.hidden) {
+      return;
+    }
+
+    overlay.hidden = true;
+    document.body.classList.remove('share-open');
+    if (main) {
+      main.removeAttribute('inert');
+      try { main.inert = false; } catch (error) {}
+    }
+    setExpanded(false);
+
+    var target = lastFocused && document.contains(lastFocused) ? lastFocused : trigger;
+    if (target && typeof target.focus === 'function') {
+      target.focus();
+    }
+  }
+
+  function selectUrl() {
+    urlInput.focus();
+    urlInput.select();
+    try { urlInput.setSelectionRange(0, urlInput.value.length); } catch (error) {}
+  }
+
+  function fallbackCopy(text) {
+    var area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.top = '0';
+    area.style.left = '-9999px';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    area.setSelectionRange(0, area.value.length);
+
+    var copied = false;
+    try { copied = document.execCommand('copy'); } catch (error) { copied = false; }
+
+    document.body.removeChild(area);
+    return copied;
+  }
+
+  function copyCardUrl() {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      return navigator.clipboard.writeText(CARD_URL).then(function () {
+        return true;
+      }, function () {
+        return fallbackCopy(CARD_URL);
+      });
+    }
+
+    return Promise.resolve(fallbackCopy(CARD_URL));
+  }
+
+  function showCopyResult(copied, successMessage) {
+    if (copied) {
+      setStatus(successMessage || 'Link copiado.');
+      return;
+    }
+
+    setStatus('Não foi possível copiar automaticamente. Selecione o link e copie manualmente.');
+    selectUrl();
+  }
+
+  function nativeShareData() {
+    return {
+      title: SHARE_TITLE,
+      text: SHARE_TEXT,
+      url: CARD_URL
+    };
+  }
+
+  function canUseNativeShare(data) {
+    if (typeof navigator.share !== 'function') {
+      return false;
+    }
+
+    if (typeof navigator.canShare === 'function') {
+      try {
+        return navigator.canShare(data);
+      } catch (error) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  trigger.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    var data = nativeShareData();
+    if (!canUseNativeShare(data)) {
+      openPanel();
+      return;
+    }
+
+    var result;
+    try {
+      result = navigator.share(data);
+    } catch (error) {
+      openPanel();
+      return;
+    }
+
+    if (result && typeof result.then === 'function') {
+      result.then(function () {}, function (error) {
+        if (error && error.name === 'AbortError') {
+          return;
+        }
+        openPanel();
+      });
+    }
+  });
+
+  copyButton.addEventListener('click', function () {
+    copyCardUrl().then(function (copied) {
+      showCopyResult(copied);
+    });
+  });
+
+  instagramLink.setAttribute('href', INSTAGRAM_PROFILE_URL);
+
+  instagramLink.addEventListener('click', function () {
+    copyCardUrl().then(function (copied) {
+      showCopyResult(copied, 'Link copiado. Cole no Instagram.');
+    });
+  });
+
+  urlInput.addEventListener('focus', selectUrl);
+  urlInput.addEventListener('click', selectUrl);
+
+  closeButton.addEventListener('click', closePanel);
+
+  overlay.addEventListener('click', function (event) {
+    if (event.target === overlay || (event.target.hasAttribute && event.target.hasAttribute('data-share-close'))) {
+      closePanel();
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (overlay.hidden) {
+      return;
+    }
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closePanel();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    var candidates = sheet.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    var focusable = [];
+    for (var i = 0; i < candidates.length; i += 1) {
+      if (candidates[i].offsetWidth || candidates[i].offsetHeight || candidates[i].getClientRects().length) {
+        focusable.push(candidates[i]);
+      }
+    }
+
+    if (!focusable.length) {
+      event.preventDefault();
+      sheet.focus();
+      return;
+    }
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === sheet)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  setExpanded(false);
+}());
+</script>
 </body>
 </html>

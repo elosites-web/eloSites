@@ -58,6 +58,7 @@ src/
 - **Telas em vez de rotas.** A navegação troca de tela por hash (`#home`, `#inicio`, `#portfolio`, `#servicos`, `#processo`, `#orcamento`, `#faq`, `#parceria-trafego`), definido em `SCREENS` (`src/types.ts`). Telas secundárias e modais são carregados sob demanda.
 - **Níveis de movimento.** `getMotionTier()` classifica o dispositivo em `full`, `lite` ou `none`. Efeitos pesados (inclinação 3D dos cards, parallax, marquee) só rodam no `full`; `prefers-reduced-motion`, economia de dados, aparelhos fracos e navegadores embutidos (Instagram, Facebook, TikTok, Line) recebem versões mais leves.
 - **Botão do WhatsApp.** O botão flutuante e o balão ficam em `src/components/FloatingWhatsApp.tsx`. O horário de resposta (segunda a sexta, 09h às 18h) só muda a cor e a mensagem do balão.
+- **Compartilhar cartão (opcional).** A página estática `/cartao/` tem o botão "Compartilhar cartão" (`#share-card`). Ele usa a Web Share API quando disponível e, nos demais casos (inclusive navegadores embutidos do Instagram e do Facebook), abre um painel acessível com WhatsApp, Facebook, Instagram (abre o Instagram e copia o link) e copiar link. A imagem de compartilhamento fica em `public/cartao/og-cartao.png` (1200x630). O destino do Instagram é configurável em `INSTAGRAM_PROFILE_URL`, no script da própria página. O recurso é opcional e não interfere no restante do site; sem JavaScript, o botão cai no compartilhamento pelo WhatsApp.
 
 ## Onde editar o conteúdo
 
@@ -87,7 +88,7 @@ O site é publicado a partir da branch `main`. Configuração esperada:
 
 Depois de publicar, confira no celular a Home, o menu, o Portfólio, os Serviços, o FAQ e o botão do WhatsApp.
 
-**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v4`) para os visitantes receberem a versão nova.
+**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v5`) para os visitantes receberem a versão nova.
 
 ## Fluxo de trabalho com Git
 
