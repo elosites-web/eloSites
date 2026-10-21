@@ -140,9 +140,10 @@ const SPECIALTIES: SpecialtyItem[] = [
 
 interface SpecialtiesSectionProps {
   onNavigateToContact?: () => void;
+  onNavigateToCartao?: () => void;
 }
 
-export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNavigateToContact }) => {
+export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNavigateToContact, onNavigateToCartao }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
@@ -297,7 +298,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
 
         {/* Card Oficial do Fundador (Everton Lopes) posicionado abaixo do conteúdo das especialidades */}
         <div className="mt-12 sm:mt-16 lg:mt-20">
-          <FounderCard />
+          <FounderCard onNavigateToCartao={onNavigateToCartao} />
         </div>
 
         {/* Banner Deslizante Interativo das Especialidades (Abaixo do Card do Fundador e antes do CTA) */}

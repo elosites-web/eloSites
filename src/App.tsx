@@ -238,6 +238,30 @@ export default function App() {
           const el = document.getElementById('contato');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 150);
+      } else if (
+        rawHash === 'cartao-digital' ||
+        rawHash === 'cartao' ||
+        rawHash === 'cartao-visitas' ||
+        rawHash === 'cartao-de-visitas'
+      ) {
+        setCurrentScreen((prev) => {
+          if (prev !== 'faq') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'faq');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'faq';
+        });
+        const scrollToCartao = () => {
+          const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        };
+        setTimeout(scrollToCartao, 120);
+        setTimeout(scrollToCartao, 350);
       } else if (rawHash === 'apresentacao') {
         setCurrentScreen('inicio');
         setTimeout(() => {
@@ -538,7 +562,21 @@ export default function App() {
           />
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
-              <SpecialtiesSection onNavigateToContact={() => navigateToScreen('servicos')} />
+              <SpecialtiesSection
+                onNavigateToContact={() => navigateToScreen('servicos')}
+                onNavigateToCartao={() => {
+                  navigateToScreen('faq');
+                  window.location.hash = 'cartao-digital';
+                  const scrollToCartao = () => {
+                    const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  };
+                  setTimeout(scrollToCartao, 120);
+                  setTimeout(scrollToCartao, 350);
+                }}
+              />
             </Suspense>
           </SectionErrorBoundary>
         </div>

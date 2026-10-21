@@ -19,11 +19,14 @@ export const DigitalCardSection: React.FC = () => {
     <section
       id="cartao-digital"
       aria-labelledby="cartao-digital-title"
-      className="section-auto-contain pt-4 pb-16 sm:pb-20 bg-[#050814] relative overflow-x-clip"
+      className="section-auto-contain pt-4 pb-16 sm:pb-20 bg-[#050814] relative overflow-x-clip scroll-mt-24"
     >
       <div className="page-shell page-x max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <BiReveal direction="up">
-          <div className="max-w-md mx-auto rounded-3xl p-6 sm:p-8 bg-[#070b1a] border border-indigo-500/20 shadow-2xl shadow-black/60 flex flex-col items-center text-center gap-5">
+          <div
+            id="cartao-de-visitas"
+            className="max-w-md mx-auto rounded-3xl p-6 sm:p-8 bg-[#070b1a] border border-indigo-500/20 shadow-2xl shadow-black/60 flex flex-col items-center text-center gap-5 scroll-mt-24"
+          >
             <div className="rounded-full p-1 bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600">
               <img
                 src="/cartao/eu.webp"

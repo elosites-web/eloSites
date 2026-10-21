@@ -7,6 +7,7 @@ import { BiReveal } from './BiReveal';
 
 interface FounderCardProps {
   className?: string;
+  onNavigateToCartao?: () => void;
 }
 
 /**
@@ -14,13 +15,25 @@ interface FounderCardProps {
  * Fiel à referência visual (eu_1d137d4a.JPG): moldura obsidian profunda, cantoneiras técnicas,
  * foto circular com halo luminoso, badge de fundador, headline de impacto, bio e botão de WhatsApp direto.
  */
-export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
+export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavigateToCartao }) => {
   const [isPulsing, setIsPulsing] = useState(false);
   const whatsappHref = whatsappUrl('Olá Everton, vi seu perfil na ēloSites e quero tirar dúvidas.');
 
-  const handlePortraitClick = () => {
+  const handleNavigateToCartao = () => {
     setIsPulsing(true);
     setTimeout(() => setIsPulsing(false), 900);
+    if (onNavigateToCartao) {
+      onNavigateToCartao();
+    } else {
+      if (window.location.hash === '#cartao-digital') {
+        const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        window.location.hash = 'cartao-digital';
+      }
+    }
   };
 
   return (
@@ -48,7 +61,20 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 sm:gap-8 lg:gap-10 my-auto">
           {/* COLUNA ESQUERDA: Retrato Circular do Fundador com Halo e Badge (sempre centralizado) */}
-          <div className="flex flex-col items-center justify-center shrink-0 self-center pb-3 md:pb-0">
+          <div
+            onClick={handleNavigateToCartao}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleNavigateToCartao();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            title="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
+            aria-label="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
+            className="flex flex-col items-center justify-center shrink-0 self-center pb-3 md:pb-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#070b1a] rounded-full group/avatar-col transition-transform duration-200"
+          >
             {/* Foto circular com halo gradiente e brilho com zoom/motion/pulse ao passar o mouse ou clicar */}
             <motion.div
               whileHover={{ scale: 1.07 }}
@@ -63,9 +89,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
                   : undefined
               }
               transition={{ type: 'spring', stiffness: 280, damping: 18 }}
-              onClick={handlePortraitClick}
-              title="Clique para interagir com o fundador"
-              className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center cursor-pointer transition-shadow duration-300 group/avatar select-none"
+              className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center transition-shadow duration-300 group/avatar select-none"
             >
               <img
                 src="/eu.png"
@@ -122,6 +146,17 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
                 <WhatsAppIcon className="w-4 h-4 text-emerald-400 group-hover/wa:scale-110 transition-transform" />
                 <span>Conversar diretamente com Everton</span>
               </a>
+
+              {/* Botão para ancorar para o Cartão de Visitas na página FAQ & Contato */}
+              <button
+                type="button"
+                onClick={handleNavigateToCartao}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 border border-indigo-500/40 hover:border-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.15)] hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all cursor-pointer group/card"
+                aria-label="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
+              >
+                <span>Ver cartão de visitas</span>
+                <span className="text-indigo-400 group-hover/card:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
+              </button>
             </div>
           </div>
         </div>
