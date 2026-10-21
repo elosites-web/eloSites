@@ -7,9 +7,3 @@
   to = "/cartao/"
   status = 301
   force = true
-
-[[redirects]]
-  from = "/cartao/"
-  to = "/cartao/index.html"
-  status = 200
-  force = true

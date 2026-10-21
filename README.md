@@ -84,7 +84,7 @@ O site é publicado a partir da branch `main`. Configuração esperada:
 - Comando de build: `npm run build`
 - Pasta de publicação: `dist`
 - Cache: regras em `public/_headers` (assets com hash em cache longo; `index.html` e `sw.js` sempre revalidados)
-- Rotas: `netlify.toml` garante que `/cartao/` sirva a página estática do cartão, sem cair no fallback da SPA
+- Rotas: o `netlify.toml` só redireciona `/cartao` para `/cartao/`; a página é servida direto pelo `dist/cartao/index.html`. Não use rewrite para esse caminho, por causa do loop de redirecionamento.
 
 Depois de publicar, confira no celular a Home, o menu, o Portfólio, os Serviços, o FAQ e o botão do WhatsApp.
 
