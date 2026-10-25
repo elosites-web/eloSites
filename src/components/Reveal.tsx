@@ -12,7 +12,7 @@ interface UseRevealOptions {
 }
 
 export function useReveal<T extends HTMLElement = HTMLDivElement>(options: UseRevealOptions = {}) {
-  const { once = false, threshold = 0.12, rootMargin = '0px 0px -50px 0px' } = options;
+  const { once = true, threshold = 0.01, rootMargin = '0px 0px 80px 0px' } = options;
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(false);
   const enabled = useRef(getMotionTier() !== 'none');

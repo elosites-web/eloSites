@@ -50,6 +50,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     businessName: '',
     segment: 'Barbearia',
     projectType: 'Site de uma página (foco em WhatsApp)',
+    investmentRange: '',
     description: '',
     whatsappContact: '',
     agreedToLgpd: true,
@@ -508,6 +509,45 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                         <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
                           ▼
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Faixa de Investimento Pretendida (4 opções, desmarcada por padrão) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                          Faixa de Investimento Pretendida
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-mono">(opcional)</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        {[
+                          'De R$ 500 a R$ 700',
+                          'De R$ 700 a R$ 900',
+                          'De R$ 900 a R$ 1.200',
+                          'Prefiro conversar',
+                        ].map((range) => {
+                          const isSelected = briefingData.investmentRange === range;
+                          return (
+                            <button
+                              key={range}
+                              type="button"
+                              onClick={() =>
+                                setBriefingData({
+                                  ...briefingData,
+                                  investmentRange: isSelected ? '' : range,
+                                })
+                              }
+                              className={`py-2.5 px-3 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer border ${
+                                isSelected
+                                  ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_15px_rgba(37,99,235,0.45)]'
+                                  : 'bg-slate-950/80 border-blue-500/20 text-slate-300 hover:text-white hover:border-blue-400/40'
+                              }`}
+                            >
+                              {range}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 

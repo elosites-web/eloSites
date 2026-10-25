@@ -16,6 +16,7 @@ interface BiRevealProps {
   duration?: number;
   id?: string;
   style?: React.CSSProperties;
+  once?: boolean;
 }
 
 export const BiReveal: React.FC<BiRevealProps> = ({
@@ -29,6 +30,7 @@ export const BiReveal: React.FC<BiRevealProps> = ({
   duration = 0.55,
   id,
   style,
+  once = true,
 }) => {
   const elementRef = useRef<HTMLElement | null>(null);
   const [isInView, setIsInView] = useState(false);
@@ -49,7 +51,7 @@ export const BiReveal: React.FC<BiRevealProps> = ({
         : 'left'
       : direction;
 
-  const resolvedDistance = distance ?? (effectiveDirection === 'up' || effectiveDirection === 'down' ? 36 : 56);
+  const resolvedDistance = distance ?? (effectiveDirection === 'up' || effectiveDirection === 'down' ? 24 : 36);
 
   useEffect(() => {
     if (isReduced) {
@@ -66,18 +68,25 @@ export const BiReveal: React.FC<BiRevealProps> = ({
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          setIsInView(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            if (once) {
+              observer.disconnect();
+            }
+          } else if (!once) {
+            setIsInView(false);
+          }
         }
       },
       {
-        threshold: 0.08,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.01,
+        rootMargin: '0px 0px 80px 0px',
       }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isReduced]);
+  }, [isReduced, once]);
 
   // Cálculo da transformação inicial/reversa baseado na direção do scroll
   let transformHidden = 'none';
@@ -133,11 +142,10 @@ export const BiReveal: React.FC<BiRevealProps> = ({
         ...style,
         opacity: isInView || isReduced ? 1 : 0,
         transform: isInView || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
-        filter: isReduced ? 'none' : isInView ? 'blur(0px)' : 'blur(2px)',
-        willChange: !isInView && !isReduced ? 'transform, opacity, filter' : 'auto',
+        willChange: !isInView && !isReduced ? 'transform, opacity' : 'auto',
         transition: isReduced
           ? 'opacity 0.2s ease-out'
-          : `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, filter ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+          : `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
       }}
     >
       {children}

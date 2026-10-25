@@ -197,12 +197,12 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </div>
             </div>
 
-            {/* Seção 1: CHALLENGE / DESAFIO */}
+            {/* Seção 1: DESAFIO DO NEGÓCIO */}
             <div className="p-5 sm:p-6 rounded-xl bg-slate-900/60 border border-white/[0.06] space-y-3">
               <div className="flex items-center gap-2.5 text-amber-400">
                 <Target className="w-5 h-5 shrink-0" />
                 <h3 className="text-base sm:text-lg font-bold font-display uppercase tracking-wide text-white">
-                  Desafio / Challenge
+                  O Desafio do Negócio
                 </h3>
               </div>
               <p className="text-sm sm:text-base leading-relaxed text-slate-300/95">
@@ -210,12 +210,12 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </p>
             </div>
 
-            {/* Seção 2: SOLUTION / SOLUÇÃO */}
+            {/* Seção 2: SOLUÇÃO DESENVOLVIDA */}
             <div className="p-5 sm:p-6 rounded-xl bg-indigo-950/20 border border-indigo-500/20 space-y-4">
               <div className="flex items-center gap-2.5 text-indigo-400">
                 <Lightbulb className="w-5 h-5 shrink-0" />
                 <h3 className="text-base sm:text-lg font-bold font-display uppercase tracking-wide text-white">
-                  Solução ēloSites / Solution
+                  Solução Desenvolvida pela ēloSites
                 </h3>
               </div>
               <p className="text-sm sm:text-base leading-relaxed text-slate-300/95">
@@ -255,12 +255,12 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               )}
             </div>
 
-            {/* Seção 3: RESULTS / RESULTADOS */}
+            {/* Seção 3: RESULTADOS E BENEFÍCIOS */}
             <div className="p-5 sm:p-6 rounded-xl bg-emerald-950/20 border border-emerald-500/20 space-y-3">
               <div className="flex items-center gap-2.5 text-emerald-400">
                 <TrendingUp className="w-5 h-5 shrink-0" />
                 <h3 className="text-base sm:text-lg font-bold font-display uppercase tracking-wide text-white">
-                  Resultados / Results
+                  Resultados e Benefícios Práticos
                 </h3>
               </div>
               <p className="text-sm sm:text-base leading-relaxed text-slate-200 font-medium">
@@ -268,7 +268,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </p>
               <div className="flex items-center gap-2 pt-1 text-xs text-emerald-300/80">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Estruturado com foco em conversão e carregamento ágil.</span>
+                <span>Estruturado para apresentar serviços com clareza e agilizar o contato no WhatsApp.</span>
               </div>
             </div>
           </div>

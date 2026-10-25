@@ -60,7 +60,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     role: 'Proprietário & Diretor Operacional',
     companyOrProject: 'Toledo Segurança',
     category: 'Site completo',
-    projectUrl: 'https://toledoseguranca.netlify.app/',
+    projectUrl: 'https://toledoseg.com.br',
     quote:
       'O desenvolvimento do site da Toledo Segurança ficou excelente! O projeto transmitiu a seriedade e o profissionalismo que eu queria passar para os nossos clientes. Ter um site próprio faz diferença na apresentação da empresa e fortalece nossa presença na internet. Fiquei muito satisfeito com o resultado e com o trabalho realizado.',
     rating: 5,
@@ -681,7 +681,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           variants={cardVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2, margin: '0px 0px -40px 0px' }}
+          viewport={{ once: true, amount: 0.01, margin: '0px 0px 80px 0px' }}
           className="glass-card-interactive surface-card mt-10 p-6 sm:p-7 md:p-8 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-slate-900/60 to-cyan-950/40 border border-white/[0.08] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 max-w-4xl mx-auto shadow-2xl shadow-black/60 bracket-panel"
         >
           <div className="space-y-2 text-left w-full lg:max-w-xl">

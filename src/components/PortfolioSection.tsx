@@ -42,6 +42,50 @@ export interface PortfolioProjectData {
 
 export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   {
+    id: 'garagem-mailasque',
+    badge: 'Site de uma página',
+    status: 'Publicado & Ativo',
+    title: 'Garagem Mailasque — Funilaria & Pintura',
+    category: 'landing',
+    challenge:
+      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque/SP (Mailasqui). Precisava de presença no Google para ser encontrada por motoristas da região e agilizar orçamentos de reparos e sinistros pelo WhatsApp.',
+    solution:
+      'Site de uma página ágil e direto, com catálogo dos serviços de funilaria, pintura e restauração, localização com mapa e canal no WhatsApp preparado para o cliente enviar fotos do veículo danificado.',
+    tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos', 'Orçamento no WhatsApp'],
+    urlLabel: 'garagemmailasque.com.br',
+    href: 'https://garagemmailasque.com.br/',
+    desktopImage: '/garagem-mailasque-mobile.jpg',
+    mobileImage: '/garagem-mailasque-mobile.jpg',
+    features: [
+      'Botão de WhatsApp com mensagem pronta para envio de fotos do veículo',
+      'Catálogo claro dos serviços de reparo, pintura e polimento automotivo',
+      'Endereço e mapa para localização rápida de motoristas de São Roque e região',
+    ],
+    resultsNote: 'Presença no Google consolidada, com atendimento direto pelo WhatsApp para envio de fotos e orçamentos.',
+  },
+  {
+    id: 'toledo-seguranca',
+    badge: 'Site completo',
+    status: 'Publicado & Ativo',
+    title: 'Toledo Segurança',
+    category: 'institutional',
+    challenge:
+      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de um site profissional para passar confiança a empresas e condomínios e receber pedidos de orçamento.',
+    solution:
+      'Site completo com apresentação detalhada dos serviços, fotos da equipe e estrutura, formulário de contato e botão para orçamento comercial no WhatsApp.',
+    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Condomínios & Empresas'],
+    urlLabel: 'toledoseg.com.br',
+    href: 'https://toledoseg.com.br',
+    desktopImage: '/portifolio-toledoseguranca-desktop.webp',
+    mobileImage: '/portifolio-toledoseguranca-mobile.webp',
+    features: [
+      'Apresentação profissional pensada para passar credibilidade',
+      'Seções organizadas para serviços de eventos, condomínios e empresas',
+      'Canais de atendimento no WhatsApp para cotações e vagas de trabalho',
+    ],
+    resultsNote: 'Presença profissional consolidada para atender condomínios, eventos e empresas.',
+  },
+  {
     id: 'jv-salvaia',
     badge: 'Site de uma página',
     status: 'Publicado & Ativo',
@@ -62,28 +106,6 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
       'Fotos leves que abrem rápido e preparado para o Google',
     ],
     resultsNote: 'Contatos organizados com mensagem específica do serviço de interesse.',
-  },
-  {
-    id: 'toledo-seguranca',
-    badge: 'Site completo',
-    status: 'Publicado & Ativo',
-    title: 'Toledo Segurança',
-    category: 'institutional',
-    challenge:
-      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de um site profissional para passar confiança a empresas e condomínios e receber pedidos de orçamento.',
-    solution:
-      'Site completo com apresentação detalhada dos serviços, fotos da equipe e estrutura, formulário de contato e botão para orçamento comercial no WhatsApp.',
-    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Condomínios & Empresas'],
-    urlLabel: 'toledoseguranca.netlify.app',
-    href: 'https://toledoseguranca.netlify.app/',
-    desktopImage: '/portifolio-toledoseguranca-desktop.webp',
-    mobileImage: '/portifolio-toledoseguranca-mobile.webp',
-    features: [
-      'Apresentação profissional pensada para passar credibilidade',
-      'Seções organizadas para serviços de eventos, condomínios e empresas',
-      'Canais de atendimento no WhatsApp para cotações e vagas de trabalho',
-    ],
-    resultsNote: 'Presença profissional consolidada para atender condomínios, eventos e empresas.',
   },
   {
     id: 'duelo-fim-de-ano',
@@ -437,7 +459,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   return (
     <section
       id="portfolio"
-      className="section-auto-contain pt-24 pb-3 sm:pt-28 sm:pb-4 lg:pt-32 lg:pb-5 bg-[#090D16]/30 backdrop-blur-[0.5px] relative"
+      className="section-auto-contain pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 bg-[#090D16]/30 backdrop-blur-[0.5px] relative"
     >
       {/* Luz ambiente de fundo */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/[0.08] blur-[140px] rounded-full pointer-events-none" />
@@ -500,21 +522,15 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
 
           {/* Grade de Projetos Reais */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch lg:grid-rows-[repeat(8,auto)] portfolio-list"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch lg:grid-rows-[repeat(8,auto)] portfolio-list"
           >
             {filteredProjects.map((project, index) => {
-              const isOddLastOnTwoCols =
-                filteredProjects.length === 3 && index === 2;
               return (
                 <BiReveal
                   key={project.id}
                   direction={index % 2 === 0 ? 'left' : 'right'}
                   index={index}
-                  className={`h-full lg:row-span-8 lg:grid lg:grid-rows-subgrid ${
-                    isOddLastOnTwoCols
-                      ? 'md:col-span-2 md:w-[calc(50%-0.5rem)] md:mx-auto lg:col-span-1 lg:w-full lg:mx-0'
-                      : ''
-                  }`}
+                  className="h-full lg:row-span-8 lg:grid lg:grid-rows-subgrid"
                 >
                   <Interactive3DCard maxTilt={5} className="h-full w-full">
                     <ProjectCard
@@ -530,13 +546,13 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           </div>
         </div>
 
-        {/* Banner Inferior com Conversão Direta e 3D Tilt com variantes dinâmicas */}
+        {/* Banner Inferior com Conversão Direta e 3D Tilt */}
         <motion.div
-          variants={getDynamicCardVariants(prefersReduced)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15, margin: '0px 0px -40px 0px' }}
-          className="mt-4 sm:mt-5 w-full"
+          initial={{ opacity: 0, y: prefersReduced ? 0 : 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.01, margin: '0px 0px 80px 0px' }}
+          transition={{ duration: prefersReduced ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 sm:mt-8 w-full"
         >
           <Interactive3DCard maxTilt={3} className="w-full">
             <div className="glass-card-interactive surface-card portfolio-card scroll-perf-card p-6 sm:p-7 md:p-8 rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/80 bracket-panel transition-all">

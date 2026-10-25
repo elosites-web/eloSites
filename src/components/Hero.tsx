@@ -108,7 +108,7 @@ export const Hero: React.FC<HeroProps> = ({
   }, [heavyMotion]);
 
   return (
-    <div className="w-full bg-[#050814]">
+    <div className="w-full bg-transparent">
       {/* 1. TELA HOME: Apenas a logo flutuante da ēloSites centralizada sobre o fundo de espaço-tempo com grade azul distorcida */}
       {(mode === 'home' || mode === 'all') && (
         <section
@@ -348,195 +348,133 @@ export const Hero: React.FC<HeroProps> = ({
                 <BiReveal direction="right" delay={150}>
                   <div className="relative mx-auto max-w-[540px] lg:max-w-none">
                     
-                    {/* Barra de Alternância Interativa entre [ Preview do Site ] e [ Código React ] */}
+                    {/* Indicador de Status do Site no Ar */}
                     <div className="flex items-center justify-between mb-3 px-2">
-                      <div className="inline-flex p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md">
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab('preview')}
-                          className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                            activeTab === 'preview'
-                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
-                              : 'text-slate-400 hover:text-slate-200'
-                          }`}
-                        >
-                          Preview ao Vivo
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab('code')}
-                          className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                            activeTab === 'code'
-                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
-                              : 'text-slate-400 hover:text-slate-200'
-                          }`}
-                        >
-                          <Code2 className="w-3.5 h-3.5" />
-                          <span>Código React</span>
-                        </button>
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md text-xs font-semibold text-blue-200">
+                        <Monitor className="w-3.5 h-3.5 text-blue-400" />
+                        <span>Visualização em Computador e Celular</span>
                       </div>
 
-                      <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-blue-300/80 bg-blue-950/40 border border-blue-500/20 px-2.5 py-1 rounded-lg">
+                      <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>Build 100% OK</span>
+                        <span>Site no ar</span>
                       </div>
                     </div>
 
-                    {/* MOCKUP DO LAPTOP 3D (com estilo metálico escuro da og-image.png) */}
+                    {/* MOCKUP DO LAPTOP 3D */}
                     <Interactive3DCard maxTilt={5} animatedBorder={true}>
                       <div className="relative rounded-2xl bg-[#090E23] border border-blue-500/25 p-2 shadow-2xl shadow-black/80 backdrop-blur-xl">
                         
                         {/* Moldura da Tela do Laptop */}
                         <div className="rounded-xl overflow-hidden bg-[#030712] border border-white/10 shadow-inner relative min-h-[300px] sm:min-h-[340px]">
                           
-                          {/* Topbar do Navegador/IDE */}
+                          {/* Topbar do Navegador */}
                           <div className="flex items-center justify-between px-3 py-2 bg-slate-950/80 border-b border-white/[0.08]">
                             <div className="flex items-center gap-1.5">
                               <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
                               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
                               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
                             </div>
-                            <div className="text-[11px] font-mono text-slate-400 bg-slate-900/80 px-4 py-0.5 rounded-md border border-white/5 flex items-center gap-1.5">
+                            <div className="text-[11px] font-mono text-slate-300 bg-slate-900/80 px-4 py-0.5 rounded-md border border-white/5 flex items-center gap-1.5">
                               <span className="text-emerald-400">🔒</span>
-                              <span>{activeTab === 'preview' ? 'https://elosites.ia.br' : 'src/App.tsx'}</span>
+                              <span>https://seunegocio.com.br</span>
                             </div>
                             <div className="w-10" />
                           </div>
 
                           {/* Conteúdo Interno da Tela */}
-                          {activeTab === 'preview' ? (
-                            <div className="relative p-4 sm:p-6 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-gradient-to-br from-[#050814] via-[#090E23] to-[#0D1535] overflow-hidden">
-                              {/* Efeito de onda azul cobalto (inspirado no wallpaper da tela do laptop em og-image.png) */}
-                              <div className="absolute inset-0 opacity-40 pointer-events-none">
-                                <svg
-                                  className="w-full h-full object-cover"
-                                  viewBox="0 0 500 300"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M-50,220 C100,280 200,120 350,180 C450,220 500,150 550,190 L550,320 L-50,320 Z"
-                                    fill="url(#blueWave)"
-                                    opacity="0.8"
-                                  />
-                                  <path
-                                    d="M-50,180 C80,100 240,240 380,140 C480,80 520,160 550,120 L550,320 L-50,320 Z"
-                                    fill="url(#indigoWave)"
-                                    opacity="0.5"
-                                  />
-                                  <defs>
-                                    <linearGradient id="blueWave" x1="0" y1="0" x2="1" y2="1">
-                                      <stop offset="0%" stopColor="#3b82f6" />
-                                      <stop offset="100%" stopColor="#1d4ed8" />
-                                    </linearGradient>
-                                    <linearGradient id="indigoWave" x1="0" y1="0" x2="1" y2="1">
-                                      <stop offset="0%" stopColor="#6366f1" />
-                                      <stop offset="100%" stopColor="#7c3aed" />
-                                    </linearGradient>
-                                  </defs>
-                                </svg>
-                              </div>
+                          <div className="relative p-4 sm:p-6 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-gradient-to-br from-[#050814] via-[#090E23] to-[#0D1535] overflow-hidden">
+                            {/* Efeito de onda azul cobalto */}
+                            <div className="absolute inset-0 opacity-40 pointer-events-none">
+                              <svg
+                                className="w-full h-full object-cover"
+                                viewBox="0 0 500 300"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M-50,220 C100,280 200,120 350,180 C450,220 500,150 550,190 L550,320 L-50,320 Z"
+                                  fill="url(#blueWave)"
+                                  opacity="0.8"
+                                />
+                                <path
+                                  d="M-50,180 C80,100 240,240 380,140 C480,80 520,160 550,120 L550,320 L-50,320 Z"
+                                  fill="url(#indigoWave)"
+                                  opacity="0.5"
+                                />
+                                <defs>
+                                  <linearGradient id="blueWave" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#3b82f6" />
+                                    <stop offset="100%" stopColor="#1d4ed8" />
+                                  </linearGradient>
+                                  <linearGradient id="indigoWave" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#6366f1" />
+                                    <stop offset="100%" stopColor="#7c3aed" />
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                            </div>
 
-                              {/* Mini Barra de Navegação Interna da Tela */}
-                              <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
-                                    ē
-                                  </div>
-                                  <span className="font-bold text-xs tracking-tight text-white">ēloSites</span>
+                            {/* Mini Barra de Navegação Interna da Tela */}
+                            <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
+                                  ē
                                 </div>
-                                <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
-                                  <span className="text-blue-400 font-semibold">Sobre</span>
-                                  <span>Serviços</span>
-                                  <span>Projetos</span>
-                                  <span>Contato</span>
-                                </div>
+                                <span className="font-bold text-xs tracking-tight text-white">Seu Negócio</span>
                               </div>
-
-                              {/* Conteúdo Central da Tela (Fiel à Imagem) */}
-                              <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
-                                <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-                                  Seu negócio no{' '}
-                                  <span className="text-blue-400 drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]">
-                                    Google.
-                                  </span>
-                                </h2>
-                                <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
-                                  Site com fotos reais que abre rápido no celular e leva o cliente direto para o seu WhatsApp.
-                                </p>
-                                <div className="pt-1">
-                                  <a
-                                    href={heroWhatsappUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold shadow-[0_0_14px_rgba(37,99,235,0.6)] cursor-pointer"
-                                  >
-                                    <span>Chamar no WhatsApp</span>
-                                    <ArrowRight className="w-3 h-3" />
-                                  </a>
-                                </div>
-                              </div>
-
-                              {/* Mini Indicador de Pilares na Tela */}
-                              <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
-                                <div className="flex items-center gap-1">
-                                  <Monitor className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Fotos</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Zap className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>No 4G</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Search className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Google</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Smartphone className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Celular</span>
-                                </div>
+                              <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
+                                <span className="text-blue-400 font-semibold">Sobre</span>
+                                <span>Serviços</span>
+                                <span>Fotos</span>
+                                <span>Contato</span>
                               </div>
                             </div>
-                          ) : (
-                            /* Modo Código React (Visual IDE da og-image.png) */
-                            <div className="p-4 font-mono text-xs leading-relaxed text-slate-300 bg-[#030712] overflow-x-auto min-h-[260px] sm:min-h-[300px]">
-                              <div className="space-y-1 text-slate-400">
-                                <p className="text-slate-500">// Site feito sob medida para o seu negócio</p>
-                                <p>
-                                  <span className="text-purple-400">export default function</span>{' '}
-                                  <span className="text-blue-400">Site</span>() &#123;
-                                </p>
-                                <p className="pl-4">
-                                  <span className="text-purple-400">return</span> (
-                                </p>
-                                <p className="pl-8 text-sky-300">
-                                  &lt;<span className="text-blue-400">main</span> className=
-                                  <span className="text-emerald-300">"site-do-negocio"</span>&gt;
-                                </p>
-                                <p className="pl-12 text-sky-300">
-                                  &lt;<span className="text-blue-400">h1</span>&gt;
-                                  <span className="text-white">Seu negócio no Google.</span>
-                                  &lt;/<span className="text-blue-400">h1</span>&gt;
-                                </p>
-                                <p className="pl-12 text-sky-300">
-                                  &lt;<span className="text-blue-400">Atendimento</span> canal=
-                                  <span className="text-emerald-300">"whatsapp"</span> /&gt;
-                                </p>
-                                <p className="pl-8 text-sky-300">
-                                  &lt;/<span className="text-blue-400">main</span>&gt;
-                                </p>
-                                <p className="pl-4">);</p>
-                                <p>&#125;</p>
-                              </div>
 
-                              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-                                <span className="flex items-center gap-1.5 text-emerald-400">
-                                  <Check className="w-3.5 h-3.5" /> 0 erros de sintaxe
+                            {/* Conteúdo Central da Tela */}
+                            <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
+                              <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                                Seu negócio no{' '}
+                                <span className="text-blue-400 drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]">
+                                  Google.
                                 </span>
-                                <span className="text-slate-500">TypeScript 5.8 &bull; Vite 6</span>
+                              </h2>
+                              <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                                Apresente fotos reais dos seus serviços, passe confiança para quem procura e receba contatos no WhatsApp.
+                              </p>
+                              <div className="pt-1">
+                                <a
+                                  href={heroWhatsappUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-[11px] font-bold shadow-md shadow-emerald-950/50 cursor-pointer"
+                                >
+                                  <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
+                                  <span>Chamar no WhatsApp</span>
+                                </a>
                               </div>
                             </div>
-                          )}
+
+                            {/* Mini Indicador de Pilares na Tela */}
+                            <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
+                              <div className="flex items-center gap-1">
+                                <Monitor className="w-2.5 h-2.5 text-blue-400" />
+                                <span>Fotos</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Zap className="w-2.5 h-2.5 text-blue-400" />
+                                <span>No 4G</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Search className="w-2.5 h-2.5 text-blue-400" />
+                                <span>Google</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Smartphone className="w-2.5 h-2.5 text-blue-400" />
+                                <span>Celular</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         {/* Base do Laptop (Entalhe e teclado escuro com luz sutil) */}
@@ -551,36 +489,36 @@ export const Hero: React.FC<HeroProps> = ({
 
             </div>
 
-            {/* BANNER DESLIZANTE INTERATIVO (MOUSE OU TOUCH) DOS NICHOS */}
+            {/* BANNER DESLIZANTE DOS NICHOS */}
             <div className="mt-14 pt-8 border-t border-blue-500/15 scroll-fade-card">
               <div className="text-center mb-5 flex items-center justify-center">
-                <span className="floating-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-950/90 border border-cyan-400/50 text-cyan-300 text-xs sm:text-sm font-semibold tracking-wider uppercase font-mono shadow-[0_0_22px_rgba(34,211,238,0.35)] backdrop-blur-md">
-                  <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse shrink-0" aria-hidden="true" />
-                  <span>Sites sob medida para o seu negócio</span>
+                <span className="floating-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-950/80 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-semibold tracking-wider uppercase font-mono shadow-[0_0_18px_rgba(59,130,246,0.25)] backdrop-blur-md">
+                  <Sparkles className="w-4 h-4 text-blue-400 animate-pulse shrink-0" aria-hidden="true" />
+                  <span>Sites profissionais para diversos segmentos</span>
                 </span>
               </div>
 
               <InfiniteMarquee
                 items={[
-                  { text: 'Barbearias & Barbeiros', icon: <Scissors className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Alta Conversão' },
+                  { text: 'Barbearias & Barbeiros', icon: <Scissors className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Agendamentos' },
                   { text: 'Salões de Beleza & Cabeleireiros', icon: <Sparkles className="w-3.5 h-3.5 text-sky-400" />, badge: 'Estética' },
                   { text: 'Personal Trainers & Consultoria Fitness', icon: <Dumbbell className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Treinos' },
                   { text: 'Clínicas de Estética & Biomédicas', icon: <HeartPulse className="w-3.5 h-3.5 text-rose-400" />, badge: 'Procedimentos' },
-                  { text: 'Manicures & Nail Designers', icon: <Gem className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Agendamentos' },
+                  { text: 'Funilaria, Pintura & Estética Automotiva', icon: <Car className="w-3.5 h-3.5 text-sky-400" />, badge: 'Automotivo' },
+                  { text: 'Manicures & Nail Designers', icon: <Gem className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Serviços' },
                   { text: 'Nutricionistas & Saúde Integrativa', icon: <Apple className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Consultas' },
-                  { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: <Brain className="w-3.5 h-3.5 text-violet-400" />, badge: 'Acolhimento' },
-                  { text: 'Estúdios de Tatuagem & Piercing', icon: <PenTool className="w-3.5 h-3.5 text-amber-400" />, badge: 'Galeria' },
+                  { text: 'Terapeutas, Psicólogos & Saúde Mental', icon: <Brain className="w-3.5 h-3.5 text-violet-400" />, badge: 'Atendimento' },
+                  { text: 'Estúdios de Tatuagem & Piercing', icon: <PenTool className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Galeria' },
                   { text: 'Segurança & Portaria Privada', icon: <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />, badge: 'Corporativo' },
                   { text: 'Empresas de Limpeza & Conservação', icon: <SprayCan className="w-3.5 h-3.5 text-teal-400" />, badge: 'Serviços' },
                   { text: 'Arquitetura & Design de Interiores', icon: <Compass className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Portfólio' },
-                  { text: 'Professores & Cursos Particulares', icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Aulas' },
-                  { text: 'Advogados & Escritórios de Advocacia', icon: <Scale className="w-3.5 h-3.5 text-amber-300" />, badge: 'Autoridade' },
-                  { text: 'Estética Automotiva & Detalhamento', icon: <Car className="w-3.5 h-3.5 text-sky-400" />, badge: 'Local' },
+                  { text: 'Professores & Aulas Particulares', icon: <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Cursos' },
+                  { text: 'Advogados & Escritórios de Advocacia', icon: <Scale className="w-3.5 h-3.5 text-blue-300" />, badge: 'Atendimento' },
                   { text: 'Clínicas Médicas & Odontológicas', icon: <Stethoscope className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Saúde' },
                   { text: 'Fisioterapia & Reabilitação', icon: <Activity className="w-3.5 h-3.5 text-teal-300" />, badge: 'Bem-Estar' },
                 ]}
                 speed={70}
-                ariaLabel="Banner deslizante interativo dos nichos atendidos pela ēloSites"
+                ariaLabel="Banner deslizante dos nichos atendidos pela ēloSites"
               />
             </div>
 

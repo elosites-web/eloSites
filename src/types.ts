@@ -181,6 +181,7 @@ export interface ProjectBriefData {
   businessName: string;
   segment: string;
   projectType: string;
+  investmentRange?: string;
   description: string;
   whatsappContact: string;
   agreedToLgpd: boolean;
@@ -202,8 +203,8 @@ export const SITE_CONFIG = {
   name: 'ēloSites',
   domain: 'elosites.ia.br',
   canonicalUrl: 'https://elosites.ia.br',
-  tagline: 'ēloSites | Estúdio de Desenvolvimento Web — Landing pages e sites institucionais responsivos com interfaces sob medida, integração com WhatsApp e SEO técnico.',
-  subtagline: 'Desenvolvemos a presença digital estratégica para pequenos negócios e profissionais liberais.',
+  tagline: 'ēloSites | Sites profissionais sob medida para o seu negócio ser encontrado no Google e receber contatos no WhatsApp.',
+  subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho, fortalecer sua presença no Google e facilitar o contato de novos clientes pelo WhatsApp.',
   email: 'contato@elosites.ia.br',
   // Número oficial da ēloSites
   whatsappNumber: '5511995722584',
@@ -215,43 +216,43 @@ export const SITE_CONFIG = {
 
   // 2) Hero / Início (Tela 01)
   heroWhatsappMessage:
-    'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional com foco em *conversão no WhatsApp* e *SEO técnico* para minha marca.',
+    'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.',
 
   // 3) Portfólio (Tela 02)
   portfolioWhatsappMessage:
-    'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e responsividade. Gostaria de solicitar uma proposta comercial para um projeto com esse nível de qualidade!',
+    'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e facilidade de navegação no celular. Gostaria de solicitar uma proposta comercial para um projeto para o meu negócio!',
 
-  // 4) Serviços - Landing Page (Tela 03)
+  // 4) Serviços - Site de uma página (Tela 03)
   landingPageWhatsappMessage:
-    'Olá! 🎯 Tenho interesse no formato *Landing Page* da *ēloSites*.\n\nPreciso de uma página única estratégica, veloz e otimizada para captação de clientes no WhatsApp. Como podemos iniciar?',
+    'Olá! 🎯 Tenho interesse no formato *Site de uma página* da *ēloSites*.\n\nPreciso de uma página direta, ágil e focada em apresentar meus serviços e levar os clientes para o WhatsApp. Como podemos iniciar?',
 
-  // 5) Serviços - Site Institucional (Tela 03)
+  // 5) Serviços - Site completo (Tela 03)
   siteInstitucionalWhatsappMessage:
-    'Olá! 🏢 Tenho interesse no formato *Site Institucional Completo* da *ēloSites*.\n\nQuero fortalecer a autoridade da minha empresa no Google com *SEO técnico*, apresentação completa de serviços e credibilidade corporativa. Poderia me enviar uma proposta?',
+    'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero fortalecer a presença da minha empresa no Google, com apresentação detalhada dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
 
   // 6) Serviços - Projeto Personalizado (Tela 03)
   personalizadoWhatsappMessage:
-    'Olá! ⚡ Gostaria de conversar sobre um *Projeto Personalizado* com a *ēloSites*.\n\nTenho requisitos específicos de frontend para o meu negócio e busco uma solução web sob medida.',
+    'Olá! ⚡ Gostaria de conversar sobre um *Projeto sob medida* com a *ēloSites*.\n\nTenho necessidades específicas para o meu negócio e busco uma solução web desenvolvida sob encomenda.',
 
   // 7) Processo / Como Funciona (Tela 04)
   processoWhatsappMessage:
-    'Olá! 📋 Conheci o *processo ágil em 4 etapas* da *ēloSites*.\n\nGostei da transparência e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!',
+    'Olá! 📋 Conheci o *processo em 4 etapas* da *ēloSites*.\n\nGostei da clareza e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!',
 
   // 8) Diferenciais (Tela 05)
   diferenciaisWhatsappMessage:
-    'Olá! ✨ Li os *diferenciais estratégicos* da *ēloSites* (código autoral limpo, sem intermediários e foco total em conversão no WhatsApp).\n\nQuero entender como podemos aplicar esses diferenciais no site do meu negócio!',
+    'Olá! ✨ Li as *vantagens* de criar um site com a *ēloSites* (atendimento direto com o desenvolvedor, carregamento rápido e foco em WhatsApp).\n\nQuero entender como podemos aplicar esses benefícios no site do meu negócio!',
 
   // 9) FAQ (Tela 07)
   faqWhatsappMessage:
-    'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, hospedagem ou prazos e gostaria de falar diretamente com o desenvolvedor.',
+    'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, publicação ou pagamentos e gostaria de falar diretamente com o desenvolvedor.',
 
   // 10) Contato Principal (Tela 08)
   finalCtaWhatsappMessage:
-    'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o escopo, formato e orçamento?',
+    'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o formato ideal e o orçamento?',
 
   // 11) Balão Flutuante e Botão WhatsApp Fixo
   floatingWhatsappMessage:
-    'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com o fundador da *ēloSites*!',
+    'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com o desenvolvedor da *ēloSites*!',
 
   // 12) Modal de Navegação
   mobileMenuWhatsappMessage:

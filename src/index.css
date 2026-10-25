@@ -1751,25 +1751,19 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 
 @keyframes scrollProgressiveFadeInCard {
   0% {
-    opacity: 0.15;
-    transform: translate3d(0, 24px, 0) scale(0.985);
-    filter: blur(2.5px);
-  }
-  65% {
-    opacity: 0.88;
-    filter: blur(0px);
+    opacity: 0.2;
+    transform: translate3d(0, 16px, 0) scale(0.99);
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0px);
   }
 }
 
 @keyframes scrollProgressiveFadeInText {
   0% {
-    opacity: 0.18;
-    transform: translate3d(0, 16px, 0);
+    opacity: 0.2;
+    transform: translate3d(0, 12px, 0);
   }
   100% {
     opacity: 1;
@@ -1792,8 +1786,8 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
     .tech-stack-card {
       animation: scrollProgressiveFadeInCard linear both;
       animation-timeline: view();
-      animation-range: entry 4% cover 28%;
-      will-change: transform, opacity, filter;
+      animation-range: entry 2% cover 20%;
+      will-change: transform, opacity;
     }
 
     /* Elementos de texto e títulos com revelação progressiva suave */
@@ -1804,227 +1798,10 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
     .page-shell p.leading-relaxed:not([role="dialog"] *) {
       animation: scrollProgressiveFadeInText linear both;
       animation-timeline: view();
-      animation-range: entry 6% cover 25%;
+      animation-range: entry 4% cover 20%;
       will-change: transform, opacity;
     }
   }
-}
-
-/* ============================================================
-   TEMA CLARO (LIGHT MODE) — VISUAL ELEGANCE & IDENTIDADE ēloSites
-   Ativado via seletor de tema (classe .light ou [data-theme="light"] no html)
-   Mantém a identidade visual autoral da marca com conforto visual diurno.
-   ============================================================ */
-
-html.light,
-html[data-theme="light"] {
-  color-scheme: light;
-  --cor-fundo: #f8fafc;
-  --cor-fundo-rgb: 248, 250, 252;
-  --cor-superficie: #ffffff;
-  --cor-superficie-hover: #f1f5f9;
-  --cor-superficie-elevada: #ffffff;
-  --cor-primaria: #2563eb;
-  --cor-primaria-hover: #1d4ed8;
-  --cor-acento: #4f46e5;
-  --cor-acento-violet: #6d28d9;
-  --cor-glow: rgba(37, 99, 235, 0.18);
-  --cor-borda: rgba(59, 130, 246, 0.18);
-  --cor-borda-hover: rgba(59, 130, 246, 0.38);
-}
-
-/* Fundo da página e canvas no tema claro */
-html.light,
-html.light body,
-html.light #root {
-  background-color: #f8fafc !important;
-  background-image:
-    linear-gradient(to right, rgba(59, 130, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(59, 130, 246, 0.04) 1px, transparent 1px) !important;
-  color: #0f172a !important;
-}
-
-/* Cabeçalho fixo no tema claro */
-html.light #header-nav {
-  background-color: rgba(255, 255, 255, 0.88) !important;
-  border-bottom-color: rgba(59, 130, 246, 0.18) !important;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06) !important;
-}
-
-/* Botão de alternância de tema no tema claro */
-html.light .theme-toggle-btn {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-color: rgba(203, 213, 225, 0.9) !important;
-  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.08) !important;
-}
-
-html.light .theme-toggle-btn:hover {
-  border-color: rgba(59, 130, 246, 0.5) !important;
-  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.2) !important;
-}
-
-/* Superfícies, painéis e cartões no tema claro */
-html.light .glass-panel,
-html.light .surface-card,
-html.light .glass-card-interactive,
-html.light .service-card,
-html.light .process-card,
-html.light .portfolio-card,
-html.light .differential-card,
-html.light .benefit-card,
-html.light .tech-stack-card,
-html.light [class*="bg-[#090E23]"],
-html.light [class*="bg-[#090e23]"],
-html.light [class*="bg-[#111a3e]"],
-html.light [class*="bg-[#111A3E]"],
-html.light [class*="bg-[#0b1228]"] {
-  background-color: #ffffff !important;
-  border-color: rgba(59, 130, 246, 0.16) !important;
-  box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.06), 0 2px 8px -2px rgba(59, 130, 246, 0.05) !important;
-  color: #1e293b !important;
-}
-
-/* Fundos profundos escuros convertidos em superfícies claras elegantes */
-html.light .bg-\[\#050814\],
-html.light [class*="bg-[#050814]"] {
-  background-color: #f8fafc !important;
-}
-
-html.light .bg-\[\#030712\],
-html.light [class*="bg-[#030712]"] {
-  background-color: #f1f5f9 !important;
-}
-
-html.light .bg-slate-900\/60,
-html.light .bg-slate-900\/80,
-html.light .bg-slate-900,
-html.light .bg-slate-950,
-html.light .bg-slate-950\/80,
-html.light .bg-slate-950\/90,
-html.light .bg-blue-950\/40,
-html.light .bg-blue-950\/50,
-html.light .bg-blue-950\/70,
-html.light .bg-blue-950\/90 {
-  background-color: #ffffff !important;
-}
-
-/* Tipografia e cores de texto no tema claro */
-html.light h1:not(.keep-colored),
-html.light h2:not(.keep-colored),
-html.light h3:not(.keep-colored),
-html.light h4:not(.keep-colored) {
-  color: #0f172a !important;
-}
-
-html.light .text-slate-100,
-html.light .text-slate-200 {
-  color: #1e293b !important;
-}
-
-html.light .text-slate-300 {
-  color: #334155 !important;
-}
-
-html.light .text-slate-400,
-html.light .text-slate-500 {
-  color: #64748b !important;
-}
-
-html.light .text-blue-200,
-html.light .text-blue-300 {
-  color: #2563eb !important;
-}
-
-/* Manter texto branco impecável em botões principais, tags de ação e banners azuis */
-html.light .cta-primary,
-html.light .cta-primary *,
-html.light a[href*="wa.me"],
-html.light a[href*="wa.me"] *,
-html.light button[type="submit"]:not(.bg-transparent),
-html.light .bg-blue-600,
-html.light .bg-blue-600 *,
-html.light .keep-white {
-  color: #ffffff !important;
-}
-
-/* Bordas finas no tema claro */
-html.light .border-white\/10,
-html.light .border-white\/5,
-html.light .border-blue-500\/15,
-html.light .border-blue-500\/20,
-html.light .border-blue-500\/25,
-html.light .border-blue-500\/30 {
-  border-color: rgba(59, 130, 246, 0.2) !important;
-}
-
-/* Formulários e campos de entrada no tema claro */
-html.light input:not([type="checkbox"]):not([type="radio"]),
-html.light textarea,
-html.light select {
-  background-color: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  color: #0f172a !important;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
-}
-
-html.light input:focus,
-html.light textarea:focus,
-html.light select:focus {
-  border-color: #2563eb !important;
-  outline-color: #2563eb !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
-}
-
-html.light input::placeholder,
-html.light textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Rodapé no tema claro */
-html.light footer {
-  background-color: #f1f5f9 !important;
-  border-top-color: rgba(59, 130, 246, 0.18) !important;
-  color: #334155 !important;
-}
-
-html.light footer a {
-  color: #475569 !important;
-}
-
-html.light footer a:hover {
-  color: #0f172a !important;
-}
-
-/* Logotipo oficial no tema claro: contraste perfeito */
-html.light .hero-home-logo,
-html.light .elo-logo-floating img {
-  filter: drop-shadow(0 0 1px rgba(15, 23, 42, 0.75)) drop-shadow(0 3px 12px rgba(37, 99, 235, 0.22)) !important;
-}
-
-html.light .hero-home-subtitle {
-  color: #475569 !important;
-}
-
-/* Modal de Navegação no tema claro */
-html.light .nav-menu-modal-container {
-  background-color: rgba(248, 250, 252, 0.94) !important;
-}
-
-html.light .nav-menu-link-item:not(.is-active) {
-  color: #475569 !important;
-}
-
-html.light .nav-menu-link-item:hover,
-html.light .nav-menu-link-item.is-active {
-  color: #0f172a !important;
-}
-
-/* Balão flutuante do WhatsApp no tema claro */
-html.light .floating-whatsapp-bubble {
-  background-color: #ffffff !important;
-  border-color: rgba(59, 130, 246, 0.22) !important;
-  box-shadow: 0 12px 36px -4px rgba(15, 23, 42, 0.14) !important;
-  color: #0f172a !important;
 }
 
 

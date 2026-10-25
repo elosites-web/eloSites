@@ -66,7 +66,7 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'hero') {
-    return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional com foco em *conversão no WhatsApp* e *SEO técnico* para minha marca.';
+    return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.';
   }
 
   if (params.location === 'portfolio-card') {
@@ -75,19 +75,19 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'portfolio') {
-    return 'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e responsividade. Gostaria de solicitar uma proposta comercial para um projeto com esse nível de qualidade!';
+    return 'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e facilidade de navegação no celular. Gostaria de solicitar uma proposta comercial para um projeto para o meu negócio!';
   }
 
   if (params.location === 'service-landing') {
-    return 'Olá! 🎯 Tenho interesse no formato *Landing Page de Alta Conversão* da *ēloSites*.\n\nPreciso de uma página única estratégica, veloz e otimizada para campanhas e captação de clientes no WhatsApp. Como podemos iniciar?';
+    return 'Olá! 🎯 Tenho interesse no formato *Site de uma página* da *ēloSites*.\n\nPreciso de uma página direta, ágil e focada em apresentar meus serviços e levar os clientes para o WhatsApp. Como podemos iniciar?';
   }
 
   if (params.location === 'service-institucional') {
-    return 'Olá! 🏢 Tenho interesse no formato *Site Institucional Completo* da *ēloSites*.\n\nQuero fortalecer a autoridade da minha empresa no Google com *SEO técnico*, apresentação completa de serviços e credibilidade corporativa. Poderia me enviar uma proposta?';
+    return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero fortalecer a presença da minha empresa no Google, com apresentação detalhada dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
   }
 
   if (params.location === 'service-personalizado') {
-    return 'Olá! ⚡ Gostaria de conversar sobre um *Projeto Sob Medida / Personalizado* com a *ēloSites*.\n\nTenho requisitos específicos para o meu negócio e busco uma solução web exclusiva de alta performance.';
+    return 'Olá! ⚡ Gostaria de conversar sobre um *Projeto sob medida* com a *ēloSites*.\n\nTenho necessidades específicas para o meu negócio e busco uma solução web desenvolvida sob encomenda.';
   }
 
   if (params.location === 'service-simulator') {
@@ -96,23 +96,23 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'process') {
-    return 'Olá! 📋 Conheci o *processo ágil em 4 etapas* da *ēloSites*.\n\nGostei da transparência e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!';
+    return 'Olá! 📋 Conheci o *processo em 4 etapas* da *ēloSites*.\n\nGostei da clareza e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!';
   }
 
   if (params.location === 'differentials') {
-    return 'Olá! ✨ Li os *diferenciais estratégicos* da *ēloSites* (código autoral limpo, sem intermediários e foco total em conversão no WhatsApp).\n\nQuero entender como podemos aplicar esses diferenciais no site do meu negócio!';
+    return 'Olá! ✨ Li as *vantagens* de criar um site com a *ēloSites* (atendimento direto com o desenvolvedor, carregamento rápido e foco em WhatsApp).\n\nQuero entender como podemos aplicar esses benefícios no site do meu negócio!';
   }
 
   if (params.location === 'faq') {
-    return 'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, hospedagem ou prazos e gostaria de falar diretamente com o desenvolvedor.';
+    return 'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, publicação ou pagamentos e gostaria de falar diretamente com o desenvolvedor.';
   }
 
   if (params.location === 'contact') {
-    return 'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o escopo, formato e orçamento?';
+    return 'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o formato ideal e o orçamento?';
   }
 
   if (params.location === 'floating') {
-    return 'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com a equipe da *ēloSites*!';
+    return 'Olá! 🚀 Preciso de um site profissional para o meu negócio.\n\nGostaria de tirar algumas dúvidas rápidas diretamente com o desenvolvedor da *ēloSites*!';
   }
 
   if (params.location === 'menu-modal') {
@@ -130,21 +130,21 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   // 2) Mensagens pelo ID da tela ativa caso location não tenha sido especificado
   switch (params.screenId) {
     case 'inicio':
-      return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional com foco em *conversão no WhatsApp* e *SEO técnico* para minha marca.';
+      return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.';
     case 'portfolio':
-      return 'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e responsividade. Gostaria de solicitar uma proposta comercial para um projeto com esse nível de qualidade!';
+      return 'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e facilidade de navegação no celular. Gostaria de solicitar uma proposta comercial para um projeto para o meu negócio!';
     case 'servicos':
-      return 'Olá! 💼 Estive analisando a seção de *Serviços & Condições Comerciais* da *ēloSites*.\n\nGostaria de entender melhor as opções de pagamento e o formato mais indicado para o meu negócio.';
+      return 'Olá! 💼 Estive analisando a seção de *Formatos & Valores* da *ēloSites*.\n\nGostaria de entender melhor as opções de pagamento e o formato mais indicado para o meu negócio.';
     case 'processo':
-      return 'Olá! 📋 Conheci o *processo ágil em 4 etapas* da *ēloSites*.\n\nGostei da transparência e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!';
+      return 'Olá! 📋 Conheci o *processo em 4 etapas* da *ēloSites*.\n\nGostei da clareza e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!';
     case 'diferenciais':
-      return 'Olá! ✨ Li os *diferenciais estratégicos* da *ēloSites* (código autoral limpo, sem intermediários e foco total em conversão no WhatsApp).\n\nQuero entender como podemos aplicar esses diferenciais no site do meu negócio!';
+      return 'Olá! ✨ Li as *vantagens* de criar um site com a *ēloSites* (atendimento direto com o desenvolvedor, carregamento rápido e foco em WhatsApp).\n\nQuero entender como podemos aplicar esses benefícios no site do meu negócio!';
     case 'orcamento':
-      return 'Olá! 📋 Estive na seção de *Briefing & Agendamento* da *ēloSites*.\n\nGostaria de alinhar os detalhes e dar início à proposta do meu projeto.';
+      return 'Olá! 📋 Estive na seção de *Orçamento & Contato* da *ēloSites*.\n\nGostaria de alinhar os detalhes e dar início à proposta do meu projeto.';
     case 'faq':
-      return 'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, hospedagem ou prazos e gostaria de falar diretamente com o desenvolvedor.';
+      return 'Olá! 💡 Estive lendo a seção de *Perguntas Frequentes (FAQ)* no site da *ēloSites*.\n\nAinda fiquei com algumas dúvidas sobre domínio, publicação ou pagamentos e gostaria de falar diretamente com o desenvolvedor.';
     case 'contato':
-      return 'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o escopo, formato e orçamento?';
+      return 'Olá! 💬 Gostaria de dar o próximo passo e iniciar o projeto do meu *site profissional* com a *ēloSites*.\n\nPodemos conversar sobre o formato ideal e o orçamento?';
     case 'parceria-trafego':
       return 'Olá! Vim pelo site da ēloSites e gostaria de conhecer a condição especial da parceria de tráfego pago. Gostaria de receber mais informações.';
     default:
@@ -173,11 +173,12 @@ export function formatBriefingWhatsappMessage(data: ProjectBriefData): string {
     `*👤 Nome:* ${data.contactName.trim()}`,
     `*🏢 Negócio:* ${data.businessName.trim()}`,
     `*🏷️ Segmento:* ${data.segment}`,
-    `*💻 Tipo de Projeto:* ${data.projectType}`,
+    `*💻 Formato Desejado:* ${data.projectType}`,
+    data.investmentRange ? `*💰 Faixa de Investimento:* ${data.investmentRange}` : '',
     `*📱 WhatsApp do Cliente:* ${data.whatsappContact.trim()}`,
     data.description.trim() ? `*📝 Detalhes e Objetivos:*\n${data.description.trim()}` : '',
     ``,
-    `Gostaria de receber uma proposta comercial personalizada considerando as opções de pagamento (PIX 50/50, 20% à vista ou cartão em até 5x sem juros).`,
+    `Gostaria de receber uma proposta comercial personalizada considerando as opções de pagamento (PIX 50/50, 20% à vista no PIX ou cartão de crédito em até 5x sem juros).`,
   ]
     .filter(Boolean)
     .join('\n');

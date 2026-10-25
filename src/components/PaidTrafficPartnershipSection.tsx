@@ -287,10 +287,10 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
                 <div className="rounded-xl p-4 bg-slate-950/80 border border-amber-400/25 text-xs text-slate-300 space-y-1 lg:space-y-0 lg:flex lg:items-center lg:gap-2.5">
                   <div className="flex items-center gap-2 text-amber-300 font-semibold uppercase tracking-wider text-[11px] font-mono shrink-0">
                     <Info className="w-4 h-4 shrink-0 text-amber-400" />
-                    <span>Investimento em mídia<span className="hidden lg:inline">:</span></span>
+                    <span>Investimento em anúncios<span className="hidden lg:inline">:</span></span>
                   </div>
                   <p className="leading-relaxed pl-6 lg:pl-0">
-                    O valor pago aos canais de anúncio (Google/Meta) é definido por você e pago diretamente às plataformas. Não está incluso na mensalidade do serviço.
+                    O valor pago para anúncios é definido por você e pago diretamente ao Google e à Meta (por exemplo, a partir de R$ 20/dia sugeridos apenas como exemplo ilustrativo, sem mínimo obrigatório fixado pela ēloSites). A verba de mídia não está inclusa na mensalidade da gestão.
                   </p>
                 </div>
 
@@ -312,7 +312,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
 
                 {/* Nota de Confiança e Transparência */}
                 <div className="pt-2 text-center text-xs text-slate-400/90 leading-relaxed max-w-2xl mx-auto border-t border-white/[0.04]">
-                  A contratação e os pagamentos são feitos diretamente com o Thomaz (TrueThomaz.BM). A ēloSites apenas indica o parceiro por confiar no trabalho dele.
+                  A gestão de tráfego é contratada diretamente com o Thomaz (TrueThomaz.BM). A ēloSites apenas recomenda o profissional por confiar na seriedade e na qualidade do serviço.
                 </div>
               </div>
             </div>

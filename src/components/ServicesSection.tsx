@@ -49,7 +49,7 @@ const FadeInBlock: React.FC<FadeInBlockProps> = ({
     <motion.div
       initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-24px' }}
+      viewport={{ once: true, margin: '0px 0px 50px 0px' }}
       transition={{
         duration: 0.48,
         delay: delay * 0.001,
@@ -592,20 +592,28 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   </FadeInBlock>
 
                   <div className="flex flex-wrap items-center gap-2 justify-center">
-                    {[650, 1000, 1500, 2200].map((preset) => (
-                      <button
-                        key={preset}
-                        type="button"
-                        onClick={() => setSimulatedValue(preset)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer ${
-                          simulatedValue === preset
-                            ? 'bg-indigo-600 text-white shadow'
-                            : 'bg-slate-900 text-slate-400 hover:text-white border border-white/[0.06]'
-                        }`}
-                      >
-                        R$ {preset.toLocaleString('pt-BR')}
-                      </button>
-                    ))}
+                    {[
+                      { label: 'R$ 500–700', value: 600, min: 500, max: 700 },
+                      { label: 'R$ 700–900', value: 800, min: 701, max: 900 },
+                      { label: 'R$ 900–1.200', value: 1050, min: 901, max: 1200 },
+                    ].map((preset) => {
+                      const isActive =
+                        simulatedValue >= preset.min && simulatedValue <= preset.max;
+                      return (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => setSimulatedValue(preset.value)}
+                          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer ${
+                            isActive
+                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)] border border-blue-400/40'
+                              : 'bg-slate-900 text-slate-300 hover:text-white border border-white/[0.08]'
+                          }`}
+                        >
+                          {preset.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -619,18 +627,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   </div>
                   <input
                     type="range"
-                    min="600"
-                    max="3500"
+                    min="500"
+                    max="1200"
                     step="50"
                     value={simulatedValue}
                     onChange={(e) => setSimulatedValue(Number(e.target.value))}
                     aria-label="Simular valor do orçamento"
                     className="w-full accent-indigo-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
                   />
-                  <div className="flex justify-between text-[11px] text-slate-500 font-mono">
-                    <span>R$ 600</span>
-                    <span>R$ 2.000</span>
-                    <span>R$ 3.500</span>
+                  <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+                    <span>R$ 500</span>
+                    <span>R$ 850</span>
+                    <span>R$ 1.200</span>
                   </div>
                 </div>
 

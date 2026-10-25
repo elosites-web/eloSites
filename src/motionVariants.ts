@@ -9,28 +9,23 @@ import type { Variants } from 'motion/react';
 export const getDynamicCardVariants = (prefersReduced: boolean = false): Variants => ({
   hidden: {
     opacity: 0,
-    scale: prefersReduced ? 1 : 0.93,
-    y: prefersReduced ? 0 : 42,
-    filter: prefersReduced ? 'none' : 'blur(8px)',
+    scale: prefersReduced ? 1 : 0.96,
+    y: prefersReduced ? 0 : 24,
   },
   visible: (i: number = 0) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       y: prefersReduced
         ? { duration: 0 }
-        : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.12 },
+        : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.08 },
       scale: prefersReduced
         ? { duration: 0 }
-        : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.12 },
+        : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.08 },
       opacity: prefersReduced
         ? { duration: 0 }
-        : { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 },
-      filter: prefersReduced
-        ? { duration: 0 }
-        : { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 },
+        : { duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 },
     },
   }),
 });
