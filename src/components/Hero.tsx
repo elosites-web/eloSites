@@ -152,8 +152,25 @@ export const Hero: React.FC<HeroProps> = ({
                 }
                 className="relative flex flex-col items-center justify-center pointer-events-auto"
               >
-                {/* Brilho decorativo elétrico azul cobalto */}
-                <div className="absolute -inset-8 sm:-inset-12 bg-gradient-to-r from-blue-600/[0.12] via-indigo-600/[0.18] to-purple-600/[0.12] blur-3xl rounded-full pointer-events-none" />
+                {/* Brilho decorativo elétrico azul cobalto com pulso de respiração sincronizado */}
+                <motion.div
+                  className="absolute -inset-8 sm:-inset-12 bg-gradient-to-r from-blue-600/[0.12] via-indigo-600/[0.18] to-purple-600/[0.12] blur-3xl rounded-full pointer-events-none"
+                  animate={
+                    isReduced
+                      ? {
+                          opacity: [0.65, 0.95, 0.65],
+                        }
+                      : {
+                          scale: [0.94, 1.06, 0.94],
+                          opacity: [0.55, 0.95, 0.55],
+                        }
+                  }
+                  transition={{
+                    duration: 4.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
 
                 <a
                   href="#inicio"
@@ -165,17 +182,46 @@ export const Hero: React.FC<HeroProps> = ({
                   className="group relative flex flex-col items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-2xl p-2 cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
                   aria-label="ēloSites — Entrar e Conhecer"
                 >
-                  <img
-                    src="/logo-elosites-1360.png"
-                    alt="ēloSites"
-                    width={1360}
-                    height={337}
-                    className="hero-home-logo w-auto object-contain relative z-10 drop-shadow-[0_0_35px_rgba(59,130,246,0.35)]"
-                  />
-                  {/* Texto minimalista proporcional ao espaço do logotipo e do contêiner */}
-                  <span className="hero-home-subtitle text-slate-400 group-hover:text-blue-300 select-none transition-colors duration-300 relative z-10">
-                    Web Development Studio
-                  </span>
+                  {/* Container de respiração orgânica suave da logo com sincronização de glow */}
+                  <motion.div
+                    className="flex flex-col items-center justify-center"
+                    animate={
+                      isReduced
+                        ? {
+                            scale: 1,
+                            filter: [
+                              'drop-shadow(0 0 18px rgba(59,130,246,0.30)) drop-shadow(0 0 30px rgba(99,102,241,0.20))',
+                              'drop-shadow(0 0 28px rgba(59,130,246,0.48)) drop-shadow(0 0 46px rgba(124,58,237,0.35))',
+                              'drop-shadow(0 0 18px rgba(59,130,246,0.30)) drop-shadow(0 0 30px rgba(99,102,241,0.20))',
+                            ],
+                          }
+                        : {
+                            scale: [1, 1.026, 1],
+                            filter: [
+                              'drop-shadow(0 0 20px rgba(59,130,246,0.32)) drop-shadow(0 0 32px rgba(99,102,241,0.20))',
+                              'drop-shadow(0 0 34px rgba(59,130,246,0.55)) drop-shadow(0 0 54px rgba(124,58,237,0.38))',
+                              'drop-shadow(0 0 20px rgba(59,130,246,0.32)) drop-shadow(0 0 32px rgba(99,102,241,0.20))',
+                            ],
+                          }
+                    }
+                    transition={{
+                      duration: 4.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  >
+                    <img
+                      src="/logo-elosites-1360.png"
+                      alt="ēloSites"
+                      width={1360}
+                      height={337}
+                      className="hero-home-logo w-auto object-contain relative z-10"
+                    />
+                    {/* Texto minimalista proporcional ao espaço do logotipo e do contêiner */}
+                    <span className="hero-home-subtitle text-slate-400 group-hover:text-blue-300 select-none transition-colors duration-300 relative z-10">
+                      Web Development Studio
+                    </span>
+                  </motion.div>
                 </a>
               </motion.div>
             )}
@@ -218,7 +264,19 @@ export const Hero: React.FC<HeroProps> = ({
                   <TypewriterSlogan mode={mode} />
                 </BiReveal>
 
-                {/* Faixa dos 4 Pilares da og-image.png */}
+                {/* Subtítulo e texto de apoio para leigos */}
+                <BiReveal direction="left" delay={160}>
+                  <div className="space-y-3 max-w-xl text-left">
+                    <p className="text-base sm:text-lg text-slate-200 font-medium leading-relaxed">
+                      Criamos o site do seu negócio: com fotos reais, que abre rápido até no 4G e leva o cliente direto para o seu WhatsApp. Você fala direto com o fundador, e a manutenção é opcional.
+                    </p>
+                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                      O Instagram continua útil. Mas quem pesquisa no Google geralmente está procurando alguém para resolver algo agora. E o site é seu: fica no ar com o seu nome, mostra suas fotos e serviços e leva a pessoa direto ao seu WhatsApp.
+                    </p>
+                  </div>
+                </BiReveal>
+
+                {/* Faixa dos 4 Pilares Simplificados */}
                 <BiReveal direction="up" delay={200}>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2 w-full max-w-xl">
                     {/* Pilar 1 */}
@@ -226,8 +284,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Monitor className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Design moderno</span>
-                      <span className="text-[10px] text-slate-400 text-center">Estética autoral</span>
+                      <span className="text-xs font-semibold text-white text-center">Fotos reais</span>
+                      <span className="text-[10px] text-slate-400 text-center">Do seu negócio</span>
                     </div>
 
                     {/* Pilar 2 */}
@@ -235,8 +293,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Zap className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Performance</span>
-                      <span className="text-[10px] text-slate-400 text-center">Velocidade real</span>
+                      <span className="text-xs font-semibold text-white text-center">Abre rápido</span>
+                      <span className="text-[10px] text-slate-400 text-center">Até no 4G</span>
                     </div>
 
                     {/* Pilar 3 */}
@@ -244,8 +302,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Search className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">SEO técnico</span>
-                      <span className="text-[10px] text-slate-400 text-center">Google Schema</span>
+                      <span className="text-xs font-semibold text-white text-center">No Google</span>
+                      <span className="text-[10px] text-slate-400 text-center">Para ser achado</span>
                     </div>
 
                     {/* Pilar 4 */}
@@ -253,8 +311,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">100% responsivo</span>
-                      <span className="text-[10px] text-slate-400 text-center">Mobile First</span>
+                      <span className="text-xs font-semibold text-white text-center">No celular</span>
+                      <span className="text-[10px] text-slate-400 text-center">E no computador</span>
                     </div>
                   </div>
                 </BiReveal>
@@ -268,7 +326,7 @@ export const Hero: React.FC<HeroProps> = ({
                       rel="noopener noreferrer"
                       className="cta-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-white inline-flex items-center justify-center gap-2.5 shadow-[0_0_24px_rgba(37,99,235,0.45)] hover:shadow-[0_0_36px_rgba(59,130,246,0.65)] cursor-pointer group text-sm sm:text-base"
                     >
-                      <span>Solicitar orçamento</span>
+                      <span>Chamar no WhatsApp</span>
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </a>
 
@@ -398,13 +456,13 @@ export const Hero: React.FC<HeroProps> = ({
                               {/* Conteúdo Central da Tela (Fiel à Imagem) */}
                               <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
                                 <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-                                  Sites que geram{' '}
+                                  Seu negócio no{' '}
                                   <span className="text-blue-400 drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]">
-                                    resultados.
+                                    Google.
                                   </span>
                                 </h2>
                                 <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
-                                  Design, performance e SEO técnico para o seu negócio crescer no Google e converter no WhatsApp.
+                                  Site com fotos reais que abre rápido no celular e leva o cliente direto para o seu WhatsApp.
                                 </p>
                                 <div className="pt-1">
                                   <a
@@ -413,7 +471,7 @@ export const Hero: React.FC<HeroProps> = ({
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold shadow-[0_0_14px_rgba(37,99,235,0.6)] cursor-pointer"
                                   >
-                                    <span>Solicitar orçamento</span>
+                                    <span>Chamar no WhatsApp</span>
                                     <ArrowRight className="w-3 h-3" />
                                   </a>
                                 </div>
@@ -423,19 +481,19 @@ export const Hero: React.FC<HeroProps> = ({
                               <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
                                 <div className="flex items-center gap-1">
                                   <Monitor className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Design</span>
+                                  <span>Fotos</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <Zap className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Veloz</span>
+                                  <span>No 4G</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <Search className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>SEO</span>
+                                  <span>Google</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <Smartphone className="w-2.5 h-2.5 text-blue-400" />
-                                  <span>Mobile</span>
+                                  <span>Celular</span>
                                 </div>
                               </div>
                             </div>
@@ -443,27 +501,26 @@ export const Hero: React.FC<HeroProps> = ({
                             /* Modo Código React (Visual IDE da og-image.png) */
                             <div className="p-4 font-mono text-xs leading-relaxed text-slate-300 bg-[#030712] overflow-x-auto min-h-[260px] sm:min-h-[300px]">
                               <div className="space-y-1 text-slate-400">
-                                <p className="text-slate-500">// Arquitetura limpa com React 19 + TypeScript</p>
+                                <p className="text-slate-500">// Site feito sob medida para o seu negócio</p>
                                 <p>
                                   <span className="text-purple-400">export default function</span>{' '}
-                                  <span className="text-blue-400">Home</span>() &#123;
+                                  <span className="text-blue-400">Site</span>() &#123;
                                 </p>
                                 <p className="pl-4">
                                   <span className="text-purple-400">return</span> (
                                 </p>
                                 <p className="pl-8 text-sky-300">
                                   &lt;<span className="text-blue-400">main</span> className=
-                                  <span className="text-emerald-300">"hero-section"</span>&gt;
+                                  <span className="text-emerald-300">"site-do-negocio"</span>&gt;
                                 </p>
                                 <p className="pl-12 text-sky-300">
                                   &lt;<span className="text-blue-400">h1</span>&gt;
-                                  <span className="text-white">Seu site, sob medida.</span>
+                                  <span className="text-white">Seu negócio no Google.</span>
                                   &lt;/<span className="text-blue-400">h1</span>&gt;
                                 </p>
                                 <p className="pl-12 text-sky-300">
-                                  &lt;<span className="text-blue-400">ConversionEngine</span> focus=
-                                  <span className="text-emerald-300">"whatsapp"</span> seo=
-                                  <span className="text-amber-300">&#123;true&#125;</span> /&gt;
+                                  &lt;<span className="text-blue-400">Atendimento</span> canal=
+                                  <span className="text-emerald-300">"whatsapp"</span> /&gt;
                                 </p>
                                 <p className="pl-8 text-sky-300">
                                   &lt;/<span className="text-blue-400">main</span>&gt;

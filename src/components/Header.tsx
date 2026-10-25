@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { Sun, Moon } from 'lucide-react';
 import { EloLogo } from './EloLogo';
 import { FluidRippleBackground } from './FluidRippleBackground';
 import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
+import { useTheme } from '../themeContext';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -20,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   isMenuOpen,
   setIsMenuOpen,
 }) => {
+  const { isDark, toggleTheme } = useTheme();
   const isHome = currentScreen === 'home';
   const savedScrollPositionRef = useRef<number>(0);
 
@@ -127,21 +130,50 @@ export const Header: React.FC<HeaderProps> = ({
     </button>
   );
 
+  // Seletor de Tema (Claro / Escuro) com transição suave e indicação visual
+  const renderThemeToggle = () => (
+    <button
+      id="theme-toggle-btn"
+      type="button"
+      onClick={toggleTheme}
+      aria-label={isDark ? 'Alternar para tema claro' : 'Alternar para tema escuro'}
+      title={isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+      className="theme-toggle-btn group relative p-2 sm:p-2.5 flex items-center justify-center rounded-xl cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 active:scale-95 bg-[#090E23]/80 border border-blue-500/25 hover:border-blue-400/60 shadow-sm hover:shadow-[0_0_12px_rgba(59,130,246,0.3)]"
+    >
+      <div className="relative w-5 h-5 flex items-center justify-center pointer-events-none">
+        {isDark ? (
+          <Sun className="w-4.5 h-4.5 text-amber-400 group-hover:rotate-45 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+        ) : (
+          <Moon className="w-4.5 h-4.5 text-indigo-600 group-hover:-rotate-12 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+        )}
+      </div>
+      <span className="sr-only">
+        {isDark ? 'Alternar para tema claro' : 'Alternar para tema escuro'}
+      </span>
+    </button>
+  );
+
   return (
     <>
-      {/* Menu Fechado na Home: Botão de menu flutuante rigorosamente centralizado no topo */}
+      {/* Menu Fechado na Home: Botão de menu centralizado e seletor de tema alinhado à direita */}
       {isHome && !isMenuOpen && (
         <header
           id="header-nav"
-          className="fixed top-5 sm:top-7 left-0 right-0 z-50 pointer-events-none flex justify-center items-center"
+          className="fixed top-5 sm:top-7 left-0 right-0 z-50 pointer-events-none px-4 sm:px-6 lg:px-8"
         >
-          <div className="pointer-events-auto flex items-center justify-center">
-            {renderMenuButton()}
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="w-10 sm:w-11" />
+            <div className="pointer-events-auto flex items-center justify-center">
+              {renderMenuButton()}
+            </div>
+            <div className="pointer-events-auto flex items-center justify-end">
+              {renderThemeToggle()}
+            </div>
           </div>
         </header>
       )}
 
-      {/* Menu Fechado nas demais telas: Cabeçalho minimalista (apenas Logo e Menu Hambúrguer) */}
+      {/* Menu Fechado nas demais telas: Cabeçalho com Logo, Seletor de Tema e Menu Hambúrguer */}
       {!isHome && !isMenuOpen && (
         <header
           id="header-nav"
@@ -162,8 +194,9 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               </div>
 
-              {/* Apenas o Botão do Menu Hambúrguer */}
-              <div className="flex items-center ml-auto shrink-0 z-10 pointer-events-auto">
+              {/* Seletor de Tema + Botão do Menu Hambúrguer */}
+              <div className="flex items-center gap-2.5 sm:gap-3.5 ml-auto shrink-0 z-10 pointer-events-auto">
+                {renderThemeToggle()}
                 {renderMenuButton()}
               </div>
             </div>
@@ -184,14 +217,18 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Fundo de grade azul de espaço-tempo com bolha em movimento contínuo e aleatório */}
           <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-70 pointer-events-none" />
 
-          {/* Botão de Fechar ('X') que sobe e desce junto com o scroll das seções */}
+          {/* Botão de Fechar ('X') e Seletor de Tema */}
           <header
             id="header-nav-active"
-            className="w-full shrink-0 relative z-20 flex justify-center items-center pt-2 sm:pt-3 pb-2 sm:pb-3 pointer-events-auto"
+            className="w-full shrink-0 relative z-20 flex justify-between items-center pt-2 sm:pt-3 pb-2 sm:pb-3 px-4 sm:px-8 pointer-events-auto max-w-5xl"
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="w-10 sm:w-11" />
             <div className="flex items-center justify-center">
               {renderMenuButton()}
+            </div>
+            <div className="flex items-center justify-end">
+              {renderThemeToggle()}
             </div>
           </header>
 

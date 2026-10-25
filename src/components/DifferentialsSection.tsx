@@ -80,39 +80,39 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
     isWhatsApp?: boolean;
   }[] = [
     {
-      title: 'Código limpo & alta performance',
+      title: 'Abre rápido até no celular 4G',
       description:
-        'Desenvolvimento autoral, leve e otimizado para carregamento instantâneo. Sem temas genéricos ou plugins pesados que deixam o site lento.',
+        'Seu site carrega sem demora, sem travar e sem páginas pesadas. Quem clica para conhecer o seu trabalho não desiste antes de abrir.',
       icon: Zap,
     },
     {
-      title: 'Trabalho direto com o fundador',
+      title: 'Você conversa direto com quem faz',
       description:
-        'Você conversa com quem desenha e desenvolve o site. Sem equipe inventada, sem intermediários e sem terceirização.',
+        'Você fala diretamente com quem planeja e coloca o seu site no ar. Sem intermediários, sem equipe inventada e com atenção ao seu negócio.',
       icon: User,
     },
     {
-      title: 'Tecnologia moderna e publicação estável',
+      title: 'Site no ar com endereço estável',
       description:
-        'Stack atual, código organizado e publicação estável na URL do Netlify. Domínio personalizado não está incluso: se quiser um, o registro fica na sua conta e o pagamento é à parte.',
+        'Seu site fica publicado em endereço seguro e moderno na internet. Se você quiser um domínio próprio (.com.br), o registro fica no seu nome e o valor anual é à parte.',
       icon: Server,
     },
     {
-      title: 'Foco em conversão',
+      title: 'Feito para o cliente chamar',
       description:
-        'Cada seção existe para um motivo comercial: apresentar o serviço com clareza e levar o visitante até o contato.',
+        'Cada parte da página foi pensada para mostrar os seus serviços com clareza e facilitar o contato de quem quer contratar.',
       icon: TrendingUp,
     },
     {
-      title: 'Mais contexto antes da conversa',
+      title: 'Tudo o que o cliente precisa saber',
       description:
-        'O site apresenta seus serviços, explica seus diferenciais e reúne as informações que o cliente precisa para conhecer melhor seu negócio antes de entrar em contato. Com o WhatsApp integrado, fica mais fácil dar o próximo passo.',
+        'Seus serviços, fotos reais do seu trabalho, horários e endereço organizados em um só lugar. O cliente tira dúvidas e clica para falar com você.',
       icon: Flame,
     },
     {
-      title: 'WhatsApp em primeiro lugar',
+      title: 'Botão para o WhatsApp sempre à mão',
       description:
-        'Quando faz sentido para o negócio, o site é pensado para gerar conversa no WhatsApp — com botões no momento certo e mensagens prontas.',
+        'O site encaminha o interessado direto para o seu WhatsApp com mensagem pronta, facilitando o primeiro contato e o agendamento.',
       icon: WhatsAppIcon,
       isWhatsApp: true,
     },
@@ -136,15 +136,15 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16 sm:mb-20">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-              <span>Diferenciais Estratégicos</span>
+              <span>Vantagens para o seu negócio</span>
             </div>
             <SplitLines
               as="h2"
-              text="O que muda quando o site é feito para o seu negócio"
+              text="O que você ganha com um site feito sob medida"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Menos agência genérica. Mais presença profissional, conversa direta e resultado.
+              Menos dependência de redes sociais. Mais presença profissional para quem procura os seus serviços no Google.
             </p>
           </div>
         </BiReveal>

@@ -49,7 +49,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     contactName: '',
     businessName: '',
     segment: 'Barbearia',
-    projectType: 'Landing Page de Conversão (Foco em WhatsApp)',
+    projectType: 'Site de uma página (foco em WhatsApp)',
     description: '',
     whatsappContact: '',
     agreedToLgpd: true,
@@ -156,9 +156,9 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   ];
 
   const projectTypesList = [
-    'Landing Page de Conversão (Foco em WhatsApp)',
-    'Site Institucional Completo (Sobre, Serviços, FAQ)',
-    'Projeto Sob Medida / Personalizado',
+    'Site de uma página (foco em WhatsApp)',
+    'Site completo (sobre, serviços, fotos, mapa, FAQ)',
+    'Projeto sob medida (funcionalidades personalizadas)',
   ];
 
   const timeSlotsList = [
@@ -315,7 +315,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
           <div className="text-center space-y-4 mb-12 sm:mb-16">
             <div className="section-kicker inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-              <span>Planejamento Estratégico & Agendamento</span>
+              <span>Próximo Passo</span>
             </div>
 
             <SplitLines
@@ -325,7 +325,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-              Preencha um briefing rápido para receber uma <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">proposta personalizada</span> ou escolha um horário para alinharmos tudo em uma chamada online de 30 minutos sem compromisso.
+              Conte sobre o seu trabalho para receber um orçamento específico ou escolha um horário para conversarmos por vídeo sem compromisso.
             </p>
           </div>
 
@@ -346,7 +346,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                 />
               )}
               <FileText className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap text-center">1. Descrever Projeto</span>
+              <span className="whitespace-nowrap text-center">1. Contar sobre o negócio</span>
             </button>
 
             <button
@@ -364,7 +364,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                 />
               )}
               <Calendar className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap text-center">2. Reunião 30 min</span>
+              <span className="whitespace-nowrap text-center">2. Conversar por vídeo</span>
             </button>
           </div>
 
@@ -391,10 +391,10 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                   <div className="mb-8">
                     <h3 className="font-display text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
                       <FileText className="w-5 h-5 text-blue-400" />
-                      <span>Briefing Estratégico do Projeto</span>
+                      <span>Informações sobre o seu negócio</span>
                     </h3>
                     <p className="mt-1.5 text-sm text-slate-300/90 leading-relaxed">
-                      Responda essas informações básicas para que possamos entender o seu negócio e preparar um orçamento sob medida.
+                      Preencha as informações básicas para prepararmos um orçamento adequado ao seu trabalho.
                     </p>
                   </div>
 

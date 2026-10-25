@@ -26,8 +26,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'react',
     name: 'React',
-    description: 'Biblioteca UI para interfaces dinâmicas',
-    category: 'Componentes & Estado',
+    description: 'O site carrega leve, sem travar e sem lentidão',
+    category: 'Estrutura Moderna',
     tagColor: 'text-cyan-400 bg-cyan-950/40 border-cyan-500/30',
     borderHover: 'hover:border-cyan-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(34,211,238,0.25)]',
@@ -52,8 +52,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'typescript',
     name: 'TypeScript',
-    description: 'Tipagem estática e segurança de código',
-    category: 'Segurança Estrutural',
+    description: 'Código seguro e estabilidade garantida',
+    category: 'Sem Falhas',
     tagColor: 'text-blue-400 bg-blue-950/40 border-blue-500/30',
     borderHover: 'hover:border-blue-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(59,130,246,0.25)]',
@@ -66,8 +66,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    description: 'Lógica e interatividade moderna',
-    category: 'ESNext Nativo',
+    description: 'Botões e funções que respondem na hora',
+    category: 'Navegação Ágil',
     tagColor: 'text-amber-300 bg-amber-950/40 border-amber-500/30',
     borderHover: 'hover:border-amber-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(251,191,36,0.25)]',
@@ -80,8 +80,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'html5',
     name: 'HTML5 Semântico',
-    description: 'Estruturação acessível e SEO',
-    category: 'Arquitetura Web',
+    description: 'Fácil para o Google entender o seu negócio',
+    category: 'Organização Limpa',
     tagColor: 'text-orange-400 bg-orange-950/40 border-orange-500/30',
     borderHover: 'hover:border-orange-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(249,115,22,0.25)]',
@@ -90,8 +90,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'tailwind',
     name: 'Tailwind CSS',
-    description: 'Estilização performática e responsiva',
-    category: 'Design System',
+    description: 'Design bonito e adaptado para celular',
+    category: 'Visual Sob Medida',
     tagColor: 'text-sky-400 bg-sky-950/40 border-sky-500/30',
     borderHover: 'hover:border-sky-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(56,189,248,0.25)]',
@@ -100,8 +100,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'vite',
     name: 'Vite',
-    description: 'Build veloz e empacotamento otimizado',
-    category: 'Bundler Moderno',
+    description: 'Abre rápido no 4G mesmo em sinal fraco',
+    category: 'Velocidade Máxima',
     tagColor: 'text-purple-400 bg-purple-950/40 border-purple-500/30',
     borderHover: 'hover:border-purple-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(168,85,247,0.25)]',
@@ -110,8 +110,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'seo-tecnico',
     name: 'SEO Técnico',
-    description: 'Schema.org, metadados e indexação',
-    category: 'Visibilidade no Google',
+    description: 'Preparado para quem busca no Google encontrar',
+    category: 'Busca Orgânica',
     tagColor: 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]',
@@ -119,9 +119,9 @@ const TECHNOLOGIES: TechItem[] = [
   },
   {
     id: 'whatsapp-integracao',
-    name: 'Integração com WhatsApp',
-    description: 'Links diretos, CTAs contextuais e mensagens personalizadas',
-    category: 'Conversão Comercial',
+    name: 'Integração WhatsApp',
+    description: 'O cliente clica e cai falando direto com você',
+    category: 'Contato Imediato',
     tagColor: 'text-emerald-300 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(37,211,102,0.25)]',
@@ -173,12 +173,12 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
 
             {/* Headline Oficial */}
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight">
-              Tecnologias modernas aplicadas a cada entrega
+              Tecnologia moderna que faz o seu site abrir rápido e funcionar sempre
             </h3>
 
             {/* Parágrafo de Apresentação Técnica */}
             <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-normal">
-              Utilizamos uma base técnica sólida de desenvolvimento frontend combinando tecnologias modernas como <strong className="text-white font-medium">React</strong>, <strong className="text-white font-medium">TypeScript</strong>, <strong className="text-white font-medium">Vite</strong> e <strong className="text-white font-medium">Tailwind CSS</strong> para entregar código limpo, interfaces fluidas e alta fidelidade visual, sem dependência de plataformas lentas ou templates engessados.
+              Em vez de plataformas pesadas e cheias de plugins que deixam tudo lento, construímos o seu site com as ferramentas mais modernas da internet. O resultado é um site leve, seguro, que abre rápido no celular e não dá dor de cabeça.
             </p>
           </div>
 
@@ -190,10 +190,10 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
-                <span className="font-semibold text-white">Frontend moderno e responsivo</span>
+                <span className="font-semibold text-white">Rápido no celular e computador</span>
               </div>
               <span className="hidden sm:inline text-slate-600" aria-hidden="true">•</span>
-              <span className="text-slate-400 text-[11px]">Código limpo e interfaces ágeis</span>
+              <span className="text-slate-400 text-[11px]">Sem travamentos nem lentidão</span>
             </div>
           </div>
         </div>

@@ -14,43 +14,43 @@ export const FaqSection: React.FC = () => {
       id: 'faq-1',
       question: 'Preciso ter todo o conteúdo pronto?',
       answer:
-        'Não. Na conversa inicial e na reunião de materiais, organizamos juntos o que já existe — fotos, textos, serviços e identidade. Se faltar alguma coisa, alinhamos o que é essencial para o site ir ao ar com qualidade.',
+        'Não. Na conversa inicial, organizamos juntos o que você já tem: fotos do espaço, lista de serviços, preços e contatos. Se faltar algo, orientamos o que é indispensável para o site ir ao ar com qualidade.',
     },
     {
       id: 'faq-2',
       question: 'Quanto tempo leva para o site ficar pronto?',
       answer:
-        'Depende do formato (landing page ou site institucional) e de quanto tempo leva para reunir conteúdos e fotos. O processo é pensado para ser rápido, em dias em vez de meses — sem um prazo absoluto, porque cada projeto tem o próprio ritmo de revisão.',
+        'Depende do formato (site de uma página ou site completo com várias seções) e do tempo para reunir fotos e informações. Trabalhamos para colocar no ar em dias, não em meses — sempre alinhando o ritmo de revisão com você.',
     },
     {
       id: 'faq-3',
       question: 'Quanto custa e como é o pagamento?',
       answer:
-        'Cada projeto tem seu escopo específico, então o valor é definido em um orçamento sob medida após entendermos seu modelo de negócio e necessidades. Para o pagamento, oferecemos 4 modalidades flexíveis: 1) 50% de entrada no início e 50% na entrega e aprovação final (via PIX); 2) 20% de desconto para pagamento integral à vista no fechamento; 3) Até 5x sem juros no cartão de crédito (1 entrada + 4 parcelas fixas); ou 4) Parcelamento estendido de 6x até 12x no cartão de crédito (com repasse das taxas de juros da operadora). Fale com a gente pelo WhatsApp para receber sua proposta detalhada.',
+        'Cada projeto recebe um orçamento sob medida após entendermos o que o seu negócio precisa. O pagamento é facilitado: 1) 50% de entrada no início e 50% na entrega e aprovação final (via PIX); 2) 20% de desconto para pagamento integral à vista no fechamento; 3) Até 5x sem juros no cartão de crédito (1 entrada + 4 parcelas fixas); ou 4) Parcelamento estendido de 6x até 12x no cartão de crédito (com repasse das taxas da maquininha). Fale com a gente pelo WhatsApp para receber sua proposta detalhada.',
     },
     {
       id: 'faq-4',
       question: 'A publicação e a hospedagem estão inclusas?',
       answer:
-        'A publicação do site no endereço combinado faz parte do projeto. Hospedagem e domínio são serviços de terceiros, contratados e pagos por você diretamente no provedor de sua escolha (por exemplo, Netlify, Cloudflare ou uma empresa de hospedagem), e a ēloSites não revende esses serviços. Configurar a publicação e conectar o domínio, quando previstos no escopo aprovado, fazem parte do projeto; migrações fora desse escopo podem ser orçadas à parte.',
+        'A publicação do site no ar faz parte do projeto. O site fica hospedado em servidor moderno e seguro na internet. Se você quiser um endereço próprio (.com.br), o registro fica no seu nome e é pago à parte diretamente ao provedor.',
     },
     {
       id: 'faq-5',
-      question: 'O domínio personalizado está incluso?',
+      question: 'O domínio próprio (.com.br) está incluso?',
       answer:
-        'Não. O registro do domínio (.com.br, .com etc.) é pago por você ao provedor de sua escolha e fica sempre na sua conta; a ēloSites não fica dona do domínio. Recomendamos fortemente contratar um domínio próprio: ele passa mais credibilidade, é mais fácil de lembrar e divulgar, e continua seu mesmo que o site mude de hospedagem. Se quiser, indicamos opções de provedores.',
+        'Não. O registro de um endereço próprio (como seunegocio.com.br) custa cerca de R$ 40 por ano e é pago por você diretamente ao Registro.br para que fique 100% no seu nome. Nós te ajudamos a configurar tudo para funcionar perfeitamente.',
     },
     {
       id: 'faq-6',
       question: 'Depois do projeto eu continuo tendo controle do site?',
       answer:
-        'Sim. O site é seu: após a confirmação do pagamento final, o conteúdo, o layout e o código desenvolvidos para o seu projeto passam a ser seus. Quando você quiser, pode pedir a transferência do repositório e das informações de publicação para a sua conta. O domínio e a hospedagem ficam sempre no seu nome.',
+        'Sim. O site é seu: todo o conteúdo, visual e arquivos desenvolvidos pertencem ao seu negócio. Você pode solicitar os arquivos e acessos a qualquer momento.',
     },
     {
       id: 'faq-7',
       question: 'Existe manutenção mensal?',
       answer:
-        'Sim, e é opcional — o valor é definido em 20% sobre o valor do orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 4 solicitações simples por mês (textos, imagens, contatos, links, pequenos ajustes), sem acúmulo entre meses. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. Não inclui domínio nem hospedagem em outro provedor.',
+        'A manutenção mensal é opcional (20% sobre o valor do orçamento do seu projeto). Cobre até 4 pedidos simples por mês (trocar fotos, atualizar preços, telefones ou textos). Não tem mensalidade obrigatória para manter o site no ar.',
     },
   ];
 

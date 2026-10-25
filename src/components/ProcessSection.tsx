@@ -65,28 +65,28 @@ export const ProcessSection: React.FC = () => {
       number: '01',
       title: 'Conversa inicial',
       description:
-        'Conversa inicial sobre o negócio: o que você oferece, para quem e o que o site precisa gerar.',
+        'Entendemos seu negócio, o que você oferece, quem é seu cliente e como o site vai te ajudar a receber contatos.',
       icon: MessageSquare,
     },
     {
       number: '02',
-      title: 'Conteúdos e identidade',
+      title: 'Conteúdos e fotos reais',
       description:
-        'Reunião de conteúdos, fotos e identidade. Organizamos o material para o site falar a língua do seu cliente.',
+        'Reunimos fotos do seu espaço e trabalhos, horários de atendimento, endereço e tudo o que o seu cliente precisa saber.',
       icon: Layers,
     },
     {
       number: '03',
-      title: 'Desenvolvimento e revisão',
+      title: 'Criação e revisão atenta',
       description:
-        'Desenvolvimento rápido com auxílio de IA e revisão humana em cada detalhe. Nada vai ao ar sem olhar atento.',
+        'Montamos o site com tecnologia moderna, testamos em celulares diferentes e revisamos cada detalhe com você antes de publicar.',
       icon: Code2,
     },
     {
       number: '04',
-      title: 'Site publicado',
+      title: 'Seu site no ar',
       description:
-        'Site publicado na URL do Netlify — essa é a entrega padrão. Domínio personalizado não está incluso. Hospedagem ou migração para outro provedor é orçada à parte.',
+        'Publicado em endereço estável na internet e pronto para receber clientes. Se quiser um domínio próprio (.com.br), o registro fica no seu nome e é pago à parte.',
       icon: Globe2,
     },
   ];

@@ -456,12 +456,12 @@ export default function App() {
     const isHome = currentScreen === 'home' || currentScreen === 'inicio';
 
     const pageTitle = isHome
-      ? 'ēloSites — Criação de Sites Profissionais com SEO Técnico e Conversão'
-      : `${meta.title} | ēloSites — Sites Profissionais com SEO Técnico`;
+      ? 'ēloSites | Sites que colocam o seu negócio no Google e no WhatsApp'
+      : `${meta.title} | ēloSites`;
 
     const pageDesc = isHome
-      ? 'Criação de sites profissionais e landing pages com SEO técnico e foco em conversão para pequenos negócios e profissionais liberais. Alta performance e código limpo.'
-      : `${meta.description} Desenvolvimento de sites institucionais e landing pages de alta conversão pela ēloSites.`;
+      ? 'Criação de sites sob medida para profissionais liberais e pequenos negócios. Abre rápido no celular, aparece no Google e leva o cliente direto para o seu WhatsApp.'
+      : `${meta.description} ēloSites: sites que colocam o seu negócio no Google e no WhatsApp.`;
 
     const canonicalUrl = currentScreen === 'home'
       ? 'https://elosites.ia.br/'

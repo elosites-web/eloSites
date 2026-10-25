@@ -39,101 +39,101 @@ interface SpecialtyItem {
 const SPECIALTIES: SpecialtyItem[] = [
   {
     id: 'desenvolvimento-web',
-    category: 'Desenvolvimento Web',
-    badge: 'Arquitetura Frontend',
+    category: 'Criação de Sites',
+    badge: 'Sob Medida',
     icon: Code2,
-    highlight: 'Interfaces sob medida e páginas construídas para velocidade e clareza comercial.',
+    highlight: 'Páginas pensadas para apresentar o seu trabalho com clareza e levar o cliente direto ao WhatsApp.',
     items: [
-      'Landing pages com foco em conversão e jornada direta ao WhatsApp',
-      'Sites institucionais e páginas profissionais para apresentação de serviços',
-      'Interfaces responsivas com fluidez para celular, tablet e desktop',
-      'Componentes e experiências de frontend personalizados para cada negócio',
+      'Site de uma página focado em explicar seu serviço e gerar contatos',
+      'Site completo com catálogo de serviços, fotos reais e localização',
+      'Visual perfeito no celular, no tablet e no computador',
+      'Feito sob medida para você, sem templates copiados',
     ],
     technicalClarification:
-      'Código autoral desenvolvido com componentes reutilizáveis, dispensando templates engessados ou construtores de arrastar-e-soltar que comprometem o desempenho.',
+      'Desenvolvimento próprio, leve e limpo, sem temas genéricos ou ferramentas pesadas que deixam o carregamento lento.',
     tagColor: 'from-blue-500/20 to-cyan-500/10 text-cyan-300 border-cyan-500/30',
   },
   {
     id: 'ui-ux-design',
-    category: 'UI/UX e Design de Interfaces',
-    badge: 'Design Prático',
+    category: 'Visual e Facilidade de Uso',
+    badge: 'Fácil de Navegar',
     icon: Layout,
-    highlight: 'Estruturação visual elegante pensada para leitura rápida e navegação intuitiva.',
+    highlight: 'Organização visual limpa para o cliente ler sem esforço e encontrar tudo rápido.',
     items: [
-      'Hierarquia visual estratégica e organização racional de todo o conteúdo',
-      'Navegação clara com menus, botões e pontos de contato evidentes',
-      'Layout responsivo adaptado com precisão a qualquer proporção de tela',
-      'Microinterações, transições suaves e feedback visual adequados à experiência',
+      'Informações organizadas na ordem certa para o visitante entender',
+      'Menus e botões de contato sempre visíveis e fáceis de clicar',
+      'Adaptação automática para qualquer tamanho de tela de celular',
+      'Transições suaves e visual moderno que passa credibilidade',
     ],
     technicalClarification:
-      'Foco em design prático de interface e arquitetura de informação clara para valorizar os serviços apresentados e facilitar a decisão de contato do visitante.',
+      'Design focado em valorizar seus serviços e deixar o caminho até a conversa no WhatsApp o mais simples possível.',
     tagColor: 'from-purple-500/20 to-indigo-500/10 text-purple-300 border-purple-500/30',
   },
   {
     id: 'funcionalidades-interatividade',
-    category: 'Funcionalidades e Interatividade',
-    badge: 'Engenharia de Frontend',
+    category: 'Recursos e Botões Práticos',
+    badge: 'Praticidade',
     icon: Sparkles,
-    highlight: 'Recursos dinâmicos no navegador que tornam a navegação envolvente e prática.',
+    highlight: 'Funções práticas na página que facilitam o contato e tiram dúvidas do cliente.',
     items: [
-      'Formulários de contato e briefing com validação instantânea no navegador',
-      'Integração direta com WhatsApp e mensagens pré-formatadas personalizadas',
-      'Simuladores e calculadoras de condições executadas diretamente no cliente',
-      'Carrosséis fluidos, galerias de fotos, modais de zoom e cartões interativos',
+      'Botões para chamar no WhatsApp com mensagens iniciais prontas',
+      'Formulários simples para o cliente mandar mensagem ou pedir proposta',
+      'Simuladores interativos de pagamento e condições financeiras',
+      'Galeria com fotos reais do seu trabalho com ampliação ao clicar',
     ],
     technicalClarification:
-      'Formulários com validação no navegador e mensagens personalizadas para facilitar o contato pelo WhatsApp, proporcionando agilidade e uma experiência fluida para o cliente.',
+      'Recursos rápidos que funcionam direto no navegador do celular, com agilidade e sem travamentos.',
     tagColor: 'from-emerald-500/20 to-teal-500/10 text-emerald-300 border-emerald-500/30',
   },
   {
     id: 'seo-tecnico-performance',
-    category: 'SEO Técnico e Performance',
-    badge: 'Fundamentos de Indexação',
+    category: 'Preparado para o Google',
+    badge: 'Buscas Locais',
     icon: Search,
-    highlight: 'Preparação técnica de código para que os buscadores compreendam seu negócio.',
+    highlight: 'Estruturação técnica para ajudar o seu negócio a ser encontrado nas pesquisas do Google.',
     items: [
-      'HTML semântico rigoroso e hierarquia clara de títulos (H1, H2, H3)',
-      'Títulos de página descritivos, meta descriptions e metadados essenciais',
-      'URLs canônicas, Open Graph e cartões para compartilhamento social',
-      'Dados estruturados Schema.org fiéis ao conteúdo visível do negócio',
-      'Otimização de ativos, imagens em formatos modernos (WebP) e lazy loading',
-      'Revisão técnica de links internos e conformidade de indexabilidade',
+      'Títulos e descrições otimizados com os serviços que você oferece',
+      'Estrutura correta para os buscadores entenderem sua cidade e atuação',
+      'Cartões bonitos para quando seu link for compartilhado no WhatsApp',
+      'Fotos leves em formato moderno (WebP) que abrem sem demora no 4G',
+      'Página rápida para o cliente não desistir antes de carregar',
+      'Endereço e dados sincronizados com o seu Perfil no Google',
     ],
     technicalClarification:
-      'Implementação de boas práticas estruturais e semânticas para facilitar a leitura e indexação pelos mecanismos de busca, com transparência e critérios técnicos.',
+      'Boas práticas estruturais para facilitar a leitura e indexação pelos mecanismos de busca, com transparência.',
     tagColor: 'from-amber-500/20 to-yellow-500/10 text-amber-300 border-amber-500/30',
   },
   {
     id: 'integracoes-mensuracao',
-    category: 'Integrações e Mensuração',
-    badge: 'Métricas & Ferramentas',
+    category: 'Acompanhamento e Anúncios',
+    badge: 'Pronto para Crescer',
     icon: BarChart3,
-    highlight: 'Conexão com ferramentas essenciais de tráfego, análise e comunicação.',
+    highlight: 'Conexão preparada para ferramentas de anúncios e contagem de acessos.',
     items: [
-      'Google Analytics 4 (GA4) para monitoramento de acessos e comportamento',
-      'Google Tag Manager (GTM) para gestão centralizada de tags e eventos',
-      'Meta Pixel para suporte a campanhas no Instagram e Facebook Ads',
-      'Canal de WhatsApp parametrizado com gatilhos de interesse por seção',
+      'Pronto para Google Analytics 4 (para ver quantas pessoas visitam o site)',
+      'Pronto para Meta Pixel (se você for anunciar no Instagram e Facebook)',
+      'Links de WhatsApp identificados para saber de onde o cliente veio',
+      'Estrutura preparada para tráfego pago quando você quiser anunciar',
     ],
     technicalClarification:
-      'A ativação de tags requer os identificadores fornecidos pelo cliente e segue boas práticas de privacidade e aviso de consentimento quando dados de navegação são coletados.',
+      'Ferramentas configuradas com os códigos fornecidos por você ou pelo gestor de tráfego, respeitando a privacidade dos visitantes.',
     tagColor: 'from-sky-500/20 to-blue-500/10 text-sky-300 border-sky-500/30',
   },
   {
     id: 'tecnologias-stack',
-    category: 'Tecnologias & Stack Frontend',
-    badge: 'Stack Moderna',
+    category: 'Base Técnica Moderna',
+    badge: 'Feito para Durar',
     icon: Cpu,
-    highlight: 'Base tecnológica atual, mantida com código limpo e componentes modulares.',
+    highlight: 'Construído com tecnologia atual que garante estabilidade e rapidez.',
     items: [
-      'React & TypeScript para interfaces sólidas, seguras e bem tipadas',
-      'JavaScript moderno (ESNext), HTML5 semântico e CSS estruturado',
-      'Tailwind CSS para estilização consistente e design responsivo leve',
-      'Vite como bundler de última geração com carregamento ultrarrápido',
-      'Motion e Lucide Icons para microinterações refinadas quando pertinentes',
+      'Código moderno que não quebra e não fica lento com o tempo',
+      'Sem plugins pesados ou plataformas lentas que travam o celular',
+      'Visual leve e consistente em qualquer tamanho de tela',
+      'Carregamento rápido até em conexões 4G no telefone',
+      'Segurança e tranquilidade para o seu negócio',
     ],
     technicalClarification:
-      'Seleção técnica orientada às reais necessidades do projeto; cada solução adota o conjunto exato de ferramentas que assegura velocidade, clareza e manutenção.',
+      'A base técnica ideal para o seu projeto, garantindo um site leve, ágil e fácil de manter.',
     tagColor: 'from-indigo-500/20 to-violet-500/10 text-indigo-300 border-indigo-500/30',
   },
 ];
@@ -200,18 +200,18 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-500/30 text-cyan-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
-              <span>Soluções Web & Especialidades</span>
+              <span>Soluções Web & Diferenciais</span>
             </div>
 
             <SplitLines
               as="h2"
               id="specialties-heading"
-              text="Tecnologia, design e estratégia para transformar sua presença digital."
+              text="Como criamos o site ideal para o seu negócio"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              A <strong>ēloSites</strong> desenvolve landing pages, sites institucionais e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">experiências web interativas</span>, combinando interfaces responsivas, navegação intuitiva, funcionalidades de frontend e SEO técnico para apresentar negócios com clareza e facilitar o contato com seus clientes.
+              A <strong>ēloSites</strong> desenvolve sites de uma página, sites completos e projetos sob medida para pequenos negócios e profissionais liberais. Tudo pensado para valorizar seus serviços e levar o cliente até o seu WhatsApp.
             </p>
           </div>
         </BiReveal>

@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              A ēloSites é um estúdio de desenvolvimento web especializado em landing pages e sites institucionais responsivos. Criamos interfaces personalizadas com tecnologias modernas, funcionalidades interativas, integração com WhatsApp e SEO técnico, com foco em clareza, experiência de navegação e objetivos comerciais.
+              A ēloSites cria sites sob medida para profissionais liberais e pequenas empresas. Desenvolvemos sites de uma página e sites completos, rápidos no celular, preparados para o Google e com botão direto para o seu WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a
@@ -90,7 +90,7 @@ export const Footer: React.FC<FooterProps> = ({
                 className="flex-1 min-w-0 inline-flex items-center justify-center text-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-300/40 text-white shadow-lg shadow-emerald-950/40 hover:shadow-[0_0_22px_rgba(37,211,102,0.65)] active:scale-[0.97] transition-transform duration-150 text-[11px] sm:text-xs font-semibold tracking-wide cursor-pointer"
               >
                 <WhatsAppIcon className="w-4 h-4 text-white shrink-0" />
-                <span className="text-white drop-shadow-sm text-center truncate sm:whitespace-normal">Falar no WhatsApp</span>
+                <span className="text-white drop-shadow-sm text-center truncate sm:whitespace-normal">Chamar no WhatsApp</span>
               </a>
 
               {SITE_CONFIG.email && (
@@ -212,14 +212,14 @@ export const Footer: React.FC<FooterProps> = ({
               <span className="text-cyan-400 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <p className="text-[13px] text-slate-300/90 leading-relaxed">
-              Desenvolvimento de landing pages focadas em conversão, sites institucionais responsivos, componentes interativos de frontend, SEO técnico e integrações com WhatsApp e ferramentas de mensuração.
+              Desenvolvimento de sites de uma página, sites completos com catálogo de serviços, fotos reais do seu trabalho, endereço no mapa e botão direto para o WhatsApp.
             </p>
             <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-2">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
               </span>
-              <span>Engenharia frontend moderna • Código limpo e sob medida</span>
+              <span>Tecnologia moderna • Rápido no celular e sob medida</span>
             </div>
           </div>
         </div>

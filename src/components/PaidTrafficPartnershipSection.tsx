@@ -1,10 +1,9 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SplitLines } from './SplitLines';
 import { whatsappUrl } from '../types';
 import { shouldReduceMedia } from '../mediaPrefs';
-import { getDynamicCardVariants } from '../motionVariants';
 import {
   MessageSquareQuote,
   Target,
@@ -15,6 +14,7 @@ import {
   Info,
   ArrowRight,
   Sparkles,
+  Flame,
 } from 'lucide-react';
 
 import { BiReveal } from './BiReveal';
@@ -30,49 +30,39 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
 
   const PARTNERSHIP_PREFILLED_MESSAGE =
-    'Olá! Vim pelo site da ēloSites e gostaria de conhecer a condição especial da parceria de tráfego pago. Gostaria de receber mais informações.';
+    'Olá! Vim pelo site da ēloSites e gostaria de conhecer a condição especial da parceria de tráfego pago com o Thomaz (TrueThomaz.BM).';
   const partnershipWhatsappUrl = whatsappUrl(PARTNERSHIP_PREFILLED_MESSAGE);
 
   const benefits = [
     {
-      id: 'conversas',
+      id: 'anuncios',
       icon: MessageSquareQuote,
-      tag: 'Meta Ads & WhatsApp',
-      title: 'Anúncios que geram conversas',
+      tag: 'Google & Meta Ads',
+      title: 'Anúncios no Google e nas redes sociais',
       description:
-        'Campanhas no Meta Ads (Facebook e Instagram) planejadas conforme o negócio, o público e a região, com foco em gerar contatos e oportunidades pelo WhatsApp.',
+        'Campanhas no Google e na Meta (Instagram e Facebook) que levam a pessoa certa direto para o seu WhatsApp no momento em que ela procura seu serviço.',
       accent: 'from-blue-600/30 to-indigo-600/20',
       iconColor: 'text-blue-400',
     },
     {
-      id: 'criativos',
+      id: 'testes',
       icon: Target,
-      tag: 'Performance & Dados',
-      title: 'Criativos, testes e otimização',
+      tag: 'Fotos reais & Região',
+      title: 'Teste de anúncios com fotos reais',
       description:
-        'Desenvolvimento e teste de diferentes anúncios e textos, análise dos dados e ajustes conforme o desempenho das campanhas.',
+        'Teste prático de anúncios com fotos reais do seu trabalho para descobrir o que mais chama a atenção e gera contatos na sua cidade ou bairro.',
       accent: 'from-blue-600/30 to-sky-600/20',
       iconColor: 'text-sky-400',
     },
     {
-      id: 'funil',
+      id: 'consultoria',
       icon: TrendingUp,
-      tag: 'Estratégia Comercial',
-      title: 'Consultoria comercial e funil de vendas',
+      tag: 'Processo Comercial',
+      title: 'Consultoria comercial e roteiros',
       description:
-        'Apoio para organizar o processo comercial, estruturar abordagens, qualificar contatos e melhorar a condução das conversas com potenciais clientes.',
+        'Organização do atendimento, roteiros simples de resposta para o WhatsApp e acompanhamento de quem chamou para não perder nenhuma oportunidade.',
       accent: 'from-indigo-600/30 to-blue-600/20',
       iconColor: 'text-indigo-400',
-    },
-    {
-      id: 'treinamento',
-      icon: Users,
-      tag: 'Capacitação & Fechamento',
-      title: 'Treinamento e acompanhamento',
-      description:
-        'Orientação prática para quem atende os contatos, com foco em melhorar o atendimento, a abordagem e as oportunidades de fechamento.',
-      accent: 'from-emerald-600/30 to-teal-600/20',
-      iconColor: 'text-emerald-400',
     },
   ];
 
@@ -99,15 +89,12 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
 
               <SplitLines
                 as="h2"
-                text="Seu site é o começo. Vamos atrair clientes?"
+                text="Site é a vitrine. Agora, como o cliente chega até ela?"
                 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.16] text-balance"
               />
 
               <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed font-normal max-w-2xl mx-auto">
-                Ter um site profissional é um passo importante para fortalecer sua presença digital.
-                Com uma <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">estratégia de tráfego pago</span> e um processo comercial bem estruturado, seu
-                negócio pode alcançar novas pessoas, gerar oportunidades e transformar conversas em
-                possíveis vendas.
+                Indicamos o Thomaz (TrueThomaz.BM) para você anunciar no Google e na Meta (Instagram e Facebook), com o cliente caindo direto no seu WhatsApp.
               </p>
             </div>
           </BiReveal>
@@ -122,13 +109,13 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
                     <span>Condição especial para clientes ēloSites</span>
                   </div>
                   <h3 className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
-                    Tráfego pago no Meta Ads combinado com acompanhamento comercial
+                    Anúncios no Google e Meta combinados com acompanhamento comercial
                   </h3>
                   <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    Clientes que desenvolvem seu site com a <strong className="text-white font-semibold">ēloSites</strong> têm acesso a uma condição comercial diferenciada nos serviços do nosso parceiro recomendado, <strong className="text-white font-semibold">Thomaz</strong>, da <strong className="text-white font-semibold">TrueThomaz.BM</strong>.
+                    Clientes que desenvolvem seu site com a <strong className="text-white font-semibold">ēloSites</strong> têm acesso a uma condição especial nos serviços do nosso parceiro recomendado, <strong className="text-white font-semibold">Thomaz</strong>, da <strong className="text-white font-semibold">TrueThomaz.BM</strong>.
                   </p>
                   <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                    A proposta vai além de criar anúncios: combina gestão de tráfego pago com orientação comercial para ajudar o negócio a aproveitar melhor os contatos recebidos.
+                    A proposta vai além de criar anúncios: prepara seu atendimento no WhatsApp para aproveitar cada contato e transformar conversas em fechamentos.
                   </p>
                 </div>
 
@@ -150,16 +137,39 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
             </div>
           </BiReveal>
 
-          {/* Grid dos 4 Benefícios e Entregas com BiReveal alternado */}
+          {/* Card OURO Destacado: Treinamento do time para fechar vendas no WhatsApp */}
+          <BiReveal direction="up" delay={120}>
+            <div className="glass-panel bracket-panel rounded-2xl p-6 sm:p-8 border-2 border-amber-400/50 bg-gradient-to-br from-[#1c1305]/80 via-[#0d1226]/90 to-[#090e23] relative shadow-[0_0_35px_rgba(245,158,11,0.2)]">
+              <div className="flex flex-col sm:flex-row items-start gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/30 to-yellow-600/20 border border-amber-400/50 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                  <Flame className="w-7 h-7 text-amber-400" />
+                </div>
+                <div className="space-y-2.5">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-400/40 text-amber-300 text-xs font-mono font-semibold uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>DIFERENCIAL DE OURO</span>
+                  </div>
+                  <h3 className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    Treinamento do seu time para fechar vendas no WhatsApp
+                  </h3>
+                  <p className="text-sm sm:text-base text-amber-100/90 leading-relaxed">
+                    Não adianta atrair cliente se a mensagem no WhatsApp fica sem resposta ou se a equipe não sabe conduzir a conversa até o fechamento. O Thomaz treina quem atende para responder rápido, tirar dúvidas com segurança e transformar conversas em clientes pagantes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </BiReveal>
+
+          {/* Grid dos 3 Benefícios e Entregas */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 px-1">
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400">
-                O que entra no acompanhamento estratégico:
+                O que entra no acompanhamento com o Thomaz:
               </span>
             </div>
 
             <div
-              className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 benefits-list scroll-perf-list scroll-snap-y-container card-list-container"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 benefits-list scroll-perf-list scroll-snap-y-container card-list-container"
               style={{
                 scrollSnapType: 'y mandatory',
                 scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
@@ -210,7 +220,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
 
           {/* Apoio Complementar e Boas Práticas com BiReveal */}
           <BiReveal direction="up" delay={150}>
-            <div className="rounded-2xl p-4 sm:p-5 bg-[#090E23] border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-300">
+            <div className="glass-panel bracket-panel rounded-2xl p-4 sm:p-5 bg-[#090E23] border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-300">
               <div className="flex items-start sm:items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                   <ShieldCheck className="w-4 h-4 text-blue-400" />
@@ -261,14 +271,14 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
                   <div className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                     <p className="leading-relaxed">
-                      <strong className="text-white font-medium">R$ 500/mês durante os primeiros três meses</strong>, conforme a condição comercial inicialmente alinhada com o parceiro.
+                      <strong className="text-white font-medium">R$ 500 por mês nos 3 primeiros meses</strong> como condição de entrada negociada para clientes ēloSites.
                     </p>
                   </div>
 
                   <div className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <p className="leading-relaxed">
-                      Após esse período, o valor integral será tratado diretamente com o Thomaz, considerando a maturação das campanhas, sua evolução e as condições comerciais acordadas.
+                      Após os 3 meses, a continuidade e os valores são alinhados diretamente com o Thomaz conforme a evolução do trabalho.
                     </p>
                   </div>
                 </div>
@@ -280,7 +290,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
                     <span>Investimento em mídia<span className="hidden lg:inline">:</span></span>
                   </div>
                   <p className="leading-relaxed pl-6 lg:pl-0">
-                    O investimento em anúncios é separado da mensalidade do serviço e é pago pelo próprio cliente diretamente à Meta.
+                    O valor pago aos canais de anúncio (Google/Meta) é definido por você e pago diretamente às plataformas. Não está incluso na mensalidade do serviço.
                   </p>
                 </div>
 
@@ -302,7 +312,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
 
                 {/* Nota de Confiança e Transparência */}
                 <div className="pt-2 text-center text-xs text-slate-400/90 leading-relaxed max-w-2xl mx-auto border-t border-white/[0.04]">
-                  A gestão é contratada diretamente com o profissional parceiro. Os objetivos, o investimento em anúncios e as condições do serviço são alinhados diretamente com ele, de acordo com as necessidades de cada negócio.
+                  A contratação e os pagamentos são feitos diretamente com o Thomaz (TrueThomaz.BM). A ēloSites apenas indica o parceiro por confiar no trabalho dele.
                 </div>
               </div>
             </div>
@@ -312,3 +322,4 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
     </section>
   );
 };
+

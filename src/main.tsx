@@ -5,6 +5,7 @@ import App from './App.tsx';
 import { ToastProvider } from './components/Toast';
 import { ScrollDirectionProvider } from './useScrollDirection';
 import { getMotionTier, isInAppBrowser } from './mediaPrefs';
+import { ThemeProvider } from './themeContext';
 import './index.css';
 
 // Expõe o tier de movimento ao CSS sem sniffing de navegador espalhado pelo código.
@@ -16,11 +17,13 @@ if (typeof document !== 'undefined') {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ScrollDirectionProvider>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </ScrollDirectionProvider>
+    <ThemeProvider>
+      <ScrollDirectionProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </ScrollDirectionProvider>
+    </ThemeProvider>
   </StrictMode>,
 );
 

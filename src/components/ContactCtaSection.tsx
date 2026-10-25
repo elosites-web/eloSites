@@ -32,14 +32,14 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
           <BiReveal direction="up" delay={100}>
             <SplitLines
               as="h2"
-              text="Vamos criar o site do seu negócio?"
+              text="Vamos conversar no WhatsApp?"
               className="font-display text-3xl sm:text-5xl lg:text-[3.25rem] font-bold tracking-[-0.035em] text-white leading-[1.12] text-balance"
             />
           </BiReveal>
 
           <BiReveal direction="up" delay={150}>
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-              Conte sobre o seu trabalho pelo WhatsApp. Conversamos sobre o formato, o conteúdo e te enviamos um orçamento específico para o seu projeto.
+              Conte sobre o seu trabalho. Conversamos sobre o formato, o conteúdo e te passamos um orçamento específico para o seu negócio.
             </p>
           </BiReveal>
 
@@ -54,7 +54,7 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
                   className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-3 px-6 sm:px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/30 shadow-lg shadow-emerald-950/40 group transition-all"
                 >
                   <WhatsAppIcon className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
-                  <span className="text-center">Falar no WhatsApp</span>
+                  <span className="text-center">Chamar no WhatsApp</span>
                 </a>
 
                 <button
@@ -69,7 +69,7 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
                   }}
                   className="cta-primary w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-base font-bold text-white shadow-lg cursor-pointer"
                 >
-                  <span className="text-center">Preencher Briefing do Projeto</span>
+                  <span className="text-center">Contar sobre o meu negócio</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

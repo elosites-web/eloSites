@@ -43,69 +43,69 @@ export interface PortfolioProjectData {
 export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   {
     id: 'jv-salvaia',
-    badge: 'Landing page responsiva',
+    badge: 'Site de uma página',
     status: 'Publicado & Ativo',
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
     challenge:
-      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Necessitava de uma landing page ágil para apresentar suas modalidades e conduzir interessados ao contato direto no WhatsApp.',
+      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Precisava de uma página rápida para apresentar suas modalidades e levar os interessados direto para o seu WhatsApp.',
     solution:
-      'Desenvolvimento de landing page responsiva, com chamadas de WhatsApp parametrizadas por modalidade de treino, galeria de resultados, apresentação de benefícios e prova social em destaque.',
-    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Foco em Conversão'],
+      'Site de uma página com carregamento rápido no celular, botões de WhatsApp personalizados para cada modalidade, fotos de resultados e depoimentos reais em destaque.',
+    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Direto no WhatsApp'],
     urlLabel: 'jvsalvaiapersonal.netlify.app',
     href: 'https://jvsalvaiapersonal.netlify.app',
     desktopImage: '/portifolio-jvsalvaia-desktop.webp',
     mobileImage: '/portifolio-jvsalvaia-mobile.webp',
     features: [
-      'Gatilho direto para WhatsApp com mensagem personalizada para cada plano',
-      'Interface responsiva adaptada para smartphone, tablet e desktop',
-      'Otimização de carregamento de imagens e fundamentos de SEO técnico',
+      'Botão direto para o WhatsApp com mensagem pronta para cada plano',
+      'Funciona perfeito no celular, tablet e computador',
+      'Fotos leves que abrem rápido e preparado para o Google',
     ],
-    resultsNote: 'Leads direcionados com mensagem específica do serviço de interesse.',
+    resultsNote: 'Contatos organizados com mensagem específica do serviço de interesse.',
   },
   {
     id: 'toledo-seguranca',
-    badge: 'Site institucional corporativo',
+    badge: 'Site completo',
     status: 'Publicado & Ativo',
     title: 'Toledo Segurança',
     category: 'institutional',
     challenge:
-      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de presença institucional clara para transmitir autoridade e receber solicitações de cotação.',
+      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de um site profissional para passar confiança a empresas e condomínios e receber pedidos de orçamento.',
     solution:
-      'Site institucional com paleta corporativa dark & gold, estruturação detalhada dos serviços prestados, formulário direto de cotação empresarial e canal de recrutamento integrado ao WhatsApp.',
-    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'B2B & Condomínios'],
+      'Site completo com apresentação detalhada dos serviços, fotos da equipe e estrutura, formulário de contato e botão para orçamento comercial no WhatsApp.',
+    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Condomínios & Empresas'],
     urlLabel: 'toledoseguranca.netlify.app',
     href: 'https://toledoseguranca.netlify.app/',
     desktopImage: '/portifolio-toledoseguranca-desktop.webp',
     mobileImage: '/portifolio-toledoseguranca-mobile.webp',
     features: [
-      'Apresentação institucional estruturada com foco em credibilidade',
+      'Apresentação profissional pensada para passar credibilidade',
       'Seções organizadas para serviços de eventos, condomínios e empresas',
-      'Fluxo duplo de atendimento no WhatsApp (Orçamento comercial e Banco de talentos)',
+      'Canais de atendimento no WhatsApp para cotações e vagas de trabalho',
     ],
-    resultsNote: 'Presença institucional consolidada para apresentação corporativa e atendimento ágil de cotações.',
+    resultsNote: 'Presença profissional consolidada para atender condomínios, eventos e empresas.',
   },
   {
     id: 'duelo-fim-de-ano',
-    badge: 'Plataforma interativa & evento',
+    badge: 'Página interativa',
     status: 'Publicado & Ativo',
     title: 'Duelo de Fim de Ano — Badem vs Becala',
     category: 'landing',
     challenge:
-      'Organização de clássico esportivo comunitário e beneficente de fim de ano que necessitava de engajamento dos torcedores, votação dos melhores da partida e mural de fotos dinâmico sem complexidade de infraestrutura.',
+      'Organização de um clássico esportivo comunitário e beneficente de fim de ano que precisava de engajamento da torcida, votação dos melhores da partida e mural de fotos sem custos nem complicação técnica.',
     solution:
-      'Aplicação web com campo tático interativo, votação no navegador ("Bola Cheia vs Bola Murcha") com persistência local, cronologia de edições e integração com a comunidade esportiva.',
-    tags: ['Interatividade', 'Engajamento Comunitário', 'Futebol Amador', 'UX Interativa'],
+      'Página interativa com campinho de futebol para ver as escalações, votação direto no celular e galeria com fotos reais dos jogos.',
+    tags: ['Interatividade', 'Engajamento', 'Futebol Amador', 'Fácil de Usar'],
     urlLabel: 'jogodefimdeano.netlify.app',
     href: 'https://jogodefimdeano.netlify.app',
     desktopImage: '/portifolio-jogodefimdeano-desktop.webp',
     mobileImage: '/portifolio-jogodefimdeano-mobile.webp',
     features: [
-      'Escalações em campo tático interativo de futebol',
-      'Votação no navegador com persistência no armazenamento local (localStorage)',
-      'Galeria de fotos com carregamento sob demanda',
+      'Escalações em campo de futebol interativo',
+      'Votação no celular para escolher os melhores em campo',
+      'Galeria de fotos leves dos jogos',
     ],
-    resultsNote: 'Engajamento comunitário interativo com interface leve, dinâmica e sem necessidade de login.',
+    resultsNote: 'Engajamento da comunidade com página leve, dinâmica e fácil de usar no celular.',
   },
 ];
 
@@ -172,7 +172,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             onClick={() => onOpenDetails(project)}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
           >
-            <span>Ver detalhes (Desafio, Solução & Resultados)</span>
+            <span>Ver detalhes do projeto</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -379,7 +379,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               onClick={() => onOpenDetails(project)}
               className="inline-flex items-center justify-center text-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-indigo-300 hover:text-white hover:bg-slate-800 border border-white/[0.08] transition-colors"
             >
-              <span>Ver Case</span>
+              <span>Ver detalhes</span>
               <ArrowRight className="w-3 h-3" />
             </button>
 
@@ -403,7 +403,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white border border-emerald-400/40 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200"
           >
             <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
-            <span className="text-white drop-shadow-sm text-center">Quero similar</span>
+            <span className="text-white drop-shadow-sm text-center">Quero um parecido</span>
           </a>
         </div>
       </div>
@@ -449,15 +449,15 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-10 sm:mb-12">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-white/[0.08] text-indigo-300 text-xs sm:text-sm font-semibold uppercase">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Portfólio de Projetos Reais</span>
+              <span>Portfólio de Clientes</span>
             </div>
             <SplitLines
               as="h2"
-              text="Sites reais no ar, prontos para converter"
+              text="Trabalhos entregues e no ar"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Explore nossos trabalhos recentes com alternador de tela Desktop e Mobile ou visualize o mockup composto sobreposto. Todos os projetos contam com código limpo, SEO técnico e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">carregamento instantâneo</span>.
+              Sites reais feitos para clientes reais. Clique para ver no celular ou abrir o site direto no navegador.
             </p>
 
             {/* Filtros de Categoria */}
@@ -471,7 +471,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
                 }`}
               >
-                Todos ({PORTFOLIO_PROJECTS.length})
+                Todos os projetos ({PORTFOLIO_PROJECTS.length})
               </button>
               <button
                 type="button"
@@ -482,7 +482,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
                 }`}
               >
-                Landing Pages
+                Sites de uma página
               </button>
               <button
                 type="button"
@@ -493,7 +493,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
                 }`}
               >
-                Sites Institucionais
+                Sites completos
               </button>
             </div>
           </div>

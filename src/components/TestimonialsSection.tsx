@@ -36,9 +36,9 @@ export type TestimonialCategoryTag = 'all' | 'landing' | 'institutional' | 'app'
 
 export const TESTIMONIAL_TAGS: { id: TestimonialCategoryTag; label: string }[] = [
   { id: 'all', label: 'Todos os formatos' },
-  { id: 'landing', label: 'Landing Page' },
-  { id: 'institutional', label: 'Site Institucional' },
-  { id: 'app', label: 'Aplicação Web' },
+  { id: 'landing', label: 'Site de uma página' },
+  { id: 'institutional', label: 'Site completo' },
+  { id: 'app', label: 'Página interativa' },
 ];
 
 // Avaliações autênticas dos clientes reais da ēloSites (dados estritamente preservados)
@@ -48,7 +48,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     name: 'João Victor Salvaia',
     role: 'Personal Trainer & Consultor Online',
     companyOrProject: 'JV Salvaia Personal Trainer',
-    category: 'Landing Page de Alta Conversão',
+    category: 'Site de uma página',
     projectUrl: 'https://jvsalvaiapersonal.netlify.app',
     quote:
       'Gostei muito do resultado do site! Ficou profissional, moderno e com a identidade do meu trabalho como personal trainer. Agora consigo apresentar melhor meus serviços e transmitir mais confiança para quem está buscando um profissional para acompanhar seus treinos. O resultado ficou muito bom!',
@@ -59,7 +59,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     name: 'Jonathan Toledo',
     role: 'Proprietário & Diretor Operacional',
     companyOrProject: 'Toledo Segurança',
-    category: 'Site Institucional Corporativo',
+    category: 'Site completo',
     projectUrl: 'https://toledoseguranca.netlify.app/',
     quote:
       'O desenvolvimento do site da Toledo Segurança ficou excelente! O projeto transmitiu a seriedade e o profissionalismo que eu queria passar para os nossos clientes. Ter um site próprio faz diferença na apresentação da empresa e fortalece nossa presença na internet. Fiquei muito satisfeito com o resultado e com o trabalho realizado.',
@@ -70,7 +70,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     name: 'Renato Becala',
     role: 'Comissão Organizadora',
     companyOrProject: 'Duelo de Fim de Ano — Badem vs Becala',
-    category: 'Aplicação Web & Plataforma de Evento',
+    category: 'Página interativa',
     projectUrl: 'https://jogodefimdeano.netlify.app',
     quote:
       'A landing page para o nosso evento de fim de ano ficou muito bacana! A proposta era ter uma página que reunisse as principais informações do evento de forma organizada e atrativa, e o resultado atendeu muito bem à ideia. Ficou uma apresentação moderna, prática e com a cara do nosso encontro. Com certeza fez o evento ter uma presença digital ainda mais especial!',
@@ -324,7 +324,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         >
           <div className="section-kicker inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-            <span>Social Proof & Clientes Reais</span>
+            <span>Depoimentos Reais</span>
           </div>
 
           <SplitLines
@@ -334,7 +334,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           />
 
           <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Depoimentos autênticos de quem confiou na ēloSites para construir sua presença digital com <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">código profissional</span>, performance máxima e foco em conversão.
+            Depoimentos reais de quem confiou na ēloSites para criar a presença digital do seu negócio com rapidez, fotos reais e botão direto para o WhatsApp.
           </p>
 
           {/* Destaque de métricas de confiabilidade */}
@@ -351,7 +351,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-              <span className="text-slate-300">Projetos reais entregues no Netlify</span>
+              <span className="text-slate-300">Projetos reais entregues e funcionando</span>
             </div>
           </div>
         </motion.div>
