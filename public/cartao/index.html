@@ -40,13 +40,17 @@ body{margin:0;min-height:100vh;min-height:100dvh;background:#050814;color:#f1f5f
 .card-close:hover{background:radial-gradient(circle at 35% 30%,rgba(99,102,241,.32),rgba(5,8,20,.88) 72%);border-color:rgba(196,181,253,.9);box-shadow:0 0 0 1px rgba(147,197,253,.2),0 0 22px rgba(129,140,248,.62),0 0 46px rgba(59,130,246,.28);transform:scale(1.05)}
 .card-close:active{transform:scale(.95)}
 .card-close::after{content:'';position:absolute;inset:-1px;border-radius:50%}
-.card-close-lines{position:relative;display:block;width:22px;height:22px;animation:cardCloseMorph 6s cubic-bezier(.65,0,.35,1) infinite}
+.card-close-lines{position:relative;display:block;width:22px;height:22px;animation:cardCloseMorph 6s cubic-bezier(.65,0,.35,1) infinite;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
 .card-close-lines span{position:absolute;left:0;top:50%;width:100%;height:2.5px;border-radius:999px;transform-origin:center}
 .card-close-lines .line-top{transform:translateY(-50%) rotate(45deg);background:linear-gradient(90deg,#a855f7,#818cf8,#3b82f6);box-shadow:0 0 7px rgba(168,85,247,.45)}
 .card-close-lines .line-mid{width:0;opacity:0;transform:translateY(-50%);background:linear-gradient(90deg,#fff,#f1f5f9,#e2e8f0)}
 .card-close-lines .line-bottom{transform:translateY(-50%) rotate(-45deg);background:linear-gradient(90deg,#3b82f6,#818cf8,#a855f7);box-shadow:0 0 7px rgba(59,130,246,.45)}
 .card-close:focus-visible{outline:3px solid #f1f5f9;outline-offset:3px}
 @keyframes cardCloseMorph{0%,45%{transform:rotate(0deg)}50%,95%{transform:rotate(45deg)}100%{transform:rotate(90deg)}}
+.card-close:hover .card-close-lines,
+.card-close:focus-visible .card-close-lines,
+.card-close:active .card-close-lines,
+.card-close.is-activating .card-close-lines{animation:none!important;transform:rotate(45deg)!important}
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
 .o1{top:-110px;right:-120px;width:360px;height:360px;background:radial-gradient(circle,rgba(59,130,246,.38),rgba(59,130,246,0) 70%);animation:float1 9s ease-in-out infinite}
 .o2{bottom:-130px;left:-130px;width:380px;height:380px;background:radial-gradient(circle,rgba(124,58,237,.34),rgba(124,58,237,0) 70%);animation:float2 11s ease-in-out infinite}
@@ -124,7 +128,7 @@ body.share-open{overflow:hidden}
 <div class="orb o1" aria-hidden="true"></div>
 <div class="orb o2" aria-hidden="true"></div>
 <main>
-<a class="card-close" href="/#fundador" aria-label="Fechar cartão e ir para o card do fundador" title="Fechar cartão">
+<a class="card-close" href="/#home" aria-label="Fechar cartão e ir para a Página Inicial" title="Fechar cartão e ir para a Página Inicial">
 <span class="card-close-lines" aria-hidden="true">
 <span class="line-top"></span>
 <span class="line-mid"></span>
@@ -229,6 +233,13 @@ elosites.ia.br
 <script>
 (function () {
   'use strict';
+
+  var cardClose = document.querySelector('.card-close');
+  if (cardClose) {
+    cardClose.addEventListener('click', function () {
+      cardClose.classList.add('is-activating');
+    });
+  }
 
   var CARD_URL = 'https://elosites.ia.br/cartao/';
   var SHARE_TITLE = 'Everton Lopes | Cartão digital — ēloSites';

@@ -79,7 +79,8 @@ export const DigitalCardSection: React.FC = () => {
                 <span>{SITE_CONFIG.email}</span>
               </a>
               <a
-                href="/cartao/"
+                href="/cartao/index.html"
+                aria-label="Abrir cartão de visitas digital de Everton Lopes em tela cheia"
                 className="flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-xl text-sm font-semibold text-blue-300 hover:text-white transition-colors"
               >
                 Abrir cartão em tela cheia

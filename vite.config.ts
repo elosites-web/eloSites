@@ -3,9 +3,39 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+import type { Plugin } from 'vite';
+
+function cartaoFallbackPlugin(): Plugin {
+  return {
+    name: 'cartao-html-fallback',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const rawUrl = req.url || '';
+        const pathname = rawUrl.split('?')[0];
+        if (pathname === '/cartao' || pathname === '/cartao/') {
+          const search = rawUrl.includes('?') ? '?' + rawUrl.split('?')[1] : '';
+          req.url = '/cartao/index.html' + search;
+        }
+        next();
+      });
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const rawUrl = req.url || '';
+        const pathname = rawUrl.split('?')[0];
+        if (pathname === '/cartao' || pathname === '/cartao/') {
+          const search = rawUrl.includes('?') ? '?' + rawUrl.split('?')[1] : '';
+          req.url = '/cartao/index.html' + search;
+        }
+        next();
+      });
+    },
+  };
+}
+
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), cartaoFallbackPlugin()],
     build: {
       target: 'es2019',
     },
