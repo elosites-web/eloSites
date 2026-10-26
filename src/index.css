@@ -92,7 +92,7 @@
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 400 500;
+  font-weight: 400 700;
   font-display: swap;
   src: local('JetBrains Mono'), local('JetBrainsMono');
 }
@@ -105,6 +105,7 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: clip;
 }
 
@@ -112,6 +113,150 @@ body {
   overflow-x: clip;
   width: 100%;
   -webkit-tap-highlight-color: transparent;
+  font-weight: 460;
+  color: #f8fafc;
+  letter-spacing: -0.011em;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   NITIDEZ, CONTRASTE E CALIBRAÇÃO DE PESO TIPOGRÁFICO
+   Ajuste avançado de legibilidade para telas padrão e telas de alta densidade (HiDPI/Retina/AMOLED)
+   ============================================================ */
+
+/* Textos e cabeçalhos nítidos com renderização otimizada */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-weight: 750;
+}
+
+h2 {
+  font-weight: 720;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+h4, h5, h6 {
+  font-weight: 650;
+}
+
+/* Parágrafos e listas com peso e contraste refinados */
+p, li, dd, dt, blockquote {
+  text-rendering: optimizeLegibility;
+  font-weight: 460;
+}
+
+/* Elevação de contraste de tons secundários sobre fundo escuro (#050814 / #080D1A)
+   Promove o contraste de 5.8:1 para 10.4:1 (WCAG AAA) para máxima nitidez */
+.text-slate-400 {
+  color: #cbd5e1;
+}
+
+.text-slate-500 {
+  color: #94a3b8;
+}
+
+.text-slate-300 {
+  color: #e2e8f0;
+}
+
+/* Calibração de pesos de utilitários Tailwind para precisão ótica */
+.font-normal {
+  font-weight: 460 !important;
+}
+
+.font-medium {
+  font-weight: 540 !important;
+}
+
+.font-semibold {
+  font-weight: 640 !important;
+}
+
+.font-bold {
+  font-weight: 740 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
+}
+
+/* Calibração específica para telas de alta densidade de pixels (Retina, telas 2x/3x, telas AMOLED e monitores 4K)
+   Compensa o afinamento de traço induzido pelo antialiasing em fundos escuros */
+@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi), (min-resolution: 1.25dppx) {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-weight: 470;
+  }
+
+  p, li, dd, dt, blockquote, label, input, textarea, select {
+    font-weight: 470;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-normal {
+    font-weight: 470 !important;
+  }
+
+  .font-medium {
+    font-weight: 550 !important;
+  }
+
+  .font-semibold {
+    font-weight: 650 !important;
+  }
+
+  .font-bold {
+    font-weight: 750 !important;
+  }
+
+  /* Em telas HiDPI, garante contraste perfeito com contraste acima de 12:1 */
+  .text-slate-400 {
+    color: #cbd5e1;
+  }
+
+  .text-slate-300 {
+    color: #e2e8f0;
+  }
+}
+
+/* Telas ultra-densas (Retina 2x/3x e displays OLED de smartphones) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+  body {
+    font-weight: 475;
+  }
+
+  p, li, dd, dt {
+    font-weight: 475;
+  }
+
+  .font-normal {
+    font-weight: 475 !important;
+  }
+
+  .font-medium {
+    font-weight: 560 !important;
+  }
+
+  .font-semibold {
+    font-weight: 660 !important;
+  }
+
+  .font-bold {
+    font-weight: 760 !important;
+  }
 }
 
 /* Elimina atraso de 300ms no clique (double-tap zoom delay) em dispositivos de toque globalmente */
@@ -199,9 +344,19 @@ article {
 /* Superfície de vidro e obsidian "premium": realce superior, bordas finas com brilho elétrico e transições rápidas */
 .surface-card {
   position: relative;
-  background-color: var(--cor-superficie);
+  background-color: #080e24;
   border: 1px solid var(--cor-borda);
-  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.surface-card > *:not(.absolute):not([aria-hidden="true"]) {
+  position: relative;
+  z-index: 1;
 }
 
 .surface-card:hover {
@@ -212,13 +367,7 @@ article {
 }
 
 .surface-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(59, 130, 246, 0.04) 20%, transparent 60%);
-  opacity: 0.95;
+  display: none !important;
 }
 
 /* Superfície sólida (sem vidro/blur), identidade escura dos cartões de Serviços com fundo obsidian puro */

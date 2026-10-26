@@ -4,15 +4,12 @@ import {
   Code2,
   Layout,
   Sparkles,
-  Search,
-  BarChart3,
   Cpu,
   CheckCircle2,
   ArrowRight,
   Info,
   ShieldCheck,
   Smartphone,
-  ExternalLink,
   Zap,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
@@ -29,7 +26,9 @@ interface SpecialtyItem {
   id: string;
   category: string;
   badge: string;
-  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+  icon: React.ComponentType<{ className?: string }>;
+  iconAlt: string;
+  iconGlow: string;
   highlight: string;
   items: string[];
   technicalClarification: string;
@@ -42,6 +41,8 @@ const SPECIALTIES: SpecialtyItem[] = [
     category: 'Criação de Sites',
     badge: 'Sob Medida',
     icon: Code2,
+    iconAlt: 'Desenvolvimento de sites responsivos sob medida',
+    iconGlow: 'shadow-[0_0_20px_rgba(34,211,238,0.35)] border-cyan-500/40 text-cyan-400',
     highlight: 'Páginas pensadas para apresentar o seu trabalho com clareza e levar o cliente direto ao WhatsApp.',
     items: [
       'Site de uma página focado em explicar seu serviço e gerar contatos',
@@ -58,6 +59,8 @@ const SPECIALTIES: SpecialtyItem[] = [
     category: 'Visual e Facilidade de Uso',
     badge: 'Fácil de Navegar',
     icon: Layout,
+    iconAlt: 'Interface de usuário e experiência de navegação',
+    iconGlow: 'shadow-[0_0_20px_rgba(168,85,247,0.35)] border-purple-500/40 text-purple-400',
     highlight: 'Organização visual limpa para o cliente ler sem esforço e encontrar tudo rápido.',
     items: [
       'Informações organizadas na ordem certa para o visitante entender',
@@ -74,6 +77,8 @@ const SPECIALTIES: SpecialtyItem[] = [
     category: 'Recursos e Botões Práticos',
     badge: 'Praticidade',
     icon: Sparkles,
+    iconAlt: 'Botões inteligentes e recursos práticos',
+    iconGlow: 'shadow-[0_0_20px_rgba(52,211,153,0.35)] border-emerald-500/40 text-emerald-400',
     highlight: 'Funções práticas na página que facilitam o contato e tiram dúvidas do cliente.',
     items: [
       'Botões para chamar no WhatsApp com mensagens iniciais prontas',
@@ -89,7 +94,9 @@ const SPECIALTIES: SpecialtyItem[] = [
     id: 'seo-tecnico-performance',
     category: 'Preparado para o Google',
     badge: 'Buscas Locais',
-    icon: Search,
+    icon: ShieldCheck,
+    iconAlt: 'Otimização para buscas locais no Google',
+    iconGlow: 'shadow-[0_0_20px_rgba(251,191,36,0.35)] border-amber-500/40 text-amber-400',
     highlight: 'Estruturação técnica para ajudar o seu negócio a ser encontrado nas pesquisas do Google.',
     items: [
       'Títulos e descrições otimizados com os serviços que você oferece',
@@ -107,7 +114,9 @@ const SPECIALTIES: SpecialtyItem[] = [
     id: 'integracoes-mensuracao',
     category: 'Acompanhamento e Anúncios',
     badge: 'Pronto para Crescer',
-    icon: BarChart3,
+    icon: Zap,
+    iconAlt: 'Métricas e conexões com plataformas de anúncios',
+    iconGlow: 'shadow-[0_0_20px_rgba(56,189,248,0.35)] border-sky-500/40 text-sky-400',
     highlight: 'Conexão preparada para ferramentas de anúncios e contagem de acessos.',
     items: [
       'Pronto para Google Analytics 4 (para ver quantas pessoas visitam o site)',
@@ -124,6 +133,8 @@ const SPECIALTIES: SpecialtyItem[] = [
     category: 'Base Técnica Moderna',
     badge: 'Feito para Durar',
     icon: Cpu,
+    iconAlt: 'Arquitetura tecnológica moderna de alta performance',
+    iconGlow: 'shadow-[0_0_20px_rgba(129,140,248,0.35)] border-indigo-500/40 text-indigo-400',
     highlight: 'Construído com tecnologia atual que garante estabilidade e rapidez.',
     items: [
       'Código moderno que não quebra e não fica lento com o tempo',
@@ -248,8 +259,6 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
         {/* Grade das 6 Especialidades */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
           {filteredSpecialties.map((spec, index) => {
-            const Icon = spec.icon;
-
             return (
               <BiReveal
                 key={spec.id}
@@ -261,11 +270,14 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
                   <article
                     className="glass-card-interactive surface-card service-card relative rounded-2xl bg-[#090E23]/95 border border-blue-500/20 hover:border-blue-400/50 p-6 sm:p-7 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all duration-300 group"
                   >
-                    {/* Linha superior: Ícone e Badge */}
+                    {/* Linha superior: Ícone 3D Exclusivo e Badge */}
                     <div className="space-y-4">
                       <div className="flex items-center justify-between gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_14px_rgba(59,130,246,0.25)] group-hover:scale-105 transition-transform">
-                          <Icon className="w-6 h-6 text-cyan-400" aria-hidden="true" />
+                        <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl p-2 bg-[#050814]/90 border border-blue-500/25 flex items-center justify-center shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.6)] group-hover:scale-108 group-hover:border-blue-400/50 transition-all duration-300">
+                          <spec.icon className="w-7 h-7 sm:w-8 sm:h-8" />
+                          <div
+                            className={`absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300 opacity-70 group-hover:opacity-100 ${spec.iconGlow}`}
+                          />
                         </div>
                         <span
                           className={`text-[11px] font-mono px-3 py-1 rounded-full border bg-gradient-to-r font-medium ${spec.tagColor}`}

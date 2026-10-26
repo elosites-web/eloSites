@@ -49,7 +49,7 @@ export const DigitalCardSection: React.FC = () => {
               <p className="mt-1.5 text-sm sm:text-base font-semibold text-blue-300">
                 Fundador da ēloSites
               </p>
-              <p className="mt-2 text-sm text-slate-400 leading-relaxed max-w-xs mx-auto">
+              <p className="mt-2 text-sm text-slate-300 font-medium leading-relaxed max-w-xs mx-auto">
                 Presença digital estratégica para pequenos negócios e profissionais liberais.
               </p>
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, useReducedMotion, type Variants } from 'motion/react';
 import { SectionErrorBoundary } from './components/SectionErrorBoundary';
 import { Header } from './components/Header';
@@ -17,6 +17,9 @@ import { preloadAllScreens } from './preloadScreens';
 import { ScreenId, SCREENS } from './types';
 import { shouldReduceMedia, getMotionTier } from './mediaPrefs';
 import { withViewTransition, supportsViewTransitions } from './viewTransition';
+import { CaseDetailPage } from './components/CaseDetailPage';
+import { ProjectImageView } from './components/ProjectImageView';
+import { getProjectById } from './portfolioData';
 
 // Code-splitting via React.lazy para acelerar a carga inicial da tela Início
 const PortfolioSection = lazy(() =>
@@ -75,6 +78,43 @@ export default function App() {
   const [isWhatsAppBubbleOpen, setIsWhatsAppBubbleOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
+  // Estados dedicados de navegação para Case e Captura de Imagem (Substituição de modais por páginas)
+  const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
+  const [activeImageView, setActiveImageView] = useState<{
+    projectId: string;
+    imageType: 'desktop' | 'mobile';
+  } | null>(null);
+
+  // Armazenamento em memória das posições de scroll de cada página/view para restauração suave
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+  const currentRouteKeyRef = useRef<string>('home');
+
+  // Desativa restauração automática truncada do navegador para controle milimétrico de scroll
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
+  // Monitora continuamente e salva a posição de rolagem vertical da rota ativa
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentRouteKeyRef.current) {
+            scrollPositionsRef.current[currentRouteKeyRef.current] = window.scrollY || window.pageYOffset || 0;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Hook do Framer Motion combinado com a preferência de acessibilidade
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
@@ -128,7 +168,7 @@ export default function App() {
     };
   }, []);
 
-  // Sincronização inicial e bidirecional com a hash da URL (9 telas oficiais)
+  // Sincronização inicial e bidirecional com a hash da URL (telas oficiais + cases + imagens)
   useEffect(() => {
     const validIds: ScreenId[] = [
       'home',
@@ -145,6 +185,54 @@ export default function App() {
 
     const handleHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
+
+      // 1. Rota de captura de imagem em alta resolução:
+      // #case/:id/:type ou #case/:id/imagem/:type ou #imagem/:id/:type
+      const imageMatch = rawHash.match(/^(?:case\/([a-z0-9-]+)\/(?:imagem\/)?(desktop|mobile)|imagem\/([a-z0-9-]+)\/(desktop|mobile)|case-([a-z0-9-]+)-(desktop|mobile))$/);
+      if (imageMatch) {
+        const pId = imageMatch[1] || imageMatch[3] || imageMatch[5];
+        const iType = (imageMatch[2] || imageMatch[4] || imageMatch[6]) as 'desktop' | 'mobile';
+        const project = getProjectById(pId);
+        if (project) {
+          setCurrentScreen('portfolio');
+          setActiveCaseId(null);
+          setActiveImageView({ projectId: pId, imageType: iType });
+          const routeKey = `case/${pId}/${iType}`;
+          currentRouteKeyRef.current = routeKey;
+          const savedY = scrollPositionsRef.current[routeKey];
+          window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+          return;
+        }
+      }
+
+      // 2. Rota de estudo de caso completo: #case/:id ou #case-:id
+      const caseMatch = rawHash.match(/^(?:case\/([a-z0-9-]+)|case-([a-z0-9-]+))$/);
+      if (caseMatch) {
+        const pId = caseMatch[1] || caseMatch[2];
+        const project = getProjectById(pId);
+        if (project) {
+          setCurrentScreen('portfolio');
+          setActiveImageView(null);
+          setActiveCaseId(pId);
+          const routeKey = `case/${pId}`;
+          currentRouteKeyRef.current = routeKey;
+          const savedY = scrollPositionsRef.current[routeKey];
+          window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+          return;
+        }
+      }
+
+      // 3. Ao entrar em qualquer tela institucional, desativa visualizações de case e imagem
+      setActiveCaseId(null);
+      setActiveImageView(null);
+
+      if (rawHash === 'portfolio') {
+        setCurrentScreen('portfolio');
+        currentRouteKeyRef.current = 'portfolio';
+        const savedY = scrollPositionsRef.current['portfolio'];
+        window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+        return;
+      }
       if (rawHash === 'sobre') {
         setCurrentScreen((prev) => {
           if (prev !== 'inicio') {
@@ -314,15 +402,19 @@ export default function App() {
   // Ao trocar de tela, atualiza o hash, a direção do slide lateral e rola para o topo
   const navigateToScreen = useCallback((screenId: ScreenId) => {
     setIsMenuOpen(false);
+    setActiveCaseId(null);
+    setActiveImageView(null);
     const prevIdx = SCREENS.findIndex((s) => s.id === currentScreen);
     const nextIdx = SCREENS.findIndex((s) => s.id === screenId);
     const nextDirection = nextIdx !== -1 && prevIdx !== -1 && nextIdx !== prevIdx ? (nextIdx > prevIdx ? 1 : -1) : direction;
+    currentRouteKeyRef.current = screenId;
     withViewTransition(() => {
       setDirection(nextDirection);
       setCurrentScreen(screenId);
     });
     window.location.hash = screenId;
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    const savedY = scrollPositionsRef.current[screenId];
+    window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
   }, [currentScreen, direction]);
 
   const currentIndex = SCREENS.findIndex((s) => s.id === currentScreen);
@@ -358,8 +450,8 @@ export default function App() {
         if (target.closest('[data-testimonials-carousel]')) return;
       }
 
-      // Não navegar quando um modal/diálogo (legal ou menu) está aberto
-      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
+      // Não navegar quando visualizando um case, imagem ampliada ou com modal aberto
+      if (activeCaseId || activeImageView || isMenuOpen || legalModal !== null || isSitemapOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) return;
 
       if (e.key === 'ArrowLeft' && previousScreen) {
         handlePrevious();
@@ -390,8 +482,8 @@ export default function App() {
         return;
       }
 
-      // Ignora se o menu ou algum modal/diálogo estiver aberto
-      if (isMenuOpen || legalModal !== null || isSitemapOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) {
+      // Ignora se o menu ou algum modal/diálogo ou tela de case/imagem estiver aberto
+      if (activeCaseId || activeImageView || isMenuOpen || legalModal !== null || isSitemapOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) {
         isSwipingIgnored = true;
         return;
       }
@@ -449,10 +541,81 @@ export default function App() {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isMenuOpen, legalModal, isSitemapOpen, nextScreen, previousScreen, handleNext, handlePrevious]);
+  }, [isMenuOpen, legalModal, isSitemapOpen, nextScreen, previousScreen, handleNext, handlePrevious, activeCaseId, activeImageView]);
 
-  // Sincronização dinâmica de meta tags OpenGraph, Twitter Cards, Canonical e Title para cada seção/tela
+  // Sincronização dinâmica de meta tags OpenGraph, Twitter Cards, Canonical e Title para cada seção/tela/case
   useEffect(() => {
+    // Helper para atualizar ou criar meta tag
+    const updateMeta = (selector: string, attrName: 'name' | 'property', attrValue: string, content: string) => {
+      let element = document.querySelector<HTMLMetaElement>(selector);
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attrName, attrValue);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
+
+    // Caso 1: Captura de tela ampliada
+    if (activeImageView) {
+      const project = getProjectById(activeImageView.projectId);
+      if (project) {
+        const typeLabel = activeImageView.imageType === 'mobile' ? 'Mobile (Celular)' : 'Desktop (Computador)';
+        const pageTitle = `${project.title} — Captura ${typeLabel} em Alta Resolução | ēloSites`;
+        const pageDesc = `Visualização em tamanho real da captura ${typeLabel} do site ${project.title}, desenvolvido com foco em conversão pela ēloSites.`;
+        const canonicalUrl = `https://elosites.ia.br/#case/${project.id}/${activeImageView.imageType}`;
+
+        document.title = pageTitle;
+        updateMeta('meta[name="description"]', 'name', 'description', pageDesc);
+
+        let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+        if (!canonicalLink) {
+          canonicalLink = document.createElement('link');
+          canonicalLink.setAttribute('rel', 'canonical');
+          document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.setAttribute('href', canonicalUrl);
+
+        updateMeta('meta[property="og:title"]', 'property', 'og:title', pageTitle);
+        updateMeta('meta[property="og:description"]', 'property', 'og:description', pageDesc);
+        updateMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+        updateMeta('meta[name="twitter:title"]', 'name', 'twitter:title', pageTitle);
+        updateMeta('meta[name="twitter:description"]', 'name', 'twitter:description', pageDesc);
+        updateMeta('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalUrl);
+        return;
+      }
+    }
+
+    // Caso 2: Estudo de Caso de Sucesso
+    if (activeCaseId) {
+      const project = getProjectById(activeCaseId);
+      if (project) {
+        const pageTitle = `${project.title} — Estudo de Caso de Sucesso | ēloSites`;
+        const pageDesc = `Estudo de caso do site ${project.title} desenvolvido pela ēloSites. ${project.challenge}`;
+        const canonicalUrl = `https://elosites.ia.br/#case/${project.id}`;
+
+        document.title = pageTitle;
+        updateMeta('meta[name="description"]', 'name', 'description', pageDesc);
+
+        let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+        if (!canonicalLink) {
+          canonicalLink = document.createElement('link');
+          canonicalLink.setAttribute('rel', 'canonical');
+          document.head.appendChild(canonicalLink);
+        }
+        canonicalLink.setAttribute('href', canonicalUrl);
+
+        updateMeta('meta[property="og:title"]', 'property', 'og:title', pageTitle);
+        updateMeta('meta[property="og:description"]', 'property', 'og:description', pageDesc);
+        updateMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+        updateMeta('meta[name="twitter:title"]', 'name', 'twitter:title', pageTitle);
+        updateMeta('meta[name="twitter:description"]', 'name', 'twitter:description', pageDesc);
+        updateMeta('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalUrl);
+        return;
+      }
+    }
+
+    // Caso 3: Telas institucionais regulares
     const meta = SCREENS.find((s) => s.id === currentScreen) || SCREENS[0];
     const isHome = currentScreen === 'home' || currentScreen === 'inicio';
 
@@ -470,17 +633,6 @@ export default function App() {
 
     // Atualiza o <title> do documento
     document.title = pageTitle;
-
-    // Helper para atualizar ou criar meta tag
-    const updateMeta = (selector: string, attrName: 'name' | 'property', attrValue: string, content: string) => {
-      let element = document.querySelector<HTMLMetaElement>(selector);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attrName, attrValue);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
 
     // Meta Description padrão
     updateMeta('meta[name="description"]', 'name', 'description', pageDesc);
@@ -503,7 +655,7 @@ export default function App() {
     updateMeta('meta[name="twitter:title"]', 'name', 'twitter:title', pageTitle);
     updateMeta('meta[name="twitter:description"]', 'name', 'twitter:description', pageDesc);
     updateMeta('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalUrl);
-  }, [currentScreen]);
+  }, [currentScreen, activeCaseId, activeImageView]);
 
   const currentMeta = SCREENS[currentIndex] || SCREENS[0];
 
@@ -631,6 +783,12 @@ export default function App() {
             <Suspense fallback={<PortfolioSkeleton />}>
               <PortfolioSection
                 onNavigateToServices={() => navigateToScreen('avaliacoes')}
+                onOpenCase={(id) => {
+                  window.location.hash = `case/${id}`;
+                }}
+                onOpenImage={(id, type) => {
+                  window.location.hash = `case/${id}/${type}`;
+                }}
               />
             </Suspense>
           </SectionErrorBoundary>
@@ -701,6 +859,13 @@ export default function App() {
     </>
   );
 
+  const activeProject =
+    (activeImageView
+      ? getProjectById(activeImageView.projectId)
+      : activeCaseId
+      ? getProjectById(activeCaseId)
+      : null) || null;
+
   return (
     <div className={`min-h-screen-dvh text-slate-800 flex flex-col selection:bg-blue-600 selection:text-white relative ${isHighContrast ? 'high-contrast' : ''}`}>
       {/* Link de pular para o conteúdo (primeiro elemento focável) */}
@@ -713,11 +878,20 @@ export default function App() {
 
       {/* Região viva: anuncia a tela atual para leitores de tela */}
       <div className="sr-only" role="status" aria-live="polite">
-        {`Tela ${currentMeta.number}: ${currentMeta.title}`}
+        {activeImageView && activeProject
+          ? `Visualização da Captura: ${activeProject.title}`
+          : activeCaseId && activeProject
+          ? `Estudo de Caso: ${activeProject.title}`
+          : `Tela ${currentMeta.number}: ${currentMeta.title}`}
       </div>
 
       {/* Barra de Progresso de Leitura no Topo */}
-      {!isMenuOpen && <ReadingProgressBar key={currentScreen} currentScreen={currentScreen} />}
+      {!isMenuOpen && (
+        <ReadingProgressBar
+          key={activeImageView ? `img-${activeImageView.projectId}` : activeCaseId ? `case-${activeCaseId}` : currentScreen}
+          currentScreen={currentScreen}
+        />
+      )}
 
       {/* Header Fixo com Botão Único "MENU DE NAVEGAÇÃO" */}
       <Header
@@ -737,7 +911,32 @@ export default function App() {
         id="main-content"
         tabIndex={-1}
       >
-        {useViewTransitions ? (
+        {activeImageView && activeProject ? (
+          <div key={`image-${activeImageView.projectId}-${activeImageView.imageType}`} className="w-full">
+            <ProjectImageView
+              project={activeProject}
+              imageType={activeImageView.imageType}
+              onBack={() => {
+                window.location.hash = `case/${activeProject.id}`;
+              }}
+              onSwitchType={(type) => {
+                window.location.hash = `case/${activeProject.id}/${type}`;
+              }}
+            />
+          </div>
+        ) : activeCaseId && activeProject ? (
+          <div key={`case-${activeCaseId}`} className="w-full">
+            <CaseDetailPage
+              project={activeProject}
+              onBack={() => {
+                window.location.hash = 'portfolio';
+              }}
+              onOpenImage={(type) => {
+                window.location.hash = `case/${activeProject.id}/${type}`;
+              }}
+            />
+          </div>
+        ) : useViewTransitions ? (
           <div
             key={currentScreen}
             style={{ contain: 'layout style' }}

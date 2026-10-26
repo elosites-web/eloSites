@@ -9,7 +9,6 @@ import {
   formatBriefingWhatsappMessage,
   formatBookingWhatsappMessage,
   createGoogleCalendarUrl,
-  generateIcsContent,
   whatsappUrl,
 } from '../types';
 import {
@@ -20,7 +19,6 @@ import {
   Copy,
   Check,
   CalendarPlus,
-  Download,
   Sparkles,
   ShieldCheck,
   CheckCircle2,
@@ -29,6 +27,22 @@ import {
 import { shouldReduceMedia } from '../mediaPrefs';
 import { getDynamicCardVariants } from '../motionVariants';
 import confetti from 'canvas-confetti';
+
+// Helper de máscara dinâmica para telefone/WhatsApp no padrão brasileiro (10 ou 11 dígitos)
+export const formatPhoneMask = (value: string): string => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (!digits) return '';
+  if (digits.length <= 2) {
+    return `(${digits}`;
+  }
+  if (digits.length <= 6) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+};
 
 interface ProjectBriefBookingSectionProps {
   onOpenPrivacy?: () => void;
@@ -44,7 +58,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   const prefersReduced = Boolean(prefersReducedMotion || shouldReduceMedia());
   const cardVariants = getDynamicCardVariants(prefersReduced);
 
-  // Briefing form state
+  // Briefing form state - caixa de consentimento desmarcada por padrão (false)
   const [briefingData, setBriefingData] = useState<ProjectBriefData>({
     contactName: '',
     businessName: '',
@@ -53,10 +67,10 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     investmentRange: '',
     description: '',
     whatsappContact: '',
-    agreedToLgpd: true,
+    agreedToLgpd: false,
   });
 
-  // Booking form state
+  // Booking form state - caixa de consentimento desmarcada por padrão (false)
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const defaultDateStr = tomorrow.toISOString().split('T')[0];
@@ -69,7 +83,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     preferredTimeSlot: 'Tarde (14h às 18h)',
     platform: 'Google Meet',
     meetingTopic: 'Orçamento, formato ideal e próximos passos',
-    agreedToLgpd: true,
+    agreedToLgpd: false,
   });
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -77,6 +91,65 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
 
   const handleFieldBlur = (fieldKey: string) => {
     setTouchedFields((prev) => ({ ...prev, [fieldKey]: true }));
+  };
+
+  // Helper de validação em tempo real para os campos do formulário de orçamento (briefing)
+  const getBriefingValidationStatus = (
+    field: 'contactName' | 'businessName' | 'whatsappContact' | 'agreedToLgpd'
+  ) => {
+    const isTouched = Boolean(touchedFields[field] || formErrors[field]);
+    if (!isTouched) {
+      return { status: 'idle' as const, message: '' };
+    }
+
+    if (field === 'contactName') {
+      const val = briefingData.contactName.trim();
+      if (!val) {
+        return { status: 'error' as const, message: 'Por favor, informe seu nome.' };
+      }
+      if (val.length < 2) {
+        return { status: 'error' as const, message: 'O nome deve ter pelo menos 2 caracteres.' };
+      }
+      return { status: 'success' as const, message: 'Nome preenchido corretamente.' };
+    }
+
+    if (field === 'businessName') {
+      const val = briefingData.businessName.trim();
+      if (!val) {
+        return { status: 'error' as const, message: 'Por favor, informe o nome do seu negócio ou empresa.' };
+      }
+      if (val.length < 2) {
+        return { status: 'error' as const, message: 'O nome da empresa deve ter pelo menos 2 caracteres.' };
+      }
+      return { status: 'success' as const, message: 'Nome da empresa registrado.' };
+    }
+
+    if (field === 'whatsappContact') {
+      const val = briefingData.whatsappContact.trim();
+      if (!val) {
+        return { status: 'error' as const, message: 'Por favor, informe seu WhatsApp com DDD.' };
+      }
+      const digitsOnly = val.replace(/\D/g, '');
+      if (digitsOnly.length < 10 || digitsOnly.length > 11) {
+        return {
+          status: 'error' as const,
+          message: 'WhatsApp incompleto. Digite DDD + 8 ou 9 dígitos.',
+        };
+      }
+      return { status: 'success' as const, message: 'WhatsApp válido para retorno.' };
+    }
+
+    if (field === 'agreedToLgpd') {
+      if (!briefingData.agreedToLgpd) {
+        return {
+          status: 'error' as const,
+          message: 'É obrigatório concordar com a política de privacidade para liberar o envio.',
+        };
+      }
+      return { status: 'success' as const, message: 'Consentimento confirmado.' };
+    }
+
+    return { status: 'idle' as const, message: '' };
   };
 
   // Helper de validação em tempo real para os campos do formulário de agendamento
@@ -177,24 +250,34 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   // Briefing handlers
   const handleBriefingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    setTouchedFields((prev) => ({
+      ...prev,
+      contactName: true,
+      businessName: true,
+      whatsappContact: true,
+      agreedToLgpd: true,
+    }));
+
     const errors: { [key: string]: string } = {};
 
-    if (!briefingData.contactName.trim()) {
-      errors.contactName = 'Informe seu nome para que possamos te chamar.';
+    if (!briefingData.contactName.trim() || briefingData.contactName.trim().length < 2) {
+      errors.contactName = 'Informe seu nome para que possamos te chamar (mínimo 2 caracteres).';
     }
-    if (!briefingData.businessName.trim()) {
-      errors.businessName = 'Informe o nome do seu negócio ou empresa.';
+    if (!briefingData.businessName.trim() || briefingData.businessName.trim().length < 2) {
+      errors.businessName = 'Informe o nome do seu negócio ou empresa (mínimo 2 caracteres).';
     }
-    if (!briefingData.whatsappContact.trim()) {
-      errors.whatsappContact = 'Informe seu WhatsApp para envio da proposta.';
+    const cleanDigits = briefingData.whatsappContact.replace(/\D/g, '');
+    if (!briefingData.whatsappContact.trim() || cleanDigits.length < 10 || cleanDigits.length > 11) {
+      errors.whatsappContact = 'Informe seu WhatsApp válido com DDD (10 ou 11 dígitos).';
     }
     if (!briefingData.agreedToLgpd) {
-      errors.agreedToLgpd = 'É necessário concordar com os termos de privacidade.';
+      errors.agreedToLgpd = 'É necessário concordar com a política de privacidade para liberar o envio.';
     }
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      error('Preencha os campos obrigatórios', 'Verifique os dados destacados no formulário.');
+      error('Preencha os campos obrigatórios', 'Verifique os dados destacados no formulário de orçamento.');
       return;
     }
 
@@ -216,6 +299,16 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   };
 
   const handleCopyBriefing = () => {
+    if (!briefingData.agreedToLgpd) {
+      setTouchedFields((prev) => ({ ...prev, agreedToLgpd: true }));
+      setFormErrors((prev) => ({
+        ...prev,
+        agreedToLgpd: 'É necessário concordar com a política de privacidade antes de exportar os dados.',
+      }));
+      error('Consentimento obrigatório', 'Marque a caixa de consentimento com a política de privacidade.');
+      return;
+    }
+
     const message = formatBriefingWhatsappMessage(briefingData);
     navigator.clipboard.writeText(message);
     setCopied(true);
@@ -284,22 +377,6 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     const calendarUrl = createGoogleCalendarUrl(bookingData);
     window.open(calendarUrl, '_blank', 'noopener,noreferrer');
     success('Google Agenda aberto', 'Confira os detalhes e salve em seu calendário.');
-  };
-
-  const handleDownloadIcs = () => {
-    if (!bookingData.name.trim()) {
-      error('Preencha seu nome', 'Precisamos do seu nome para gerar o convite.');
-      return;
-    }
-    const icsContent = generateIcsContent(bookingData);
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', `reuniao-elosites-${bookingData.preferredDate}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    success('Convite baixado (.ics)', 'Abra o arquivo para adicionar ao Outlook ou Apple Calendar.');
   };
 
   return (
@@ -378,7 +455,11 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
             className="w-full"
           >
             <div className="surface-card rounded-3xl p-6 sm:p-10 relative overflow-hidden bracket-panel bg-[#090E23] border border-blue-500/25 shadow-2xl">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/[0.05] blur-3xl pointer-events-none rounded-full" />
+            <div
+              className="pointer-events-none absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-500/[0.05] blur-3xl"
+              style={{ position: 'absolute' }}
+              aria-hidden="true"
+            />
 
             <AnimatePresence mode="wait">
               {activeTab === 'briefing' ? (
@@ -400,226 +481,386 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                   </div>
 
                   <form onSubmit={handleBriefingSubmit} className="space-y-6">
-                    {/* Linha 1: Dados de Contato Direto (Nome & WhatsApp) */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Seu Nome *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={briefingData.contactName}
-                          onChange={(e) =>
-                            setBriefingData({ ...briefingData, contactName: e.target.value })
-                          }
-                          placeholder="Ex: Carlos Eduardo"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                        {formErrors.contactName && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.contactName}</p>
-                        )}
-                      </div>
+                    {(() => {
+                      const nameStatus = getBriefingValidationStatus('contactName');
+                      const whatsappStatus = getBriefingValidationStatus('whatsappContact');
+                      const businessStatus = getBriefingValidationStatus('businessName');
+                      const agreedStatus = getBriefingValidationStatus('agreedToLgpd');
 
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Seu WhatsApp para Retorno *
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          value={briefingData.whatsappContact}
-                          onChange={(e) =>
-                            setBriefingData({ ...briefingData, whatsappContact: e.target.value })
-                          }
-                          placeholder="Ex: (11) 99999-9999"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                        {formErrors.whatsappContact && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.whatsappContact}</p>
-                        )}
-                      </div>
-                    </div>
+                      return (
+                        <>
+                          {/* Linha 1: Dados de Contato Direto (Nome & WhatsApp) */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            {/* Campo: Seu Nome */}
+                            <div>
+                              <label
+                                htmlFor="briefing-contact-name"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Seu Nome *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="briefing-contact-name"
+                                  type="text"
+                                  required
+                                  value={briefingData.contactName}
+                                  onBlur={() => handleFieldBlur('contactName')}
+                                  onChange={(e) => {
+                                    setBriefingData((prev) => ({ ...prev, contactName: e.target.value }));
+                                    if (touchedFields.contactName) handleFieldBlur('contactName');
+                                  }}
+                                  placeholder="Ex: Carlos Eduardo"
+                                  aria-required="true"
+                                  aria-invalid={nameStatus.status === 'error'}
+                                  aria-describedby={nameStatus.status === 'error' ? 'briefing-name-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    nameStatus.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : nameStatus.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {nameStatus.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Nome válido" />
+                                  )}
+                                  {nameStatus.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Nome com erro" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {nameStatus.status === 'error' && (
+                                  <p id="briefing-name-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{nameStatus.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                    {/* Linha 2: Sobre a Empresa / Negócio (Nome do Negócio & Ramo de Atuação) */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Nome do Negócio / Empresa *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={briefingData.businessName}
-                          onChange={(e) =>
-                            setBriefingData({ ...briefingData, businessName: e.target.value })
-                          }
-                          placeholder="Ex: Barbearia Navalha & Estilo"
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops]"
-                        />
-                        {formErrors.businessName && (
-                          <p className="mt-1 text-xs text-rose-400">{formErrors.businessName}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                          Ramo de Atuação
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={briefingData.segment}
-                            onChange={(e) =>
-                              setBriefingData({ ...briefingData, segment: e.target.value })
-                            }
-                            className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] appearance-none cursor-pointer"
-                          >
-                            {segmentsList.map((item) => (
-                              <option key={item} value={item} className="bg-slate-900 text-white">
-                                {item}
-                              </option>
-                            ))}
-                          </select>
-                          <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                            ▼
+                            {/* Campo: WhatsApp com Máscara e Validação em tempo real */}
+                            <div>
+                              <label
+                                htmlFor="briefing-whatsapp"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Seu WhatsApp para Retorno *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="briefing-whatsapp"
+                                  type="tel"
+                                  required
+                                  value={briefingData.whatsappContact}
+                                  onBlur={() => handleFieldBlur('whatsappContact')}
+                                  onChange={(e) => {
+                                    const masked = formatPhoneMask(e.target.value);
+                                    setBriefingData((prev) => ({ ...prev, whatsappContact: masked }));
+                                    if (touchedFields.whatsappContact) handleFieldBlur('whatsappContact');
+                                  }}
+                                  placeholder="Ex: (11) 99999-9999"
+                                  maxLength={15}
+                                  aria-required="true"
+                                  aria-invalid={whatsappStatus.status === 'error'}
+                                  aria-describedby={whatsappStatus.status === 'error' ? 'briefing-whatsapp-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    whatsappStatus.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : whatsappStatus.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {whatsappStatus.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="WhatsApp válido" />
+                                  )}
+                                  {whatsappStatus.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="WhatsApp com erro" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {whatsappStatus.status === 'error' && (
+                                  <p id="briefing-whatsapp-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{whatsappStatus.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Linha 3: Formato do Site Desejado */}
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Tipo de Site Desejado
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={briefingData.projectType}
-                          onChange={(e) =>
-                            setBriefingData({ ...briefingData, projectType: e.target.value })
-                          }
-                          className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] appearance-none cursor-pointer"
-                        >
-                          {projectTypesList.map((item) => (
-                            <option key={item} value={item} className="bg-slate-900 text-white">
-                              {item}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                          ▼
-                        </div>
-                      </div>
-                    </div>
+                          {/* Linha 2: Sobre a Empresa / Negócio (Nome do Negócio & Ramo de Atuação) */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                              <label
+                                htmlFor="briefing-business-name"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Nome do Negócio / Empresa *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="briefing-business-name"
+                                  type="text"
+                                  required
+                                  value={briefingData.businessName}
+                                  onBlur={() => handleFieldBlur('businessName')}
+                                  onChange={(e) => {
+                                    setBriefingData((prev) => ({ ...prev, businessName: e.target.value }));
+                                    if (touchedFields.businessName) handleFieldBlur('businessName');
+                                  }}
+                                  placeholder="Ex: Barbearia Navalha & Estilo"
+                                  aria-required="true"
+                                  aria-invalid={businessStatus.status === 'error'}
+                                  aria-describedby={businessStatus.status === 'error' ? 'briefing-business-error' : undefined}
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    businessStatus.status === 'error'
+                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : businessStatus.status === 'success'
+                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {businessStatus.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Nome da empresa válido" />
+                                  )}
+                                  {businessStatus.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Nome da empresa com erro" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {businessStatus.status === 'error' && (
+                                  <p id="briefing-business-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{businessStatus.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                    {/* Faixa de Investimento Pretendida (4 opções, desmarcada por padrão) */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                          Faixa de Investimento Pretendida
-                        </label>
-                        <span className="text-[11px] text-slate-400 font-mono">(opcional)</span>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                        {[
-                          'De R$ 500 a R$ 700',
-                          'De R$ 700 a R$ 900',
-                          'De R$ 900 a R$ 1.200',
-                          'Prefiro conversar',
-                        ].map((range) => {
-                          const isSelected = briefingData.investmentRange === range;
-                          return (
-                            <button
-                              key={range}
-                              type="button"
-                              onClick={() =>
-                                setBriefingData({
-                                  ...briefingData,
-                                  investmentRange: isSelected ? '' : range,
-                                })
-                              }
-                              className={`py-2.5 px-3 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer border ${
-                                isSelected
-                                  ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_15px_rgba(37,99,235,0.45)]'
-                                  : 'bg-slate-950/80 border-blue-500/20 text-slate-300 hover:text-white hover:border-blue-400/40'
-                              }`}
+                            <div>
+                              <label
+                                htmlFor="briefing-segment"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Ramo de Atuação
+                              </label>
+                              <div className="relative">
+                                <select
+                                  id="briefing-segment"
+                                  value={briefingData.segment}
+                                  onChange={(e) =>
+                                    setBriefingData((prev) => ({ ...prev, segment: e.target.value }))
+                                  }
+                                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                                >
+                                  {segmentsList.map((item) => (
+                                    <option key={item} value={item} className="bg-slate-900 text-white">
+                                      {item}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                  ▼
+                                </div>
+                              </div>
+                              <div className="min-h-[18px] mt-1.5" />
+                            </div>
+                          </div>
+
+                          {/* Linha 3: Formato do Site Desejado */}
+                          <div>
+                            <label
+                              htmlFor="briefing-project-type"
+                              className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
                             >
-                              {range}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
+                              Tipo de Site Desejado
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="briefing-project-type"
+                                value={briefingData.projectType}
+                                onChange={(e) =>
+                                  setBriefingData((prev) => ({ ...prev, projectType: e.target.value }))
+                                }
+                                className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                              >
+                                {projectTypesList.map((item) => (
+                                  <option key={item} value={item} className="bg-slate-900 text-white">
+                                    {item}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                ▼
+                              </div>
+                            </div>
+                          </div>
 
-                    {/* Linha 4: Objetivos e Detalhes do Projeto */}
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Conte um pouco sobre o projeto e seus objetivos
-                      </label>
-                      <textarea
-                        rows={4}
-                        value={briefingData.description}
-                        onChange={(e) =>
-                          setBriefingData({ ...briefingData, description: e.target.value })
-                        }
-                        placeholder="Ex: Quero que os clientes vejam meus serviços, valores e chamem direto no WhatsApp para agendar. Já tenho fotos do espaço e logotipo..."
-                        className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] resize-y"
-                      />
-                    </div>
+                          {/* Faixa de Investimento Pretendida (caixa de seleção) */}
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <label
+                                htmlFor="briefing-investment-range"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider"
+                              >
+                                Faixa de Investimento Pretendida
+                              </label>
+                              <span className="text-[11px] text-slate-400 font-mono">(opcional)</span>
+                            </div>
+                            <div className="relative">
+                              <select
+                                id="briefing-investment-range"
+                                value={briefingData.investmentRange}
+                                onChange={(e) =>
+                                  setBriefingData((prev) => ({ ...prev, investmentRange: e.target.value }))
+                                }
+                                className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                              >
+                                <option value="" className="bg-slate-900 text-slate-400">
+                                  Selecione uma faixa (opcional)
+                                </option>
+                                <option value="De R$ 500 a R$ 700" className="bg-slate-900 text-white">
+                                  De R$ 500 a R$ 700
+                                </option>
+                                <option value="De R$ 700 a R$ 900" className="bg-slate-900 text-white">
+                                  De R$ 700 a R$ 900
+                                </option>
+                                <option value="De R$ 900 a R$ 1.200" className="bg-slate-900 text-white">
+                                  De R$ 900 a R$ 1.200
+                                </option>
+                                <option value="Prefiro conversar" className="bg-slate-900 text-white">
+                                  Prefiro conversar
+                                </option>
+                              </select>
+                              <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                ▼
+                              </div>
+                            </div>
+                          </div>
 
-                    {/* LGPD Consent */}
-                    <div className="flex items-start gap-3 pt-2">
-                      <input
-                        type="checkbox"
-                        id="lgpd-consent-briefing"
-                        checked={briefingData.agreedToLgpd}
-                        onChange={(e) =>
-                          setBriefingData({ ...briefingData, agreedToLgpd: e.target.checked })
-                        }
-                        className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                      />
-                      <label
-                        htmlFor="lgpd-consent-briefing"
-                        className="text-xs text-slate-400 leading-relaxed cursor-pointer"
-                      >
-                        Concordo com o uso dos dados informados para contato comercial e elaboração de orçamento pela ēloSites, de acordo com a{' '}
-                        <button
-                          type="button"
-                          onClick={onOpenPrivacy}
-                          className="text-blue-400 underline hover:text-indigo-300 inline"
-                        >
-                          Política de Privacidade
-                        </button>
-                        .
-                      </label>
-                    </div>
-                    {formErrors.agreedToLgpd && (
-                      <p className="text-xs text-rose-400">{formErrors.agreedToLgpd}</p>
-                    )}
+                          {/* Linha 4: Objetivos e Detalhes do Projeto */}
+                          <div>
+                            <label
+                              htmlFor="briefing-description"
+                              className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                            >
+                              Conte um pouco sobre o projeto e seus objetivos
+                            </label>
+                            <textarea
+                              id="briefing-description"
+                              rows={4}
+                              value={briefingData.description}
+                              onChange={(e) =>
+                                setBriefingData((prev) => ({ ...prev, description: e.target.value }))
+                              }
+                              placeholder="Ex: Quero que os clientes vejam meus serviços, valores e chamem direto no WhatsApp para agendar. Já tenho fotos do espaço e logotipo..."
+                              className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all resize-y"
+                            />
+                          </div>
 
-                    {/* Submit Actions */}
-                    <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                      <button
-                        type="submit"
-                        className="cta-primary inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-white pressable min-h-12 flex-1"
-                      >
-                        <WhatsAppIcon className="w-5 h-5 shrink-0" />
-                        <span className="text-center">Enviar Briefing pelo WhatsApp</span>
-                      </button>
+                          {/* LGPD Consent com validação em tempo real e aria-live */}
+                          <div className="pt-2">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                id="lgpd-consent-briefing"
+                                checked={briefingData.agreedToLgpd}
+                                onBlur={() => handleFieldBlur('agreedToLgpd')}
+                                onChange={(e) => {
+                                  setBriefingData((prev) => ({ ...prev, agreedToLgpd: e.target.checked }));
+                                  handleFieldBlur('agreedToLgpd');
+                                }}
+                                aria-required="true"
+                                aria-invalid={agreedStatus.status === 'error'}
+                                aria-describedby={agreedStatus.status === 'error' ? 'briefing-lgpd-error' : undefined}
+                                className="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                              />
+                              <label
+                                htmlFor="lgpd-consent-briefing"
+                                className="text-xs text-slate-400 leading-relaxed cursor-pointer select-none"
+                              >
+                                Concordo com o uso dos dados informados para contato comercial e elaboração de orçamento pela ēloSites, de acordo com a{' '}
+                                <button
+                                  type="button"
+                                  onClick={onOpenPrivacy}
+                                  className="text-blue-400 underline hover:text-indigo-300 inline font-medium"
+                                >
+                                  Política de Privacidade
+                                </button>
+                                . <span className="text-amber-400/90 font-semibold" title="Obrigatório">*</span>
+                              </label>
+                            </div>
+                            <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                              {agreedStatus.status === 'error' && (
+                                <p id="briefing-lgpd-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                  <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                  <span>{agreedStatus.message}</span>
+                                </p>
+                              )}
+                              {agreedStatus.status === 'success' && (
+                                <p className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                  <span>Termos de privacidade aceitos. Envio liberado.</span>
+                                </p>
+                              )}
+                            </div>
+                          </div>
 
-                      <button
-                        type="button"
-                        onClick={handleCopyBriefing}
-                        className="cta-secondary inline-flex items-center justify-center text-center gap-2 px-5 py-4 rounded-xl text-sm font-semibold border border-slate-700/80 text-slate-200 hover:text-white pressable min-h-12"
-                      >
-                        {copied ? (
-                          <Check className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-blue-400" />
-                        )}
-                        <span className="text-center">{copied ? 'Copiado!' : 'Copiar Resumo'}</span>
-                      </button>
-                    </div>
+                          {/* Submit Actions */}
+                          <div className="pt-2">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                              <button
+                                type="submit"
+                                disabled={!briefingData.agreedToLgpd}
+                                aria-disabled={!briefingData.agreedToLgpd}
+                                className={`cta-primary inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-white min-h-12 flex-1 transition-all ${
+                                  !briefingData.agreedToLgpd
+                                    ? 'opacity-40 cursor-not-allowed bg-slate-800 border border-slate-700/60 shadow-none pointer-events-auto'
+                                    : 'pressable'
+                                }`}
+                              >
+                                <WhatsAppIcon className="w-5 h-5 shrink-0" />
+                                <span className="text-center">Enviar Briefing pelo WhatsApp</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={handleCopyBriefing}
+                                disabled={!briefingData.agreedToLgpd}
+                                aria-disabled={!briefingData.agreedToLgpd}
+                                className={`cta-secondary inline-flex items-center justify-center text-center gap-2 px-5 py-4 rounded-xl text-sm font-semibold border border-slate-700/80 text-slate-200 min-h-12 transition-all ${
+                                  !briefingData.agreedToLgpd
+                                    ? 'opacity-40 cursor-not-allowed text-slate-500 border-slate-800'
+                                    : 'hover:text-white pressable'
+                                }`}
+                              >
+                                {copied ? (
+                                  <Check className="w-4 h-4 text-emerald-400" />
+                                ) : (
+                                  <Copy className="w-4 h-4 text-blue-400" />
+                                )}
+                                <span className="text-center">{copied ? 'Copiado!' : 'Copiar Resumo'}</span>
+                              </button>
+                            </div>
+
+                            {!briefingData.agreedToLgpd && (
+                              <p className="mt-3 text-xs text-amber-300/85 flex items-center gap-1.5 font-medium">
+                                <AlertCircle className="w-3.5 h-3.5 shrink-0 text-amber-400" aria-hidden="true" />
+                                <span>Marque a caixa de consentimento com a Política de Privacidade acima para liberar o envio do orçamento.</span>
+                              </p>
+                            )}
+                          </div>
+                        </>
+                      );
+                    })()}
                   </form>
                 </motion.div>
               ) : (
@@ -1004,16 +1245,6 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                       >
                         <CalendarPlus className="w-4 h-4 text-indigo-400" />
                         <span className="text-center">Salvar no Google Agenda</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleDownloadIcs}
-                        className="cta-secondary inline-flex items-center justify-center text-center gap-2 px-4 py-4 rounded-xl text-xs sm:text-sm font-semibold border border-slate-700/80 text-slate-200 hover:text-white pressable min-h-12"
-                        title="Baixar arquivo .ics para Apple Calendar ou Outlook"
-                      >
-                        <Download className="w-4 h-4 text-slate-400" />
-                        <span className="text-center">Baixar .ics</span>
                       </button>
                     </div>
                   </form>

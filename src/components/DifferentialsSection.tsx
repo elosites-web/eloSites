@@ -173,15 +173,15 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
               >
                 <Interactive3DCard maxTilt={1.2} className="h-full">
                   <article
-                    className="glass-card-interactive surface-card differential-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 h-full w-full p-5 sm:p-6 md:p-8 flex flex-col justify-between group shadow-2xl shadow-black/80 bracket-panel transition-all"
+                    className="differential-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#0a0f28] border border-blue-500/30 hover:border-blue-400/60 h-full w-full p-5 sm:p-6 md:p-8 flex flex-col justify-between group shadow-2xl shadow-black/85 bracket-panel transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2.5 mb-5">
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 ${
                             item.isWhatsApp
-                              ? 'bg-[#25D366] text-white shadow-md shadow-emerald-950/40'
-                              : 'bg-blue-950/80 border border-blue-500/30 text-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.25)]'
+                              ? 'bg-[#25D366] text-white shadow-lg shadow-emerald-950/50 border border-emerald-300/40'
+                              : 'bg-blue-950 border border-blue-400/40 text-blue-300 shadow-[0_0_14px_rgba(59,130,246,0.3)]'
                           }`}
                         >
                           {item.isWhatsApp ? (
@@ -190,22 +190,22 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
                             <Icon className="w-5 h-5" aria-hidden="true" />
                           )}
                         </div>
-                        <span className="font-mono text-xs font-bold text-blue-400/80 group-hover:text-blue-300 transition-colors">
+                        <span className="font-mono text-xs font-bold text-blue-300 bg-blue-950 px-2.5 py-0.5 rounded-md border border-blue-500/40">
                           0{index + 1}
                         </span>
                       </div>
 
-                      <h3 className="font-display text-lg font-bold tracking-tight text-white mb-2.5 group-hover:text-blue-100 transition-colors">
+                      <h3 className="font-display text-lg sm:text-xl font-bold tracking-tight text-white mb-2.5 drop-shadow-sm">
                         {item.title}
                       </h3>
-                      <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                      <p className="text-sm text-slate-100 font-medium leading-relaxed">
                         {item.description}
                       </p>
                     </div>
 
-                    <div className="mt-6 pt-3.5 border-t border-white/[0.08] flex items-center gap-1.5 text-xs text-slate-400">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-                      <span className="font-medium text-slate-300">Padrão ēloSites</span>
+                    <div className="mt-6 pt-3.5 border-t border-blue-500/25 flex items-center gap-2 text-xs">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                      <span className="font-semibold text-slate-200">Padrão ēloSites</span>
                     </div>
                   </article>
                 </Interactive3DCard>
@@ -217,12 +217,12 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
         {/* Aviso de responsabilidade e alinhamento estratégico */}
         <BiReveal direction="up" delay={150}>
           <div className="mt-10 sm:mt-12 max-w-2xl mx-auto text-center px-4">
-            <p className="inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm text-blue-200/90 leading-relaxed bg-blue-950/40 border border-blue-500/25 rounded-xl px-4 sm:px-5 py-3 shadow-md">
+            <p className="inline-flex items-center justify-center gap-3 text-sm sm:text-base text-slate-100 font-medium leading-relaxed bg-[#0b122e] border border-blue-400/40 rounded-2xl px-5 sm:px-6 py-4 shadow-xl shadow-black/70">
               <CheckCircle2
-                className="w-4 h-4 text-blue-400 shrink-0"
+                className="w-5 h-5 text-emerald-400 shrink-0 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                 aria-hidden="true"
               />
-              <span>
+              <span className="text-white font-medium">
                 O site apoia sua divulgação. Você continua responsável por atrair pessoas, atender os contatos e conduzir as vendas.
               </span>
             </p>

@@ -58,8 +58,8 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
 
     if (isOverInteractive) {
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      card.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      card.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1)';
+      card.style.transform = 'none';
       if (glareRef.current) glareRef.current.style.opacity = '0';
       return;
     }
@@ -102,14 +102,15 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     const card = cardRef.current;
     if (card) {
-      card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      card.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+      card.style.transform = 'none';
       if (settleTimerRef.current) window.clearTimeout(settleTimerRef.current);
       settleTimerRef.current = window.setTimeout(() => {
         if (!cardRef.current) return;
         cardRef.current.style.willChange = 'auto';
+        cardRef.current.style.transform = 'none';
         cardRef.current.style.transition = '';
-      }, 420);
+      }, 350);
     }
     if (glareRef.current) glareRef.current.style.opacity = '0';
   };

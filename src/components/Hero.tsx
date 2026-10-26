@@ -267,10 +267,10 @@ export const Hero: React.FC<HeroProps> = ({
                 {/* Subtítulo e texto de apoio para leigos */}
                 <BiReveal direction="left" delay={160}>
                   <div className="space-y-3 max-w-xl text-left">
-                    <p className="text-base sm:text-lg text-slate-200 font-medium leading-relaxed">
+                    <p className="text-base sm:text-lg text-slate-100 font-medium leading-relaxed">
                       Criamos o site do seu negócio: com fotos reais, que abre rápido até no 4G e leva o cliente direto para o seu WhatsApp. Você fala direto com o fundador, e a manutenção é opcional.
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
                       O Instagram continua útil. Mas quem pesquisa no Google geralmente está procurando alguém para resolver algo agora. E o site é seu: fica no ar com o seu nome, mostra suas fotos e serviços e leva a pessoa direto ao seu WhatsApp.
                     </p>
                   </div>
@@ -285,7 +285,7 @@ export const Hero: React.FC<HeroProps> = ({
                         <Monitor className="w-4 h-4" />
                       </div>
                       <span className="text-xs font-semibold text-white text-center">Fotos reais</span>
-                      <span className="text-[10px] text-slate-400 text-center">Do seu negócio</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Do seu negócio</span>
                     </div>
 
                     {/* Pilar 2 */}
@@ -294,7 +294,7 @@ export const Hero: React.FC<HeroProps> = ({
                         <Zap className="w-4 h-4" />
                       </div>
                       <span className="text-xs font-semibold text-white text-center">Abre rápido</span>
-                      <span className="text-[10px] text-slate-400 text-center">Até no 4G</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Até no 4G</span>
                     </div>
 
                     {/* Pilar 3 */}
@@ -303,7 +303,7 @@ export const Hero: React.FC<HeroProps> = ({
                         <Search className="w-4 h-4" />
                       </div>
                       <span className="text-xs font-semibold text-white text-center">No Google</span>
-                      <span className="text-[10px] text-slate-400 text-center">Para ser achado</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Para ser achado</span>
                     </div>
 
                     {/* Pilar 4 */}
@@ -312,7 +312,7 @@ export const Hero: React.FC<HeroProps> = ({
                         <Smartphone className="w-4 h-4" />
                       </div>
                       <span className="text-xs font-semibold text-white text-center">No celular</span>
-                      <span className="text-[10px] text-slate-400 text-center">E no computador</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">E no computador</span>
                     </div>
                   </div>
                 </BiReveal>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
@@ -13,296 +13,262 @@ import {
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
-import { ProjectModal } from './ProjectModal';
-import { ScreenshotLightbox } from './ScreenshotLightbox';
 import { LazyPortfolioImage } from './LazyPortfolioImage';
 import { SplitLines } from './SplitLines';
 import { Reveal } from './Reveal';
 import { BiReveal } from './BiReveal';
 import { Interactive3DCard } from './Interactive3DCard';
 import { MagneticButton } from './MagneticButton';
-import { getDynamicCardVariants } from '../motionVariants';
+import {
+  PORTFOLIO_PROJECTS,
+  PortfolioProjectData,
+  preloadProjectWebpImages,
+  preloadAllPortfolioWebpImages,
+} from '../portfolioData';
 
-export interface PortfolioProjectData {
-  id: string;
-  badge: string;
-  status: string;
-  title: string;
-  category: 'landing' | 'institutional';
-  challenge: string;
-  solution: string;
-  tags: string[];
-  urlLabel: string;
-  href: string;
-  desktopImage: string;
-  mobileImage: string;
-  features: string[];
-  resultsNote: string;
-}
-
-export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
-  {
-    id: 'garagem-mailasque',
-    badge: 'Site de uma página',
-    status: 'Publicado & Ativo',
-    title: 'Garagem Mailasque — Funilaria & Pintura',
-    category: 'landing',
-    challenge:
-      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque/SP (Mailasqui). Precisava de presença no Google para ser encontrada por motoristas da região e agilizar orçamentos de reparos e sinistros pelo WhatsApp.',
-    solution:
-      'Site de uma página ágil e direto, com catálogo dos serviços de funilaria, pintura e restauração, localização com mapa e canal no WhatsApp preparado para o cliente enviar fotos do veículo danificado.',
-    tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos', 'Orçamento no WhatsApp'],
-    urlLabel: 'garagemmailasque.com.br',
-    href: 'https://garagemmailasque.com.br/',
-    desktopImage: '/garagem-mailasque-mobile.jpg',
-    mobileImage: '/garagem-mailasque-mobile.jpg',
-    features: [
-      'Botão de WhatsApp com mensagem pronta para envio de fotos do veículo',
-      'Catálogo claro dos serviços de reparo, pintura e polimento automotivo',
-      'Endereço e mapa para localização rápida de motoristas de São Roque e região',
-    ],
-    resultsNote: 'Presença no Google consolidada, com atendimento direto pelo WhatsApp para envio de fotos e orçamentos.',
-  },
-  {
-    id: 'toledo-seguranca',
-    badge: 'Site completo',
-    status: 'Publicado & Ativo',
-    title: 'Toledo Segurança',
-    category: 'institutional',
-    challenge:
-      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de um site profissional para passar confiança a empresas e condomínios e receber pedidos de orçamento.',
-    solution:
-      'Site completo com apresentação detalhada dos serviços, fotos da equipe e estrutura, formulário de contato e botão para orçamento comercial no WhatsApp.',
-    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Condomínios & Empresas'],
-    urlLabel: 'toledoseg.com.br',
-    href: 'https://toledoseg.com.br',
-    desktopImage: '/portifolio-toledoseguranca-desktop.webp',
-    mobileImage: '/portifolio-toledoseguranca-mobile.webp',
-    features: [
-      'Apresentação profissional pensada para passar credibilidade',
-      'Seções organizadas para serviços de eventos, condomínios e empresas',
-      'Canais de atendimento no WhatsApp para cotações e vagas de trabalho',
-    ],
-    resultsNote: 'Presença profissional consolidada para atender condomínios, eventos e empresas.',
-  },
-  {
-    id: 'jv-salvaia',
-    badge: 'Site de uma página',
-    status: 'Publicado & Ativo',
-    title: 'JV Salvaia Personal Trainer',
-    category: 'landing',
-    challenge:
-      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Precisava de uma página rápida para apresentar suas modalidades e levar os interessados direto para o seu WhatsApp.',
-    solution:
-      'Site de uma página com carregamento rápido no celular, botões de WhatsApp personalizados para cada modalidade, fotos de resultados e depoimentos reais em destaque.',
-    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Direto no WhatsApp'],
-    urlLabel: 'jvsalvaiapersonal.netlify.app',
-    href: 'https://jvsalvaiapersonal.netlify.app',
-    desktopImage: '/portifolio-jvsalvaia-desktop.webp',
-    mobileImage: '/portifolio-jvsalvaia-mobile.webp',
-    features: [
-      'Botão direto para o WhatsApp com mensagem pronta para cada plano',
-      'Funciona perfeito no celular, tablet e computador',
-      'Fotos leves que abrem rápido e preparado para o Google',
-    ],
-    resultsNote: 'Contatos organizados com mensagem específica do serviço de interesse.',
-  },
-  {
-    id: 'duelo-fim-de-ano',
-    badge: 'Página interativa',
-    status: 'Publicado & Ativo',
-    title: 'Duelo de Fim de Ano — Badem vs Becala',
-    category: 'landing',
-    challenge:
-      'Organização de um clássico esportivo comunitário e beneficente de fim de ano que precisava de engajamento da torcida, votação dos melhores da partida e mural de fotos sem custos nem complicação técnica.',
-    solution:
-      'Página interativa com campinho de futebol para ver as escalações, votação direto no celular e galeria com fotos reais dos jogos.',
-    tags: ['Interatividade', 'Engajamento', 'Futebol Amador', 'Fácil de Usar'],
-    urlLabel: 'jogodefimdeano.netlify.app',
-    href: 'https://jogodefimdeano.netlify.app',
-    desktopImage: '/portifolio-jogodefimdeano-desktop.webp',
-    mobileImage: '/portifolio-jogodefimdeano-mobile.webp',
-    features: [
-      'Escalações em campo de futebol interativo',
-      'Votação no celular para escolher os melhores em campo',
-      'Galeria de fotos leves dos jogos',
-    ],
-    resultsNote: 'Engajamento da comunidade com página leve, dinâmica e fácil de usar no celular.',
-  },
-];
+export type { PortfolioProjectData };
+export { PORTFOLIO_PROJECTS };
 
 type ViewMode = 'composite' | 'desktop' | 'mobile';
 
 interface ProjectCardProps {
   project: PortfolioProjectData;
-  onOpenZoom: (imgSrc: string, title: string) => void;
-  onOpenDetails: (project: PortfolioProjectData) => void;
+  onOpenCase: (projectId: string) => void;
+  onOpenImage: (projectId: string, type: 'desktop' | 'mobile') => void;
   priority?: boolean;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
-  onOpenZoom,
-  onOpenDetails,
+  onOpenCase,
+  onOpenImage,
   priority = false,
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('composite');
 
+  // Disparo de preload imediato por intenção de navegação
+  const handleIntentPreload = () => {
+    preloadProjectWebpImages(project);
+  };
+
   return (
     <Interactive3DCard maxTilt={1.2} animatedBorder={true} className="h-full">
-      <article className="glass-card-interactive surface-card portfolio-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 flex flex-col h-full overflow-hidden group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all">
+      <article
+        onMouseEnter={handleIntentPreload}
+        onFocusCapture={handleIntentPreload}
+        onTouchStart={handleIntentPreload}
+        className="portfolio-card relative rounded-2xl bg-[#090e26] border border-blue-500/30 hover:border-blue-400/60 flex flex-col h-full overflow-hidden group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/85 bracket-panel transition-all"
+      >
         {/* Top Header / Informações */}
-        <div className="p-6 sm:p-7 border-b border-white/[0.06] bg-[#070B1A]/80 space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-[11px] font-mono uppercase bg-blue-950/70 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full font-semibold">
-            {project.badge}
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            {project.status}
-          </span>
-        </div>
-
-        <div>
-          <button
-            type="button"
-            onClick={() => onOpenDetails(project)}
-            className="text-left font-display text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-200 hover:text-blue-300 transition-colors cursor-pointer w-full"
-            title="Ver estudo de caso e resultados"
-          >
-            {project.title}
-          </button>
-          <p className="mt-1 text-xs text-slate-400 font-mono flex items-center gap-1.5">
-            <span className="text-blue-400 font-bold">🌐</span>
-            <span>{project.urlLabel}</span>
-          </p>
-        </div>
-
-        <div className="space-y-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
-          <p>
-            <strong className="text-white font-semibold">Desafio:</strong> {project.challenge}
-          </p>
-          <p>
-            <strong className="text-blue-300 font-semibold">Solução ēloSites:</strong> {project.solution}
-          </p>
-        </div>
-
-        {/* Ver Detalhes e Tags */}
-        <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={() => onOpenDetails(project)}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
-          >
-            <span>Ver detalhes do projeto</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5 pt-1 portfolio-list scroll-perf-list">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900/90 border border-blue-500/15 text-[11px] font-medium text-slate-300"
-            >
-              <CheckCircle2 className="w-3 h-3 text-blue-400" aria-hidden="true" />
-              {tag}
+        <div className="p-6 sm:p-7 border-b border-blue-500/20 bg-[#070b1c] space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
+              {project.badge}
             </span>
-          ))}
-        </div>
-      </div>
+            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-300 font-semibold bg-emerald-950/60 border border-emerald-400/40 px-2.5 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              {project.status}
+            </span>
+          </div>
 
-      {/* Visual Mockup Area com Seletor */}
-      <div className="p-4 sm:p-5 bg-[#04060E] flex-1 flex flex-col justify-between space-y-4 lg:flex-none lg:row-span-3 lg:grid lg:grid-rows-subgrid">
-        {/* Controles de visualização: Composto, Desktop, Mobile */}
-        <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 lg:justify-center lg:gap-3">
-          <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-blue-500/15 text-xs font-medium">
+          <div>
             <button
               type="button"
-              onClick={() => setViewMode('composite')}
-              aria-label="Ver mockup composto sobreposto"
-              className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all ${
-                viewMode === 'composite'
-                  ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              onClick={() => onOpenCase(project.id)}
+              className="text-left font-display text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-200 hover:text-blue-300 transition-colors cursor-pointer w-full drop-shadow-sm"
+              title="Ver o case completo"
             >
-              <Layers className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline text-center">Composto</span>
+              {project.title}
             </button>
+            <p className="mt-1 text-xs text-slate-300 font-mono flex items-center gap-1.5 font-medium">
+              <span className="text-blue-400 font-bold">🌐</span>
+              <span>{project.urlLabel}</span>
+            </p>
+          </div>
+
+          <div className="space-y-2.5 text-xs sm:text-sm text-slate-100 font-medium leading-relaxed">
+            <p>
+              <strong className="text-white font-bold">Desafio:</strong> {project.challenge}
+            </p>
+            <p>
+              <strong className="text-blue-300 font-bold">Solução ēloSites:</strong> {project.solution}
+            </p>
+          </div>
+
+          {/* Ver o Case Completo e Tags */}
+          <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
             <button
               type="button"
-              onClick={() => setViewMode('desktop')}
-              aria-label="Ver imagem desktop"
-              className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all ${
-                viewMode === 'desktop'
-                  ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              onClick={() => onOpenCase(project.id)}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-300 hover:text-blue-200 transition-colors cursor-pointer"
             >
-              <Monitor className="w-3.5 h-3.5" />
-              <span className="text-center">Desktop</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('mobile')}
-              aria-label="Ver imagem mobile"
-              className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all ${
-                viewMode === 'mobile'
-                  ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              <span className="text-center">Mobile</span>
+              <span>Ver o case completo</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              onOpenZoom(
-                viewMode === 'mobile' ? project.mobileImage : project.desktopImage,
-                `${project.title} (${viewMode.toUpperCase()})`
-              )
-            }
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            title="Ampliar captura em alta resolução"
-            aria-label="Ampliar captura em tela cheia"
-          >
-            <Maximize2 className="w-4 h-4" />
-          </button>
+          <div className="flex flex-wrap gap-1.5 pt-1 portfolio-list scroll-perf-list">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900 border border-blue-400/30 text-[11px] font-semibold text-slate-200"
+              >
+                <CheckCircle2 className="w-3 h-3 text-blue-400" aria-hidden="true" />
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Display do Mockup conforme Modo (revelado em máscara, uma vez) */}
-        <Reveal
-          variant="mask"
-          className="relative min-h-[300px] sm:min-h-[330px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-slate-950/70 border border-white/[0.05] p-2 sm:p-3"
-        >
-          {/* MODO 1: COMPOSTO (Desktop com largura total + Celular sobreposto à direita e abaixo) */}
-          {viewMode === 'composite' && (
-            <div className="relative w-full h-full flex items-center justify-center py-2">
-              {/* Desktop Window Frame com largura total expandida */}
-              <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-2xl shadow-black/80 transition-transform duration-300 group-hover:scale-[1.01]">
-                {/* Browser topbar */}
-                <div className="px-3 py-1.5 bg-slate-900 border-b border-white/[0.08] flex items-center gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                    <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                    <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+        {/* Visual Mockup Area com Seletor */}
+        <div className="p-4 sm:p-5 bg-[#04060E] flex-1 flex flex-col justify-between space-y-4 lg:flex-none lg:row-span-3 lg:grid lg:grid-rows-subgrid">
+          {/* Controles de visualização: Composto, Desktop, Mobile */}
+          <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 lg:justify-center lg:gap-3">
+            <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-blue-500/15 text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => setViewMode('composite')}
+                aria-label="Ver mockup composto sobreposto"
+                className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  viewMode === 'composite'
+                    ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span className="hidden xs:inline text-center">Composto</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('desktop')}
+                aria-label="Ver imagem desktop"
+                className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  viewMode === 'desktop'
+                    ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                <span className="text-center">Desktop</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('mobile')}
+                aria-label="Ver imagem mobile"
+                className={`flex items-center justify-center text-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  viewMode === 'mobile'
+                    ? 'bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(37,99,235,0.5)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span className="text-center">Mobile</span>
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                onOpenImage(
+                  project.id,
+                  viewMode === 'mobile' ? 'mobile' : 'desktop'
+                )
+              }
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Abrir captura em tela cheia"
+              aria-label="Abrir captura em tela cheia"
+            >
+              <Maximize2 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Display do Mockup conforme Modo (revelado em máscara, uma vez) */}
+          <Reveal
+            variant="mask"
+            className="relative min-h-[300px] sm:min-h-[330px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-slate-950/70 border border-white/[0.05] p-2 sm:p-3"
+          >
+            {/* MODO 1: COMPOSTO (Desktop com largura total + Celular sobreposto à direita e abaixo) */}
+            {viewMode === 'composite' && (
+              <div className="relative w-full h-full flex items-center justify-center py-2">
+                {/* Desktop Window Frame com largura total expandida */}
+                <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-2xl shadow-black/80 transition-transform duration-300 group-hover:scale-[1.01]">
+                  {/* Browser topbar */}
+                  <div className="px-3 py-1.5 bg-slate-900 border-b border-white/[0.08] flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-rose-500/80" />
+                      <span className="w-2 h-2 rounded-full bg-amber-500/80" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <div className="flex-1 bg-slate-950 rounded px-2 py-0.5 text-[10px] text-slate-400 font-mono truncate border border-white/[0.05]">
+                      {project.urlLabel}
+                    </div>
                   </div>
-                  <div className="flex-1 bg-slate-950 rounded px-2 py-0.5 text-[10px] text-slate-400 font-mono truncate border border-white/[0.05]">
-                    {project.urlLabel}
+                  {/* Desktop Screenshot */}
+                  <div
+                    className="aspect-[16/10] overflow-hidden bg-slate-900 cursor-pointer"
+                    onClick={() => onOpenImage(project.id, 'desktop')}
+                    title="Clique para abrir captura Desktop completa"
+                  >
+                    <LazyPortfolioImage
+                      src={project.desktopImage}
+                      alt={`Versão Desktop do site ${project.title}`}
+                      wrapperClassName="relative w-full h-full overflow-hidden"
+                      className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+                      rootMargin="500px 0px 500px 0px"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                      priority={priority}
+                    />
                   </div>
                 </div>
-                {/* Desktop Screenshot */}
+
+                {/* Mobile Phone Mockup Sobreposto com 3D Breakout de Profundidade */}
                 <div
-                  className="aspect-[16/10] overflow-hidden bg-slate-900 cursor-zoom-in"
-                  onClick={() => onOpenZoom(project.desktopImage, `${project.title} - Desktop`)}
+                  className="absolute right-1 sm:right-2 -bottom-1 sm:bottom-0 w-[36%] sm:w-[33%] max-w-[155px] sm:max-w-[170px] rounded-[20px] p-1.5 sm:p-2 bg-[#090d16] border-2 border-indigo-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.95)] shadow-indigo-950/60 breakout-layer-front cursor-pointer z-20 hover:scale-105 transition-all duration-300"
+                  style={{ transform: 'translateZ(38px)' }}
+                  onClick={() => onOpenImage(project.id, 'mobile')}
+                  title="Clique para abrir captura Mobile completa"
+                >
+                  {/* Phone screen */}
+                  <div className="rounded-[14px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
+                    <LazyPortfolioImage
+                      src={project.mobileImage}
+                      alt={`Versão Mobile do site ${project.title}`}
+                      wrapperClassName="relative w-full h-full overflow-hidden"
+                      className="w-full h-full object-cover object-top"
+                      rootMargin="500px 0px 500px 0px"
+                      sizes="(max-width: 640px) 140px, 170px"
+                    />
+                  </div>
+                  {/* Badge visual */}
+                  <div className="absolute -bottom-2 -left-2 bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow border border-indigo-400/30">
+                    📱 Mobile
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* MODO 2: APENAS DESKTOP */}
+            {viewMode === 'desktop' && (
+              <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-xl">
+                <div className="px-3 py-2 bg-slate-900 border-b border-white/[0.08] flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-mono truncate">
+                    {project.urlLabel}
+                  </span>
+                  <span className="text-[10px] text-indigo-400 font-semibold uppercase">Desktop</span>
+                </div>
+                <div
+                  className="aspect-[16/10] overflow-hidden bg-slate-950 cursor-pointer"
+                  onClick={() => onOpenImage(project.id, 'desktop')}
+                  title="Clique para abrir captura Desktop completa"
                 >
                   <LazyPortfolioImage
                     src={project.desktopImage}
-                    alt={`Versão Desktop do site ${project.title}`}
+                    alt={`Captura Desktop completa de ${project.title}`}
                     wrapperClassName="relative w-full h-full overflow-hidden"
                     className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
                     rootMargin="500px 0px 500px 0px"
@@ -311,143 +277,95 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   />
                 </div>
               </div>
+            )}
 
-              {/* Mobile Phone Mockup Sobreposto com 3D Breakout de Profundidade */}
-              <div
-                className="absolute right-1 sm:right-2 -bottom-1 sm:bottom-0 w-[36%] sm:w-[33%] max-w-[155px] sm:max-w-[170px] rounded-[20px] p-1.5 sm:p-2 bg-[#090d16] border-2 border-indigo-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.95)] shadow-indigo-950/60 breakout-layer-front cursor-zoom-in z-20 hover:scale-105 transition-all duration-300"
-                style={{ transform: 'translateZ(38px)' }}
-                onClick={() => onOpenZoom(project.mobileImage, `${project.title} - Mobile`)}
-                title="Clique para ampliar versão mobile"
+            {/* MODO 3: APENAS MOBILE (Largura ampliada e centrada) */}
+            {viewMode === 'mobile' && (
+              <div className="flex items-center justify-center py-2 w-full">
+                <div
+                  className="w-[210px] sm:w-[240px] max-w-full rounded-[26px] p-2 sm:p-2.5 bg-[#090d16] border-2 border-indigo-500/50 shadow-2xl shadow-black cursor-pointer"
+                  onClick={() => onOpenImage(project.id, 'mobile')}
+                  title="Clique para abrir captura Mobile completa"
+                >
+                  {/* Speaker pill */}
+                  <div className="w-12 h-1.5 bg-slate-700 mx-auto rounded-full mb-1.5" />
+                  <div className="rounded-[20px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
+                    <LazyPortfolioImage
+                      src={project.mobileImage}
+                      alt={`Captura Mobile completa de ${project.title}`}
+                      wrapperClassName="relative w-full h-full overflow-hidden"
+                      className="w-full h-full object-cover object-top"
+                      rootMargin="500px 0px 500px 0px"
+                      sizes="(max-width: 640px) 210px, 240px"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </Reveal>
+
+          {/* Rodapé do Card com Ações */}
+          <div className="pt-3 border-t border-blue-500/20 flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onOpenCase(project.id)}
+                className="inline-flex items-center justify-center text-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0c122e] text-blue-200 hover:text-white hover:bg-blue-950/80 border border-blue-400/40 transition-colors shadow-sm cursor-pointer"
               >
-                {/* Phone screen */}
-                <div className="rounded-[14px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
-                  <LazyPortfolioImage
-                    src={project.mobileImage}
-                    alt={`Versão Mobile do site ${project.title}`}
-                    wrapperClassName="relative w-full h-full overflow-hidden"
-                    className="w-full h-full object-cover object-top"
-                    rootMargin="500px 0px 500px 0px"
-                    sizes="(max-width: 640px) 140px, 170px"
-                  />
-                </div>
-                {/* Badge visual */}
-                <div className="absolute -bottom-2 -left-2 bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow border border-indigo-400/30">
-                  📱 Mobile
-                </div>
-              </div>
-            </div>
-          )}
+                <span>Ver o case</span>
+                <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
+              </button>
 
-          {/* MODO 2: APENAS DESKTOP */}
-          {viewMode === 'desktop' && (
-            <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-xl">
-              <div className="px-3 py-2 bg-slate-900 border-b border-white/[0.08] flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                </div>
-                <span className="text-[11px] text-slate-400 font-mono truncate">
-                  {project.urlLabel}
-                </span>
-                <span className="text-[10px] text-indigo-400 font-semibold uppercase">Desktop</span>
-              </div>
-              <div
-                className="aspect-[16/10] overflow-hidden bg-slate-950 cursor-zoom-in"
-                onClick={() => onOpenZoom(project.desktopImage, `${project.title} - Desktop`)}
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center text-center gap-1 text-xs font-semibold text-slate-200 hover:text-white bg-[#0c122e] hover:bg-blue-950/80 border border-blue-400/40 rounded-lg p-1.5 transition-colors shadow-sm"
+                title="Abrir site publicado em nova aba"
               >
-                <LazyPortfolioImage
-                  src={project.desktopImage}
-                  alt={`Captura Desktop completa de ${project.title}`}
-                  wrapperClassName="relative w-full h-full overflow-hidden"
-                  className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
-                  rootMargin="500px 0px 500px 0px"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
-                  priority={priority}
-                />
-              </div>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-200" aria-hidden="true" />
+              </a>
             </div>
-          )}
-
-          {/* MODO 3: APENAS MOBILE (Largura ampliada e centrada) */}
-          {viewMode === 'mobile' && (
-            <div className="flex items-center justify-center py-2 w-full">
-              <div
-                className="w-[210px] sm:w-[240px] max-w-full rounded-[26px] p-2 sm:p-2.5 bg-[#090d16] border-2 border-indigo-500/50 shadow-2xl shadow-black cursor-zoom-in"
-                onClick={() => onOpenZoom(project.mobileImage, `${project.title} - Mobile`)}
-              >
-                {/* Speaker pill */}
-                <div className="w-12 h-1.5 bg-slate-700 mx-auto rounded-full mb-1.5" />
-                <div className="rounded-[20px] overflow-hidden aspect-[9/18] bg-black border border-white/[0.1] w-full">
-                  <LazyPortfolioImage
-                    src={project.mobileImage}
-                    alt={`Captura Mobile completa de ${project.title}`}
-                    wrapperClassName="relative w-full h-full overflow-hidden"
-                    className="w-full h-full object-cover object-top"
-                    rootMargin="500px 0px 500px 0px"
-                    sizes="(max-width: 640px) 210px, 240px"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </Reveal>
-
-        {/* Rodapé do Card com Ações */}
-        <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => onOpenDetails(project)}
-              className="inline-flex items-center justify-center text-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-indigo-300 hover:text-white hover:bg-slate-800 border border-white/[0.08] transition-colors"
-            >
-              <span>Ver detalhes</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
 
             <a
-              href={project.href}
+              href={whatsappUrl(
+                `Olá! 💻 Vi o projeto *${project.title}* no portfólio da *ēloSites*.\n\nGostei muito do resultado e gostaria de solicitar um orçamento para desenvolver um site similar para o meu negócio!`
+              )}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center text-center gap-1 text-xs font-semibold text-slate-400 hover:text-white transition-colors p-1"
-              title="Abrir site publicado em nova aba"
+              className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+              <WhatsAppIcon className="w-3.5 h-3.5 text-slate-950" />
+              <span className="text-slate-950 font-black tracking-tight text-center">Quero um parecido</span>
             </a>
           </div>
-
-          <a
-            href={whatsappUrl(
-              `Olá! 💻 Vi o projeto *${project.title}* no portfólio da *ēloSites*.\n\nGostei muito do resultado e gostaria de solicitar um orçamento para desenvolver um site similar para o meu negócio!`
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white border border-emerald-400/40 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200"
-          >
-            <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
-            <span className="text-white drop-shadow-sm text-center">Quero um parecido</span>
-          </a>
         </div>
-      </div>
-    </article>
+      </article>
     </Interactive3DCard>
   );
 };
 
-interface PortfolioSectionProps {
+export interface PortfolioSectionProps {
   onNavigateToServices?: () => void;
+  onOpenCase?: (projectId: string) => void;
+  onOpenImage?: (projectId: string, type: 'desktop' | 'mobile') => void;
 }
 
 export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   onNavigateToServices,
+  onOpenCase,
+  onOpenImage,
 }) => {
   const [filter, setFilter] = useState<'all' | 'landing' | 'institutional'>('all');
-  const [zoomModal, setZoomModal] = useState<{ src: string; title: string } | null>(null);
-  const [selectedProject, setSelectedProject] = useState<PortfolioProjectData | null>(null);
 
   // Detecção de preferências de acessibilidade e redução de movimento
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
+
+  // Pré-carregamento estratégico em segundo plano (idle) das capturas WebP dos projetos
+  useEffect(() => {
+    preloadAllPortfolioWebpImages({ idle: true });
+  }, []);
 
   const filteredProjects = PORTFOLIO_PROJECTS.filter((p) => {
     if (filter === 'all') return true;
@@ -455,6 +373,22 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   });
 
   const whatsappInquiryUrl = whatsappUrl(SITE_CONFIG.portfolioWhatsappMessage);
+
+  const handleOpenCase = (projectId: string) => {
+    if (onOpenCase) {
+      onOpenCase(projectId);
+    } else {
+      window.location.hash = `case/${projectId}`;
+    }
+  };
+
+  const handleOpenImage = (projectId: string, type: 'desktop' | 'mobile') => {
+    if (onOpenImage) {
+      onOpenImage(projectId, type);
+    } else {
+      window.location.hash = `case/${projectId}/${type}`;
+    }
+  };
 
   return (
     <section
@@ -483,14 +417,14 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             </p>
 
             {/* Filtros de Categoria */}
-            <div className="flex items-center justify-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setFilter('all')}
-                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] ${
+                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
                   filter === 'all'
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
+                    ? 'bg-blue-600 text-white border border-blue-400 shadow-md shadow-blue-900/50'
+                    : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
                 Todos os projetos ({PORTFOLIO_PROJECTS.length})
@@ -498,10 +432,10 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setFilter('landing')}
-                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] ${
+                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
                   filter === 'landing'
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
+                    ? 'bg-blue-600 text-white border border-blue-400 shadow-md shadow-blue-900/50'
+                    : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
                 Sites de uma página
@@ -509,10 +443,10 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setFilter('institutional')}
-                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] ${
+                className={`inline-flex items-center justify-center text-center px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
                   filter === 'institutional'
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-white/[0.06]'
+                    ? 'bg-blue-600 text-white border border-blue-400 shadow-md shadow-blue-900/50'
+                    : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
                 Sites completos
@@ -536,8 +470,8 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     <ProjectCard
                       project={project}
                       priority={index === 0}
-                      onOpenZoom={(src, title) => setZoomModal({ src, title })}
-                      onOpenDetails={(p) => setSelectedProject(p)}
+                      onOpenCase={handleOpenCase}
+                      onOpenImage={handleOpenImage}
                     />
                   </Interactive3DCard>
                 </BiReveal>
@@ -555,12 +489,12 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           className="mt-6 sm:mt-8 w-full"
         >
           <Interactive3DCard maxTilt={3} className="w-full">
-            <div className="glass-card-interactive surface-card portfolio-card scroll-perf-card p-6 sm:p-7 md:p-8 rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/80 bracket-panel transition-all">
+            <div className="portfolio-card p-6 sm:p-7 md:p-8 rounded-2xl bg-[#090e26] border border-blue-400/40 hover:border-blue-400/70 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/90 bracket-panel transition-all">
               <div className="space-y-2 text-left w-full lg:max-w-xl">
-                <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-display tracking-tight drop-shadow-sm">
                   Gostou do nível dos projetos da ēloSites?
                 </h3>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm sm:text-[15px] text-slate-100 font-medium leading-relaxed">
                   Cada projeto recebe um orçamento específico baseado no escopo. 50% de entrada no início + 50% na aprovação final (PIX), 20% de desconto à vista, até 5x sem juros ou de 6x a 12x no cartão.
                 </p>
               </div>
@@ -570,9 +504,9 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   <button
                     type="button"
                     onClick={onNavigateToServices}
-                    className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 border border-blue-400/40 shadow-lg shadow-blue-600/30 hover:shadow-[0_0_24px_rgba(59,130,246,0.55)] active:shadow-[0_0_32px_rgba(124,58,237,0.7)] hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                    className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-300/50 shadow-lg shadow-blue-900/60 hover:shadow-[0_0_24px_rgba(59,130,246,0.6)] active:scale-[0.98] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                   >
-                    <span className="text-center">Ver Formatos & Condições</span>
+                    <span className="text-center font-bold text-white drop-shadow-sm">Ver Formatos & Condições</span>
                     <ArrowRight className="w-4 h-4 text-white" />
                   </button>
                 )}
@@ -582,33 +516,17 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   rel="noopener noreferrer"
                   strength={12}
                   glowColor="rgba(37, 211, 102, 0.45)"
-                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3 rounded-xl text-sm font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/40 shadow-lg shadow-emerald-950/40 hover:shadow-[0_0_24px_rgba(37,211,102,0.65)] hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-[#25D366] hover:bg-[#22c55e] border border-emerald-300/50 shadow-lg shadow-emerald-950/60 hover:shadow-[0_0_24px_rgba(37,211,102,0.7)] active:scale-[0.98] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                   ariaLabel="Solicitar Orçamento no WhatsApp"
                 >
                   <WhatsAppIcon className="w-4 h-4 text-white" />
-                  <span className="text-center">Solicitar Orçamento</span>
+                  <span className="text-center font-bold text-white drop-shadow-sm">Solicitar Orçamento</span>
                 </MagneticButton>
               </div>
             </div>
           </Interactive3DCard>
         </motion.div>
-    </div>
-
-      {/* Modal de Detalhes do Projeto (Challenge, Solution, Results) */}
-      <ProjectModal
-        project={selectedProject}
-        isOpen={!!selectedProject}
-        onClose={() => setSelectedProject(null)}
-        onOpenZoom={(src, title) => setZoomModal({ src, title })}
-      />
-
-      {/* Modal de Zoom / Lightbox de Capturas em Alta Resolução */}
-      <ScreenshotLightbox
-        isOpen={!!zoomModal}
-        src={zoomModal?.src || ''}
-        title={zoomModal?.title || ''}
-        onClose={() => setZoomModal(null)}
-      />
+      </div>
     </section>
   );
 };

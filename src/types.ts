@@ -99,18 +99,18 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'parceria-trafego',
     number: '08',
-    title: 'Anúncios & Vendas no WhatsApp',
-    shortTitle: 'Anúncios',
-    badge: 'Parceria de Anúncios',
+    title: 'Tráfego Pago & Vendas no WhatsApp',
+    shortTitle: 'Tráfego Pago',
+    badge: 'Tráfego Pago',
     description: 'Parceria com Thomaz (TrueThomaz.BM) para anunciar no Google e Meta e fechar vendas no WhatsApp.',
     iconName: 'TrendingUp',
   },
   {
     id: 'faq',
     number: '09',
-    title: 'Dúvidas Frequentes & Contato',
-    shortTitle: 'Dúvidas',
-    badge: 'Dúvidas',
+    title: 'FAQ e Contato',
+    shortTitle: 'FAQ e Contato',
+    badge: 'FAQ e Contato',
     description: 'Respostas diretas sobre prazos, domínio próprio, publicação, pagamentos e WhatsApp.',
     iconName: 'HelpCircle',
   },
@@ -280,7 +280,7 @@ export const NAVIGATION_ITEMS: NavItem[] = [
   { label: 'Como Funciona', href: '#processo', id: 'nav-processo' },
   { label: 'Orçamento', href: '#orcamento', id: 'nav-orcamento' },
   { label: 'Tráfego Pago', href: '#parceria-trafego', id: 'nav-parceria-trafego' },
-  { label: 'FAQ & Contato', href: '#faq', id: 'nav-faq' },
+  { label: 'FAQ e Contato', href: '#faq', id: 'nav-faq' },
 ];
 
 export {

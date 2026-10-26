@@ -1,5 +1,6 @@
 import { saveDataEnabled } from './mediaPrefs';
 import type { ScreenId } from './types';
+import { preloadAllPortfolioWebpImages } from './portfolioData';
 
 type Loader = () => Promise<unknown>;
 
@@ -47,6 +48,9 @@ export function preloadScreen(screenId: ScreenId): void {
   if (prefetchBlocked()) return;
   const loader = screenLoaders[screenId];
   if (loader) ignoreFailure(loader());
+  if (screenId === 'portfolio') {
+    preloadAllPortfolioWebpImages({ idle: true });
+  }
 }
 
 export function preloadDeferredChrome(): void {
@@ -63,4 +67,5 @@ export function preloadAllScreens(): void {
   if (prefetchBlocked()) return;
   preloadDeferredChrome();
   Object.values(screenLoaders).forEach((loader) => ignoreFailure(loader()));
+  preloadAllPortfolioWebpImages({ idle: true });
 }
