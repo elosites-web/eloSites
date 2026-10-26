@@ -92,9 +92,9 @@ const SERVICES: ServiceCategory[] = [
       'Galeria com fotos do seu trabalho',
       'Perguntas frequentes (FAQ) para tirar dúvidas comuns',
       'Botões de WhatsApp chamativos em pontos estratégicos',
-      'Formulário simples de contato (quando previsto no escopo)',
+      'Formulário simples de contato (conforme o escopo contratado)',
       'Links para suas redes sociais',
-      'Adaptação perfeita para celulares, tablets e computadores',
+      'Design responsivo adaptado para celulares, tablets e computadores',
       'Estrutura organizada para o Google e imagem para redes sociais',
       'Publicação no ar e testes de funcionamento antes da entrega',
     ],
@@ -126,8 +126,8 @@ const SERVICES: ServiceCategory[] = [
       'Perguntas frequentes (FAQ) bem explicadas',
       'Endereço, mapa de localização e canais de atendimento',
       'Botões de WhatsApp e links para redes sociais',
-      'Formulário de contato com envio de mensagens',
-      'Adaptação total para celulares, tablets e computadores',
+      'Formulário de contato com envio de mensagens (conforme o escopo contratado)',
+      'Design responsivo adaptado para celulares, tablets e computadores',
       'Estrutura organizada para o Google e cartões de compartilhamento',
       'Publicação no ar e testes completos de funcionamento',
     ],
@@ -153,12 +153,12 @@ const SERVICES: ServiceCategory[] = [
     includes: [
       'Páginas e seções desenhadas para a rotina do seu negócio',
       'Navegação pensada sob medida (abas, telas ou formatos mistos)',
-      'Recursos práticos na tela que facilitam a vida do visitante',
-      'Formulários customizados, calculadoras ou galerias exclusivas',
+      'Recursos práticos na tela que facilitam a vida do visitante (conforme o escopo contratado)',
+      'Formulários customizados, calculadoras ou galerias exclusivas (conforme o escopo contratado)',
       'Conexão com WhatsApp com mensagens iniciadas por serviço',
       'Apresentação institucional e depoimentos com acabamento de alto padrão',
       'Estrutura revisada para o Google e imagens otimizadas para abrir rápido',
-      'Adaptação impecável para celulares, tablets e computadores',
+      'Design responsivo adaptado para celulares, tablets e computadores',
       'Publicação no ar e revisão cuidadosa de cada detalhe',
     ],
     scopeNote:
@@ -426,14 +426,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             })}
           </div>
 
-          {/* Navegação para a Seção Sobre / Soluções Web */}
+          {/* Navegação para a Seção de Especialidades Web */}
           <div className="mt-8 sm:mt-10 text-center">
             <button
               type="button"
               onClick={() => {
-                if (window.location.hash === '#solucoes-web') {
-                  const el = document.getElementById('solucoes-web');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                const el = document.getElementById('solucoes-web');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
                 } else {
                   window.location.hash = 'solucoes-web';
                 }
@@ -441,7 +441,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98 uppercase"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>CONHECER NOSSAS ESPECIALIDADES NA SEÇÃO &apos;SOBRE&apos;</span>
+              <span>Ver todas as especialidades e capacidades técnicas</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

@@ -54,10 +54,10 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'servicos',
     number: '03',
-    title: 'Serviços & Condições Comerciais',
+    title: 'Serviços & Especialidades Web',
     shortTitle: 'Serviços',
-    badge: 'Formatos & Valores',
-    description: 'Formatos sob medida com pagamento flexível.',
+    badge: 'Formatos & Especialidades',
+    description: 'Formatos sob medida, especialidades técnicas e pagamento flexível.',
     iconName: 'Briefcase',
   },
   {

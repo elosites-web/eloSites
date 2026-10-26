@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
   Code2,
@@ -18,7 +18,6 @@ import { Interactive3DCard } from './Interactive3DCard';
 import { BiReveal } from './BiReveal';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { SITE_CONFIG, whatsappUrl } from '../types';
-import { FounderCard } from './FounderCard';
 import { TechStackCard } from './TechStackCard';
 import { InfiniteMarquee } from './InfiniteMarquee';
 
@@ -47,11 +46,11 @@ const SPECIALTIES: SpecialtyItem[] = [
     items: [
       'Landing pages: páginas únicas e diretas, focadas em apresentar seus serviços e conduzir o cliente até o WhatsApp',
       'Sites institucionais: páginas completas para empresas que precisam detalhar história, equipe, serviços e localização',
-      'Design responsivo: o site se ajusta perfeitamente na tela de qualquer celular, tablet ou computador',
+      'Design responsivo: o site se adapta com naturalidade à tela de qualquer celular, tablet ou computador',
       'Programação visual (frontend): seções, menus e botões construídos sob medida para a realidade do seu negócio',
     ],
     technicalClarification:
-      'Construímos o código visual (frontend) do zero com ferramentas modernas, sem modelos prontos pesados. Isso garante um site muito mais leve, rápido e fácil de manter.',
+      'Construímos o código visual (frontend) com tecnologias modernas, sem modelos pesados. Isso contribui para um site mais ágil no carregamento, limpo e fácil de atualizar.',
     tagColor: 'from-blue-500/20 to-cyan-500/10 text-cyan-300 border-cyan-500/30',
   },
   {
@@ -69,7 +68,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Respostas visuais agradáveis: botões que reagem suavemente ao clique, dando sensação de agilidade e bom acabamento',
     ],
     technicalClarification:
-      'O design de interface (UI) cuida da aparência bonita e profissional, enquanto a experiência do usuário (UX) garante que qualquer pessoa consiga navegar com facilidade.',
+      'O design de interface (UI) cuida da apresentação visual e profissional, enquanto a experiência do usuário (UX) é planejada para que o visitante navegue com clareza e encontre informações com facilidade.',
     tagColor: 'from-purple-500/20 to-indigo-500/10 text-purple-300 border-purple-500/30',
   },
   {
@@ -79,15 +78,15 @@ const SPECIALTIES: SpecialtyItem[] = [
     icon: Sparkles,
     iconAlt: 'Botões inteligentes e recursos práticos',
     iconGlow: 'shadow-[0_0_20px_rgba(52,211,153,0.35)] border-emerald-500/40 text-emerald-400',
-    highlight: 'Botões práticos, formulários inteligentes e recursos que facilitam a vida de quem visita o seu site e agilizam o seu atendimento.',
+    highlight: 'Botões práticos, formulários inteligentes e recursos desenvolvidos sob medida para facilitar a navegação do visitante e agilizar o seu atendimento.',
     items: [
-      'Formulários com conferência imediata: avisam na hora se algum campo obrigatório estiver incompleto antes de enviar',
+      'Formulários com conferência imediata no cliente: avisam na hora se algum campo obrigatório estiver incompleto (conforme o escopo contratado)',
       'Botões de WhatsApp com mensagens pré-formatadas: o cliente já inicia a conversa dizendo qual serviço deseja',
-      'Simuladores interativos: permitem ao cliente calcular opções de pagamento direto na tela sem complicação',
-      'Galerias de fotos com ampliação: imagens nítidas fáceis de visualizar no celular com um simples toque',
+      'Simuladores interativos: permitem ao cliente calcular opções de pagamento direto na tela (conforme o escopo contratado)',
+      'Galerias de fotos com ampliação: imagens nítidas para visualização no celular com um simples toque',
     ],
     technicalClarification:
-      'Tudo funciona direto no navegador do visitante (frontend), tornando a resposta imediata, sem telas travando ou demoras no carregamento.',
+      'Recursos interativos, simuladores e formulários personalizados funcionam direto no navegador (frontend) e são desenvolvidos conforme o escopo contratado para o seu projeto.',
     tagColor: 'from-emerald-500/20 to-teal-500/10 text-emerald-300 border-emerald-500/30',
   },
   {
@@ -104,7 +103,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Cartões de compartilhamento (Open Graph): ao enviar o link do site no WhatsApp ou redes sociais, aparece uma prévia bonita com foto e título',
       'Etiquetas técnicas (Schema.org / Dados estruturados): código padronizado que informa ao Google seu nome, telefone, endereço e serviços',
       'Imagens leves (formato WebP): fotos otimizadas para abrir com rapidez, sem consumir a franquia de internet do celular',
-      'Revisão técnica de links: garantia de que todas as páginas e botões funcionem sem links quebrados',
+      'Revisão técnica de links: verificação para que todas as páginas e botões funcionem sem links quebrados',
     ],
     technicalClarification:
       'O SEO técnico organiza o site conforme as boas práticas oficiais do Google. Isso facilita a leitura e a indexação do seu negócio, sem promessas enganosas de primeiro lugar garantido.',
@@ -117,15 +116,15 @@ const SPECIALTIES: SpecialtyItem[] = [
     icon: Zap,
     iconAlt: 'Métricas e conexões com plataformas de anúncios',
     iconGlow: 'shadow-[0_0_20px_rgba(56,189,248,0.35)] border-sky-500/40 text-sky-400',
-    highlight: 'Quando contratado e configurado, o site pode se conectar a ferramentas que ajudam a acompanhar quantas pessoas visitam suas páginas e de onde elas vieram.',
+    highlight: 'Quando contratado e previsto no escopo, o site pode se conectar a ferramentas que ajudam a acompanhar quantas pessoas visitam suas páginas e de onde elas vieram.',
     items: [
-      'Google Analytics 4: relatório que mostra quantas pessoas acessaram seu site, quais páginas viram e quanto tempo ficaram',
-      'Google Tag Manager: painel para organizar códigos de medição em um só lugar sem precisar alterar a programação do site',
-      'Meta Pixel (Facebook e Instagram): ferramenta que ajuda a medir o resultado de anúncios nas redes sociais quando você investir em tráfego pago',
-      'Identificação de origem no WhatsApp: links específicos para você saber exatamente de qual seção do site o cliente veio',
+      'Google Analytics 4: relatório de acessos, visualizações de páginas e tempo de navegação (conforme o escopo contratado)',
+      'Google Tag Manager: painel para organizar códigos de medição sem alterar o código principal (conforme o escopo contratado)',
+      'Meta Pixel (Facebook e Instagram): ferramenta para medir o resultado de anúncios caso você decida investir em tráfego pago (conforme o escopo contratado)',
+      'Identificação de origem no WhatsApp: mensagens personalizadas para saber exatamente de qual seção do site o contato partiu',
     ],
     technicalClarification:
-      'A ativação de ferramentas requer as contas fornecidas pelo cliente e segue rigorosamente as regras de privacidade (LGPD), com aviso de consentimento aos visitantes.',
+      'A ativação de ferramentas de mensuração requer as contas fornecidas pelo cliente e segue rigorosamente as regras de privacidade (LGPD), com aviso de consentimento aos visitantes.',
     tagColor: 'from-sky-500/20 to-blue-500/10 text-sky-300 border-sky-500/30',
   },
   {
@@ -164,32 +163,6 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
       ? SPECIALTIES
       : SPECIALTIES.filter((s) => s.id === activeCategory);
 
-  useEffect(() => {
-    if (window.location.hash !== '#fundador') return;
-
-    let cancelled = false;
-    const scrollToFounder = () => {
-      if (cancelled) return;
-      const element = document.getElementById('fundador');
-      if (!element) return;
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.setTimeout(() => {
-        if (!cancelled) {
-          document.getElementById('fundador')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 600);
-    };
-
-    const frame = window.requestAnimationFrame(scrollToFounder);
-    const timer = window.setTimeout(scrollToFounder, 400);
-
-    return () => {
-      cancelled = true;
-      window.cancelAnimationFrame(frame);
-      window.clearTimeout(timer);
-    };
-  }, []);
-
   const specialtiesWhatsappMessage =
     'Olá! ⚡ Estive analisando a seção de *Especialidades e Soluções Web* da *ēloSites*.\n\nGostaria de entender como essas soluções em desenvolvimento frontend, SEO técnico e integração com WhatsApp podem ser aplicadas ao meu negócio!';
 
@@ -222,7 +195,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Criamos sites que se adaptam com perfeição ao celular e ao computador. Combinamos visual moderno, textos bem organizados e botões de contato direto para que seus clientes encontrem o que precisam e conversem com você pelo WhatsApp.
+              Criamos sites adaptados para celular e computador. Combinamos visual moderno, textos bem organizados e botões de contato direto para que seus clientes encontrem o que precisam e conversem com você pelo WhatsApp.
             </p>
           </div>
         </BiReveal>
@@ -334,13 +307,8 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
           <TechStackCard />
         </div>
 
-        {/* Card Oficial do Fundador (Everton Lopes) posicionado abaixo do conteúdo das especialidades */}
-        <div id="fundador" className="mt-12 sm:mt-16 lg:mt-20 scroll-mt-24">
-          <FounderCard onNavigateToCartao={onNavigateToCartao} />
-        </div>
-
-        {/* Banner Deslizante Interativo das Especialidades (Abaixo do Card do Fundador e antes do CTA) */}
-        <div className="mt-8 sm:mt-10 py-1">
+        {/* Banner Deslizante Interativo das Especialidades e Tecnologias Web */}
+        <div className="mt-10 sm:mt-12 py-1">
           <InfiniteMarquee
             items={[
               { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Base Moderna' },
@@ -349,7 +317,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
               { text: 'Google Analytics 4 & Tag Manager', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Visitas' },
               { text: 'Carregamento Otimizado', icon: <Zap className="w-3.5 h-3.5 text-amber-300" />, badge: 'Rapidez' },
               { text: 'Código Organizado & Semântico', icon: <Code2 className="w-3.5 h-3.5 text-teal-400" />, badge: 'Código Limpo' },
-              { text: 'Perfeito no Celular e Computador', icon: <Smartphone className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Responsivo' },
+              { text: 'Adaptado para Celular e Computador', icon: <Smartphone className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Responsivo' },
               { text: 'Canal Direto no WhatsApp', icon: <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Contato' },
               { text: 'Landing Pages (Página Única)', icon: <Layout className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Mais Clientes' },
               { text: 'Sites Institucionais', icon: <Cpu className="w-3.5 h-3.5 text-blue-400" />, badge: 'Empresas' },

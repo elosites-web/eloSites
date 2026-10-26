@@ -17,11 +17,16 @@ import { preloadAllScreens } from './preloadScreens';
 import { ScreenId, SCREENS } from './types';
 import { shouldReduceMedia, getMotionTier } from './mediaPrefs';
 import { withViewTransition, supportsViewTransitions } from './viewTransition';
+import { Sparkles } from 'lucide-react';
+import { BiReveal } from './components/BiReveal';
 import { CaseDetailPage } from './components/CaseDetailPage';
 import { ProjectImageView } from './components/ProjectImageView';
 import { getProjectById } from './portfolioData';
 
 // Code-splitting via React.lazy para acelerar a carga inicial da tela Início
+const FounderCard = lazy(() =>
+  import('./components/FounderCard').then((mod) => ({ default: mod.FounderCard }))
+);
 const PortfolioSection = lazy(() =>
   import('./components/PortfolioSection').then((mod) => ({ default: mod.PortfolioSection }))
 );
@@ -247,14 +252,14 @@ export default function App() {
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
         setCurrentScreen((prev) => {
-          if (prev !== 'inicio') {
+          if (prev !== 'servicos') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'servicos');
             if (nextIdx !== -1 && prevIdx !== -1) {
               setDirection(nextIdx > prevIdx ? 1 : -1);
             }
           }
-          return 'inicio';
+          return 'servicos';
         });
         setTimeout(() => {
           const el = document.getElementById('solucoes-web');
@@ -733,20 +738,79 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 02: Sobre (Apresentação Completa, Especialidades & Soluções Web e Card Oficial do Fundador) */}
+      {/* TELA 02: Sobre a ēloSites & Apresentação do Fundador */}
       {currentScreen === 'inicio' && (
         <div className="w-full space-y-0">
           <Hero
             mode="inicio"
-            onNavigateToPortfolio={() => {
-              const el = document.getElementById('solucoes-web');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onNavigateToPortfolio={() => navigateToScreen('portfolio')}
           />
+          <section
+            id="sobre-fundador"
+            aria-labelledby="sobre-fundador-heading"
+            className="section-auto-contain pt-16 pb-20 sm:pt-20 sm:pb-24 lg:pt-24 lg:pb-28 bg-[#050814]/90 border-t border-blue-500/15 relative overflow-hidden"
+          >
+            {/* Luz ambiente sutil */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
+
+            <div className="page-shell page-x max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
+              <BiReveal direction="up">
+                <div className="text-center max-w-3xl mx-auto space-y-4">
+                  <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-500/30 text-cyan-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                    <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+                    <span>Sobre a ēloSites</span>
+                  </div>
+
+                  <h2
+                    id="sobre-fundador-heading"
+                    className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
+                  >
+                    Presença digital profissional feita com transparência e proximidade.
+                  </h2>
+
+                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+                    Acreditamos que todo negócio, autônomo ou empresa local merece um site rápido, claro e fácil de navegar. Desenvolvemos cada projeto com atendimento direto, sem termos complicados e com total respeito ao seu investimento.
+                  </p>
+                </div>
+              </BiReveal>
+
+              <div id="fundador" className="scroll-mt-24">
+                <SectionErrorBoundary>
+                  <Suspense fallback={<SimpleSectionSkeleton />}>
+                    <FounderCard
+                      onNavigateToCartao={() => {
+                        navigateToScreen('faq');
+                        window.location.hash = 'cartao-digital';
+                        const scrollToCartao = () => {
+                          const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        };
+                        setTimeout(scrollToCartao, 120);
+                        setTimeout(scrollToCartao, 350);
+                      }}
+                    />
+                  </Suspense>
+                </SectionErrorBoundary>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* TELA 03: Serviços & Condições Comerciais + Especialidades Web */}
+      {currentScreen === 'servicos' && (
+        <div className="w-full space-y-0">
+          <SectionErrorBoundary>
+            <Suspense fallback={<ServicesSkeleton />}>
+              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
+            </Suspense>
+          </SectionErrorBoundary>
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
               <SpecialtiesSection
-                onNavigateToContact={() => navigateToScreen('servicos')}
+                onNavigateToContact={() => navigateToScreen('portfolio')}
                 onNavigateToCartao={() => {
                   navigateToScreen('faq');
                   window.location.hash = 'cartao-digital';
@@ -760,17 +824,6 @@ export default function App() {
                   setTimeout(scrollToCartao, 350);
                 }}
               />
-            </Suspense>
-          </SectionErrorBoundary>
-        </div>
-      )}
-
-      {/* TELA 04: Serviços & Condições Comerciais */}
-      {currentScreen === 'servicos' && (
-        <div className="w-full">
-          <SectionErrorBoundary>
-            <Suspense fallback={<ServicesSkeleton />}>
-              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
             </Suspense>
           </SectionErrorBoundary>
         </div>

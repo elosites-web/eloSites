@@ -196,14 +196,13 @@ export const Footer: React.FC<FooterProps> = ({
               type="button"
               onClick={() => {
                 if (onSelectScreen) {
-                  onSelectScreen('inicio');
+                  onSelectScreen('servicos');
                   setTimeout(() => {
                     const el = document.getElementById('solucoes-web');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }, 120);
                 } else {
-                  window.location.hash = 'inicio';
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.location.hash = 'solucoes-web';
                 }
               }}
               className="text-left text-xs font-mono font-semibold uppercase tracking-wider text-slate-200 hover:text-cyan-300 transition-colors cursor-pointer group flex items-center gap-1.5"
