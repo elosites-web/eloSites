@@ -34,7 +34,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     mobileImage: '/portifolio-jvsalvaia-mobile.webp',
     features: [
       'Botões de WhatsApp com mensagem pronta para cada plano de treino',
-      'Site que se ajusta com perfeição ao celular e computador (responsivo)',
+      'Site com layout responsivo para celular e computador',
       'Carregamento rápido das imagens e organização pensada para o Google',
     ],
     resultsNote: 'Contatos organizados pelo WhatsApp, com mensagens que já identificam o serviço desejado pelo aluno.',
@@ -70,7 +70,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Garagem Mailasque',
     category: 'landing',
     challenge:
-      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava ser encontrada por motoristas locais no Google e agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
+      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava facilitar sua localização por motoristas locais no Google e agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
     solution:
       'Criamos uma página direta e fácil de navegar no celular, apresentando os serviços de funilaria, pintura e restauração, mapa de localização e botão de WhatsApp preparado para o cliente enviar fotos do veículo batido ou arranhado.',
     tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos do Carro', 'Orçamento no WhatsApp'],

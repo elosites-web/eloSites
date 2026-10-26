@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              Desenvolvemos sites profissionais sob medida para o seu negócio ser encontrado no Google, transmitir confiança e receber novos contatos diretamente no WhatsApp.
+              Desenvolvemos sites profissionais estruturados para facilitar a localização no Google, transmitir confiança e receber novos contatos diretamente no WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a

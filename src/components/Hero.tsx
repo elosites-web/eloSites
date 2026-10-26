@@ -290,8 +290,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Search className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Pronto para o Google</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Estrutura organizada</span>
+                      <span className="text-xs font-semibold text-white text-center">Estrutura para indexação</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Preparada para o Google</span>
                     </div>
 
                     {/* Pilar 4 */}
@@ -299,8 +299,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Perfeito no celular</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">E no computador</span>
+                      <span className="text-xs font-semibold text-white text-center">Layout responsivo</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Para diferentes telas</span>
                     </div>
                   </div>
                 </BiReveal>

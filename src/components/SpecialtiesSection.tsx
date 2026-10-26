@@ -103,7 +103,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Cartões de compartilhamento (Open Graph): ao enviar o link do site no WhatsApp ou redes sociais, aparece uma prévia bonita com foto e título',
       'Etiquetas técnicas (Schema.org / Dados estruturados): código padronizado que informa ao Google seu nome, telefone, endereço e serviços',
       'Imagens leves (formato WebP): fotos otimizadas para abrir com rapidez, sem consumir a franquia de internet do celular',
-      'Revisão técnica de links: verificação para que todas as páginas e botões funcionem sem links quebrados',
+      'Revisão técnica de links: verificação para prevenir links quebrados e inconsistências de navegação',
     ],
     technicalClarification:
       'O SEO técnico organiza o site conforme as boas práticas oficiais do Google. Isso facilita a leitura e a indexação do seu negócio, sem promessas enganosas de primeiro lugar garantido.',
@@ -134,16 +134,16 @@ const SPECIALTIES: SpecialtyItem[] = [
     icon: Cpu,
     iconAlt: 'Arquitetura tecnológica moderna de alta performance',
     iconGlow: 'shadow-[0_0_20px_rgba(129,140,248,0.35)] border-indigo-500/40 text-indigo-400',
-    highlight: 'Tecnologia moderna e confiável para o seu site carregar rápido, funcionar sem falhas e permanecer no ar com segurança.',
+    highlight: 'Tecnologia moderna e confiável para o seu site carregar com agilidade, ter boa estabilidade e oferecer uma navegação consistente.',
     items: [
-      'React e TypeScript: tecnologias consagradas utilizadas pelas maiores empresas do mundo para criar páginas modernas, estáveis e livres de falhas',
+      'React e TypeScript: tecnologias consagradas para criar páginas modernas, bem estruturadas e com código padronizado',
       'HTML5 e CSS organizados: código limpo que estrutura textos e visual de forma rápida e acessível',
       'Tailwind CSS: ferramenta moderna de estilo que mantém o visual bonito e o tamanho dos arquivos leve',
       'Vite: sistema de última geração que faz as páginas abrirem com agilidade no celular',
       'Ícones e animações sutis: detalhes que deixam o site elegante sem pesar na conexão do visitante',
     ],
     technicalClarification:
-      'Utilizamos programação moderna em código limpo, sem plataformas lentas ou modelos engessados. O resultado é um site muito mais rápido, seguro e durável para a sua empresa.',
+      'Utilizamos programação moderna em código limpo, sem plugins desnecessários ou modelos engessados. Isso contribui para um carregamento ágil, navegação estável e facilidade de manutenção para a sua empresa.',
     tagColor: 'from-indigo-500/20 to-violet-500/10 text-indigo-300 border-indigo-500/30',
   },
 ];

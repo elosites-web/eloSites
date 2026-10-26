@@ -39,7 +39,7 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Home',
     shortTitle: 'Home',
     badge: 'Home',
-    description: 'Seu negócio precisa ser encontrado no Google, não só no Instagram.',
+    description: 'Presença profissional estruturada para o Google, não só no Instagram.',
     iconName: 'Sparkles',
   },
   {
@@ -203,7 +203,7 @@ export const SITE_CONFIG = {
   name: 'ēloSites',
   domain: 'elosites.ia.br',
   canonicalUrl: 'https://elosites.ia.br',
-  tagline: 'ēloSites | Sites profissionais sob medida para o seu negócio ser encontrado no Google e receber contatos no WhatsApp.',
+  tagline: 'ēloSites | Sites profissionais estruturados para facilitar a localização no Google e receber contatos no WhatsApp.',
   subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho, fortalecer sua presença no Google e facilitar o contato de novos clientes pelo WhatsApp.',
   email: 'contato@elosites.ia.br',
   // Número oficial da ēloSites
@@ -216,7 +216,7 @@ export const SITE_CONFIG = {
 
   // 2) Hero / Início (Tela 01)
   heroWhatsappMessage:
-    'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.',
+    'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, estruturado para o Google e com contato direto pelo WhatsApp.',
 
   // 3) Portfólio (Tela 02)
   portfolioWhatsappMessage:

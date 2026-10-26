@@ -52,8 +52,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'typescript',
     name: 'TypeScript',
-    description: 'Evita erros e dá estabilidade ao site',
-    category: 'Sem Falhas',
+    description: 'Ajuda a prevenir erros e dá estabilidade ao código',
+    category: 'Alta Confiabilidade',
     tagColor: 'text-blue-400 bg-blue-950/40 border-blue-500/30',
     borderHover: 'hover:border-blue-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(59,130,246,0.25)]',

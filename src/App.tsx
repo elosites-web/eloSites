@@ -804,7 +804,7 @@ export default function App() {
         <div className="w-full space-y-0">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
-              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('portfolio')} />
+              <ServicesSection onNavigateToOrcamento={() => navigateToScreen('orcamento')} />
             </Suspense>
           </SectionErrorBoundary>
           <SectionErrorBoundary>
