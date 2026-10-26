@@ -264,19 +264,7 @@ export const Hero: React.FC<HeroProps> = ({
                   <TypewriterSlogan mode={mode} />
                 </BiReveal>
 
-                {/* Subtítulo e texto de apoio para leigos */}
-                <BiReveal direction="left" delay={160}>
-                  <div className="space-y-3 max-w-xl text-left">
-                    <p className="text-base sm:text-lg text-slate-100 font-medium leading-relaxed">
-                      Criamos o site do seu negócio: com fotos reais, que abre rápido até no 4G e leva o cliente direto para o seu WhatsApp. Você fala direto com o fundador, e a manutenção é opcional.
-                    </p>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                      O Instagram continua útil. Mas quem pesquisa no Google geralmente está procurando alguém para resolver algo agora. E o site é seu: fica no ar com o seu nome, mostra suas fotos e serviços e leva a pessoa direto ao seu WhatsApp.
-                    </p>
-                  </div>
-                </BiReveal>
-
-                {/* Faixa dos 4 Pilares Simplificados */}
+                {/* 4 Pilares da ēloSites */}
                 <BiReveal direction="up" delay={200}>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2 w-full max-w-xl">
                     {/* Pilar 1 */}
@@ -284,8 +272,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Monitor className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Fotos reais</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Do seu negócio</span>
+                      <span className="text-xs font-semibold text-white text-center">Design moderno</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Estética autoral</span>
                     </div>
 
                     {/* Pilar 2 */}
@@ -293,8 +281,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Zap className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Abre rápido</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Até no 4G</span>
+                      <span className="text-xs font-semibold text-white text-center">Performance</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Velocidade real</span>
                     </div>
 
                     {/* Pilar 3 */}
@@ -302,8 +290,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Search className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">No Google</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Para ser achado</span>
+                      <span className="text-xs font-semibold text-white text-center">SEO técnico</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Google Schema</span>
                     </div>
 
                     {/* Pilar 4 */}
@@ -311,8 +299,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">No celular</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">E no computador</span>
+                      <span className="text-xs font-semibold text-white text-center">100% responsivo</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Mobile First</span>
                     </div>
                   </div>
                 </BiReveal>
@@ -326,7 +314,7 @@ export const Hero: React.FC<HeroProps> = ({
                       rel="noopener noreferrer"
                       className="cta-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-white inline-flex items-center justify-center gap-2.5 shadow-[0_0_24px_rgba(37,99,235,0.45)] hover:shadow-[0_0_36px_rgba(59,130,246,0.65)] cursor-pointer group text-sm sm:text-base"
                     >
-                      <span>Chamar no WhatsApp</span>
+                      <span>Solicitar orçamento</span>
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </a>
 
@@ -343,21 +331,41 @@ export const Hero: React.FC<HeroProps> = ({
 
               </div>
 
-              {/* COLUNA DIREITA: Mockup Composto 3D Fiel à og-image.png */}
+              {/* COLUNA DIREITA: Mockup Composto Interativo com abas Preview ao Vivo / Código React */}
               <div className="lg:col-span-6 relative mt-6 lg:mt-0">
                 <BiReveal direction="right" delay={150}>
                   <div className="relative mx-auto max-w-[540px] lg:max-w-none">
                     
-                    {/* Indicador de Status do Site no Ar */}
+                    {/* Indicador de Status do Mockup com Abas */}
                     <div className="flex items-center justify-between mb-3 px-2">
-                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md text-xs font-semibold text-blue-200">
-                        <Monitor className="w-3.5 h-3.5 text-blue-400" />
-                        <span>Visualização em Computador e Celular</span>
+                      <div className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md">
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('preview')}
+                          className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                            activeTab === 'preview'
+                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          Preview ao Vivo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('code')}
+                          className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+                            activeTab === 'code'
+                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          Código React
+                        </button>
                       </div>
 
                       <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>Site no ar</span>
+                        <span>Build 100% OK</span>
                       </div>
                     </div>
 
@@ -377,104 +385,116 @@ export const Hero: React.FC<HeroProps> = ({
                             </div>
                             <div className="text-[11px] font-mono text-slate-300 bg-slate-900/80 px-4 py-0.5 rounded-md border border-white/5 flex items-center gap-1.5">
                               <span className="text-emerald-400">🔒</span>
-                              <span>https://seunegocio.com.br</span>
+                              <span>https://elosites.ia.br</span>
                             </div>
                             <div className="w-10" />
                           </div>
 
-                          {/* Conteúdo Interno da Tela */}
-                          <div className="relative p-4 sm:p-6 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-gradient-to-br from-[#050814] via-[#090E23] to-[#0D1535] overflow-hidden">
-                            {/* Efeito de onda azul cobalto */}
-                            <div className="absolute inset-0 opacity-40 pointer-events-none">
-                              <svg
-                                className="w-full h-full object-cover"
-                                viewBox="0 0 500 300"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M-50,220 C100,280 200,120 350,180 C450,220 500,150 550,190 L550,320 L-50,320 Z"
-                                  fill="url(#blueWave)"
-                                  opacity="0.8"
-                                />
-                                <path
-                                  d="M-50,180 C80,100 240,240 380,140 C480,80 520,160 550,120 L550,320 L-50,320 Z"
-                                  fill="url(#indigoWave)"
-                                  opacity="0.5"
-                                />
-                                <defs>
-                                  <linearGradient id="blueWave" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stopColor="#3b82f6" />
-                                    <stop offset="100%" stopColor="#1d4ed8" />
-                                  </linearGradient>
-                                  <linearGradient id="indigoWave" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stopColor="#6366f1" />
-                                    <stop offset="100%" stopColor="#7c3aed" />
-                                  </linearGradient>
-                                </defs>
-                              </svg>
-                            </div>
-
-                            {/* Mini Barra de Navegação Interna da Tela */}
-                            <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
-                                  ē
-                                </div>
-                                <span className="font-bold text-xs tracking-tight text-white">Seu Negócio</span>
-                              </div>
-                              <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
-                                <span className="text-blue-400 font-semibold">Sobre</span>
-                                <span>Serviços</span>
-                                <span>Fotos</span>
-                                <span>Contato</span>
-                              </div>
-                            </div>
-
-                            {/* Conteúdo Central da Tela */}
-                            <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
-                              <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-                                Seu negócio no{' '}
-                                <span className="text-blue-400 drop-shadow-[0_0_12px_rgba(59,130,246,0.5)]">
-                                  Google.
-                                </span>
-                              </h2>
-                              <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
-                                Apresente fotos reais dos seus serviços, passe confiança para quem procura e receba contatos no WhatsApp.
-                              </p>
-                              <div className="pt-1">
-                                <a
-                                  href={heroWhatsappUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-[11px] font-bold shadow-md shadow-emerald-950/50 cursor-pointer"
+                          {/* Conteúdo da Tela Alternável */}
+                          {activeTab === 'preview' ? (
+                            <div className="relative p-4 sm:p-6 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-gradient-to-br from-[#050814] via-[#090E23] to-[#0D1535] overflow-hidden">
+                              {/* Efeito de onda azul cobalto */}
+                              <div className="absolute inset-0 opacity-40 pointer-events-none">
+                                <svg
+                                  className="w-full h-full object-cover"
+                                  viewBox="0 0 500 300"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
                                 >
-                                  <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
-                                  <span>Chamar no WhatsApp</span>
-                                </a>
+                                  <path
+                                    d="M-50,220 C100,280 200,120 350,180 C450,220 500,150 550,190 L550,320 L-50,320 Z"
+                                    fill="url(#blueWave)"
+                                    opacity="0.8"
+                                  />
+                                  <path
+                                    d="M-50,180 C80,100 240,240 380,140 C480,80 520,160 550,120 L550,320 L-50,320 Z"
+                                    fill="url(#indigoWave)"
+                                    opacity="0.5"
+                                  />
+                                  <defs>
+                                    <linearGradient id="blueWave" x1="0" y1="0" x2="1" y2="1">
+                                      <stop offset="0%" stopColor="#3b82f6" />
+                                      <stop offset="100%" stopColor="#1d4ed8" />
+                                    </linearGradient>
+                                    <linearGradient id="indigoWave" x1="0" y1="0" x2="1" y2="1">
+                                      <stop offset="0%" stopColor="#6366f1" />
+                                      <stop offset="100%" stopColor="#7c3aed" />
+                                    </linearGradient>
+                                  </defs>
+                                </svg>
                               </div>
-                            </div>
 
-                            {/* Mini Indicador de Pilares na Tela */}
-                            <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
-                              <div className="flex items-center gap-1">
-                                <Monitor className="w-2.5 h-2.5 text-blue-400" />
-                                <span>Fotos</span>
+                              {/* Mini Barra de Navegação Interna da Tela */}
+                              <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
+                                    ē
+                                  </div>
+                                  <span className="font-bold text-xs tracking-tight text-white">ēloSites</span>
+                                </div>
+                                <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
+                                  <span className="text-blue-400 font-semibold">Sobre</span>
+                                  <span>Serviços</span>
+                                  <span>Projetos</span>
+                                  <span>Contato</span>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Zap className="w-2.5 h-2.5 text-blue-400" />
-                                <span>No 4G</span>
+
+                              {/* Conteúdo Central da Tela */}
+                              <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
+                                <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                                  Sites que geram resultados.
+                                </h2>
+                                <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                                  Design, performance e SEO técnico para o seu negócio crescer no Google e converter no WhatsApp.
+                                </p>
+                                <div className="pt-1">
+                                  <a
+                                    href={heroWhatsappUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold shadow-md shadow-blue-950/50 cursor-pointer"
+                                  >
+                                    <span>Solicitar orçamento</span>
+                                  </a>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Search className="w-2.5 h-2.5 text-blue-400" />
-                                <span>Google</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Smartphone className="w-2.5 h-2.5 text-blue-400" />
-                                <span>Celular</span>
+
+                              {/* Mini Indicador de Pilares na Tela */}
+                              <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>Design</span>
+                                </div>
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>Veloz</span>
+                                </div>
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>SEO</span>
+                                </div>
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>Mobile</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          ) : (
+                            <div className="relative p-4 sm:p-5 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-[#020617] font-mono text-[11px] text-slate-300 overflow-hidden">
+                              <div className="space-y-2">
+                                <div className="text-slate-500">// Arquitetura limpa com React 19 + TypeScript</div>
+                                <div className="text-blue-400">export default function Home() {'{'}</div>
+                                <div className="pl-4 text-slate-300">return (</div>
+                                <div className="pl-8 text-sky-300">&lt;main className=&quot;hero-section&quot;&gt;</div>
+                                <div className="pl-12 text-slate-200">&lt;h1&gt;Seu site, sob medida.&lt;/h1&gt;</div>
+                                <div className="pl-12 text-cyan-300">&lt;ConversionEngine focus=&quot;whatsapp&quot; seo={'{'}true{'}'} /&gt;</div>
+                                <div className="pl-8 text-sky-300">&lt;/main&gt;</div>
+                                <div className="pl-4 text-slate-300">);</div>
+                                <div className="text-blue-400">{'}'}</div>
+                              </div>
+                              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
+                                <span className="text-emerald-400">✓ 0 erros de sintaxe</span>
+                                <span>TypeScript 5.6 • Vite 6</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Base do Laptop (Entalhe e teclado escuro com luz sutil) */}
@@ -494,7 +514,7 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="text-center mb-5 flex items-center justify-center">
                 <span className="floating-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-950/80 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-semibold tracking-wider uppercase font-mono shadow-[0_0_18px_rgba(59,130,246,0.25)] backdrop-blur-md">
                   <Sparkles className="w-4 h-4 text-blue-400 animate-pulse shrink-0" aria-hidden="true" />
-                  <span>Sites profissionais para diversos segmentos</span>
+                  <span>Sites sob medida para o seu negócio</span>
                 </span>
               </div>
 

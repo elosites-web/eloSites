@@ -7,8 +7,8 @@ interface TypewriterSloganProps {
   className?: string;
 }
 
-const PREFIX = 'Seu negócio precisa ser ';
-const HIGHLIGHT_TEXT = 'encontrado no Google, não só no Instagram.';
+const PREFIX = 'Tecnologia que transforma ';
+const HIGHLIGHT_TEXT = 'ideias em sites profissionais.';
 const FULL_SLOGAN = `${PREFIX}${HIGHLIGHT_TEXT}`;
 const PREFIX_LENGTH = PREFIX.length;
 

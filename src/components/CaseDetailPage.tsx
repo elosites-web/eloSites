@@ -358,7 +358,7 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
             </p>
             <div className="flex items-center gap-2 pt-2 text-xs sm:text-sm text-emerald-300 font-semibold">
               <Sparkles className="w-4 h-4" />
-              <span>Estruturado para apresentar serviços com autoridade e levar clientes qualificados direto para o WhatsApp.</span>
+              <span>{project.highlightNote || 'Estruturado para apresentar serviços com autoridade e levar clientes qualificados direto para o WhatsApp.'}</span>
             </div>
           </section>
         </div>

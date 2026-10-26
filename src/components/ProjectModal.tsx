@@ -268,7 +268,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </p>
               <div className="flex items-center gap-2 pt-1 text-xs text-emerald-300/80">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Estruturado para apresentar serviços com clareza e agilizar o contato no WhatsApp.</span>
+                <span>{project.highlightNote || 'Estruturado para apresentar serviços com clareza e agilizar o contato no WhatsApp.'}</span>
               </div>
             </div>
           </div>

@@ -79,94 +79,99 @@ interface ServiceCategory {
 const SERVICES: ServiceCategory[] = [
   {
     id: 'landing-page',
-    badge: 'Página única',
-    title: 'Site de uma página',
+    badge: 'Foco em Conversão',
+    title: 'Landing Page',
     description:
-      'Uma página direta e estratégica para o cliente entender o seu serviço, ver fotos reais do seu trabalho e clicar para falar no WhatsApp.',
+      'Página única, estratégica e direta. Apresenta o seu serviço de forma clara e conduz o visitante até o contato no WhatsApp.',
     icon: Target,
     includes: [
-      'Página única focada em apresentar o seu serviço',
-      'Apresentação clara do seu negócio e diferenciais',
-      'Lista de serviços oferecidos com detalhes e valores (se desejar)',
-      'Fotos reais do seu trabalho organizadas em galeria',
-      'Espaço para depoimentos e avaliações reais de clientes',
-      'Perguntas frequentes (FAQ) para tirar as dúvidas mais comuns',
-      'Botões estratégicos para chamar direto no seu WhatsApp',
-      'Links para redes sociais e endereço de atendimento',
-      'Abre rápido até no celular 4G',
-      'Preparado para ser encontrado nas buscas do Google',
-      'Publicação do site na internet e testes de funcionamento',
+      'Estrutura estratégica de página única',
+      'Seção hero com chamada principal',
+      'Apresentação do negócio',
+      'Serviços ou produtos, benefícios e diferenciais',
+      'Depoimentos e prova social quando fornecidos',
+      'Imagens e galeria quando aplicável',
+      'Perguntas frequentes (FAQ) e chamadas para ação (CTA)',
+      'Integração com WhatsApp e informações de contato',
+      'Formulários quando incluídos no escopo',
+      'Links para redes sociais',
+      'Layout responsivo para celular, tablet e desktop',
+      'SEO técnico básico, metadados e favicon',
+      'Publicação e revisão final de funcionamento',
     ],
-    scopeNote: 'O escopo exato é combinado na proposta antes de começar.',
+    scopeNote: 'O escopo exato é definido na proposta e no contrato.',
     excluded: [
-      'Registro de domínio próprio (.com.br é pago à parte na sua conta)',
-      'Hospedagem em servidor externo',
-      'Criação de logotipo do zero',
-      'Novas páginas fora do combinado na proposta',
+      'Domínio próprio',
+      'Hospedagem em outro provedor',
+      'Criação de identidade visual (logo)',
+      'Novas páginas fora do escopo combinado',
     ],
-    ctaLabel: 'Pedir proposta de Site de uma página',
+    ctaLabel: 'Pedir proposta de Landing Page',
     ctaId: 'service-cta-landing-page',
     ctaMessage: SITE_CONFIG.landingPageWhatsappMessage,
   },
   {
     id: 'site-institucional',
-    badge: 'Mais seções',
-    title: 'Site completo',
+    badge: 'Autoridade & Estrutura',
+    title: 'Site Institucional',
     description:
-      'Presença digital completa, com várias seções e navegação. Ideal para passar confiança, mostrar estrutura, história, catálogo de serviços e localização.',
+      'Presença digital mais completa, com navegação e várias seções. Ideal para transmitir credibilidade e mostrar estrutura, serviços e prova social.',
     icon: Building2,
     includes: [
-      'Página inicial com apresentação completa do negócio',
-      'Seção Sobre com a história e diferenciais do profissional',
-      'Catálogo detalhado de todos os serviços prestados',
-      'Galeria com fotos reais do seu espaço e trabalhos',
-      'Espaço para depoimentos e avaliações reais de clientes',
-      'Perguntas frequentes (FAQ) para tirar dúvidas dos clientes',
-      'Endereço, mapa interativo e botão para abrir rotas no GPS',
-      'Botões para chamar no WhatsApp com mensagens prontas',
-      'Layout adaptado para celular, tablet e computador',
-      'Preparado para o Google e pronto para compartilhar',
-      'Publicação do site na internet e testes completos',
+      'Página inicial (Home)',
+      'Sobre',
+      'Serviços com descrição detalhada',
+      'Diferenciais',
+      'Portfólio e projetos',
+      'Depoimentos e prova social',
+      'Perguntas frequentes (FAQ)',
+      'Contato e localização/endereço quando fornecidos',
+      'WhatsApp e redes sociais',
+      'Formulários quando incluídos no escopo',
+      'Navegação entre seções e páginas',
+      'Layout responsivo para celular, tablet e desktop',
+      'SEO técnico básico, metadados e favicon',
+      'Publicação e testes de funcionamento',
     ],
     scopeNote:
-      'O número de seções e funcionalidades é combinado na proposta.',
+      'O número de páginas, seções, integrações e funcionalidades depende do escopo aprovado.',
     excluded: [
-      'Registro de domínio próprio (.com.br é pago à parte na sua conta)',
-      'Hospedagem em servidor externo',
-      'Criação de logotipo do zero',
-      'Integrações com sistemas externos não previstos no escopo',
+      'Domínio próprio',
+      'Hospedagem em outro provedor',
+      'Identidade visual do zero',
+      'Integrações com sistemas de terceiros',
     ],
-    ctaLabel: 'Pedir proposta de Site completo',
+    ctaLabel: 'Pedir proposta de Site Institucional',
     ctaId: 'service-cta-institucional',
     ctaMessage: SITE_CONFIG.siteInstitucionalWhatsappMessage,
   },
   {
     id: 'projeto-personalizado',
-    badge: 'Sob medida',
-    title: 'Projeto sob medida',
+    badge: 'Solução Sob Medida',
+    title: 'Projeto Personalizado',
     description:
-      'Para negócios que precisam de algo específico: calculadoras interativas, formulários detalhados, fluxos especiais de navegação ou telas adicionais.',
+      'Desenvolvimento frontend sob medida para requisitos específicos. Estruturação exclusiva de páginas, componentes interativos, formulários personalizados e integrações aprovadas em escopo.',
     icon: Sparkles,
     includes: [
-      'Páginas e seções desenhadas sob medida para o seu negócio',
-      'Navegação fluida e botões pensados para facilitar o contato',
-      'Formulários e campos específicos conforme a sua necessidade',
-      'Calculadoras simples ou recursos interativos na página',
-      'Apresentação de serviços e fotos reais sem limites rígidos',
-      'Botões para o WhatsApp integrados em cada etapa',
-      'Abre rápido no celular 4G e funciona em qualquer dispositivo',
-      'Preparado para o Google e otimizado para carregar leve',
-      'Publicação segura e suporte na revisão final de funcionamento',
+      'Estruturas de páginas e seções personalizadas para o seu modelo de negócio',
+      'Interfaces responsivas e fluxos de navegação fluidos (abas, telas ou página única)',
+      'Componentes interativos e recursos dinâmicos executados no navegador',
+      'Formulários customizados, galerias, modais e calculadoras quando previstos no escopo',
+      'Integrações com WhatsApp e ferramentas de mensuração previstas no escopo',
+      'Depoimentos, prova social e apresentação institucional sob medida',
+      'SEO técnico básico, metadados semânticos e otimização de imagens',
+      'Layout responsivo adaptado com precisão para celular, tablet e desktop',
+      'Publicação e revisão técnica final de funcionamento',
     ],
     scopeNote:
-      'Preço, prazo e itens inclusos são definidos conforme a proposta combinada.',
+      'Preço, escopo e prazo são definidos conforme a complexidade e os requisitos de frontend aprovados na proposta.',
     excluded: [
-      'Registro de domínio próprio (.com.br é pago à parte na sua conta)',
-      'Hospedagem em servidor externo',
-      'Criação de logotipo do zero',
+      'Domínio próprio',
+      'Hospedagem em outro provedor',
+      'Criação de identidade visual (logo) do zero',
       'Funcionalidades fora do escopo aprovado no orçamento',
     ],
-    ctaLabel: 'Pedir proposta de Projeto sob medida',
+    ctaLabel: 'Solicitar proposta personalizada',
     ctaId: 'service-cta-personalizado',
     ctaMessage: SITE_CONFIG.personalizadoWhatsappMessage,
   },
@@ -285,15 +290,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-white/[0.08] text-indigo-300 text-xs sm:text-sm font-semibold uppercase">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Formatos & Valores</span>
+              <span>SERVIÇOS & CONDIÇÕES COMERCIAIS</span>
             </div>
             <SplitLines
               as="h2"
-              text="Sites feitos sob medida para o seu negócio"
+              text="Formatos sob medida com pagamento flexível"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Cada projeto recebe um <strong className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-bold">orçamento específico</strong> considerando o que o seu negócio precisa. Sem mensalidades escondidas e com opções de parcelamento no cartão ou desconto no PIX.
+              Cada projeto recebe um orçamento personalizado considerando escopo, seções e conteúdo necessário. Sem mensalidades surpresa e com opções de parcelamento no cartão ou desconto à vista no PIX.
             </p>
           </div>
 
@@ -435,10 +440,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   window.location.hash = 'solucoes-web';
                 }
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98 uppercase"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>CONHECER MAIS SOBRE O NOSSO TRABALHO</span>
+              <span>CONHECER NOSSAS ESPECIALIDADES NA SEÇÃO &apos;SOBRE&apos;</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -448,14 +453,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             <div className="max-w-3xl mx-auto text-center mb-10">
               <div className="mb-4">
                 <span className="inline-block text-xs font-mono uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full font-semibold">
-                  Pagamento transparente
+                  Formas de Pagamento Transparentes
                 </span>
               </div>
               <h3 className="font-display text-2xl sm:text-3xl font-bold text-white">
                 Como funciona o pagamento na ēloSites
               </h3>
               <p className="mt-3 text-sm sm:text-base text-slate-300">
-                Você escolhe a melhor forma para o seu bolso, com total clareza e sem surpresas.
+                Você escolhe a melhor modalidade financeira para o momento da sua empresa, com total segurança e clareza contratual.
               </p>
             </div>
 
@@ -477,7 +482,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       </div>
                       <h4 className="text-base font-bold text-white">50% Início + 50% Entrega</h4>
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Metade para começar o trabalho e a outra metade só após o site estar pronto, testado e aprovado por você (via PIX).
+                        50% no momento da contratação para iniciar imediatamente o desenvolvimento e 50% restante após a entrega e aprovação final (via PIX).
                       </p>
                     </FadeInBlock>
                     <div className="mt-auto pt-4">
@@ -508,7 +513,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         </span>
                       </div>
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Pagamento integral no momento do fechamento garante 20% de desconto direto sobre o valor total do orçamento (via PIX).
+                        Pagamento integral à vista no momento do fechamento garante 20% de desconto direto sobre o valor total do projeto orçado.
                       </p>
                     </FadeInBlock>
                     <div className="mt-auto pt-4">
@@ -534,7 +539,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       </div>
                       <h4 className="text-base font-bold text-white">Até 5x Sem Juros no Cartão</h4>
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Aceitamos cartão de crédito em até 5 vezes sem juros para você (sendo 1 entrada + 4 parcelas mensais fixas).
+                        Aceitamos cartão de crédito em até 5 vezes sem nenhum juro para você (sendo 1 entrada + 4 parcelas mensais fixas).
                       </p>
                     </FadeInBlock>
                     <div className="mt-auto pt-4">
@@ -560,7 +565,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       </div>
                       <h4 className="text-base font-bold text-white">De 6x até 12x no Cartão</h4>
                       <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Para quem prefere parcelas menores, viabilizamos de 6x até 12x no cartão com repasse da taxa da maquininha.
+                        Para parcelamentos mais longos, viabilizamos de 6x até 12x no cartão de crédito, com repasse das taxas de juros da operadora para o cliente.
                       </p>
                     </FadeInBlock>
                     <div className="mt-auto pt-4">
@@ -573,7 +578,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
               </BiReveal>
             </div>
 
-            {/* SIMULADOR INTERATIVO DE CONDIÇÕES (100% estável para cliques e slider) */}
+            {/* SIMULADOR INTERATIVO DE CONDIÇÕES */}
             <BiReveal direction="up" delay={150} className="mt-8 w-full">
               <Interactive3DCard maxTilt={0} className="w-full">
                 <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 shadow-2xl shadow-black/80 bracket-panel transition-all">
@@ -587,18 +592,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       Simule as formas de pagamento com base no orçamento
                     </h4>
                     <p className="text-xs sm:text-sm text-slate-400">
-                      Arraste o controle ou clique em um valor de referência para visualizar a economia à vista e as parcelas.
+                      Arraste o controle ou escolha um valor de referência para visualizar a economia à vista e as parcelas.
                     </p>
                   </FadeInBlock>
 
                   <div className="flex flex-wrap items-center gap-2 justify-center">
                     {[
-                      { label: 'R$ 500–700', value: 600, min: 500, max: 700 },
-                      { label: 'R$ 700–900', value: 800, min: 701, max: 900 },
-                      { label: 'R$ 900–1.200', value: 1050, min: 901, max: 1200 },
+                      { label: 'R$ 650', value: 650 },
+                      { label: 'R$ 1.000', value: 1000 },
+                      { label: 'R$ 1.500', value: 1500 },
+                      { label: 'R$ 2.200', value: 2200 },
                     ].map((preset) => {
-                      const isActive =
-                        simulatedValue >= preset.min && simulatedValue <= preset.max;
+                      const isActive = simulatedValue === preset.value;
                       return (
                         <button
                           key={preset.label}
@@ -627,8 +632,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   </div>
                   <input
                     type="range"
-                    min="500"
-                    max="1200"
+                    min="600"
+                    max="3500"
                     step="50"
                     value={simulatedValue}
                     onChange={(e) => setSimulatedValue(Number(e.target.value))}
@@ -636,9 +641,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                     className="w-full accent-indigo-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
                   />
                   <div className="flex justify-between text-[11px] text-slate-400 font-mono">
-                    <span>R$ 500</span>
-                    <span>R$ 850</span>
-                    <span>R$ 1.200</span>
+                    <span>R$ 600</span>
+                    <span>R$ 2.000</span>
+                    <span>R$ 3.500</span>
                   </div>
                 </div>
 
@@ -724,7 +729,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
         <div className="mt-12 sm:mt-16 max-w-3xl mx-auto rounded-2xl border border-white/[0.07] bg-slate-950/50 p-5 sm:p-6 space-y-2 text-xs sm:text-sm text-slate-400 leading-relaxed text-center">
           <p>
             <ShieldCheck className="w-4 h-4 text-indigo-400 inline-block mr-1.5" />
-            A entrega padrão é o seu site publicado e testado na infraestrutura moderna do Netlify. Se você quiser um domínio próprio (.com.br), o registro é feito no seu nome e pago à parte para garantir que o endereço seja 100% seu.
+            A entrega padrão é o site publicado e testado na infraestrutura Netlify. O registro de domínio personalizado (.com.br, .com) é realizado diretamente em nome e conta do cliente para garantir 100% de titularidade.
           </p>
         </div>
       </div>

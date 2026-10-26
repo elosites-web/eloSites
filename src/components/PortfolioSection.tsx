@@ -102,7 +102,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               onClick={() => onOpenCase(project.id)}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-300 hover:text-blue-200 transition-colors cursor-pointer"
             >
-              <span>Ver o case completo</span>
+              <span>Ver detalhes (Desafio, Solução & Resultados)</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -312,7 +312,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 onClick={() => onOpenCase(project.id)}
                 className="inline-flex items-center justify-center text-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0c122e] text-blue-200 hover:text-white hover:bg-blue-950/80 border border-blue-400/40 transition-colors shadow-sm cursor-pointer"
               >
-                <span>Ver o case</span>
+                <span>Ver Case</span>
                 <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
               </button>
 
@@ -336,7 +336,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
               <WhatsAppIcon className="w-3.5 h-3.5 text-slate-950" />
-              <span className="text-slate-950 font-black tracking-tight text-center">Quero um parecido</span>
+              <span className="text-slate-950 font-black tracking-tight text-center">Quero similar</span>
             </a>
           </div>
         </div>
@@ -405,15 +405,15 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-10 sm:mb-12">
             <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-white/[0.08] text-indigo-300 text-xs sm:text-sm font-semibold uppercase">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Portfólio de Clientes</span>
+              <span>PORTFÓLIO DE PROJETOS REAIS</span>
             </div>
             <SplitLines
               as="h2"
-              text="Trabalhos entregues e no ar"
+              text="Sites reais no ar, prontos para converter"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Sites reais feitos para clientes reais. Clique para ver no celular ou abrir o site direto no navegador.
+              Explore nossos trabalhos recentes com alternador de tela Desktop e Mobile ou visualize o mockup composto sobreposto. Todos os projetos contam com código limpo, SEO técnico e carregamento instantâneo.
             </p>
 
             {/* Filtros de Categoria */}
@@ -427,7 +427,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Todos os projetos ({PORTFOLIO_PROJECTS.length})
+                Todos (3)
               </button>
               <button
                 type="button"
@@ -438,7 +438,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Sites de uma página
+                Landing Pages
               </button>
               <button
                 type="button"
@@ -449,7 +449,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Sites completos
+                Sites Institucionais
               </button>
             </div>
           </div>
@@ -517,10 +517,10 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   strength={12}
                   glowColor="rgba(37, 211, 102, 0.45)"
                   className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-[#25D366] hover:bg-[#22c55e] border border-emerald-300/50 shadow-lg shadow-emerald-950/60 hover:shadow-[0_0_24px_rgba(37,211,102,0.7)] active:scale-[0.98] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                  ariaLabel="Solicitar Orçamento no WhatsApp"
+                  ariaLabel="Conversar no WhatsApp"
                 >
                   <WhatsAppIcon className="w-4 h-4 text-white" />
-                  <span className="text-center font-bold text-white drop-shadow-sm">Solicitar Orçamento</span>
+                  <span className="text-center font-bold text-white drop-shadow-sm">Conversar no WhatsApp</span>
                 </MagneticButton>
               </div>
             </div>
