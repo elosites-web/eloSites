@@ -80,21 +80,21 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
     isWhatsApp?: boolean;
   }[] = [
     {
-      title: 'Código limpo & alta performance',
+      title: 'Código limpo & carregamento ágil',
       description:
-        'Desenvolvimento autoral, leve e otimizado para carregamento instantâneo. Sem temas genéricos ou plugins pesados que deixam o site lento.',
+        'Desenvolvimento autoral, leve e otimizado para abrir com rapidez no celular e no computador. Sem modelos genéricos ou ferramentas pesadas que deixam a navegação lenta.',
       icon: Zap,
     },
     {
       title: 'Trabalho direto com o fundador',
       description:
-        'Você conversa com quem desenha e desenvolve o site. Sem equipe inventada, sem intermediários e sem terceirização.',
+        'Você conversa diretamente com quem desenha e programa o site. Sem intermediários, sem ruído na comunicação e com atendimento transparente.',
       icon: User,
     },
     {
       title: 'Tecnologia moderna e publicação estável',
       description:
-        'Stack atual, código organizado e publicação estável na URL do Netlify. Domínio personalizado não está incluso: se quiser um, o registro fica na sua conta e o pagamento é à parte.',
+        'Tecnologia atual e confiável, com entrega padrão do site no ar pela Netlify. O endereço personalizado (como seunegocio.com.br) é registrado em sua própria conta para garantir sua titularidade.',
       icon: Server,
     },
     {

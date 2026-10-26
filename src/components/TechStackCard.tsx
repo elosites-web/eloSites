@@ -26,7 +26,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'react',
     name: 'React',
-    description: 'Biblioteca UI para interfaces dinâmicas',
+    description: 'Cria páginas modernas e interativas',
     category: 'Estrutura Moderna',
     tagColor: 'text-cyan-400 bg-cyan-950/40 border-cyan-500/30',
     borderHover: 'hover:border-cyan-400/60',
@@ -52,7 +52,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'typescript',
     name: 'TypeScript',
-    description: 'Tipagem estática e segurança de código',
+    description: 'Evita erros e dá estabilidade ao site',
     category: 'Sem Falhas',
     tagColor: 'text-blue-400 bg-blue-950/40 border-blue-500/30',
     borderHover: 'hover:border-blue-400/60',
@@ -66,7 +66,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    description: 'Lógica e interatividade moderna',
+    description: 'Permite cliques rápidos e ações na tela',
     category: 'Navegação Ágil',
     tagColor: 'text-amber-300 bg-amber-950/40 border-amber-500/30',
     borderHover: 'hover:border-amber-400/60',
@@ -80,7 +80,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'html5',
     name: 'HTML5 Semântico',
-    description: 'Estruturação acessível e SEO',
+    description: 'Organiza o conteúdo de forma clara',
     category: 'Organização Limpa',
     tagColor: 'text-orange-400 bg-orange-950/40 border-orange-500/30',
     borderHover: 'hover:border-orange-400/60',
@@ -90,7 +90,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'tailwind',
     name: 'Tailwind CSS',
-    description: 'Estilização performática e responsiva',
+    description: 'Garante visual elegante, leve e adaptado',
     category: 'Visual Sob Medida',
     tagColor: 'text-sky-400 bg-sky-950/40 border-sky-500/30',
     borderHover: 'hover:border-sky-400/60',
@@ -100,7 +100,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'vite',
     name: 'Vite',
-    description: 'Build veloz e empacotamento otimizado',
+    description: 'Faz o site abrir com agilidade',
     category: 'Velocidade Máxima',
     tagColor: 'text-purple-400 bg-purple-950/40 border-purple-500/30',
     borderHover: 'hover:border-purple-400/60',
@@ -110,7 +110,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'seo-tecnico',
     name: 'SEO Técnico',
-    description: 'Schema.org, metadados e indexação',
+    description: 'Ajuda o Google a entender suas páginas',
     category: 'Busca Orgânica',
     tagColor: 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
@@ -120,7 +120,7 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'whatsapp-integracao',
     name: 'Integração com WhatsApp',
-    description: 'Links diretos, CTAs contextuais e mensagens personalizadas',
+    description: 'Leva o cliente direto para conversar com você',
     category: 'Contato Imediato',
     tagColor: 'text-emerald-300 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
@@ -176,9 +176,8 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
               Tecnologias modernas aplicadas a cada entrega
             </h3>
 
-            {/* Parágrafo de Apresentação Técnica */}
             <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-normal">
-              Utilizamos uma base técnica sólida de desenvolvimento frontend combinando tecnologias modernas como React, TypeScript, Vite e Tailwind CSS para entregar código limpo, interfaces fluidas e alta fidelidade visual, sem dependência de plataformas lentas ou templates engessados.
+              Construímos cada site com tecnologias consagradas da internet, como React, TypeScript, Vite e Tailwind CSS. Isso significa um site leve, que abre rápido no celular e não depende de sistemas pesados ou modelos prontos que travam.
             </p>
           </div>
 

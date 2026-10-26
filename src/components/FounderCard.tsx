@@ -128,9 +128,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
             {/* Parágrafo de Apresentação e Posicionamento */}
             <p className="text-sm sm:text-base text-slate-300/90 leading-relaxed max-w-2xl">
               Sou <strong className="font-bold text-white">Everton Lopes</strong>, fundador da{' '}
-              <strong className="font-bold text-white">ēloSites</strong>. Desenvolvo landing pages, sites institucionais e
-              experiências web interativas, combinando tecnologia, design de interfaces e SEO técnico para ajudar negócios a
-              fortalecer sua presença digital.
+              <strong className="font-bold text-white">ēloSites</strong>. Desenvolvo sites profissionais do zero, pensados para apresentar o seu trabalho com clareza, passar credibilidade no Google e facilitar o contato de novos clientes pelo WhatsApp.
             </p>
 
             {/* Linha de Ações */}

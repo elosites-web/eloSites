@@ -272,8 +272,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Monitor className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Design moderno</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Estética autoral</span>
+                      <span className="text-xs font-semibold text-white text-center">Design sob medida</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Identidade própria</span>
                     </div>
 
                     {/* Pilar 2 */}
@@ -281,8 +281,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Zap className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">Performance</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Velocidade real</span>
+                      <span className="text-xs font-semibold text-white text-center">Carregamento rápido</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Sem lentidão</span>
                     </div>
 
                     {/* Pilar 3 */}
@@ -290,8 +290,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Search className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">SEO técnico</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Google Schema</span>
+                      <span className="text-xs font-semibold text-white text-center">Pronto para o Google</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">Estrutura organizada</span>
                     </div>
 
                     {/* Pilar 4 */}
@@ -299,8 +299,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-white text-center">100% responsivo</span>
-                      <span className="text-[11px] text-slate-300 font-medium text-center">Mobile First</span>
+                      <span className="text-xs font-semibold text-white text-center">Perfeito no celular</span>
+                      <span className="text-[11px] text-slate-300 font-medium text-center">E no computador</span>
                     </div>
                   </div>
                 </BiReveal>
@@ -443,10 +443,10 @@ export const Hero: React.FC<HeroProps> = ({
                               {/* Conteúdo Central da Tela */}
                               <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
                                 <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-                                  Sites que geram resultados.
+                                  Um site profissional para o seu negócio.
                                 </h2>
                                 <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
-                                  Design, performance e SEO técnico para o seu negócio crescer no Google e converter no WhatsApp.
+                                  Apresente seus serviços com clareza, transmita confiança e receba novos contatos direto no seu WhatsApp.
                                 </p>
                                 <div className="pt-1">
                                   <a

@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              A ēloSites é um estúdio de desenvolvimento web especializado em landing pages e sites institucionais responsivos. Criamos interfaces personalizadas com tecnologias modernas, funcionalidades interativas, integração com WhatsApp e SEO técnico, com foco em clareza, experiência de navegação e objetivos comerciais.
+              Desenvolvemos sites profissionais sob medida para o seu negócio ser encontrado no Google, transmitir confiança e receber novos contatos diretamente no WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a

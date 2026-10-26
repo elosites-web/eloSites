@@ -102,7 +102,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               onClick={() => onOpenCase(project.id)}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-300 hover:text-blue-200 transition-colors cursor-pointer"
             >
-              <span>Ver detalhes (Desafio, Solução & Resultados)</span>
+              <span>Ver detalhes do projeto (Desafio & Solução)</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -409,11 +409,11 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             </div>
             <SplitLines
               as="h2"
-              text="Sites reais no ar, prontos para converter"
+              text="Sites reais no ar para apresentar seu negócio"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Explore nossos trabalhos recentes com alternador de tela Desktop e Mobile ou visualize o mockup composto sobreposto. Todos os projetos contam com código limpo, SEO técnico e carregamento instantâneo.
+              Veja na prática como nossos sites se adaptam ao celular e ao computador. Cada projeto é estruturado para facilitar a leitura das suas informações, transmitir credibilidade e direcionar o visitante para o contato pelo WhatsApp.
             </p>
 
             {/* Filtros de Categoria */}
@@ -427,7 +427,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Todos (3)
+                Todos ({PORTFOLIO_PROJECTS.length})
               </button>
               <button
                 type="button"
@@ -438,7 +438,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Landing Pages
+                Landing Pages ({PORTFOLIO_PROJECTS.filter((p) => p.category === 'landing').length})
               </button>
               <button
                 type="button"
@@ -449,7 +449,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     : 'bg-[#0c122e] text-slate-200 hover:text-white border border-blue-500/30 hover:border-blue-400'
                 }`}
               >
-                Sites Institucionais
+                Sites Institucionais ({PORTFOLIO_PROJECTS.filter((p) => p.category === 'institutional').length})
               </button>
             </div>
           </div>
@@ -492,10 +492,10 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
             <div className="portfolio-card p-6 sm:p-7 md:p-8 rounded-2xl bg-[#090e26] border border-blue-400/40 hover:border-blue-400/70 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/90 bracket-panel transition-all">
               <div className="space-y-2 text-left w-full lg:max-w-xl">
                 <h3 className="text-xl sm:text-2xl font-bold text-white font-display tracking-tight drop-shadow-sm">
-                  Gostou do nível dos projetos da ēloSites?
+                  Quer um site com esse mesmo nível de acabamento?
                 </h3>
                 <p className="text-sm sm:text-[15px] text-slate-100 font-medium leading-relaxed">
-                  Cada projeto recebe um orçamento específico baseado no escopo. 50% de entrada no início + 50% na aprovação final (PIX), 20% de desconto à vista, até 5x sem juros ou de 6x a 12x no cartão.
+                  Cada projeto recebe uma proposta sob medida para as necessidades do seu negócio. Pagamento facilitado: 50% no início e 50% na aprovação final (PIX), 20% de desconto para pagamento à vista no PIX, ou cartão de crédito em até 5x sem juros (e de 6x a 12x com taxas da operadora).
                 </p>
               </div>
 

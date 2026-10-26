@@ -24,21 +24,21 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
     challenge:
-      'Personal trainer atuante em treino presencial, consultoria online e avaliação física. Necessitava de uma landing page ágil para apresentar suas modalidades e conduzir interessados ao contato direto no WhatsApp.',
+      'O treinador precisava apresentar seus treinos presenciais, consultoria online e avaliação física de forma profissional, facilitando para quem tem interesse entrar em contato direto pelo WhatsApp.',
     solution:
-      'Desenvolvimento de landing page responsiva, com chamadas de WhatsApp parametrizadas por modalidade de treino, galeria de resultados, apresentação de benefícios e prova social em destaque.',
+      'Criamos uma página rápida e focada em conversão, com botões de WhatsApp específicos para cada tipo de treino, galeria de fotos de resultados, apresentação dos benefícios e depoimentos de alunos.',
     tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Foco em Conversão'],
     urlLabel: 'jvsalvaiapersonal.netlify.app',
     href: 'https://jvsalvaiapersonal.netlify.app',
     desktopImage: '/portifolio-jvsalvaia-desktop.webp',
     mobileImage: '/portifolio-jvsalvaia-mobile.webp',
     features: [
-      'Gatilho direto para WhatsApp com mensagem personalizada para cada plano',
-      'Interface responsiva adaptada para smartphone, tablet e desktop',
-      'Otimização de carregamento de imagens e fundamentos de SEO técnico',
+      'Botões de WhatsApp com mensagem pronta para cada plano de treino',
+      'Site que se ajusta perfeitamente na tela do celular e do computador',
+      'Carregamento rápido das imagens e organização pensada para o Google',
     ],
-    resultsNote: 'Leads direcionados com mensagem específica do serviço de interesse.',
-    highlightNote: 'Estruturado com foco em conversão e carregamento ágil.',
+    resultsNote: 'Contatos organizados pelo WhatsApp, com mensagens que já identificam o serviço desejado pelo aluno.',
+    highlightNote: 'Desenvolvido para abrir rápido no celular e facilitar o primeiro contato pelo WhatsApp.',
   },
   {
     id: 'toledo-seguranca',
@@ -47,21 +47,44 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Toledo Segurança',
     category: 'institutional',
     challenge:
-      'Empresa especializada em segurança para eventos, portaria terceirizada e rondas preventivas em Jundiaí/SP. Precisava de presença institucional clara para transmitir autoridade e receber solicitações de cotação.',
+      'Empresa de segurança para eventos, portaria e rondas preventivas em Jundiaí e região. Precisava de um site profissional para transmitir confiança a condomínios e empresas e receber pedidos de cotação.',
     solution:
-      'Site institucional com paleta corporativa dark & gold, estruturação detalhada dos serviços prestados, formulário direto de cotação empresarial e canal de recrutamento integrado ao WhatsApp.',
+      'Desenvolvemos um site institucional completo com visual sério e corporativo, detalhes de cada serviço prestado, formulário direto para solicitar orçamento e canal no WhatsApp também para recebimento de currículos.',
     tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'B2B & Condomínios'],
     urlLabel: 'toledoseguranca.netlify.app',
     href: 'https://toledoseguranca.netlify.app',
     desktopImage: '/portifolio-toledoseguranca-desktop.webp',
     mobileImage: '/portifolio-toledoseguranca-mobile.webp',
     features: [
-      'Apresentação institucional estruturada com foco em credibilidade',
-      'Seções organizadas para serviços de eventos, condomínios e empresas',
-      'Fluxo duplo de atendimento no WhatsApp (Orçamento comercial e Banco de talentos)',
+      'Apresentação completa da empresa e dos serviços para transmitir credibilidade',
+      'Seções organizadas para condomínios, eventos particulares e empresas',
+      'Dois caminhos de atendimento no WhatsApp: orçamentos comerciais e envio de currículos',
     ],
-    resultsNote: 'Presença institucional consolidada para apresentação corporativa e atendimento ágil de cotações.',
-    highlightNote: 'Estruturado com foco em conversão e carregamento ágil',
+    resultsNote: 'Presença profissional na internet para apresentar a empresa a clientes corporativos e agilizar cotações.',
+    highlightNote: 'Estruturado para transmitir autoridade e receber solicitações comerciais com rapidez.',
+  },
+  {
+    id: 'garagem-mailasque',
+    badge: 'SITE DE UMA PÁGINA & OFICINA',
+    status: 'Publicado & Ativo',
+    title: 'Garagem Mailasque',
+    category: 'landing',
+    challenge:
+      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava ser encontrada por motoristas locais no Google e agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
+    solution:
+      'Criamos uma página direta e fácil de navegar no celular, apresentando os serviços de funilaria, pintura e restauração, mapa de localização e botão de WhatsApp preparado para o cliente enviar fotos do veículo batido ou arranhado.',
+    tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos', 'Orçamento no WhatsApp'],
+    urlLabel: 'garagemailasque.com.br',
+    href: 'https://garagemailasque.com.br',
+    desktopImage: '/garagem-mailasque-desktop.webp',
+    mobileImage: '/garagem-mailasque-mobile.jpg',
+    features: [
+      'Mensagem pronta no WhatsApp para agilizar o orçamento e envio de fotos do veículo',
+      'Apresentação clara dos serviços automotivos de funilaria, pintura e polimento',
+      'Endereço e mapa para ajudar motoristas de São Roque e região a encontrar a oficina',
+    ],
+    resultsNote: 'Presença no Google para motoristas da região e canal direto de WhatsApp para pedidos de orçamento com envio de fotos.',
+    highlightNote: 'Estruturado para apresentar serviços com clareza e levar o cliente direto para o WhatsApp.',
   },
   {
     id: 'duelo-fim-de-ano',
@@ -70,52 +93,27 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Duelo de Fim de Ano — Badem vs Becala',
     category: 'landing',
     challenge:
-      'Organização de clássico esportivo comunitário e beneficente de fim de ano que necessitava de engajamento dos torcedores, votação dos melhores da partida e mural de fotos dinâmico sem complexidade de infraestrutura.',
+      'Evento esportivo tradicional e beneficente de fim de ano que precisava envolver torcedores, permitir votação dos melhores jogadores e exibir fotos dos jogos de forma leve e prática no celular.',
     solution:
-      'Aplicação web com campo tático interativo, votação no navegador ("Bola Cheia vs Bola Murcha") com persistência local, cronologia de edições e integração com a comunidade esportiva.',
+      'Criamos uma página interativa com campinho de futebol visual para ver a escalação dos times, sistema de votação de "Bola Cheia e Bola Murcha" que funciona direto no navegador e galeria de fotos das edições anteriores.',
     tags: ['Interatividade', 'Engajamento Comunitário', 'Futebol Amador', 'UX Interativa'],
     urlLabel: 'jogodefimdeano.netlify.app',
     href: 'https://jogodefimdeano.netlify.app',
     desktopImage: '/portifolio-jogodefimdeano-desktop.webp',
     mobileImage: '/portifolio-jogodefimdeano-mobile.webp',
     features: [
-      'Escalações em campo tático interativo de futebol',
-      'Votação no navegador com persistência no armazenamento local (localStorage)',
-      'Galeria de fotos com carregamento sob demanda',
+      'Campo tático visual com a escalação completa dos dois times',
+      'Votação dos melhores jogadores funcionando direto no navegador, sem precisar de cadastro',
+      'Mural de fotos com carregamento leve para não pesar na internet do celular',
     ],
-    resultsNote: 'Engajamento comunitário interativo com interface leve, dinâmica e sem necessidade de login.',
-    highlightNote: 'Estruturado com foco em conversão e carregamento ági',
+    resultsNote: 'Engajamento dos torcedores e participantes com uma experiência dinâmica, moderna e sem necessidade de login.',
+    highlightNote: 'Estruturado para envolver a comunidade esportiva com carregamento ágil no celular.',
   },
 ];
 
-export const GARAGEM_MAILASQUE_PROJECT: PortfolioProjectData = {
-  id: 'garagem-mailasque',
-  badge: 'SITE DE UMA PÁGINA & OFICINA',
-  status: 'Publicado & Ativo',
-  title: 'Garagem Mailasque',
-  category: 'landing',
-  challenge:
-    'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque/SP (Mailasqui). Precisava de presença no Google para ser encontrada por motoristas da região e agilizar orçamentos de reparos e sinistros pelo WhatsApp.',
-  solution:
-    'Site de uma página ágil e direto, com catálogo dos serviços de funilaria, pintura e restauração, localização com mapa e canal no WhatsApp preparado para o cliente enviar fotos do veículo danificado.',
-  tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos', 'Orçamento no WhatsApp'],
-  urlLabel: 'garagemailasque.com.br',
-  href: 'https://garagemailasque.com.br',
-  desktopImage: '/garagem-mailasque-desktop.webp',
-  mobileImage: '/garagem-mailasque-mobile.jpg',
-  features: [
-    'Botão de WhatsApp com mensagem pronta para envio de fotos do veículo',
-    'Catálogo claro dos serviços de reparo, pintura e polimento automotivo',
-    'Endereço e mapa para localização rápida de motoristas de São Roque e região',
-  ],
-  resultsNote: 'Presença no Google consolidada, com atendimento direto pelo WhatsApp para envio de fotos e orçamentos.',
-  highlightNote: 'Estruturado para apresentar serviços com autoridade e levar clientes qualificados direto para o WhatsAp',
-};
+export const GARAGEM_MAILASQUE_PROJECT: PortfolioProjectData = PORTFOLIO_PROJECTS[2];
 
-export const ALL_CASES: PortfolioProjectData[] = [
-  ...PORTFOLIO_PROJECTS,
-  GARAGEM_MAILASQUE_PROJECT,
-];
+export const ALL_CASES: PortfolioProjectData[] = PORTFOLIO_PROJECTS;
 
 export function getProjectById(id: string): PortfolioProjectData | undefined {
   return ALL_CASES.find((p) => p.id === id);
