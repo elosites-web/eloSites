@@ -32,13 +32,13 @@ export const FaqSection: React.FC = () => {
       id: 'faq-4',
       question: 'A publicação e a hospedagem estão inclusas?',
       answer:
-        'A publicação do site no endereço combinado faz parte do projeto. Hospedagem e domínio são serviços de terceiros, contratados e pagos por você diretamente no provedor de sua escolha (por exemplo, Netlify, Cloudflare ou uma empresa de hospedagem), e a ēloSites não revende esses serviços. Configurar a publicação e conectar o domínio, quando previstos no escopo aprovado, fazem parte do projeto; migrações fora desse escopo podem ser orçadas à parte.',
+        'A entrega inclui o site pronto, publicado e testado na plataforma segura da Netlify. O endereço do site (o domínio, como seunegocio.com.br) e eventuais servidores externos são contratados diretamente em seu nome, garantindo que você tenha 100% de controle e titularidade. A ēloSites cuida de toda a configuração técnica para colocar o site no ar.',
     },
     {
       id: 'faq-5',
       question: 'O domínio personalizado está incluso?',
       answer:
-        'Não. O registro do domínio (.com.br, .com etc.) é pago por você ao provedor de sua escolha e fica sempre na sua conta; a ēloSites não fica dona do domínio. Recomendamos fortemente contratar um domínio próprio: ele passa mais credibilidade, é mais fácil de lembrar e divulgar, e continua seu mesmo que o site mude de hospedagem. Se quiser, indicamos opções de provedores.',
+        'Não. O registro do domínio (o endereço oficial do seu site, como seunegocio.com.br) é uma anuidade paga diretamente aos órgãos oficiais (como o Registro.br, cerca de R$ 40/ano) e fica 100% no seu nome ou CNPJ. A ēloSites não retém seu endereço e ajuda você a registrar e conectar ao site com total facilidade.',
     },
     {
       id: 'faq-6',
@@ -50,7 +50,7 @@ export const FaqSection: React.FC = () => {
       id: 'faq-7',
       question: 'Existe manutenção mensal?',
       answer:
-        'Sim, e é opcional — o valor é definido em 20% sobre o valor do orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 4 solicitações simples por mês (textos, imagens, contatos, links, pequenos ajustes), sem acúmulo entre meses. Novas páginas, funcionalidades, integrações, redesigns e alterações estruturais são orçados à parte. Não inclui domínio nem hospedagem em outro provedor.',
+        'Sim, e é opcional — o valor é definido em 20% sobre o valor do orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 4 solicitações simples por mês (troca de textos, fotos, telefones, links e pequenos ajustes visuais), sem acúmulo entre meses. Novas páginas, recursos exclusivos e mudanças estruturais são orçados à parte. Não inclui anuidade de domínio nem outros servidores.',
     },
   ];
 

@@ -79,10 +79,10 @@ interface ServiceCategory {
 const SERVICES: ServiceCategory[] = [
   {
     id: 'landing-page',
-    badge: 'Foco em Conversão',
+    badge: 'Página Única (Foco em WhatsApp)',
     title: 'Landing Page',
     description:
-      'Uma página única, direta e focada em apresentar o seu trabalho e levar o visitante para conversar com você no WhatsApp.',
+      'Uma página única, direta e prática para apresentar o seu trabalho e levar o visitante a chamar você no WhatsApp. É a opção ideal para quem quer começar rápido sem complicações.',
     icon: Target,
     includes: [
       'Estrutura em página única pensada para leitura rápida',
@@ -101,7 +101,7 @@ const SERVICES: ServiceCategory[] = [
     scopeNote: 'O que será desenvolvido é detalhado na proposta e no contrato antes de começar.',
     excluded: [
       'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros provedores',
+      'Hospedagem em outros servidores (o site é publicado na Netlify)',
       'Criação de logotipo do zero',
       'Páginas extras fora do escopo combinado',
     ],
@@ -111,7 +111,7 @@ const SERVICES: ServiceCategory[] = [
   },
   {
     id: 'site-institucional',
-    badge: 'Autoridade & Estrutura',
+    badge: 'Empresa Completa (Várias Páginas)',
     title: 'Site Institucional',
     description:
       'Estrutura completa com várias seções e navegação entre páginas. Perfeito para empresas que precisam mostrar equipe, história, detalhes dos serviços e localização.',
@@ -135,7 +135,7 @@ const SERVICES: ServiceCategory[] = [
       'A quantidade de páginas, seções e botões é combinada com clareza no orçamento.',
     excluded: [
       'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros provedores',
+      'Hospedagem em outros servidores (o site é publicado na Netlify)',
       'Criação de logotipo do zero',
       'Integrações com sistemas externos não combinados',
     ],
@@ -145,10 +145,10 @@ const SERVICES: ServiceCategory[] = [
   },
   {
     id: 'projeto-personalizado',
-    badge: 'Solução Sob Medida',
+    badge: 'Recursos Sob Medida',
     title: 'Projeto Personalizado',
     description:
-      'Site planejado sob medida quando você tem ideias ou necessidades específicas de navegação, formulários ou recursos exclusivos.',
+      'Site planejado sob medida quando você tem necessidades específicas de navegação, formulários detalhados ou recursos exclusivos para o seu negócio.',
     icon: Sparkles,
     includes: [
       'Páginas e seções desenhadas para a rotina do seu negócio',
@@ -165,7 +165,7 @@ const SERVICES: ServiceCategory[] = [
       'Prazo, etapas e valor são definidos de acordo com o que o seu projeto realmente precisa.',
     excluded: [
       'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros provedores',
+      'Hospedagem em outros servidores (o site é publicado na Netlify)',
       'Criação de logotipo do zero',
       'Recursos que não constam na proposta aprovada',
     ],
@@ -727,7 +727,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
         <div className="mt-12 sm:mt-16 max-w-3xl mx-auto rounded-2xl border border-white/[0.07] bg-slate-950/50 p-5 sm:p-6 space-y-2 text-xs sm:text-sm text-slate-400 leading-relaxed text-center">
           <p>
             <ShieldCheck className="w-4 h-4 text-indigo-400 inline-block mr-1.5" />
-            A entrega padrão é o site publicado e testado na infraestrutura Netlify. O registro de domínio personalizado (.com.br, .com) é realizado diretamente em nome e conta do cliente para garantir 100% de titularidade.
+            A entrega inclui o site publicado no ar e testado no servidor seguro da Netlify. O registro do seu endereço na internet (domínio .com.br ou .com) é feito diretamente em sua própria conta e nome para garantir que o site seja sempre 100% seu.
           </p>
         </div>
       </div>

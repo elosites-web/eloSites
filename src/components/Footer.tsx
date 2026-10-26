@@ -212,14 +212,14 @@ export const Footer: React.FC<FooterProps> = ({
               <span className="text-cyan-400 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <p className="text-[13px] text-slate-300/90 leading-relaxed">
-              Desenvolvimento de landing pages focadas em conversão, sites institucionais responsivos, componentes interativos de frontend, SEO técnico e integrações com WhatsApp e ferramentas de mensuração.
+              Criação de páginas únicas (landing pages), sites completos para empresas (institucionais), código visual moderno (frontend), organização técnica para o Google (SEO) e botões inteligentes de WhatsApp.
             </p>
             <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-2">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
               </span>
-              <span>Engenharia frontend moderna • Código limpo e sob medida</span>
+              <span>Engenharia web moderna • Código limpo, rápido e sob medida</span>
             </div>
           </div>
         </div>
@@ -276,7 +276,7 @@ export const Footer: React.FC<FooterProps> = ({
               </button>
             </div>
             <span className="hidden md:inline text-slate-500/80 mx-0.5 select-none" aria-hidden="true">•</span>
-            <span className="text-slate-400 font-medium shrink-0">O MELHOR SITE PELO MELHOR PREÇO</span>
+            <span className="text-slate-400 font-medium shrink-0">SITES PROFISSIONAIS SOB MEDIDA PARA O SEU NEGÓCIO</span>
           </div>
         </div>
 

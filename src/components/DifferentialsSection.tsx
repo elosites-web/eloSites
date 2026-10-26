@@ -98,21 +98,21 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
       icon: Server,
     },
     {
-      title: 'Foco em conversão',
+      title: 'Estrutura focada em gerar contatos',
       description:
-        'Cada seção existe para um motivo comercial: apresentar o serviço com clareza e levar o visitante até o contato.',
+        'Cada parte do site tem um objetivo prático: apresentar seus serviços com clareza e transformar visitantes em conversas reais no WhatsApp.',
       icon: TrendingUp,
     },
     {
-      title: 'Mais contexto antes da conversa',
+      title: 'Clientes mais preparados para conversar',
       description:
-        'O site apresenta seus serviços, explica seus diferenciais e reúne as informações que o cliente precisa para conhecer melhor seu negócio antes de entrar em contato. Com o WhatsApp integrado, fica mais fácil dar o próximo passo.',
+        'O visitante já lê seus diferenciais, vê fotos e entende seus serviços antes de chamar. Assim, quem clica no WhatsApp já chega sabendo o que quer, economizando seu tempo.',
       icon: Flame,
     },
     {
       title: 'WhatsApp em primeiro lugar',
       description:
-        'Quando faz sentido para o negócio, o site é pensado para gerar conversa no WhatsApp — com botões no momento certo e mensagens prontas.',
+        'O site é pensado para facilitar o contato: botões bem posicionados e mensagens pré-formatadas para o cliente iniciar a conversa em um clique.',
       icon: WhatsAppIcon,
       isWhatsApp: true,
     },

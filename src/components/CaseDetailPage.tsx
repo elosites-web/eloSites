@@ -50,7 +50,7 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onBack]);
 
-  const projectWhatsappMessage = `Olá! 💻 Estive analisando o case de sucesso *${project.title}* no portfólio da *ēloSites*.\n\nGostaria de entender melhor como vocês podem desenvolver uma solução personalizada com foco em conversão para o meu negócio!`;
+  const projectWhatsappMessage = `Olá! 💻 Estive conhecendo o projeto *${project.title}* no portfólio da *ēloSites*.\n\nGostaria de entender melhor como vocês podem desenvolver um site sob medida para o meu negócio!`;
 
   return (
     <article
@@ -113,7 +113,7 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
           </h1>
 
           <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-medium max-w-3xl">
-            Estudo de caso detalhado do projeto desenvolvido pela ēloSites, com foco em presença no Google, velocidade no celular e conversão rápida pelo WhatsApp.
+            Estudo de caso detalhado do projeto desenvolvido pela ēloSites, com foco em presença no Google, velocidade no celular e facilidade de contato pelo WhatsApp.
           </p>
 
           {/* Botões Rápidos de Ação */}

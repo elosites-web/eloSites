@@ -63,7 +63,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     contactName: '',
     businessName: '',
     segment: 'Barbearia',
-    projectType: 'Landing Page de Conversão (Foco em WhatsApp)',
+    projectType: 'Landing Page (Página Única focada em WhatsApp)',
     investmentRange: '',
     description: '',
     whatsappContact: '',
@@ -230,8 +230,8 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   ];
 
   const projectTypesList = [
-    'Landing Page de Conversão (Foco em WhatsApp)',
-    'Site Institucional Completo (Sobre, Serviços, FAQ)',
+    'Landing Page (Página Única focada em WhatsApp)',
+    'Site Institucional (Várias Páginas: Sobre, Serviços, Contato)',
     'Projeto Sob Medida / Personalizado',
   ];
 

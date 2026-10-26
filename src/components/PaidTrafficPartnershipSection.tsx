@@ -37,40 +37,40 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
     {
       id: 'anuncios',
       icon: MessageSquareQuote,
-      tag: 'META ADS & WHATSAPP',
+      tag: 'ANÚNCIOS NO INSTAGRAM & FACEBOOK',
       title: 'Anúncios que geram conversas',
       description:
-        'Campanhas no Meta Ads (Facebook e Instagram) planejadas conforme o negócio, o público e a região, com foco em gerar contatos e oportunidades pelo WhatsApp.',
+        'Campanhas no Meta Ads (anúncios no Instagram e Facebook) planejadas para o seu público e cidade, levando as pessoas interessadas direto para o seu WhatsApp.',
       accent: 'from-blue-600/30 to-indigo-600/20',
       iconColor: 'text-blue-400',
     },
     {
       id: 'testes',
       icon: Target,
-      tag: 'PERFORMANCE & DADOS',
-      title: 'Criativos, testes e otimização',
+      tag: 'TESTES & RESULTADOS',
+      title: 'Criativos, testes e melhorias contínuas',
       description:
-        'Desenvolvimento e teste de diferentes anúncios e textos, análise dos dados e ajustes conforme o desempenho das campanhas.',
+        'Criação de diferentes versões de fotos, vídeos e textos para descobrir o que chama mais atenção e dá o melhor retorno para o seu orçamento.',
       accent: 'from-blue-600/30 to-sky-600/20',
       iconColor: 'text-sky-400',
     },
     {
       id: 'consultoria',
       icon: TrendingUp,
-      tag: 'ESTRATÉGIA COMERCIAL',
-      title: 'Consultoria comercial e funil de vendas',
+      tag: 'ORGANIZAÇÃO DE VENDAS',
+      title: 'Consultoria para conduzir conversas',
       description:
-        'Apoio para organizar o processo comercial, estruturar abordagens, qualificar contatos e melhorar a condução das conversas com potenciais clientes.',
+        'Ajuda prática para organizar como sua equipe atende os contatos no WhatsApp, responde dúvidas e conduz as conversas até o fechamento.',
       accent: 'from-indigo-600/30 to-blue-600/20',
       iconColor: 'text-indigo-400',
     },
     {
       id: 'treinamento',
       icon: Users,
-      tag: 'CAPACITAÇÃO & FECHAMENTO',
-      title: 'Treinamento e acompanhamento',
+      tag: 'ATENDIMENTO & FECHAMENTO',
+      title: 'Treinamento para quem atende no WhatsApp',
       description:
-        'Orientação prática para quem atende os contatos, com foco em melhorar o atendimento, a abordagem e as oportunidades de fechamento.',
+        'Orientações e técnicas para quem responde as mensagens no dia a dia atender com agilidade, clareza e mais chances de fechar vendas.',
       accent: 'from-emerald-600/30 to-teal-600/20',
       iconColor: 'text-emerald-400',
     },
@@ -277,7 +277,7 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
                     <span>Investimento em mídia:</span>
                   </div>
                   <p className="leading-relaxed pl-6 lg:pl-0">
-                    O investimento em anúncios é separado da mensalidade do serviço e é pago pelo próprio cliente diretamente à Meta.
+                    O valor investido nos anúncios (quanto você quer colocar para o Instagram e o Facebook mostrarem sua empresa) é separado da mensalidade e é pago diretamente para a Meta por você.
                   </p>
                 </div>
 

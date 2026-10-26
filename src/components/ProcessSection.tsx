@@ -65,28 +65,28 @@ export const ProcessSection: React.FC = () => {
       number: '01',
       title: 'Conversa inicial',
       description:
-        'Conversa inicial sobre o negócio: o que você oferece, para quem e o que o site precisa gerar.',
+        'Conversamos sobre o seu negócio: o que você oferece, quem são seus clientes e qual o objetivo principal do site.',
       icon: MessageSquare,
     },
     {
       number: '02',
       title: 'Conteúdos e identidade',
       description:
-        'Reunião de conteúdos, fotos e identidade. Organizamos o material para o site falar a língua do seu cliente.',
+        'Reunimos seus textos, fotos e logotipo. Organizamos tudo com clareza para o visitante entender sua empresa sem esforço.',
       icon: Layers,
     },
     {
       number: '03',
       title: 'Desenvolvimento e revisão',
       description:
-        'Desenvolvimento rápido com auxílio de IA e revisão humana em cada detalhe. Nada vai ao ar sem olhar atento.',
+        'Programamos o site com apoio de inteligência artificial para ganhar agilidade, com revisão humana cuidadosa em cada detalhe.',
       icon: Code2,
     },
     {
       number: '04',
-      title: 'Site publicado',
+      title: 'Site no ar e publicado',
       description:
-        'Site publicado na URL do Netlify — essa é a entrega padrão. Domínio personalizado não está incluso. Hospedagem ou migração para outro provedor é orçada à parte.',
+        'Publicamos o site no servidor seguro da Netlify. O endereço (.com.br) fica registrado em seu próprio nome para total controle.',
       icon: Globe2,
     },
   ];
@@ -165,7 +165,7 @@ export const ProcessSection: React.FC = () => {
           <div className="mt-12 sm:mt-16 max-w-3xl mx-auto rounded-2xl border border-blue-500/20 bg-blue-950/30 p-5 sm:p-6 space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed text-center shadow-lg">
             <p>
               <ShieldCheck className="w-4 h-4 text-blue-400 inline-block mr-1.5" />
-              A publicação oficial na URL do Netlify faz parte do projeto. O domínio (.com.br) fica sempre na sua conta para sua segurança patrimonial digital.
+              A publicação no servidor seguro da Netlify já está inclusa na entrega. O endereço na internet (domínio .com.br) fica registrado em seu próprio nome para garantir que o site seja sempre seu.
             </p>
           </div>
         </BiReveal>

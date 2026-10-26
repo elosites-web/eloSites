@@ -168,16 +168,16 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
             {/* Kicker com ícone Cpu */}
             <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest">
               <Cpu className="w-4 h-4 text-cyan-400 shrink-0" aria-hidden="true" />
-              <span>STACK TECNOLÓGICA OFICIAL</span>
+              <span>BASE TÉCNICA DO SITE (FERRAMENTAS DE PROGRAMAÇÃO)</span>
             </div>
 
             {/* Headline Oficial */}
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight">
-              Tecnologias modernas aplicadas a cada entrega
+              Tecnologias modernas que fazem seu site abrir rápido e funcionar bem
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-normal">
-              Construímos cada site com tecnologias consagradas da internet, como React, TypeScript, Vite e Tailwind CSS. Isso significa um site leve, que abre rápido no celular e não depende de sistemas pesados ou modelos prontos que travam.
+              Construímos cada site com ferramentas consagradas da internet, como React, TypeScript, Vite e Tailwind CSS. Para você, isso significa um site leve, seguro, que abre sem demora no celular e não depende de sistemas lentos ou modelos prontos que travam.
             </p>
           </div>
 
@@ -189,10 +189,10 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
-                <span className="font-semibold text-white">Frontend moderno e responsivo</span>
+                <span className="font-semibold text-white">Site adaptável ao celular (Frontend)</span>
               </div>
               <span className="hidden sm:inline text-slate-600" aria-hidden="true">•</span>
-              <span className="text-slate-400 text-[11px]">Código limpo e interfaces ágeis</span>
+              <span className="text-slate-400 text-[11px]">Código limpo e navegação ágil</span>
             </div>
           </div>
         </div>

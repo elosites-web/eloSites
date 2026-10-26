@@ -19,22 +19,22 @@ export interface PortfolioProjectData {
 export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   {
     id: 'jv-salvaia',
-    badge: 'LANDING PAGE RESPONSIVA',
+    badge: 'PÁGINA ÚNICA (LANDING PAGE)',
     status: 'Publicado & Ativo',
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
     challenge:
       'O treinador precisava apresentar seus treinos presenciais, consultoria online e avaliação física de forma profissional, facilitando para quem tem interesse entrar em contato direto pelo WhatsApp.',
     solution:
-      'Criamos uma página rápida e focada em conversão, com botões de WhatsApp específicos para cada tipo de treino, galeria de fotos de resultados, apresentação dos benefícios e depoimentos de alunos.',
-    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Foco em Conversão'],
+      'Criamos uma página rápida e focada em atrair novos alunos (conversão direta), com botões de WhatsApp específicos para cada tipo de treino, galeria de fotos de resultados, apresentação dos benefícios e depoimentos de alunos.',
+    tags: ['Treino Presencial', 'Consultoria Online', 'Avaliação Física', 'Contato no WhatsApp'],
     urlLabel: 'jvsalvaiapersonal.netlify.app',
     href: 'https://jvsalvaiapersonal.netlify.app',
     desktopImage: '/portifolio-jvsalvaia-desktop.webp',
     mobileImage: '/portifolio-jvsalvaia-mobile.webp',
     features: [
       'Botões de WhatsApp com mensagem pronta para cada plano de treino',
-      'Site que se ajusta perfeitamente na tela do celular e do computador',
+      'Site que se ajusta com perfeição ao celular e computador (responsivo)',
       'Carregamento rápido das imagens e organização pensada para o Google',
     ],
     resultsNote: 'Contatos organizados pelo WhatsApp, com mensagens que já identificam o serviço desejado pelo aluno.',
@@ -50,13 +50,13 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
       'Empresa de segurança para eventos, portaria e rondas preventivas em Jundiaí e região. Precisava de um site profissional para transmitir confiança a condomínios e empresas e receber pedidos de cotação.',
     solution:
       'Desenvolvemos um site institucional completo com visual sério e corporativo, detalhes de cada serviço prestado, formulário direto para solicitar orçamento e canal no WhatsApp também para recebimento de currículos.',
-    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'B2B & Condomínios'],
+    tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Empresas & Condomínios'],
     urlLabel: 'toledoseguranca.netlify.app',
     href: 'https://toledoseguranca.netlify.app',
     desktopImage: '/portifolio-toledoseguranca-desktop.webp',
     mobileImage: '/portifolio-toledoseguranca-mobile.webp',
     features: [
-      'Apresentação completa da empresa e dos serviços para transmitir credibilidade',
+      'Apresentação completa da empresa e dos serviços para transmitir seriedade e confiança',
       'Seções organizadas para condomínios, eventos particulares e empresas',
       'Dois caminhos de atendimento no WhatsApp: orçamentos comerciais e envio de currículos',
     ],
@@ -65,7 +65,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   },
   {
     id: 'garagem-mailasque',
-    badge: 'SITE DE UMA PÁGINA & OFICINA',
+    badge: 'PÁGINA ÚNICA & OFICINA',
     status: 'Publicado & Ativo',
     title: 'Garagem Mailasque',
     category: 'landing',
@@ -73,7 +73,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
       'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava ser encontrada por motoristas locais no Google e agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
     solution:
       'Criamos uma página direta e fácil de navegar no celular, apresentando os serviços de funilaria, pintura e restauração, mapa de localização e botão de WhatsApp preparado para o cliente enviar fotos do veículo batido ou arranhado.',
-    tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos', 'Orçamento no WhatsApp'],
+    tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos do Carro', 'Orçamento no WhatsApp'],
     urlLabel: 'garagemailasque.com.br',
     href: 'https://garagemailasque.com.br',
     desktopImage: '/garagem-mailasque-desktop.webp',
@@ -88,7 +88,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   },
   {
     id: 'duelo-fim-de-ano',
-    badge: 'PLATAFORMA INTERATIVA & EVENTO',
+    badge: 'PÁGINA INTERATIVA & EVENTO',
     status: 'Publicado & Ativo',
     title: 'Duelo de Fim de Ano — Badem vs Becala',
     category: 'landing',
@@ -96,7 +96,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
       'Evento esportivo tradicional e beneficente de fim de ano que precisava envolver torcedores, permitir votação dos melhores jogadores e exibir fotos dos jogos de forma leve e prática no celular.',
     solution:
       'Criamos uma página interativa com campinho de futebol visual para ver a escalação dos times, sistema de votação de "Bola Cheia e Bola Murcha" que funciona direto no navegador e galeria de fotos das edições anteriores.',
-    tags: ['Interatividade', 'Engajamento Comunitário', 'Futebol Amador', 'UX Interativa'],
+    tags: ['Interatividade no Navegador', 'Engajamento de Torcedores', 'Futebol Amador', 'Navegação Fácil no Celular'],
     urlLabel: 'jogodefimdeano.netlify.app',
     href: 'https://jogodefimdeano.netlify.app',
     desktopImage: '/portifolio-jogodefimdeano-desktop.webp',

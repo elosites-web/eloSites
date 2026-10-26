@@ -66,7 +66,7 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Portfólio de Projetos Reais',
     shortTitle: 'Portfólio',
     badge: 'Sites no Ar',
-    description: 'Sites reais no ar, prontos para converter.',
+    description: 'Sites reais no ar para apresentar seu trabalho e facilitar o contato pelo WhatsApp.',
     iconName: 'LayoutGrid',
   },
   {
@@ -99,10 +99,10 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'parceria-trafego',
     number: '08',
-    title: 'Tráfego Pago & Gestão de Leads',
+    title: 'Tráfego Pago (Anúncios na Internet) & Contatos',
     shortTitle: 'Tráfego Pago',
     badge: 'Tráfego Pago',
-    description: 'Seu site é o começo. Vamos atrair clientes?',
+    description: 'Anúncios para atrair mais pessoas para o seu site e WhatsApp.',
     iconName: 'TrendingUp',
   },
   {
