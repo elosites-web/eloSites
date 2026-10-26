@@ -39,7 +39,7 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Home',
     shortTitle: 'Home',
     badge: 'Home',
-    description: 'Presença profissional estruturada para o Google, não só no Instagram.',
+    description: 'Presença profissional estruturada com boas práticas de indexação, além das redes sociais.',
     iconName: 'Sparkles',
   },
   {
@@ -203,8 +203,8 @@ export const SITE_CONFIG = {
   name: 'ēloSites',
   domain: 'elosites.ia.br',
   canonicalUrl: 'https://elosites.ia.br',
-  tagline: 'ēloSites | Sites profissionais estruturados para facilitar a localização no Google e receber contatos no WhatsApp.',
-  subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho, fortalecer sua presença no Google e facilitar o contato de novos clientes pelo WhatsApp.',
+  tagline: 'ēloSites | Sites profissionais e landing pages estruturados com boas práticas de SEO técnico e contato pelo WhatsApp.',
+  subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho com clareza, estruturado com boas práticas técnicas para facilitar a indexação pelos mecanismos de busca e o contato pelo WhatsApp.',
   email: 'contato@elosites.ia.br',
   // Número oficial da ēloSites
   whatsappNumber: '5511995722584',

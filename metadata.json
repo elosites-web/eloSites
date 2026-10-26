@@ -1,6 +1,6 @@
 {
   "name": "ēloSites",
-  "description": "Criação de sites sob medida para profissionais liberais e pequenos negócios. Estruturado para facilitar a localização no Google, carrega com rapidez no celular e direciona o cliente para o seu WhatsApp.",
+  "description": "Criação de sites institucionais e landing pages responsivas, com boas práticas de SEO técnico e acesso facilitado ao contato pelo WhatsApp.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
