@@ -51,8 +51,8 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     solution:
       'Desenvolvemos um site institucional completo com visual sério e corporativo, detalhes de cada serviço prestado, formulário direto para solicitar orçamento e canal no WhatsApp também para recebimento de currículos.',
     tags: ['Segurança para Eventos', 'Portaria & Acesso', 'Rondas Preventivas', 'Empresas & Condomínios'],
-    urlLabel: 'toledoseguranca.netlify.app',
-    href: 'https://toledoseguranca.netlify.app',
+    urlLabel: 'www.toledoseg.com.br',
+    href: 'https://www.toledoseg.com.br',
     desktopImage: '/portifolio-toledoseguranca-desktop.webp',
     mobileImage: '/portifolio-toledoseguranca-mobile.webp',
     features: [
@@ -74,8 +74,8 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     solution:
       'Criamos uma página direta e fácil de navegar no celular, apresentando os serviços de funilaria, pintura e restauração, mapa de localização e botão de WhatsApp preparado para o cliente enviar fotos do veículo batido ou arranhado.',
     tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos do Carro', 'Orçamento no WhatsApp'],
-    urlLabel: 'garagemailasque.com.br',
-    href: 'https://garagemailasque.com.br',
+    urlLabel: 'www.garagemmailasque.com.br',
+    href: 'https://www.garagemmailasque.com.br',
     desktopImage: '/garagem-mailasque-desktop.webp',
     mobileImage: '/garagem-mailasque-mobile.jpg',
     features: [

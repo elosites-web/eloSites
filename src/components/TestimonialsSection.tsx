@@ -54,7 +54,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     role: 'Proprietário & Diretor Operacional',
     companyOrProject: 'Toledo Segurança',
     category: 'Site Institucional Corporativo',
-    projectUrl: 'https://toledoseg.com.br',
+    projectUrl: 'https://www.toledoseg.com.br',
     quote:
       'O desenvolvimento do site da Toledo Segurança ficou excelente! O projeto transmitiu a seriedade e o profissionalismo que eu queria passar para os nossos clientes. Ter um site próprio faz diferença na apresentação da empresa e fortalece nossa presença na internet. Fiquei muito satisfeito com o resultado e com o trabalho realizado.',
     rating: 5,
