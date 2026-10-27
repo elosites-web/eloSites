@@ -110,8 +110,8 @@ const TECHNOLOGIES: TechItem[] = [
   {
     id: 'seo-tecnico',
     name: 'SEO Técnico',
-    description: 'Ajuda o Google a entender suas páginas',
-    category: 'Busca Orgânica',
+    description: 'Estrutura adequada para leitura e indexação',
+    category: 'Indexação & Leitura',
     tagColor: 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]',

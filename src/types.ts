@@ -228,7 +228,7 @@ export const SITE_CONFIG = {
 
   // 5) Serviços - Site completo (Tela 03)
   siteInstitucionalWhatsappMessage:
-    'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero fortalecer a presença da minha empresa no Google, com apresentação detalhada dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
+    'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
 
   // 6) Serviços - Projeto Personalizado (Tela 03)
   personalizadoWhatsappMessage:

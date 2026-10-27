@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              Desenvolvemos sites profissionais estruturados para facilitar a localização no Google, transmitir confiança e receber novos contatos diretamente no WhatsApp.
+              Desenvolvemos sites profissionais com boas práticas de SEO técnico, estrutura adequada para indexação e acesso facilitado ao contato pelo WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a
@@ -211,7 +211,7 @@ export const Footer: React.FC<FooterProps> = ({
               <span className="text-cyan-400 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <p className="text-[13px] text-slate-300/90 leading-relaxed">
-              Criação de páginas únicas (landing pages), sites completos para empresas (institucionais), código visual moderno (frontend), organização técnica para o Google (SEO) e botões inteligentes de WhatsApp.
+              Criação de páginas únicas (landing pages), sites completos para empresas (institucionais), código visual moderno (frontend), boas práticas de SEO técnico e botões inteligentes de WhatsApp.
             </p>
             <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-2">
               <span className="relative flex h-2 w-2 shrink-0">

@@ -232,7 +232,6 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   const projectTypesList = [
     'Landing Page (Página Única focada em WhatsApp)',
     'Site Institucional (Várias Páginas: Sobre, Serviços, Contato)',
-    'Projeto Sob Medida / Personalizado',
   ];
 
   const timeSlotsList = [

@@ -96,7 +96,7 @@ export const PortfolioSkeleton: React.FC = () => {
 };
 
 /**
- * Esqueleto para a Seção de Serviços & Simulador
+ * Esqueleto para a Seção de Serviços & Orçamento
  */
 export const ServicesSkeleton: React.FC = () => {
   return (
@@ -107,8 +107,8 @@ export const ServicesSkeleton: React.FC = () => {
           <div className="w-3/4 h-11 rounded-xl bg-slate-800 mx-auto" />
           <div className="w-1/2 h-5 rounded bg-slate-850 mx-auto" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {[1, 2].map((i) => (
             <div
               key={i}
               className="rounded-2xl p-6 bg-[#0B101D]/90 border border-white/[0.06] min-h-[380px]"

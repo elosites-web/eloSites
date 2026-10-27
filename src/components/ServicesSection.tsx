@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, useReducedMotion, type Variants } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
@@ -12,7 +12,6 @@ import {
   Percent,
   Split,
   Calendar,
-  Calculator,
   ArrowRight,
   ShieldCheck,
   LucideIcon,
@@ -95,7 +94,7 @@ const SERVICES: ServiceCategory[] = [
       'Formulário simples de contato (conforme o escopo contratado)',
       'Links para suas redes sociais',
       'Design responsivo adaptado para celulares, tablets e computadores',
-      'Estrutura organizada para o Google e imagem para redes sociais',
+      'Boas práticas de SEO técnico e cartões para redes sociais',
       'Publicação no ar e testes de funcionamento antes da entrega',
     ],
     scopeNote: 'O que será desenvolvido é detalhado na proposta e no contrato antes de começar.',
@@ -128,7 +127,7 @@ const SERVICES: ServiceCategory[] = [
       'Botões de WhatsApp e links para redes sociais',
       'Formulário de contato com envio de mensagens (conforme o escopo contratado)',
       'Design responsivo adaptado para celulares, tablets e computadores',
-      'Estrutura organizada para o Google e cartões de compartilhamento',
+      'Boas práticas de SEO técnico e cartões de compartilhamento',
       'Publicação no ar e testes completos de funcionamento',
     ],
     scopeNote:
@@ -143,36 +142,6 @@ const SERVICES: ServiceCategory[] = [
     ctaId: 'service-cta-institucional',
     ctaMessage: SITE_CONFIG.siteInstitucionalWhatsappMessage,
   },
-  {
-    id: 'projeto-personalizado',
-    badge: 'Recursos Sob Medida',
-    title: 'Projeto Personalizado',
-    description:
-      'Site planejado sob medida quando você tem necessidades específicas de navegação, formulários detalhados ou recursos exclusivos para o seu negócio.',
-    icon: Sparkles,
-    includes: [
-      'Páginas e seções desenhadas para a rotina do seu negócio',
-      'Navegação pensada sob medida (abas, telas ou formatos mistos)',
-      'Recursos práticos na tela que facilitam a vida do visitante (conforme o escopo contratado)',
-      'Formulários customizados, calculadoras ou galerias exclusivas (conforme o escopo contratado)',
-      'Conexão com WhatsApp com mensagens iniciadas por serviço',
-      'Apresentação institucional e depoimentos com acabamento de alto padrão',
-      'Estrutura revisada para o Google e imagens otimizadas para abrir rápido',
-      'Design responsivo adaptado para celulares, tablets e computadores',
-      'Publicação no ar e revisão cuidadosa de cada detalhe',
-    ],
-    scopeNote:
-      'Prazo, etapas e valor são definidos de acordo com o que o seu projeto realmente precisa.',
-    excluded: [
-      'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros servidores (o site é publicado na Netlify)',
-      'Criação de logotipo do zero',
-      'Recursos que não constam na proposta aprovada',
-    ],
-    ctaLabel: 'Solicitar proposta personalizada',
-    ctaId: 'service-cta-personalizado',
-    ctaMessage: SITE_CONFIG.personalizadoWhatsappMessage,
-  },
 ];
 
 interface ServicesSectionProps {
@@ -180,16 +149,9 @@ interface ServicesSectionProps {
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOrcamento }) => {
-  // Simulador interativo de pagamento (iniciando em R$ 650 conforme solicitado)
-  const [simulatedValue, setSimulatedValue] = useState<number>(650);
-
   // Detecção de preferências de acessibilidade e redução de movimento
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-
-  const discountValue = Math.round(simulatedValue * (1 - PAYMENT_CONDITIONS.cashDiscountPercent / 100));
-  const pixSplitFirst = Math.round(simulatedValue * 0.5);
-  const installment5x = (simulatedValue / 5).toFixed(2);
 
   // Variantes dinâmicas de entrada com Framer Motion para fluidez máxima ao rolar (service-card)
   const serviceCardVariants: Variants = {
@@ -251,28 +213,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
     }),
   };
 
-  // Variantes para o card do simulador interativo (service-card)
-  const simulatorCardVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      scale: prefersReduced ? 1 : 0.96,
-      y: prefersReduced ? 0 : 36,
-      filter: prefersReduced ? 'none' : 'blur(6px)',
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        y: prefersReduced ? { duration: 0 } : { type: 'spring', damping: 24, stiffness: 100, mass: 0.85 },
-        scale: prefersReduced ? { duration: 0 } : { type: 'spring', damping: 24, stiffness: 100, mass: 0.85 },
-        opacity: prefersReduced ? { duration: 0 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-        filter: prefersReduced ? { duration: 0 } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-      },
-    },
-  };
-
   return (
     <section
       id="servicos"
@@ -300,9 +240,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             </p>
           </div>
 
-          {/* Grid dos 3 Serviços */}
+          {/* Grid dos 2 Serviços */}
           <div
-            className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 min-w-0 items-stretch lg:grid-rows-[repeat(5,auto)] service-list p-0.5 overflow-visible"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 max-w-5xl mx-auto min-w-0 items-stretch md:grid-rows-[repeat(5,auto)] service-list p-0.5 overflow-visible"
           >
             {SERVICES.map((service, index) => {
               const Icon = service.icon;
@@ -311,13 +251,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
               return (
                 <BiReveal
                   key={service.id}
-                  direction={index === 0 ? 'left' : index === 1 ? 'right' : 'up'}
+                  direction={index === 0 ? 'left' : 'right'}
                   index={index}
-                  className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid scroll-snap-card card-snap-item"
+                  className="h-full w-full min-w-0 max-w-full md:row-span-5 md:grid md:grid-rows-subgrid scroll-snap-card card-snap-item"
                 >
-                  <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+                  <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full md:row-span-5 md:grid md:grid-rows-subgrid">
                     <article
-                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col space-y-5 lg:space-y-0 lg:row-span-5 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all h-full w-full min-w-0 max-w-full box-border"
+                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col space-y-5 md:space-y-0 md:row-span-5 md:grid md:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all h-full w-full min-w-0 max-w-full box-border"
                     >
                       {/* Linha 1: Topo do card + Título + Descrição com Fade-In suave */}
                       <div className="space-y-4 lg:pb-4">
@@ -576,151 +516,52 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
               </BiReveal>
             </div>
 
-            {/* SIMULADOR INTERATIVO DE CONDIÇÕES */}
+            {/* Bloco de Orçamento Personalizado sob Medida */}
             <BiReveal direction="up" delay={150} className="mt-8 w-full">
               <Interactive3DCard maxTilt={0} className="w-full">
                 <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 shadow-2xl shadow-black/80 bracket-panel transition-all">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-6 border-b border-white/[0.08]">
-                  <FadeInBlock delay={30} className="space-y-1 text-center lg:text-left">
-                    <div className="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold uppercase">
-                      <Calculator className="w-4 h-4" />
-                      <span>Simulador de Condições de Pagamento</span>
-                    </div>
-                    <h4 className="text-xl sm:text-2xl font-bold text-white">
-                      Simule as formas de pagamento com base no orçamento
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-400">
-                      Arraste o controle ou escolha um valor de referência para visualizar a economia à vista e as parcelas.
-                    </p>
-                  </FadeInBlock>
+                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                    <FadeInBlock delay={30} className="space-y-2 text-center lg:text-left">
+                      <div className="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold uppercase">
+                        <Sparkles className="w-4 h-4" />
+                        <span>Orçamento Sob Medida</span>
+                      </div>
+                      <h4 className="text-xl sm:text-2xl font-bold text-white">
+                        Cada projeto é orçado conforme suas necessidades reais
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                        Analisamos o objetivo da sua empresa, a quantidade de seções e o escopo de conteúdo para formular uma proposta clara e sem surpresas. Preencha o briefing ou fale diretamente conosco pelo WhatsApp.
+                      </p>
+                    </FadeInBlock>
 
-                  <div className="flex flex-wrap items-center gap-2 justify-center">
-                    {[
-                      { label: 'R$ 650', value: 650 },
-                      { label: 'R$ 1.000', value: 1000 },
-                      { label: 'R$ 1.500', value: 1500 },
-                      { label: 'R$ 2.200', value: 2200 },
-                    ].map((preset) => {
-                      const isActive = simulatedValue === preset.value;
-                      return (
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
+                      {onNavigateToOrcamento && (
                         <button
-                          key={preset.label}
                           type="button"
-                          onClick={() => setSimulatedValue(preset.value)}
-                          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer ${
-                            isActive
-                              ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)] border border-blue-400/40'
-                              : 'bg-slate-900 text-slate-300 hover:text-white border border-white/[0.08]'
-                          }`}
+                          onClick={onNavigateToOrcamento}
+                          className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-400/40 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-105 cursor-pointer"
                         >
-                          {preset.label}
+                          <span className="text-center">Montar Briefing</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Slider de Valor */}
-                <div className="py-6 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-400 font-medium">Valor orçado simulado:</span>
-                    <span className="text-xl sm:text-2xl font-bold font-mono text-indigo-300">
-                      R$ {simulatedValue.toLocaleString('pt-BR')},00
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="600"
-                    max="3500"
-                    step="50"
-                    value={simulatedValue}
-                    onChange={(e) => setSimulatedValue(Number(e.target.value))}
-                    aria-label="Simular valor do orçamento"
-                    className="w-full accent-indigo-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
-                  />
-                  <div className="flex justify-between text-[11px] text-slate-400 font-mono">
-                    <span>R$ 600</span>
-                    <span>R$ 2.000</span>
-                    <span>R$ 3.500</span>
-                  </div>
-                </div>
-
-                {/* Grid de Resultados da Simulação */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                  {/* Resultado À Vista */}
-                  <div className="p-4 rounded-xl bg-emerald-950/25 border border-emerald-500/30 space-y-1">
-                    <span className="text-xs font-semibold text-emerald-400 uppercase">
-                      ⚡ À Vista (20% OFF)
-                    </span>
-                    <p className="text-2xl font-bold font-mono text-emerald-300">
-                      R$ {discountValue.toLocaleString('pt-BR')},00
-                    </p>
-                    <p className="text-[11px] text-slate-300">
-                      Economia imediata de <strong className="text-white">R$ {(simulatedValue - discountValue).toLocaleString('pt-BR')}</strong> via PIX
-                    </p>
-                  </div>
-
-                  {/* Resultado 50% / 50% */}
-                  <div className="p-4 rounded-xl bg-slate-900 border border-white/[0.08] space-y-1">
-                    <span className="text-xs font-semibold text-indigo-400 uppercase">
-                      💎 50% Início + 50% Entrega
-                    </span>
-                    <p className="text-2xl font-bold font-mono text-white">
-                      2x R$ {pixSplitFirst.toLocaleString('pt-BR')}
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      1ª parcela na contratação e 2ª na entrega final (PIX)
-                    </p>
-                  </div>
-
-                  {/* Resultado Cartão 5x */}
-                  <div className="p-4 rounded-xl bg-slate-900 border border-white/[0.08] space-y-1">
-                    <span className="text-xs font-semibold text-indigo-400 uppercase">
-                      💳 Cartão até 5x Sem Juros
-                    </span>
-                    <p className="text-2xl font-bold font-mono text-white">
-                      5x R$ {installment5x}
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      1 entrada + 4 parcelas no cartão sem nenhum acréscimo
-                    </p>
-                  </div>
-                </div>
-
-                {/* Ação direta da simulação */}
-                <div className="mt-6 pt-5 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="text-xs text-slate-400 text-center sm:text-left">
-                    * Valores calculados para fins de demonstração. Cada proposta oficial detalha prazos e entregáveis específicos.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-                    {onNavigateToOrcamento && (
-                      <button
-                        type="button"
-                        onClick={onNavigateToOrcamento}
-                        className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-400/40 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-105 cursor-pointer"
-                      >
-                        <span className="text-center">Montar Briefing</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                    <a
-                      href={whatsappUrl(
-                        `Olá! 💰 Simulei uma condição de pagamento no site da *ēloSites* (valor base estimado em *R$ ${simulatedValue.toLocaleString('pt-BR')},00*).\n\nGostaria de receber um orçamento oficial com o escopo detalhado para o meu projeto!`
                       )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/30 transition-all duration-200 hover:scale-105 shadow-md shadow-emerald-950/40"
-                    >
-                      <WhatsAppIcon className="w-4 h-4 text-white" />
-                      <span className="text-center">Pedir Proposta com Esta Condição</span>
-                    </a>
+                      <a
+                        href={whatsappUrl(
+                          'Olá! Gostaria de solicitar um orçamento personalizado para o meu projeto com a ēloSites.'
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/30 transition-all duration-200 hover:scale-105 shadow-md shadow-emerald-950/40"
+                      >
+                        <WhatsAppIcon className="w-4 h-4 text-white" />
+                        <span className="text-center">Conversar no WhatsApp</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Interactive3DCard>
-          </BiReveal>
-        </div>
+              </Interactive3DCard>
+            </BiReveal>
+          </div>
         </div>
 
         {/* Rodapé institucional com aviso de hospedagem e domínio */}

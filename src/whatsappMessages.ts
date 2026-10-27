@@ -66,7 +66,7 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'hero') {
-    return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.';
+    return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, estruturado para o Google e com contato no WhatsApp.';
   }
 
   if (params.location === 'portfolio-card') {
@@ -83,7 +83,7 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'service-institucional') {
-    return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero fortalecer a presença da minha empresa no Google, com apresentação detalhada dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
+    return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
   }
 
   if (params.location === 'service-personalizado') {
@@ -130,7 +130,7 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   // 2) Mensagens pelo ID da tela ativa caso location não tenha sido especificado
   switch (params.screenId) {
     case 'inicio':
-      return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, ser encontrado no Google e receber contatos no WhatsApp.';
+      return 'Olá! 🚀 Conheci a *ēloSites* pela página inicial.\n\nQuero solicitar um *orçamento sob medida* para desenvolver um site profissional para o meu negócio, estruturado para o Google e com contato no WhatsApp.';
     case 'portfolio':
       return 'Olá! 💻 Estive analisando o *portfólio de projetos reais* no site da *ēloSites*.\n\nGostei muito do padrão de acabamento, velocidade e facilidade de navegação no celular. Gostaria de solicitar uma proposta comercial para um projeto para o meu negócio!';
     case 'servicos':

@@ -23,19 +23,19 @@ export interface TestimonialItem {
   category: string;
   projectUrl: string;
   quote: string;
-  rating: number;
+  rating?: number;
+  isDraftProposal?: boolean;
 }
 
-export type TestimonialCategoryTag = 'all' | 'landing' | 'institutional' | 'app';
+export type TestimonialCategoryTag = 'all' | 'landing' | 'institutional';
 
 export const TESTIMONIAL_TAGS: { id: TestimonialCategoryTag; label: string }[] = [
   { id: 'all', label: 'Todos os formatos' },
   { id: 'landing', label: 'Landing Page' },
   { id: 'institutional', label: 'Site Institucional' },
-  { id: 'app', label: 'Aplicação Web' },
 ];
 
-// Avaliações autênticas dos clientes reais da ēloSites (dados estritamente preservados)
+// Avaliações de clientes reais da ēloSites
 export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
   {
     id: 'jv-salvaia',
@@ -46,6 +46,17 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     projectUrl: 'https://jvsalvaiapersonal.netlify.app',
     quote:
       'Gostei muito do resultado do site! Ficou profissional, moderno e com a identidade do meu trabalho como personal trainer. Agora consigo apresentar melhor meus serviços e transmitir mais confiança para quem está buscando um profissional para acompanhar seus treinos. O resultado ficou muito bom!',
+    rating: 5,
+  },
+  {
+    id: 'garagem-mailasque',
+    name: 'Fabio',
+    role: 'Proprietário',
+    companyOrProject: 'Garagem Mailasque',
+    category: 'Landing Page Automotiva',
+    projectUrl: 'https://www.garagemmailasque.com.br',
+    quote:
+      'Fiquei satisfeito com o trabalho desenvolvido para a Garagem Mailasque. A ēloSites ajudou a apresentar melhor o negócio na internet, com um site alinhado à nossa empresa.',
     rating: 5,
   },
   {
@@ -64,7 +75,7 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     name: 'Renato Becala',
     role: 'Comissão Organizadora',
     companyOrProject: 'Duelo de Fim de Ano — Badem vs Becala',
-    category: 'Aplicação Web & Plataforma de Evento',
+    category: 'Landing Page para Evento',
     projectUrl: 'https://jogodefimdeano.netlify.app',
     quote:
       'A landing page para o nosso evento de fim de ano ficou muito bacana! A proposta era ter uma página que reunisse as principais informações do evento de forma organizada e atrativa, e o resultado atendeu muito bem à ideia. Ficou uma apresentação moderna, prática e com a cara do nosso encontro. Com certeza fez o evento ter uma presença digital ainda mais especial!',
@@ -102,7 +113,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     if (selectedTag === 'all') return true;
     if (selectedTag === 'landing') return item.category.toLowerCase().includes('landing');
     if (selectedTag === 'institutional') return item.category.toLowerCase().includes('institucional');
-    if (selectedTag === 'app') return item.category.toLowerCase().includes('aplica');
     return true;
   });
   const total = testimonials.length;
@@ -259,7 +269,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 : CLIENT_TESTIMONIALS.filter((t) => {
                     if (tag.id === 'landing') return t.category.toLowerCase().includes('landing');
                     if (tag.id === 'institutional') return t.category.toLowerCase().includes('institucional');
-                    if (tag.id === 'app') return t.category.toLowerCase().includes('aplica');
                     return true;
                   }).length;
 
@@ -353,26 +362,30 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                                 <span>{item.category}</span>
                               </div>
 
-                              <div className="hidden min-[420px]:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[9px] font-mono">
-                                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                                <span>VERIFICADO</span>
-                              </div>
+                              {!item.isDraftProposal && (
+                                <div className="hidden min-[420px]:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[9px] font-mono">
+                                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                                  <span>VERIFICADO</span>
+                                </div>
+                              )}
                             </div>
 
                             <div className="flex items-center gap-2">
-                              {/* 5 Estrelas Douradas */}
-                              <div
-                                className="flex items-center gap-0.5 text-amber-400"
-                                title={`Classificação ${item.rating} de 5 estrelas`}
-                              >
-                                {[...Array(item.rating)].map((_, starIdx) => (
-                                  <Star
-                                    key={starIdx}
-                                    className="w-3.5 h-3.5 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]"
-                                    aria-hidden="true"
-                                  />
-                                ))}
-                              </div>
+                              {/* Estrelas quando houver nota cadastrada */}
+                              {item.rating ? (
+                                <div
+                                  className="flex items-center gap-0.5 text-amber-400"
+                                  title={`Classificação ${item.rating} de 5 estrelas`}
+                                >
+                                  {[...Array(item.rating)].map((_, starIdx) => (
+                                    <Star
+                                      key={starIdx}
+                                      className="w-3.5 h-3.5 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]"
+                                      aria-hidden="true"
+                                    />
+                                  ))}
+                                </div>
+                              ) : null}
 
                               {/* Contador de Slides */}
                               <div className="font-mono text-[10px] text-blue-300 px-1.5 py-0.5 rounded bg-slate-900/90 border border-blue-500/20">
@@ -396,10 +409,12 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/40 flex items-center justify-center text-blue-200 font-bold font-mono text-xs shadow-inner">
                                   {getInitials(item.name)}
                                 </div>
-                                <CheckCircle2
-                                  className="w-3.5 h-3.5 text-emerald-400 absolute -bottom-1 -right-1 bg-slate-950 rounded-full"
-                                  aria-hidden="true"
-                                />
+                                {!item.isDraftProposal && (
+                                  <CheckCircle2
+                                    className="w-3.5 h-3.5 text-emerald-400 absolute -bottom-1 -right-1 bg-slate-950 rounded-full"
+                                    aria-hidden="true"
+                                  />
+                                )}
                               </div>
 
                               <div className="min-w-0">
@@ -415,10 +430,17 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               </div>
                             </div>
 
-                            <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                              <span>Cliente Verificado</span>
-                            </div>
+                            {!item.isDraftProposal ? (
+                              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                <span>Cliente Verificado</span>
+                              </div>
+                            ) : (
+                              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                <span>Minuta em Validação</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

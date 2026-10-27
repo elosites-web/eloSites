@@ -82,21 +82,21 @@ const SPECIALTIES: SpecialtyItem[] = [
     items: [
       'Formulários com conferência imediata no cliente: avisam na hora se algum campo obrigatório estiver incompleto (conforme o escopo contratado)',
       'Botões de WhatsApp com mensagens pré-formatadas: o cliente já inicia a conversa dizendo qual serviço deseja',
-      'Simuladores interativos: permitem ao cliente calcular opções de pagamento direto na tela (conforme o escopo contratado)',
+      'Interações dinâmicas de interface: botões de ação rápida, abas e sanfonas de FAQ para organizar o conteúdo (conforme o escopo contratado)',
       'Galerias de fotos com ampliação: imagens nítidas para visualização no celular com um simples toque',
     ],
     technicalClarification:
-      'Recursos interativos, simuladores e formulários personalizados funcionam direto no navegador (frontend) e são desenvolvidos conforme o escopo contratado para o seu projeto.',
+      'Recursos visuais interativos e formulários funcionam direto no navegador (frontend) e são desenvolvidos conforme o escopo contratado para o seu projeto.',
     tagColor: 'from-emerald-500/20 to-teal-500/10 text-emerald-300 border-emerald-500/30',
   },
   {
     id: 'seo-tecnico-performance',
-    category: 'Organização para o Google (SEO Técnico)',
-    badge: 'Visibilidade no Google',
+    category: 'Boas Práticas de SEO Técnico & Indexação',
+    badge: 'SEO & Indexação',
     icon: ShieldCheck,
-    iconAlt: 'Otimização para buscas locais no Google',
+    iconAlt: 'Boas práticas de SEO técnico e indexação',
     iconGlow: 'shadow-[0_0_20px_rgba(251,191,36,0.35)] border-amber-500/40 text-amber-400',
-    highlight: 'Organizo o código e as informações para que os mecanismos de busca, como o Google, compreendam com clareza o seu trabalho e a sua região.',
+    highlight: 'Boas práticas de SEO técnico, estrutura adequada para indexação e conteúdo organizado para facilitar a leitura pelos mecanismos de busca, como o Google.',
     items: [
       'Estrutura lógica de títulos (arquitetura semântica): ajuda as pessoas e o Google a entender o assunto principal de cada seção',
       'Descrições de página (meta tags): textos resumidos exibidos abaixo do nome do seu site nas buscas do Google',
@@ -106,7 +106,7 @@ const SPECIALTIES: SpecialtyItem[] = [
       'Revisão técnica de links: verificação para prevenir links quebrados e inconsistências de navegação',
     ],
     technicalClarification:
-      'O SEO técnico organiza o site conforme as boas práticas oficiais do Google. Isso facilita a leitura e a indexação do seu negócio, sem promessas enganosas de primeiro lugar garantido.',
+      'O SEO técnico organiza o site conforme as boas práticas dos mecanismos de busca. Isso facilita a leitura e a indexação do seu negócio, sem promessa de garantia de posicionamento ou visibilidade.',
     tagColor: 'from-amber-500/20 to-yellow-500/10 text-amber-300 border-amber-500/30',
   },
   {
@@ -313,7 +313,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
             items={[
               { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Base Moderna' },
               { text: 'Vite & Tailwind CSS', icon: <Zap className="w-3.5 h-3.5 text-sky-400" />, badge: 'Visual Leve' },
-              { text: 'SEO Técnico & Schema.org', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Google' },
+              { text: 'SEO Técnico & Schema.org', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Indexação' },
               { text: 'Google Analytics 4 & Tag Manager', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Visitas' },
               { text: 'Carregamento Otimizado', icon: <Zap className="w-3.5 h-3.5 text-amber-300" />, badge: 'Rapidez' },
               { text: 'Código Organizado & Semântico', icon: <Code2 className="w-3.5 h-3.5 text-teal-400" />, badge: 'Código Limpo' },
