@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import useEmblaCarousel from 'embla-carousel-react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { motion, useMotionValue, animate, useReducedMotion } from 'motion/react';
 import {
   Quote,
   Star,
@@ -8,11 +7,13 @@ import {
   ArrowRight,
   Sparkles,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SplitLines } from './SplitLines';
 import { SITE_CONFIG, whatsappUrl } from '../types';
-import { shouldReduceMedia } from '../mediaPrefs';
+import { shouldReduceMedia, isInAppBrowser } from '../mediaPrefs';
 import { getDynamicCardVariants } from '../motionVariants';
 
 export interface TestimonialItem {
@@ -56,8 +57,9 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     category: 'Landing Page Automotiva',
     projectUrl: 'https://www.garagemmailasque.com.br',
     quote:
-      'Fiquei satisfeito com o trabalho desenvolvido para a Garagem Mailasque. A ēloSites ajudou a apresentar melhor o negócio na internet, com um site alinhado à nossa empresa.',
+      'Rapaz, ficou top o trabalho! A ēloSites pegou a ideia da Garagem Mailasque e colocou tudo no site de um jeito organizado, bonito e com a cara da gente. Agora quem chega pela internet consegue conhecer melhor nosso trabalho e ver o que a garagem oferece. Ficou bem feito, sem enrolação, do jeito que tem que ser. Tamo junto!',
     rating: 5,
+    isDraftProposal: true,
   },
   {
     id: 'toledo-seguranca',
@@ -92,6 +94,102 @@ const getInitials = (fullName: string) => {
     .join('');
 };
 
+interface CylinderGeometry {
+  cardMaxWidth: number;
+  orbitRadiusX: number;
+  orbitRadiusZ: number;
+  maxTiltDeg: number;
+  perspective: number;
+  sideScale: number;
+  backScale: number;
+  sideOpacity: number;
+  backOpacity: number;
+}
+
+function computeCylinderGeometry(
+  stageWidth: number,
+  stageHeight: number,
+  inApp: boolean,
+  reduced: boolean
+): CylinderGeometry {
+  const isLandscapeShort = stageHeight > 0 && stageHeight < 500 && stageWidth > stageHeight;
+
+  if (reduced) {
+    return {
+      cardMaxWidth: Math.min(Math.max(stageWidth - 24, 280), 560),
+      orbitRadiusX: Math.min(Math.round(stageWidth * 0.22), 220),
+      orbitRadiusZ: 0,
+      maxTiltDeg: 0,
+      perspective: 1200,
+      sideScale: 0.92,
+      backScale: 0.85,
+      sideOpacity: 0.25,
+      backOpacity: 0,
+    };
+  }
+
+  // Smartphones compactos (< 400px)
+  if (stageWidth < 400) {
+    return {
+      cardMaxWidth: Math.max(260, stageWidth - 20),
+      orbitRadiusX: Math.round(stageWidth * 0.26),
+      orbitRadiusZ: inApp ? 85 : 110,
+      maxTiltDeg: inApp ? 26 : 32,
+      perspective: 920,
+      sideScale: 0.84,
+      backScale: 0.72,
+      sideOpacity: 0.28,
+      backOpacity: 0.06,
+    };
+  }
+
+  // Smartphones grandes e modo paisagem mobile (400px - 639px)
+  if (stageWidth < 640) {
+    const maxW = isLandscapeShort
+      ? Math.min(stageWidth - 88, 460)
+      : Math.min(stageWidth - 32, 460);
+    return {
+      cardMaxWidth: Math.max(290, maxW),
+      orbitRadiusX: Math.round(stageWidth * 0.3),
+      orbitRadiusZ: inApp ? 110 : 140,
+      maxTiltDeg: inApp ? 30 : 36,
+      perspective: 1080,
+      sideScale: 0.85,
+      backScale: 0.73,
+      sideOpacity: 0.36,
+      backOpacity: 0.08,
+    };
+  }
+
+  // Tablets (640px - 1023px)
+  if (stageWidth < 1024) {
+    return {
+      cardMaxWidth: Math.min(Math.round(stageWidth * 0.68), 530),
+      orbitRadiusX: Math.min(Math.round(stageWidth * 0.31), 290),
+      orbitRadiusZ: inApp ? 145 : 185,
+      maxTiltDeg: inApp ? 34 : 40,
+      perspective: 1260,
+      sideScale: 0.86,
+      backScale: 0.74,
+      sideOpacity: 0.46,
+      backOpacity: 0.1,
+    };
+  }
+
+  // Laptops, Desktops e Telas Ultrawide (>= 1024px)
+  return {
+    cardMaxWidth: Math.min(Math.round(stageWidth * 0.54), 560),
+    orbitRadiusX: Math.min(Math.round(stageWidth * 0.31), 340),
+    orbitRadiusZ: 225,
+    maxTiltDeg: 44,
+    perspective: 1420,
+    sideScale: 0.86,
+    backScale: 0.74,
+    sideOpacity: 0.52,
+    backOpacity: 0.11,
+  };
+}
+
 interface TestimonialsSectionProps {
   onNavigateToServices?: () => void;
 }
@@ -99,79 +197,399 @@ interface TestimonialsSectionProps {
 export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   onNavigateToServices,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedTag, setSelectedTag] = useState<TestimonialCategoryTag>('all');
-  const carouselContainerRef = useRef<HTMLDivElement>(null);
+  // Contador contínuo de passos para rotação 3D cilíndrica consistente nas duas direções
+  const [virtualStep, setVirtualStep] = useState(0);
+  const [renderAngle, setRenderAngle] = useState(0);
+  const [isRotating, setIsRotating] = useState(false);
+  const [rotationDirection, setRotationDirection] = useState<'next' | 'prev' | null>(null);
 
-  // Detecção de preferências de acessibilidade e redução de movimento
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const virtualStepRef = useRef(0);
+  const lastNavTimestampRef = useRef(0);
+  const glowTimeoutRef = useRef<number | null>(null);
+
+  // Detecção de preferências de acessibilidade, WebViews e redução de movimento
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
+  const inApp = useMemo(() => isInAppBrowser(), []);
 
   const cardVariants = getDynamicCardVariants(prefersReduced);
 
-  const testimonials = CLIENT_TESTIMONIALS.filter((item) => {
-    if (selectedTag === 'all') return true;
-    if (selectedTag === 'landing') return item.category.toLowerCase().includes('landing');
-    if (selectedTag === 'institutional') return item.category.toLowerCase().includes('institucional');
-    return true;
-  });
-  const total = testimonials.length;
+  // Medição responsiva do palco para recalcular o cilindro em resize e orientationchange
+  const [viewportMetrics, setViewportMetrics] = useState<{ width: number; height: number }>(() => ({
+    width: typeof window !== 'undefined' ? Math.min(window.innerWidth - 32, 1024) : 960,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  }));
 
-  // Configuração do Embla Carousel para deslize horizontal suave e contínuo em loop
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: total > 1,
-    align: 'center',
-    skipSnaps: false,
-    duration: 25,
-  });
-
-  // Ao alternar a tag de filtro, reinicia para o primeiro depoimento
   useEffect(() => {
-    setSelectedIndex(0);
-    if (emblaApi) {
-      requestAnimationFrame(() => {
-        emblaApi.reInit();
-        emblaApi.scrollTo(0, true);
+    const updateMetrics = () => {
+      const stageEl = stageRef.current;
+      const measuredWidth = stageEl?.clientWidth || Math.min(window.innerWidth - 32, 1024);
+      setViewportMetrics({
+        width: Math.max(280, measuredWidth),
+        height: window.innerHeight || 800,
       });
+    };
+
+    updateMetrics();
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && stageRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateMetrics();
+      });
+      resizeObserver.observe(stageRef.current);
     }
-  }, [selectedTag, emblaApi, total]);
 
-  // Sincronização do slide ativo
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+    const handleOrientationOrVisibility = () => {
+      updateMetrics();
+    };
 
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
+    window.addEventListener('resize', updateMetrics, { passive: true });
+    window.addEventListener('orientationchange', handleOrientationOrVisibility, { passive: true });
+    window.addEventListener('pageshow', handleOrientationOrVisibility, { passive: true });
+    document.addEventListener('visibilitychange', handleOrientationOrVisibility);
 
     return () => {
-      emblaApi.off('select', onSelect);
-      emblaApi.off('reInit', onSelect);
+      if (resizeObserver) resizeObserver.disconnect();
+      window.removeEventListener('resize', updateMetrics);
+      window.removeEventListener('orientationchange', handleOrientationOrVisibility);
+      window.removeEventListener('pageshow', handleOrientationOrVisibility);
+      document.removeEventListener('visibilitychange', handleOrientationOrVisibility);
     };
-  }, [emblaApi, onSelect]);
+  }, []);
 
-  // Controles manuais de navegação
-  const scrollPrev = useCallback(() => {
-    if (emblaApi && total > 1) emblaApi.scrollPrev();
-  }, [emblaApi, total]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi && total > 1) emblaApi.scrollNext();
-  }, [emblaApi, total]);
-
-  const scrollTo = useCallback(
-    (index: number) => {
-      if (emblaApi) emblaApi.scrollTo(index);
-    },
-    [emblaApi]
+  const testimonials = useMemo(
+    () =>
+      CLIENT_TESTIMONIALS.filter((item) => {
+        if (selectedTag === 'all') return true;
+        if (selectedTag === 'landing') return item.category.toLowerCase().includes('landing');
+        if (selectedTag === 'institutional')
+          return item.category.toLowerCase().includes('institucional');
+        return true;
+      }),
+    [selectedTag]
   );
 
-  // Suporte a teclado acessível (setas direcionais esquerda e direita)
+  const total = testimonials.length;
+  const stepAngle = total > 1 ? 360 / total : 0;
+
+  // Índice ativo normalizado sempre em [0, total - 1]
+  const selectedIndex = total > 0 ? ((virtualStep % total) + total) % total : 0;
+
+  // MotionValue para interpolação suave e sem engasgos do ângulo do cilindro
+  const cylinderAngleMv = useMotionValue(0);
+
+  useEffect(() => {
+    const unsubscribe = cylinderAngleMv.on('change', (latest) => {
+      setRenderAngle(latest);
+    });
+    return () => unsubscribe();
+  }, [cylinderAngleMv]);
+
+  // Limpa timeout de brilho ao desmontar
+  useEffect(() => {
+    return () => {
+      if (glowTimeoutRef.current !== null) {
+        window.clearTimeout(glowTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Anima o cilindro até um passo inteiro específico sem parar entre cards
+  const animateToVirtualStep = useCallback(
+    (nextStep: number, directionHint: 'next' | 'prev') => {
+      virtualStepRef.current = nextStep;
+      setVirtualStep(nextStep);
+
+      const targetDeg = total > 1 ? -nextStep * (360 / total) : 0;
+
+      if (prefersReduced || total <= 1) {
+        cylinderAngleMv.stop();
+        cylinderAngleMv.set(targetDeg);
+        setRenderAngle(targetDeg);
+        setIsRotating(false);
+        setRotationDirection(null);
+        return;
+      }
+
+      setRotationDirection(directionHint);
+      setIsRotating(true);
+
+      if (glowTimeoutRef.current !== null) {
+        window.clearTimeout(glowTimeoutRef.current);
+      }
+
+      const controls = animate(cylinderAngleMv, targetDeg, {
+        duration: 0.68,
+        // Curva com aceleração inicial decidida e desaceleração suave de precisão
+        ease: [0.24, 0.96, 0.32, 1],
+        onComplete: () => {
+          cylinderAngleMv.set(targetDeg);
+          setRenderAngle(targetDeg);
+          setIsRotating(false);
+          setRotationDirection(null);
+        },
+      });
+
+      glowTimeoutRef.current = window.setTimeout(() => {
+        setIsRotating(false);
+        setRotationDirection(null);
+      }, 720);
+
+      return () => controls.stop();
+    },
+    [cylinderAngleMv, prefersReduced, total]
+  );
+
+  // Ao trocar a categoria de filtro, reposiciona no card 0 sem salto brusco
+  useEffect(() => {
+    cylinderAngleMv.stop();
+    virtualStepRef.current = 0;
+    setVirtualStep(0);
+    cylinderAngleMv.set(0);
+    setRenderAngle(0);
+    setIsRotating(false);
+    setRotationDirection(null);
+  }, [selectedTag, cylinderAngleMv]);
+
+  // Quando o usuário retorna de outra aba ou WebView in-app, garante alinhamento exato do card
+  useEffect(() => {
+    const snapToCurrentCard = () => {
+      if (document.visibilityState === 'visible') {
+        const exactDeg = total > 1 ? -virtualStepRef.current * (360 / total) : 0;
+        cylinderAngleMv.stop();
+        cylinderAngleMv.set(exactDeg);
+        setRenderAngle(exactDeg);
+        setIsRotating(false);
+      }
+    };
+    document.addEventListener('visibilitychange', snapToCurrentCard);
+    window.addEventListener('pageshow', snapToCurrentCard);
+    return () => {
+      document.removeEventListener('visibilitychange', snapToCurrentCard);
+      window.removeEventListener('pageshow', snapToCurrentCard);
+    };
+  }, [cylinderAngleMv, total]);
+
+  // Navegação protegida contra cliques/toques sobrepostos acidentais
+  const rotateBySteps = useCallback(
+    (delta: number) => {
+      if (total <= 1 || delta === 0) return;
+      const now = performance.now();
+      if (now - lastNavTimestampRef.current < 160) return;
+      lastNavTimestampRef.current = now;
+
+      const nextStep = virtualStepRef.current + delta;
+      animateToVirtualStep(nextStep, delta > 0 ? 'next' : 'prev');
+    },
+    [animateToVirtualStep, total]
+  );
+
+  const scrollPrev = useCallback(() => {
+    rotateBySteps(-1);
+  }, [rotateBySteps]);
+
+  const scrollNext = useCallback(() => {
+    rotateBySteps(1);
+  }, [rotateBySteps]);
+
+  // Seleciona qualquer indicador pelo caminho angular mais curto ao redor do cilindro
+  const scrollTo = useCallback(
+    (targetIdx: number) => {
+      if (total <= 1) return;
+      const currentStep = virtualStepRef.current;
+      const currentIdx = ((currentStep % total) + total) % total;
+      if (targetIdx === currentIdx) {
+        // Garante que o card esteja perfeitamente alinhado caso um arraste tenha sido solto
+        animateToVirtualStep(currentStep, 'next');
+        return;
+      }
+
+      let diff = targetIdx - currentIdx;
+      if (total > 2) {
+        if (diff > total / 2) diff -= total;
+        else if (diff < -total / 2) diff += total;
+      }
+
+      const now = performance.now();
+      if (now - lastNavTimestampRef.current < 120) return;
+      lastNavTimestampRef.current = now;
+
+      animateToVirtualStep(currentStep + diff, diff >= 0 ? 'next' : 'prev');
+    },
+    [animateToVirtualStep, total]
+  );
+
+  // Gestos de deslize horizontal (touch & pointer) preservando a rolagem vertical da página
+  const gestureRef = useRef<{
+    active: boolean;
+    startX: number;
+    startY: number;
+    startTime: number;
+    baseAngle: number;
+    lockedAxis: 'x' | 'y' | null;
+  }>({
+    active: false,
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    baseAngle: 0,
+    lockedAxis: null,
+  });
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (total <= 1 || e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      gestureRef.current = {
+        active: true,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        startTime: performance.now(),
+        baseAngle: -virtualStepRef.current * stepAngle,
+        lockedAxis: null,
+      };
+    },
+    [stepAngle, total]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      const g = gestureRef.current;
+      if (!g.active || total <= 1 || e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      const dx = touch.clientX - g.startX;
+      const dy = touch.clientY - g.startY;
+
+      if (g.lockedAxis === null) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        g.lockedAxis = Math.abs(dx) > Math.abs(dy) * 1.15 ? 'x' : 'y';
+      }
+
+      if (g.lockedAxis === 'y') {
+        // Permite rolagem vertical nativa sem interferência
+        return;
+      }
+
+      if (!prefersReduced) {
+        // Feedback tátil suave no cilindro durante o arraste horizontal
+        const maxDragDeg = Math.min(stepAngle * 0.36, 32);
+        const dragDeg = Math.max(-maxDragDeg, Math.min(maxDragDeg, dx * 0.16));
+        cylinderAngleMv.stop();
+        cylinderAngleMv.set(g.baseAngle + dragDeg);
+      }
+    },
+    [cylinderAngleMv, prefersReduced, stepAngle, total]
+  );
+
+  const finishSwipeGesture = useCallback(
+    (endX: number, endY: number) => {
+      const g = gestureRef.current;
+      if (!g.active) return;
+      g.active = false;
+
+      if (total <= 1) return;
+
+      const dx = endX - g.startX;
+      const dy = endY - g.startY;
+      const dt = Math.max(1, performance.now() - g.startTime);
+      const velocityX = Math.abs(dx) / dt; // px/ms
+
+      const isHorizontalSwipe =
+        g.lockedAxis === 'x' || (Math.abs(dx) > Math.abs(dy) * 1.2 && Math.abs(dx) >= 28);
+      const passedThreshold = Math.abs(dx) >= 42 || (velocityX > 0.35 && Math.abs(dx) >= 22);
+
+      if (isHorizontalSwipe && passedThreshold) {
+        if (dx < 0) {
+          // Swipe para a esquerda -> avança para o próximo card
+          animateToVirtualStep(virtualStepRef.current + 1, 'next');
+        } else {
+          // Swipe para a direita -> retorna para o card anterior
+          animateToVirtualStep(virtualStepRef.current - 1, 'prev');
+        }
+      } else {
+        // Retorna suavemente para o card atual se o gesto foi curto
+        animateToVirtualStep(virtualStepRef.current, 'next');
+      }
+    },
+    [animateToVirtualStep, total]
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.changedTouches.length < 1) return;
+      const touch = e.changedTouches[0];
+      finishSwipeGesture(touch.clientX, touch.clientY);
+    },
+    [finishSwipeGesture]
+  );
+
+  const handleTouchCancel = useCallback(() => {
+    if (!gestureRef.current.active) return;
+    gestureRef.current.active = false;
+    animateToVirtualStep(virtualStepRef.current, 'next');
+  }, [animateToVirtualStep]);
+
+  // Suporte a arraste com mouse no desktop
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (total <= 1 || e.button !== 0) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('button, a')) return;
+
+      gestureRef.current = {
+        active: true,
+        startX: e.clientX,
+        startY: e.clientY,
+        startTime: performance.now(),
+        baseAngle: -virtualStepRef.current * stepAngle,
+        lockedAxis: null,
+      };
+    },
+    [stepAngle, total]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      const g = gestureRef.current;
+      if (!g.active || total <= 1) return;
+      const dx = e.clientX - g.startX;
+      const dy = e.clientY - g.startY;
+
+      if (g.lockedAxis === null) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        g.lockedAxis = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+      }
+
+      if (g.lockedAxis === 'x' && !prefersReduced) {
+        const maxDragDeg = Math.min(stepAngle * 0.32, 28);
+        const dragDeg = Math.max(-maxDragDeg, Math.min(maxDragDeg, dx * 0.14));
+        cylinderAngleMv.stop();
+        cylinderAngleMv.set(g.baseAngle + dragDeg);
+      }
+    },
+    [cylinderAngleMv, prefersReduced, stepAngle, total]
+  );
+
+  const handleMouseUp = useCallback(
+    (e: React.MouseEvent) => {
+      if (!gestureRef.current.active) return;
+      finishSwipeGesture(e.clientX, e.clientY);
+    },
+    [finishSwipeGesture]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    if (!gestureRef.current.active) return;
+    gestureRef.current.active = false;
+    animateToVirtualStep(virtualStepRef.current, 'next');
+  }, [animateToVirtualStep]);
+
+  // Suporte a teclado acessível (setas direcionais esquerda/direita, Home e End)
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || total <= 1) return;
@@ -190,9 +608,26 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         scrollNext();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        scrollTo(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        scrollTo(total - 1);
       }
     },
-    [scrollPrev, scrollNext, total]
+    [scrollPrev, scrollNext, scrollTo, total]
+  );
+
+  const geometry = useMemo(
+    () =>
+      computeCylinderGeometry(
+        viewportMetrics.width,
+        viewportMetrics.height,
+        inApp,
+        prefersReduced
+      ),
+    [viewportMetrics.width, viewportMetrics.height, inApp, prefersReduced]
   );
 
   return (
@@ -201,23 +636,15 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       aria-label="Avaliações de Clientes e Prova Social"
       className="section-auto-contain pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-hidden"
     >
-      {/* Luzes ambiente de fundo azul elétrico e cobalto */}
+      {/* Luzes ambiente de fundo azul elétrico e violeta */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho da Seção com Reveal Suave */}
         <motion.div
-          initial={
-            prefersReduced
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: 20 }
-          }
-          whileInView={
-            prefersReduced
-              ? { opacity: 1, y: 0 }
-              : { opacity: 1, y: 0 }
-          }
+          initial={prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{
             duration: prefersReduced ? 0 : 0.45,
@@ -268,7 +695,8 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 ? CLIENT_TESTIMONIALS.length
                 : CLIENT_TESTIMONIALS.filter((t) => {
                     if (tag.id === 'landing') return t.category.toLowerCase().includes('landing');
-                    if (tag.id === 'institutional') return t.category.toLowerCase().includes('institucional');
+                    if (tag.id === 'institutional')
+                      return t.category.toLowerCase().includes('institucional');
                     return true;
                   }).length;
 
@@ -294,7 +722,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         </div>
 
         {/* =========================================================================
-            ESTÁGIO EMBLA CAROUSEL HORIZONTAL COM DESLIZE SUAVE E PONTOS INDICADORES
+            PALCO DO CARROSSEL CILÍNDRICO 3D (CSS 3D + PRESERVE-3D)
            ========================================================================= */}
         <motion.div
           variants={cardVariants}
@@ -308,57 +736,259 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             data-testimonials-carousel
             role="region"
             aria-roledescription="carousel"
-            aria-label="Carrossel de Depoimentos"
+            aria-label="Carrossel 3D de Depoimentos"
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            className="relative max-w-5xl mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 rounded-2xl"
+            className="relative max-w-6xl mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 rounded-2xl"
           >
-            {/* Viewport do Embla Carousel */}
+            {/* Anúncio acessível do slide ativo para leitores de tela */}
+            <div className="sr-only" aria-live="polite" aria-atomic="true">
+              {testimonials[selectedIndex]
+                ? `Depoimento ${selectedIndex + 1} de ${total}: ${testimonials[selectedIndex].name}, ${testimonials[selectedIndex].companyOrProject}`
+                : ''}
+            </div>
+
+            {/* Palco 3D com perspectiva calibrada e anéis orbitais do cilindro */}
             <div
-              className="overflow-hidden py-4 cursor-grab active:cursor-grabbing select-none"
-              ref={emblaRef}
+              ref={stageRef}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchCancel}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                perspective: `${geometry.perspective}px`,
+                perspectiveOrigin: '50% 50%',
+              }}
+              className="relative w-full py-5 sm:py-8 px-1 sm:px-8 md:px-14 select-none touch-pan-y cursor-grab active:cursor-grabbing overflow-visible"
             >
-              <div className="flex -ml-4 sm:-ml-6 touch-pan-y">
+              {/* Iluminação direcional e brilho cinético azul/violeta durante a rotação do cilindro */}
+              <div
+                aria-hidden="true"
+                className={`pointer-events-none absolute inset-x-8 sm:inset-x-20 top-1/2 -translate-y-1/2 h-64 sm:h-72 rounded-full transition-opacity duration-500 ${
+                  isRotating ? 'opacity-95' : 'opacity-45'
+                }`}
+                style={{
+                  background:
+                    rotationDirection === 'prev'
+                      ? 'radial-gradient(ellipse at 38% 50%, rgba(139, 92, 246, 0.24) 0%, rgba(59, 130, 246, 0.18) 42%, rgba(5, 8, 20, 0) 74%)'
+                      : 'radial-gradient(ellipse at 62% 50%, rgba(59, 130, 246, 0.24) 0%, rgba(139, 92, 246, 0.18) 42%, rgba(5, 8, 20, 0) 74%)',
+                  filter: 'blur(28px)',
+                }}
+              />
+
+              {/* Anel orbital superior e inferior para reforçar a leitura espacial do cilindro 3D */}
+              {total > 1 && !prefersReduced && (
+                <>
+                  <div
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 w-[78%] max-w-[680px] h-7 rounded-[100%] border transition-all duration-500 ${
+                      isRotating
+                        ? 'border-blue-400/35 shadow-[0_0_24px_rgba(59,130,246,0.25)]'
+                        : 'border-blue-500/15'
+                    }`}
+                    style={{
+                      background:
+                        'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08) 0%, rgba(99, 102, 241, 0.02) 60%, transparent 80%)',
+                      transform: 'translateX(-50%) rotateX(76deg)',
+                    }}
+                  />
+                  <div
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute left-1/2 bottom-2 -translate-x-1/2 w-[82%] max-w-[720px] h-8 rounded-[100%] border transition-all duration-500 ${
+                      isRotating
+                        ? 'border-purple-400/40 shadow-[0_0_28px_rgba(139,92,246,0.28)]'
+                        : 'border-indigo-500/15'
+                    }`}
+                    style={{
+                      background:
+                        'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 58%, transparent 82%)',
+                      transform: 'translateX(-50%) rotateX(76deg)',
+                    }}
+                  />
+                </>
+              )}
+
+              {/* Botões laterais de navegação (visíveis em telas médias e grandes, mantendo fácil alcance) */}
+              {total > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={scrollPrev}
+                    aria-label="Depoimento anterior"
+                    title="Depoimento anterior (Seta para a esquerda)"
+                    className="hidden md:flex items-center justify-center absolute left-1 lg:left-2 top-1/2 -translate-y-1/2 z-[120] w-11 h-11 rounded-full bg-[#090E23]/90 hover:bg-blue-950/90 text-slate-200 hover:text-white border border-blue-400/35 hover:border-blue-400/80 shadow-[0_8px_24px_rgba(2,6,23,0.85),0_0_16px_rgba(59,130,246,0.22)] hover:shadow-[0_0_24px_rgba(59,130,246,0.48)] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  >
+                    <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={scrollNext}
+                    aria-label="Próximo depoimento"
+                    title="Próximo depoimento (Seta para a direita)"
+                    className="hidden md:flex items-center justify-center absolute right-1 lg:right-2 top-1/2 -translate-y-1/2 z-[120] w-11 h-11 rounded-full bg-[#090E23]/90 hover:bg-blue-950/90 text-slate-200 hover:text-white border border-blue-400/35 hover:border-blue-400/80 shadow-[0_8px_24px_rgba(2,6,23,0.85),0_0_16px_rgba(59,130,246,0.22)] hover:shadow-[0_0_24px_rgba(59,130,246,0.48)] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  >
+                    <ChevronRight className="w-5 h-5" aria-hidden="true" />
+                  </button>
+                </>
+              )}
+
+              {/* Rotor 3D: todos os cards compartilham a mesma célula central e eixo vertical Y */}
+              <div
+                style={{
+                  transformStyle: 'preserve-3d',
+                  WebkitTransformStyle: 'preserve-3d',
+                }}
+                className="relative grid grid-cols-1 place-items-center w-full"
+              >
                 {testimonials.map((item, idx) => {
                   const isActive = selectedIndex === idx;
+
+                  // Ângulo relativo do painel ao redor do cilindro em [-180°, +180°]
+                  const baseCardDeg = idx * stepAngle;
+                  const rawDeg = baseCardDeg + renderAngle;
+                  const wrappedDeg = ((((rawDeg + 180) % 360) + 360) % 360) - 180;
+                  const rad = (wrappedDeg * Math.PI) / 180;
+
+                  // Coordenadas 3D sobre o cilindro compartilhado
+                  const sinTheta = total > 1 ? Math.sin(rad) : 0;
+                  const cosTheta = total > 1 ? Math.cos(rad) : 1;
+                  // Fator de profundidade normalizado: 1.0 na frente (0°), 0.5 nas laterais (±90°), 0.0 atrás (180°)
+                  const depthFactor = (cosTheta + 1) * 0.5;
+
+                  const translateX = sinTheta * geometry.orbitRadiusX;
+                  // Frente em z = 0 para nitidez 1:1 sem distorção tipográfica
+                  const translateZ = (cosTheta - 1) * geometry.orbitRadiusZ;
+                  // Inclinação tangencial convexa do painel ao redor do cilindro/globo 3D
+                  const panelRotateY = sinTheta * geometry.maxTiltDeg;
+
+                  // Escala e opacidade progressivas conforme a posição no cilindro
+                  const scale =
+                    cosTheta >= 0
+                      ? geometry.sideScale + (1 - geometry.sideScale) * cosTheta
+                      : geometry.backScale + (geometry.sideScale - geometry.backScale) * (1 + cosTheta);
+
+                  const opacity =
+                    total <= 1
+                      ? 1
+                      : cosTheta >= 0
+                      ? geometry.sideOpacity + (1 - geometry.sideOpacity) * Math.pow(cosTheta, 1.35)
+                      : geometry.backOpacity +
+                        (geometry.sideOpacity - geometry.backOpacity) * Math.max(0, 1 + cosTheta);
+
+                  const zIndex = Math.round(depthFactor * 100);
+                  const isBackFacing = cosTheta < -0.35;
 
                   return (
                     <div
                       key={item.id}
-                      className="flex-[0_0_92%] sm:flex-[0_0_75%] md:flex-[0_0_58%] lg:flex-[0_0_46%] max-w-[540px] min-w-0 pl-4 sm:pl-6"
+                      style={{
+                        gridArea: '1 / 1 / 2 / 2',
+                        width: '100%',
+                        maxWidth: `${geometry.cardMaxWidth}px`,
+                        transform: prefersReduced
+                          ? `translate3d(${Math.round(translateX * 0.35)}px, 0px, 0px) scale(${
+                              isActive ? 1 : 0.94
+                            })`
+                          : `translate3d(${translateX.toFixed(2)}px, 0px, ${translateZ.toFixed(
+                              2
+                            )}px) rotateY(${panelRotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
+                        opacity: prefersReduced ? (isActive ? 1 : 0) : Number(opacity.toFixed(3)),
+                        zIndex,
+                        transformStyle: 'preserve-3d',
+                        WebkitTransformStyle: 'preserve-3d',
+                        backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden',
+                        willChange: 'transform, opacity',
+                        pointerEvents: isBackFacing || (prefersReduced && !isActive) ? 'none' : 'auto',
+                      }}
+                      aria-hidden={!isActive}
                       onFocus={() => {
-                        if (selectedIndex !== idx) {
+                        if (!isActive) {
                           scrollTo(idx);
                         }
                       }}
+                      className="w-full h-full flex items-stretch justify-center px-1 sm:px-2"
                     >
-                      {/* Card de depoimento com transição suave e seleção por clique */}
-                      <div
+                      {/* Painel do cilindro 3D */}
+                      <article
+                        style={{ contain: 'none' }}
                         onClick={() => {
-                          scrollTo(idx);
+                          if (!isActive) {
+                            scrollTo(idx);
+                          }
                         }}
-                        className={`relative rounded-2xl bracket-panel overflow-hidden select-none flex flex-col justify-between h-full transition-all duration-300 ${
+                        tabIndex={isActive ? 0 : -1}
+                        aria-label={`Depoimento de ${item.name}, ${item.companyOrProject}`}
+                        className={`relative w-full rounded-2xl bracket-panel overflow-hidden select-none flex flex-col justify-between h-full transition-[border-color,box-shadow,background-color] duration-300 ${
                           isActive
-                            ? 'bg-[#090E23] border border-blue-500/60 shadow-[0_12px_36px_-6px_rgba(59,130,246,0.4)] ring-1 ring-blue-400/40 cursor-default scale-100 opacity-100'
-                            : 'bg-[#060A1A]/90 border border-blue-500/15 hover:border-blue-400/40 shadow-xl cursor-pointer opacity-75 hover:opacity-95 scale-[0.98]'
+                            ? isRotating
+                              ? 'bg-[#090E23]/95 border border-blue-400/85 shadow-[0_22px_55px_-12px_rgba(2,6,23,0.95),0_0_38px_-4px_rgba(59,130,246,0.52),0_0_22px_-4px_rgba(139,92,246,0.42)] ring-1 ring-purple-400/45 cursor-default'
+                              : 'bg-[#090E23]/95 border border-blue-500/65 shadow-[0_20px_50px_-12px_rgba(2,6,23,0.92),0_0_32px_-6px_rgba(59,130,246,0.38),0_0_18px_-6px_rgba(139,92,246,0.25)] ring-1 ring-blue-400/35 cursor-default'
+                            : 'bg-[#060A1A]/92 border border-blue-500/25 hover:border-blue-400/50 shadow-[0_14px_34px_-10px_rgba(2,6,23,0.85)] cursor-pointer'
                         }`}
-                        aria-label={`Depoimento de ${item.name}`}
                       >
-                        {/* Brilho sutil no topo do card ativo */}
-                        {isActive && (
+                        {/* Iluminação especular superior e reflexo direcional azul/violeta no painel ativo */}
+                        <div
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute inset-x-0 top-0 h-24 transition-opacity duration-300 ${
+                            isActive ? 'opacity-100' : 'opacity-40'
+                          }`}
+                          style={{
+                            background:
+                              'linear-gradient(180deg, rgba(59, 130, 246, 0.16) 0%, rgba(99, 102, 241, 0.06) 48%, rgba(9, 14, 35, 0) 100%)',
+                          }}
+                        />
+
+                        {/* Filete neon superior e inferior para acabamento de painel cilíndrico */}
+                        <div
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute inset-x-6 top-0 h-[1px] transition-opacity duration-300 ${
+                            isActive ? 'opacity-90' : 'opacity-30'
+                          }`}
+                          style={{
+                            background:
+                              'linear-gradient(90deg, transparent 0%, rgba(96, 165, 250, 0.85) 35%, rgba(167, 139, 250, 0.85) 65%, transparent 100%)',
+                          }}
+                        />
+                        <div
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute inset-x-10 bottom-0 h-[1px] transition-opacity duration-300 ${
+                            isActive ? 'opacity-75' : 'opacity-20'
+                          }`}
+                          style={{
+                            background:
+                              'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.7) 50%, transparent 100%)',
+                          }}
+                        />
+
+                        {/* Sombreamento direcional nos painéis laterais do cilindro para dar profundidade volumétrica */}
+                        {!isActive && (
                           <div
-                            className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-blue-500/[0.14] via-indigo-500/[0.04] to-transparent"
                             aria-hidden="true"
+                            className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
+                            style={{
+                              background:
+                                sinTheta > 0
+                                  ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.06) 0%, rgba(5, 8, 20, 0.35) 55%, rgba(2, 6, 23, 0.65) 100%)'
+                                  : 'linear-gradient(270deg, rgba(139, 92, 246, 0.06) 0%, rgba(5, 8, 20, 0.35) 55%, rgba(2, 6, 23, 0.65) 100%)',
+                            }}
                           />
                         )}
 
-                        {/* Conteúdo com altura balanceada e legibilidade excelente */}
-                        <div className="p-5 sm:p-6 flex flex-col justify-between space-y-4 relative z-10 h-full">
+                        {/* Conteúdo do Card com composição equilibrada, espaçamento proporcional e clara separação */}
+                        <div className="p-5 sm:p-6 md:p-7 flex flex-col justify-between gap-4 sm:gap-5 relative z-10 h-full">
                           {/* Top Bar do Card: Categoria, Estrelas e Contador */}
-                          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.08]">
+                          <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-white/[0.08]">
                             <div className="flex items-center gap-2">
                               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950/80 border border-blue-400/30 text-blue-300 text-[11px] font-semibold">
-                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                                <ShieldCheck
+                                  className="w-3.5 h-3.5 text-emerald-400 shrink-0"
+                                  aria-hidden="true"
+                                />
                                 <span>{item.category}</span>
                               </div>
 
@@ -371,7 +1001,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                             </div>
 
                             <div className="flex items-center gap-2">
-                              {/* Estrelas quando houver nota cadastrada */}
+                              {/* Estrelas da avaliação */}
                               {item.rating ? (
                                 <div
                                   className="flex items-center gap-0.5 text-amber-400"
@@ -388,25 +1018,33 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               ) : null}
 
                               {/* Contador de Slides */}
-                              <div className="font-mono text-[10px] text-blue-300 px-1.5 py-0.5 rounded bg-slate-900/90 border border-blue-500/20">
+                              <div className="font-mono text-[10px] text-blue-300 px-1.5 py-0.5 rounded bg-slate-900/90 border border-blue-500/20 tabular-nums">
                                 0{idx + 1} / 0{total}
                               </div>
                             </div>
                           </div>
 
-                          {/* Citação compacta e elegante */}
-                          <div className="relative flex-1 flex flex-col justify-center my-2">
-                            <Quote className="w-4 h-4 text-blue-400/30 mb-1.5 shrink-0" aria-hidden="true" />
-                            <blockquote className="text-xs sm:text-[13px] md:text-sm text-slate-100 leading-relaxed italic border-l-2 border-blue-500/40 pl-3">
-                              "{item.quote}"
-                            </blockquote>
+                          {/* Corpo da Citação com largura de leitura equilibrada e entrelinha confortável */}
+                          <div className="relative flex-1 flex flex-col justify-center py-1 sm:py-1.5">
+                            <div className="rounded-xl bg-slate-950/45 border border-blue-500/15 px-4 py-3.5 sm:px-5 sm:py-4 shadow-inner">
+                              <div className="flex items-center justify-between mb-2">
+                                <Quote
+                                  className="w-4 h-4 text-blue-400/50 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                <span className="h-[1px] flex-1 ml-3 bg-gradient-to-r from-blue-500/20 via-indigo-500/10 to-transparent" />
+                              </div>
+                              <blockquote className="text-xs sm:text-[13px] md:text-sm text-slate-100 leading-[1.68] italic border-l-2 border-blue-500/45 pl-3 sm:pl-3.5 max-w-[60ch]">
+                                “{item.quote}”
+                              </blockquote>
+                            </div>
                           </div>
 
-                          {/* Rodapé com Dados do Cliente */}
-                          <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-2.5 min-w-0">
+                          {/* Rodapé com Dados do Cliente claramente separados da citação */}
+                          <div className="pt-3.5 border-t border-white/[0.08] flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
                               <div className="relative shrink-0">
-                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600/30 via-indigo-600/30 to-purple-600/30 border border-blue-400/40 flex items-center justify-center text-blue-200 font-bold font-mono text-xs shadow-inner">
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-600/35 via-indigo-600/30 to-purple-600/35 border border-blue-400/45 flex items-center justify-center text-blue-200 font-bold font-mono text-xs shadow-inner">
                                   {getInitials(item.name)}
                                 </div>
                                 {!item.isDraftProposal && (
@@ -418,9 +1056,9 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               </div>
 
                               <div className="min-w-0">
-                                <h3 className="font-display text-xs sm:text-sm font-bold text-white tracking-tight truncate">
+                                <div className="font-display text-xs sm:text-sm font-bold text-white tracking-tight truncate">
                                   {item.name}
-                                </h3>
+                                </div>
                                 <p className="text-[11px] text-blue-300 font-medium truncate">
                                   {item.role}
                                 </p>
@@ -430,20 +1068,15 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               </div>
                             </div>
 
-                            {!item.isDraftProposal ? (
+                            {!item.isDraftProposal && (
                               <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                                 <span>Cliente Verificado</span>
                               </div>
-                            ) : (
-                              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                                <span>Minuta em Validação</span>
-                              </div>
                             )}
                           </div>
                         </div>
-                      </div>
+                      </article>
                     </div>
                   );
                 })}
@@ -451,43 +1084,69 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             </div>
 
             {/* =========================================================================
-                CONTROLES DE NAVEGAÇÃO: PONTOS INDICADORES (DOTS) E GESTO DE ARRASTAR
+                CONTROLES DE NAVEGAÇÃO SINCRONIZADOS: ANTERIOR / INDICADORES / PRÓXIMO
                ========================================================================= */}
-            <div className="mt-6 sm:mt-8 flex flex-col items-center justify-center gap-2.5 px-2">
-              {/* Indicadores dos slides minimalistas com identidade visual roxo ēloSites */}
-              <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/60 border border-purple-500/15 backdrop-blur-sm"
-                role="tablist"
-                aria-label="Indicadores dos slides de depoimentos"
-              >
-                {testimonials.map((t, idx) => {
-                  const isCurrent = selectedIndex === idx;
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={isCurrent}
-                      aria-label={`Depoimento ${idx + 1} de ${total}: ${t.name}`}
-                      title={`Depoimento ${idx + 1} de ${total}: ${t.name}`}
-                      onClick={() => scrollTo(idx)}
-                      disabled={total <= 1}
-                      className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
-                        total <= 1
-                          ? 'w-7 bg-gradient-to-r from-purple-500 to-indigo-500 shadow-[0_0_12px_rgba(168,85,247,0.7)] cursor-default'
-                          : isCurrent
-                          ? 'w-7 bg-gradient-to-r from-purple-500 to-indigo-500 shadow-[0_0_12px_rgba(168,85,247,0.7)] cursor-pointer'
-                          : 'w-2.5 bg-slate-700/80 hover:bg-slate-500 hover:border-purple-400/40 cursor-pointer'
-                      }`}
-                    />
-                  );
-                })}
+            <div className="mt-4 sm:mt-6 flex flex-col items-center justify-center gap-2.5 px-2">
+              <div className="flex items-center justify-center gap-3 sm:gap-4">
+                {total > 1 && (
+                  <button
+                    type="button"
+                    onClick={scrollPrev}
+                    aria-label="Girar cilindro para o depoimento anterior"
+                    title="Depoimento anterior"
+                    className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/85 hover:bg-blue-950/90 text-slate-200 hover:text-white border border-blue-500/25 hover:border-blue-400/60 shadow-[0_0_14px_rgba(59,130,246,0.18)] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  >
+                    <ChevronLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5" aria-hidden="true" />
+                  </button>
+                )}
+
+                {/* Indicadores dos slides minimalistas com identidade visual roxo/azul ēloSites */}
+                <div
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900/75 border border-purple-500/20 backdrop-blur-sm shadow-[0_0_20px_rgba(99,102,241,0.12)]"
+                  role="tablist"
+                  aria-label="Indicadores dos slides de depoimentos"
+                >
+                  {testimonials.map((t, idx) => {
+                    const isCurrent = selectedIndex === idx;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isCurrent}
+                        aria-label={`Depoimento ${idx + 1} de ${total}: ${t.name}`}
+                        title={`Depoimento ${idx + 1} de ${total}: ${t.name}`}
+                        onClick={() => scrollTo(idx)}
+                        disabled={total <= 1}
+                        className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
+                          total <= 1
+                            ? 'w-7 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.7)] cursor-default'
+                            : isCurrent
+                            ? 'w-7 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.7)] cursor-pointer'
+                            : 'w-2.5 bg-slate-700/80 hover:bg-slate-500 hover:border-purple-400/40 cursor-pointer'
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+
+                {total > 1 && (
+                  <button
+                    type="button"
+                    onClick={scrollNext}
+                    aria-label="Girar cilindro para o próximo depoimento"
+                    title="Próximo depoimento"
+                    className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/85 hover:bg-blue-950/90 text-slate-200 hover:text-white border border-blue-500/25 hover:border-blue-400/60 shadow-[0_0_14px_rgba(59,130,246,0.18)] transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  >
+                    <ChevronRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" aria-hidden="true" />
+                  </button>
+                )}
               </div>
 
               {/* Rótulo informativo discreto */}
               {total > 1 && (
-                <span className="text-[11px] font-mono text-slate-400">
-                  Deslize para o lado ou selecione um indicador
+                <span className="text-[11px] font-mono text-slate-400 text-center">
+                  Gire o cilindro pelas setas, deslize para o lado ou selecione um indicador
                 </span>
               )}
             </div>
