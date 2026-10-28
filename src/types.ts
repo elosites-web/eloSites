@@ -230,10 +230,6 @@ export const SITE_CONFIG = {
   siteInstitucionalWhatsappMessage:
     'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
 
-  // 6) Serviços - Projeto Personalizado (Tela 03)
-  personalizadoWhatsappMessage:
-    'Olá! ⚡ Gostaria de conversar sobre um *Projeto sob medida* com a *ēloSites*.\n\nTenho necessidades específicas para o meu negócio e busco uma solução web desenvolvida sob encomenda.',
-
   // 7) Processo / Como Funciona (Tela 04)
   processoWhatsappMessage:
     'Olá! 📋 Conheci o *processo em 4 etapas* da *ēloSites*.\n\nGostei da clareza e do contato direto com quem desenvolve. Gostaria de entender os prazos para iniciar o meu site!',

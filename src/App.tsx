@@ -568,7 +568,7 @@ export default function App() {
         const typeLabel = activeImageView.imageType === 'mobile' ? 'Mobile (Celular)' : 'Desktop (Computador)';
         const pageTitle = `${project.title} — Captura ${typeLabel} em Alta Resolução | ēloSites`;
         const pageDesc = `Visualização em tamanho real da captura ${typeLabel} do site ${project.title}, desenvolvido com foco em conversão pela ēloSites.`;
-        const canonicalUrl = `https://elosites.ia.br/#case/${project.id}/${activeImageView.imageType}`;
+        const canonicalUrl = 'https://elosites.ia.br/';
 
         document.title = pageTitle;
         updateMeta('meta[name="description"]', 'name', 'description', pageDesc);
@@ -597,7 +597,7 @@ export default function App() {
       if (project) {
         const pageTitle = `${project.title} — Estudo de Caso de Sucesso | ēloSites`;
         const pageDesc = `Estudo de caso do site ${project.title} desenvolvido pela ēloSites. ${project.challenge}`;
-        const canonicalUrl = `https://elosites.ia.br/#case/${project.id}`;
+        const canonicalUrl = 'https://elosites.ia.br/';
 
         document.title = pageTitle;
         updateMeta('meta[name="description"]', 'name', 'description', pageDesc);
@@ -632,9 +632,7 @@ export default function App() {
       ? 'Criação de sites profissionais e landing pages com SEO técnico e foco em conversão para pequenos negócios e profissionais liberais. Alta performance e código limpo.'
       : `${meta.description} Desenvolvimento de sites institucionais e landing pages de alta conversão pela ēloSites.`;
 
-    const canonicalUrl = currentScreen === 'home'
-      ? 'https://elosites.ia.br/'
-      : `https://elosites.ia.br/#${currentScreen}`;
+    const canonicalUrl = 'https://elosites.ia.br/';
 
     // Atualiza o <title> do documento
     document.title = pageTitle;
@@ -958,6 +956,7 @@ export default function App() {
 
       {/* Conteúdo Principal — Exibição Estratégica da Tela Ativa */}
       <main
+        style={{ willChange: 'transform, opacity' }}
         className={`flex-1 relative z-10 overflow-x-hidden transition-opacity duration-300 ${
           isMenuOpen ? 'opacity-0 pointer-events-none invisible' : 'opacity-100'
         }`}
@@ -965,7 +964,11 @@ export default function App() {
         tabIndex={-1}
       >
         {activeImageView && activeProject ? (
-          <div key={`image-${activeImageView.projectId}-${activeImageView.imageType}`} className="w-full">
+          <div
+            key={`image-${activeImageView.projectId}-${activeImageView.imageType}`}
+            style={{ willChange: 'transform, opacity' }}
+            className="w-full"
+          >
             <ProjectImageView
               project={activeProject}
               imageType={activeImageView.imageType}
@@ -978,7 +981,11 @@ export default function App() {
             />
           </div>
         ) : activeCaseId && activeProject ? (
-          <div key={`case-${activeCaseId}`} className="w-full">
+          <div
+            key={`case-${activeCaseId}`}
+            style={{ willChange: 'transform, opacity' }}
+            className="w-full"
+          >
             <CaseDetailPage
               project={activeProject}
               onBack={() => {
@@ -992,7 +999,7 @@ export default function App() {
         ) : useViewTransitions ? (
           <div
             key={currentScreen}
-            style={{ contain: 'layout style' }}
+            style={{ contain: 'layout style', willChange: 'transform, opacity' }}
             className="w-full [contain:layout_style]"
           >
             {renderActiveScreen()}
@@ -1006,7 +1013,7 @@ export default function App() {
               initial="initial"
               animate="animate"
               exit="exit"
-              style={{ contain: 'layout style' }}
+              style={{ contain: 'layout style', willChange: 'transform, opacity' }}
               className="w-full [contain:layout_style]"
             >
               {renderActiveScreen()}

@@ -6,14 +6,14 @@ import {
   ShieldCheck,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SplitLines } from './SplitLines';
 import { SITE_CONFIG, whatsappUrl } from '../types';
-import { shouldReduceMedia, isInAppBrowser } from '../mediaPrefs';
+import { shouldReduceMedia, isInAppBrowser, getMotionTier } from '../mediaPrefs';
 import { getDynamicCardVariants } from '../motionVariants';
 
 export interface TestimonialItem {
@@ -25,7 +25,6 @@ export interface TestimonialItem {
   projectUrl: string;
   quote: string;
   rating?: number;
-  isDraftProposal?: boolean;
 }
 
 export type TestimonialCategoryTag = 'all' | 'landing' | 'institutional';
@@ -59,7 +58,6 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     quote:
       'Rapaz, ficou top o trabalho! A ēloSites pegou a ideia da Garagem Mailasque e colocou tudo no site de um jeito organizado, bonito e com a cara da gente. Agora quem chega pela internet consegue conhecer melhor nosso trabalho e ver o que a garagem oferece. Ficou bem feito, sem enrolação, do jeito que tem que ser. Tamo junto!',
     rating: 5,
-    isDraftProposal: true,
   },
   {
     id: 'toledo-seguranca',
@@ -190,6 +188,68 @@ function computeCylinderGeometry(
   };
 }
 
+interface CardTransformState {
+  transform: string;
+  opacity: number;
+  zIndex: number;
+  pointerEvents: 'auto' | 'none';
+  sideShadeOpacity: number;
+  sinTheta: number;
+}
+
+function computeCardTransformState(
+  idx: number,
+  total: number,
+  stepAngle: number,
+  angleDeg: number,
+  selectedIndex: number,
+  geometry: CylinderGeometry,
+  prefersReduced: boolean
+): CardTransformState {
+  const rawAngle = idx * stepAngle + angleDeg;
+  const normAngle = ((((rawAngle + 180) % 360) + 360) % 360) - 180;
+  const rad = (normAngle * Math.PI) / 180;
+  const sinA = Math.sin(rad);
+  const cosA = Math.cos(rad);
+  const absCos = Math.abs(cosA);
+
+  const tx = total > 1 ? sinA * geometry.orbitRadiusX : 0;
+  const tz = total > 1 ? (cosA - 1) * geometry.orbitRadiusZ : 0;
+  const rotY = total > 1 ? sinA * geometry.maxTiltDeg : 0;
+
+  let scale = 1;
+  let opacity = 1;
+
+  if (total > 1) {
+    if (cosA >= 0) {
+      scale = geometry.sideScale + (1 - geometry.sideScale) * Math.pow(cosA, 1.15);
+      opacity = geometry.sideOpacity + (1 - geometry.sideOpacity) * Math.pow(cosA, 1.35);
+    } else {
+      const backFactor = 1 - absCos;
+      scale = geometry.backScale + (geometry.sideScale - geometry.backScale) * backFactor;
+      opacity = geometry.backOpacity + (geometry.sideOpacity - geometry.backOpacity) * backFactor;
+    }
+  }
+
+  const isSelected = idx === selectedIndex;
+  const zIndex = Math.round((cosA + 1) * 50) + (isSelected ? 15 : 0);
+  const transform = prefersReduced
+    ? `translate3d(${tx.toFixed(1)}px, 0px, 0px) scale(${scale.toFixed(3)})`
+    : `translate3d(${tx.toFixed(1)}px, 0px, ${tz.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+
+  const sideShadeOpacity = isSelected ? 0 : Math.min(0.42, (1 - Math.max(0, cosA)) * 0.38);
+  const pointerEvents: 'auto' | 'none' = isSelected || cosA > -0.15 ? 'auto' : 'none';
+
+  return {
+    transform,
+    opacity: Number(opacity.toFixed(3)),
+    zIndex,
+    pointerEvents,
+    sideShadeOpacity,
+    sinTheta: sinA,
+  };
+}
+
 interface TestimonialsSectionProps {
   onNavigateToServices?: () => void;
 }
@@ -200,20 +260,24 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   const [selectedTag, setSelectedTag] = useState<TestimonialCategoryTag>('all');
   // Contador contínuo de passos para rotação 3D cilíndrica consistente nas duas direções
   const [virtualStep, setVirtualStep] = useState(0);
-  const [renderAngle, setRenderAngle] = useState(0);
   const [isRotating, setIsRotating] = useState(false);
   const [rotationDirection, setRotationDirection] = useState<'next' | 'prev' | null>(null);
 
   const carouselContainerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const cardWrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sideShadeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const virtualStepRef = useRef(0);
   const lastNavTimestampRef = useRef(0);
   const glowTimeoutRef = useRef<number | null>(null);
 
   // Detecção de preferências de acessibilidade, WebViews e redução de movimento
   const systemPrefersReduced = useReducedMotion();
-  const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-  const inApp = useMemo(() => isInAppBrowser(), []);
+  const motionTier = useMemo(() => getMotionTier(), []);
+  const prefersReduced = Boolean(
+    systemPrefersReduced || shouldReduceMedia() || motionTier === 'none'
+  );
+  const inApp = useMemo(() => isInAppBrowser() || motionTier === 'lite', [motionTier]);
 
   const cardVariants = getDynamicCardVariants(prefersReduced);
 
@@ -279,15 +343,57 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   // Índice ativo normalizado sempre em [0, total - 1]
   const selectedIndex = total > 0 ? ((virtualStep % total) + total) % total : 0;
 
+  // Geometria responsiva do cilindro 3D
+  const geometry = useMemo(
+    () =>
+      computeCylinderGeometry(
+        viewportMetrics.width,
+        viewportMetrics.height,
+        inApp,
+        prefersReduced
+      ),
+    [viewportMetrics.width, viewportMetrics.height, inApp, prefersReduced]
+  );
+
+  // Atualiza diretamente o DOM dos painéis durante a interpolação de 60fps sem re-renderizar o React a cada frame
+  const syncCylinderDom = useCallback(
+    (angleDeg: number) => {
+      const currentSelected = total > 0 ? ((virtualStepRef.current % total) + total) % total : 0;
+      for (let i = 0; i < total; i++) {
+        const wrapperEl = cardWrapperRefs.current[i];
+        if (!wrapperEl) continue;
+        const state = computeCardTransformState(
+          i,
+          total,
+          stepAngle,
+          angleDeg,
+          currentSelected,
+          geometry,
+          prefersReduced
+        );
+        wrapperEl.style.transform = state.transform;
+        wrapperEl.style.opacity = String(state.opacity);
+        wrapperEl.style.zIndex = String(state.zIndex);
+        wrapperEl.style.pointerEvents = state.pointerEvents;
+
+        const shadeEl = sideShadeRefs.current[i];
+        if (shadeEl) {
+          shadeEl.style.opacity = String(state.sideShadeOpacity);
+        }
+      }
+    },
+    [geometry, prefersReduced, stepAngle, total]
+  );
+
   // MotionValue para interpolação suave e sem engasgos do ângulo do cilindro
   const cylinderAngleMv = useMotionValue(0);
 
   useEffect(() => {
     const unsubscribe = cylinderAngleMv.on('change', (latest) => {
-      setRenderAngle(latest);
+      syncCylinderDom(latest);
     });
     return () => unsubscribe();
-  }, [cylinderAngleMv]);
+  }, [cylinderAngleMv, syncCylinderDom]);
 
   // Limpa timeout de brilho ao desmontar
   useEffect(() => {
@@ -309,7 +415,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       if (prefersReduced || total <= 1) {
         cylinderAngleMv.stop();
         cylinderAngleMv.set(targetDeg);
-        setRenderAngle(targetDeg);
+        syncCylinderDom(targetDeg);
         setIsRotating(false);
         setRotationDirection(null);
         return;
@@ -328,7 +434,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         ease: [0.24, 0.96, 0.32, 1],
         onComplete: () => {
           cylinderAngleMv.set(targetDeg);
-          setRenderAngle(targetDeg);
+          syncCylinderDom(targetDeg);
           setIsRotating(false);
           setRotationDirection(null);
         },
@@ -341,7 +447,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
       return () => controls.stop();
     },
-    [cylinderAngleMv, prefersReduced, total]
+    [cylinderAngleMv, prefersReduced, syncCylinderDom, total]
   );
 
   // Ao trocar a categoria de filtro, reposiciona no card 0 sem salto brusco
@@ -350,10 +456,10 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     virtualStepRef.current = 0;
     setVirtualStep(0);
     cylinderAngleMv.set(0);
-    setRenderAngle(0);
+    syncCylinderDom(0);
     setIsRotating(false);
     setRotationDirection(null);
-  }, [selectedTag, cylinderAngleMv]);
+  }, [selectedTag, cylinderAngleMv, syncCylinderDom]);
 
   // Quando o usuário retorna de outra aba ou WebView in-app, garante alinhamento exato do card
   useEffect(() => {
@@ -362,7 +468,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         const exactDeg = total > 1 ? -virtualStepRef.current * (360 / total) : 0;
         cylinderAngleMv.stop();
         cylinderAngleMv.set(exactDeg);
-        setRenderAngle(exactDeg);
+        syncCylinderDom(exactDeg);
         setIsRotating(false);
       }
     };
@@ -372,7 +478,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       document.removeEventListener('visibilitychange', snapToCurrentCard);
       window.removeEventListener('pageshow', snapToCurrentCard);
     };
-  }, [cylinderAngleMv, total]);
+  }, [cylinderAngleMv, syncCylinderDom, total]);
 
   // Navegação protegida contra cliques/toques sobrepostos acidentais
   const rotateBySteps = useCallback(
@@ -619,17 +725,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     [scrollPrev, scrollNext, scrollTo, total]
   );
 
-  const geometry = useMemo(
-    () =>
-      computeCylinderGeometry(
-        viewportMetrics.width,
-        viewportMetrics.height,
-        inApp,
-        prefersReduced
-      ),
-    [viewportMetrics.width, viewportMetrics.height, inApp, prefersReduced]
-  );
-
   return (
     <section
       id="avaliacoes"
@@ -654,7 +749,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         >
           <div className="section-kicker inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-            <span>SOCIAL PROOF & CLIENTES REAIS</span>
+            <span>DEPOIMENTOS DE CLIENTES REAIS</span>
           </div>
 
           <SplitLines
@@ -664,7 +759,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           />
 
           <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Depoimentos autênticos de quem confiou na ēloSites para construir sua presença digital com código profissional, performance máxima e foco em conversão.
+            Relatos de quem confiou na ēloSites para construir sua presença digital com código profissional, carregamento ágil e foco em contato pelo WhatsApp.
           </p>
 
           {/* Destaque de métricas de confiabilidade */}
@@ -676,12 +771,12 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 ))}
               </div>
               <span className="font-semibold text-white">5.0 / 5.0</span>
-              <span className="text-slate-400">• Avaliação máxima</span>
+              <span className="text-slate-400">• Avaliação dos projetos entregues</span>
             </div>
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-              <span className="text-slate-300">Projetos reais entregues no Netlify</span>
+              <span className="text-slate-300">Projetos reais publicados no ar</span>
             </div>
           </div>
         </motion.div>
@@ -846,64 +941,35 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
               >
                 {testimonials.map((item, idx) => {
                   const isActive = selectedIndex === idx;
-
-                  // Ângulo relativo do painel ao redor do cilindro em [-180°, +180°]
-                  const baseCardDeg = idx * stepAngle;
-                  const rawDeg = baseCardDeg + renderAngle;
-                  const wrappedDeg = ((((rawDeg + 180) % 360) + 360) % 360) - 180;
-                  const rad = (wrappedDeg * Math.PI) / 180;
-
-                  // Coordenadas 3D sobre o cilindro compartilhado
-                  const sinTheta = total > 1 ? Math.sin(rad) : 0;
-                  const cosTheta = total > 1 ? Math.cos(rad) : 1;
-                  // Fator de profundidade normalizado: 1.0 na frente (0°), 0.5 nas laterais (±90°), 0.0 atrás (180°)
-                  const depthFactor = (cosTheta + 1) * 0.5;
-
-                  const translateX = sinTheta * geometry.orbitRadiusX;
-                  // Frente em z = 0 para nitidez 1:1 sem distorção tipográfica
-                  const translateZ = (cosTheta - 1) * geometry.orbitRadiusZ;
-                  // Inclinação tangencial convexa do painel ao redor do cilindro/globo 3D
-                  const panelRotateY = sinTheta * geometry.maxTiltDeg;
-
-                  // Escala e opacidade progressivas conforme a posição no cilindro
-                  const scale =
-                    cosTheta >= 0
-                      ? geometry.sideScale + (1 - geometry.sideScale) * cosTheta
-                      : geometry.backScale + (geometry.sideScale - geometry.backScale) * (1 + cosTheta);
-
-                  const opacity =
-                    total <= 1
-                      ? 1
-                      : cosTheta >= 0
-                      ? geometry.sideOpacity + (1 - geometry.sideOpacity) * Math.pow(cosTheta, 1.35)
-                      : geometry.backOpacity +
-                        (geometry.sideOpacity - geometry.backOpacity) * Math.max(0, 1 + cosTheta);
-
-                  const zIndex = Math.round(depthFactor * 100);
-                  const isBackFacing = cosTheta < -0.35;
+                  const initialState = computeCardTransformState(
+                    idx,
+                    total,
+                    stepAngle,
+                    cylinderAngleMv.get(),
+                    selectedIndex,
+                    geometry,
+                    prefersReduced
+                  );
 
                   return (
                     <div
                       key={item.id}
+                      ref={(el) => {
+                        cardWrapperRefs.current[idx] = el;
+                      }}
                       style={{
                         gridArea: '1 / 1 / 2 / 2',
                         width: '100%',
                         maxWidth: `${geometry.cardMaxWidth}px`,
-                        transform: prefersReduced
-                          ? `translate3d(${Math.round(translateX * 0.35)}px, 0px, 0px) scale(${
-                              isActive ? 1 : 0.94
-                            })`
-                          : `translate3d(${translateX.toFixed(2)}px, 0px, ${translateZ.toFixed(
-                              2
-                            )}px) rotateY(${panelRotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`,
-                        opacity: prefersReduced ? (isActive ? 1 : 0) : Number(opacity.toFixed(3)),
-                        zIndex,
+                        transform: initialState.transform,
+                        opacity: initialState.opacity,
+                        zIndex: initialState.zIndex,
                         transformStyle: 'preserve-3d',
                         WebkitTransformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',
                         WebkitBackfaceVisibility: 'hidden',
                         willChange: 'transform, opacity',
-                        pointerEvents: isBackFacing || (prefersReduced && !isActive) ? 'none' : 'auto',
+                        pointerEvents: initialState.pointerEvents,
                       }}
                       aria-hidden={!isActive}
                       onFocus={() => {
@@ -968,11 +1034,14 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                         {/* Sombreamento direcional nos painéis laterais do cilindro para dar profundidade volumétrica */}
                         {!isActive && (
                           <div
+                            ref={(el) => {
+                              sideShadeRefs.current[idx] = el;
+                            }}
                             aria-hidden="true"
                             className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
                             style={{
                               background:
-                                sinTheta > 0
+                                initialState.sinTheta > 0
                                   ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.06) 0%, rgba(5, 8, 20, 0.35) 55%, rgba(2, 6, 23, 0.65) 100%)'
                                   : 'linear-gradient(270deg, rgba(139, 92, 246, 0.06) 0%, rgba(5, 8, 20, 0.35) 55%, rgba(2, 6, 23, 0.65) 100%)',
                             }}
@@ -991,13 +1060,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                                 />
                                 <span>{item.category}</span>
                               </div>
-
-                              {!item.isDraftProposal && (
-                                <div className="hidden min-[420px]:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[9px] font-mono">
-                                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                                  <span>VERIFICADO</span>
-                                </div>
-                              )}
                             </div>
 
                             <div className="flex items-center gap-2">
@@ -1047,12 +1109,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-600/35 via-indigo-600/30 to-purple-600/35 border border-blue-400/45 flex items-center justify-center text-blue-200 font-bold font-mono text-xs shadow-inner">
                                   {getInitials(item.name)}
                                 </div>
-                                {!item.isDraftProposal && (
-                                  <CheckCircle2
-                                    className="w-3.5 h-3.5 text-emerald-400 absolute -bottom-1 -right-1 bg-slate-950 rounded-full"
-                                    aria-hidden="true"
-                                  />
-                                )}
                               </div>
 
                               <div className="min-w-0">
@@ -1068,11 +1124,19 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                               </div>
                             </div>
 
-                            {!item.isDraftProposal && (
-                              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900/80 border border-white/[0.06] text-[10px] text-slate-400 shrink-0">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                <span>Cliente Verificado</span>
-                              </div>
+                            {item.projectUrl && (
+                              <a
+                                href={item.projectUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                tabIndex={isActive ? 0 : -1}
+                                aria-label={`Visitar o site publicado de ${item.companyOrProject}`}
+                                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/85 hover:bg-blue-950/80 border border-white/[0.08] hover:border-blue-400/40 text-[10px] font-medium text-slate-300 hover:text-white transition-colors shrink-0"
+                              >
+                                <span>Ver site</span>
+                                <ExternalLink className="w-3 h-3 text-blue-400" aria-hidden="true" />
+                              </a>
                             )}
                           </div>
                         </div>

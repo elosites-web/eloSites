@@ -369,8 +369,23 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
   };
 
   const handleOpenGoogleCalendar = () => {
-    if (!bookingData.name.trim()) {
+    if (!bookingData.name.trim() || bookingData.name.trim().length < 2) {
+      setTouchedFields((prev) => ({ ...prev, bookingName: true }));
       error('Preencha seu nome', 'Precisamos do seu nome para gerar o evento de calendário.');
+      return;
+    }
+    if (!bookingData.preferredDate) {
+      setTouchedFields((prev) => ({ ...prev, bookingDate: true }));
+      error('Selecione a data', 'Escolha uma data de preferência para gerar o evento de calendário.');
+      return;
+    }
+    if (!bookingData.agreedToLgpd) {
+      setTouchedFields((prev) => ({ ...prev, bookingAgreed: true }));
+      setFormErrors((prev) => ({
+        ...prev,
+        bookingAgreed: 'É necessário concordar com os termos de privacidade.',
+      }));
+      error('Consentimento necessário', 'Marque a concordância com a Política de Privacidade antes de prosseguir.');
       return;
     }
     const calendarUrl = createGoogleCalendarUrl(bookingData);

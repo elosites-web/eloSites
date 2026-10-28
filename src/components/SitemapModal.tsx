@@ -13,95 +13,17 @@ export interface SitemapEntry {
   url: string;
   screenId: ScreenId;
   title: string;
-  priority: string;
-  changefreq: 'weekly' | 'monthly' | 'daily';
-  lastmod: string;
+  isCanonicalIndexable: boolean;
 }
 
 export const generateSitemapXml = (baseUrl: string): string => {
   const cleanBase = baseUrl.replace(/\/+$/, '');
-  const today = new Date().toISOString().split('T')[0];
-
-  const entries: Array<{
-    loc: string;
-    priority: string;
-    changefreq: string;
-    comment: string;
-  }> = [
-    {
-      loc: `${cleanBase}/`,
-      priority: '1.0',
-      changefreq: 'weekly',
-      comment: 'Tela 01: Home',
-    },
-    {
-      loc: `${cleanBase}/#inicio`,
-      priority: '1.0',
-      changefreq: 'weekly',
-      comment: 'Tela 02: Sobre a ēloSites (Apresentação, Especialidades & Fundador)',
-    },
-    {
-      loc: `${cleanBase}/#servicos`,
-      priority: '0.9',
-      changefreq: 'weekly',
-      comment: 'Tela 03: Serviços & Condições Comerciais',
-    },
-    {
-      loc: `${cleanBase}/#portfolio`,
-      priority: '0.9',
-      changefreq: 'weekly',
-      comment: 'Tela 04: Portfólio de Projetos Reais',
-    },
-    {
-      loc: `${cleanBase}/#avaliacoes`,
-      priority: '0.8',
-      changefreq: 'monthly',
-      comment: 'Tela 05: Avaliações de Clientes Reais',
-    },
-    {
-      loc: `${cleanBase}/#processo`,
-      priority: '0.8',
-      changefreq: 'monthly',
-      comment: 'Tela 06: Processo Ágil & Diferenciais',
-    },
-    {
-      loc: `${cleanBase}/#orcamento`,
-      priority: '0.9',
-      changefreq: 'weekly',
-      comment: 'Tela 07: Orçamento & Agendamento de Reunião',
-    },
-    {
-      loc: `${cleanBase}/#parceria-trafego`,
-      priority: '0.8',
-      changefreq: 'monthly',
-      comment: 'Tela 08: Parceria Estratégica | Tráfego Pago',
-    },
-    {
-      loc: `${cleanBase}/#faq`,
-      priority: '0.8',
-      changefreq: 'monthly',
-      comment: 'Tela 09: Perguntas Frequentes & Contato',
-    },
-  ];
-
-  const urlsBlock = entries
-    .map(
-      (entry) => `  <!-- ${entry.comment} -->
-  <url>
-    <loc>${entry.loc}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${entry.changefreq}</changefreq>
-    <priority>${entry.priority}</priority>
-  </url>`
-    )
-    .join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-${urlsBlock}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${cleanBase}/</loc>
+  </url>
 </urlset>`;
 };
 
@@ -130,7 +52,6 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
   const sitemapXml = useMemo(() => generateSitemapXml(baseUrl), [baseUrl]);
 
   const sitemapEntries: SitemapEntry[] = useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
     const cleanBase = baseUrl.replace(/\/+$/, '');
     return SCREENS.map((s) => {
       const isHome = s.id === 'home';
@@ -139,9 +60,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
         url: isHome ? `${cleanBase}/` : `${cleanBase}/#${s.id}`,
         screenId: s.id,
         title: s.title,
-        priority: isHome || s.id === 'inicio' ? '1.0' : s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? '0.9' : '0.8',
-        changefreq: isHome || s.id === 'inicio' || s.id === 'portfolio' || s.id === 'servicos' || s.id === 'orcamento' ? 'weekly' : 'monthly',
-        lastmod: today,
+        isCanonicalIndexable: isHome,
       };
     });
   }, [baseUrl]);
@@ -305,7 +224,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
               }`}
             >
               <ListTree className="w-3.5 h-3.5" />
-              <span>Rotas Indexadas ({sitemapEntries.length})</span>
+              <span>URL Canônica & Seções ({sitemapEntries.length})</span>
             </button>
             <button
               type="button"
@@ -358,8 +277,8 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
           {activeTab === 'xml' && (
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Arquivo gerado dinamicamente com base no domínio atual</span>
-                <span className="font-mono text-indigo-300">{sitemapEntries.length} nós de URL cadastrados</span>
+                <span>Arquivo XML oficial contendo exclusivamente a URL canônica indexável</span>
+                <span className="font-mono text-indigo-300">1 URL canônica indexável</span>
               </div>
               <div className="relative rounded-xl border border-slate-800 bg-[#070B14] p-4 overflow-x-auto text-xs font-mono leading-relaxed text-slate-300 shadow-inner">
                 <pre className="whitespace-pre">
@@ -372,7 +291,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
           {activeTab === 'routes' && (
             <div className="space-y-3">
               <p className="text-xs text-slate-400">
-                Rotas oficiais rastreáveis da ēloSites configuradas com prioridades e frequências ideais para motores de busca:
+                URL canônica principal indexável pelos motores de busca e âncoras internas de navegação da SPA:
               </p>
               <div className="grid grid-cols-1 gap-2.5">
                 {sitemapEntries.map((entry, idx) => (
@@ -389,7 +308,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
                           {entry.title}
                         </h4>
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300">
-                          {entry.changefreq}
+                          {entry.isCanonicalIndexable ? 'Indexável (Sitemap XML)' : 'Âncora Interna SPA'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-xs font-mono text-slate-400 break-all">
@@ -399,8 +318,10 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
 
                     <div className="flex items-center gap-3 shrink-0 self-end sm:self-auto">
                       <div className="text-right">
-                        <span className="text-[10px] uppercase font-mono text-slate-500 block">Prioridade</span>
-                        <span className="text-xs font-bold font-mono text-emerald-400">{entry.priority}</span>
+                        <span className="text-[10px] uppercase font-mono text-slate-500 block">Tipo</span>
+                        <span className="text-xs font-bold font-mono text-emerald-400">
+                          {entry.isCanonicalIndexable ? 'Canônica' : 'Seção'}
+                        </span>
                       </div>
                       <button
                         type="button"
@@ -434,7 +355,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
                   Passo a passo para envio no Google Search Console
                 </h4>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Envie seu sitemap diretamente para que o Google indexe todas as telas e seções da aplicação imediatamente após a publicação.
+                  Envie seu sitemap diretamente para que o Google indexe a URL canônica oficial da aplicação após a publicação.
                 </p>
               </div>
 
@@ -449,7 +370,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
                   <strong className="text-white">Envie o arquivo:</strong> no campo "Adicionar um novo sitemap", digite exatamente <code className="bg-slate-800 text-indigo-300 px-1.5 py-0.5 rounded font-mono">sitemap.xml</code> e clique no botão <strong>Enviar</strong>.
                 </li>
                 <li className="p-3 rounded-lg bg-slate-900/60 border border-slate-800">
-                  <strong className="text-white">Status de sucesso:</strong> o Google exibirá o status em verde com as 7 URLs descobertas e programadas para rastreamento.
+                  <strong className="text-white">Status de sucesso:</strong> o Google exibirá o status em verde com a URL canônica principal descoberta sem erros de fragmentos (#).
                 </li>
               </ol>
 

@@ -88,7 +88,7 @@ O site é publicado a partir da branch `main`. Configuração esperada:
 
 Depois de publicar, confira no celular a Home, o menu, o Portfólio, os Serviços, o FAQ e o botão do WhatsApp.
 
-**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v7`) para os visitantes receberem a versão nova.
+**Service Worker:** ao trocar ou renomear arquivos listados no pré-cache de `public/sw.js`, aumente o número em `CACHE_NAME` (hoje `elosites-cache-v8`) para os visitantes receberem a versão nova.
 
 ## Fluxo de trabalho com Git
 

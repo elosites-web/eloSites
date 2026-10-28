@@ -20,8 +20,6 @@ export type WhatsAppLocation =
   | 'services'
   | 'service-landing'
   | 'service-institucional'
-  | 'service-personalizado'
-  | 'service-simulator'
   | 'process'
   | 'differentials'
   | 'briefing'
@@ -38,7 +36,6 @@ export interface WhatsAppContextParams {
   screenId?: ScreenId | 'contato' | 'diferenciais';
   location?: WhatsAppLocation;
   projectName?: string;
-  simulatedValue?: number;
   serviceTitle?: string;
   customText?: string;
 }
@@ -84,15 +81,6 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
 
   if (params.location === 'service-institucional') {
     return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
-  }
-
-  if (params.location === 'service-personalizado') {
-    return 'Olá! ⚡ Gostaria de conversar sobre um *Projeto sob medida* com a *ēloSites*.\n\nTenho necessidades específicas para o meu negócio e busco uma solução web desenvolvida sob encomenda.';
-  }
-
-  if (params.location === 'service-simulator') {
-    const val = params.simulatedValue ? `R$ ${params.simulatedValue.toLocaleString('pt-BR')},00` : 'sob medida';
-    return `Olá! 💰 Simulei uma condição de pagamento no site da *ēloSites* (valor base estimado em *${val}*).\n\nGostaria de receber um orçamento oficial com o escopo detalhado para o meu projeto!`;
   }
 
   if (params.location === 'process') {

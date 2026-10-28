@@ -454,9 +454,10 @@ article {
   width: 18px;
   height: 18px;
   pointer-events: none;
+  z-index: 25;
   border-style: solid;
   border-width: 0;
-  border-color: rgba(165, 180, 252, 0.4);
+  border-color: rgba(147, 197, 253, 0.75);
 }
 
 .bracket-panel::before {
@@ -473,6 +474,24 @@ article {
   border-bottom-width: 1px;
   border-right-width: 1px;
   border-bottom-right-radius: 6px;
+}
+
+/* Nos artigos do portfólio, os 4 cantos e toda a borda recebem brilho uniforme contínuo */
+article.portfolio-card.bracket-panel::before,
+article.portfolio-card.bracket-panel::after {
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: inherit;
+  border: 1px solid rgba(96, 165, 250, 0.55);
+  box-shadow:
+    inset 0 0 14px rgba(59, 130, 246, 0.28),
+    0 0 14px rgba(59, 130, 246, 0.25);
+}
+
+article.portfolio-card.bracket-panel::after {
+  border-color: rgba(125, 211, 252, 0.4);
+  box-shadow: inset 0 0 22px rgba(56, 189, 248, 0.18);
 }
 
 /* Escala tipográfica em progressão geométrica (1.25 mobile). */
@@ -509,6 +528,7 @@ article {
 
 .glass-card-interactive,
 .surface-card {
+  will-change: transform, opacity;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.35s ease,
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -577,12 +597,14 @@ article {
 }
 
 .animate-subtle-pulse {
+  will-change: transform, opacity;
   animation: subtlePulse 2.8s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-subtle-pulse {
     animation: none;
+    will-change: auto;
   }
 }
 
@@ -630,6 +652,7 @@ article {
 
 /* Efeito de elevação sutil no hover (apenas ponteiro fino) do balão */
 .whatsapp-bubble-interactive {
+  will-change: transform, opacity;
   transition: transform var(--dur-hover) var(--ease-out),
               border-color var(--dur-hover) var(--ease);
 }
@@ -696,33 +719,109 @@ article {
   }
 }
 
+/* Variante sutil para fora do horário de atendimento (brilho atenuado e respiração mais lenta) */
+@keyframes pulseGradientButtonOffline {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.65), 0 0 8px rgba(99, 102, 241, 0.16);
+  }
+  50% {
+    transform: scale(1.018) translateZ(0);
+    box-shadow: 0 6px 16px rgba(30, 41, 59, 0.75), 0 0 12px rgba(245, 158, 11, 0.22);
+  }
+}
+
+@keyframes pulseGradientAuraOffline {
+  0%, 100% {
+    transform: scale(0.95) translateZ(0);
+    opacity: 0.14;
+  }
+  50% {
+    transform: scale(1.06) translateZ(0);
+    opacity: 0.32;
+  }
+}
+
+@keyframes pulseGradientAmberDotOffline {
+  0% {
+    transform: scale(1) translateZ(0);
+    opacity: 0.55;
+  }
+  80%, 100% {
+    transform: scale(1.65) translateZ(0);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGradientAmberGlowOffline {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22), 0 0 5px rgba(251, 191, 36, 0.45);
+  }
+}
+
 .animate-gradient-pulse-button {
   backface-visibility: hidden;
+  will-change: transform, opacity;
   animation: pulseGradientButton 2.8s ease-in-out infinite;
+}
+
+.animate-gradient-pulse-button-offline {
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: pulseGradientButtonOffline 4.2s ease-in-out infinite;
 }
 
 .animate-gradient-pulse-aura {
   backface-visibility: hidden;
+  will-change: transform, opacity;
   animation: pulseGradientAura 2.8s ease-in-out infinite;
+}
+
+.animate-gradient-pulse-aura-offline {
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: pulseGradientAuraOffline 4.2s ease-in-out infinite;
 }
 
 .animate-gradient-dot-ping {
   backface-visibility: hidden;
+  will-change: transform, opacity;
   animation: pulseGradientGreenDot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-gradient-dot-ping-offline {
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: pulseGradientAmberDotOffline 3.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .animate-gradient-dot-glow {
   backface-visibility: hidden;
+  will-change: transform, opacity;
   animation: pulseGradientGreenGlow 2s ease-in-out infinite;
+}
+
+.animate-gradient-dot-glow-offline {
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: pulseGradientAmberGlowOffline 3.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-gradient-pulse-button,
+  .animate-gradient-pulse-button-offline,
   .animate-gradient-pulse-aura,
+  .animate-gradient-pulse-aura-offline,
   .animate-gradient-dot-ping,
-  .animate-gradient-dot-glow {
+  .animate-gradient-dot-ping-offline,
+  .animate-gradient-dot-glow,
+  .animate-gradient-dot-glow-offline {
     animation: none !important;
     transform: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -785,6 +884,7 @@ button:not(.text-left):not([class*="text-left"]) > span:not(.text-left):not([cla
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), 0 0 20px rgba(59, 130, 246, 0.35), 0 0 2px rgba(99, 102, 241, 0.3) !important;
   letter-spacing: 0.015em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  will-change: transform, opacity;
   transition: transform var(--dur-press) var(--ease-out),
               box-shadow var(--dur-hover) var(--ease-out),
               border-color var(--dur-hover) var(--ease);
@@ -838,6 +938,7 @@ a[id*="whatsapp"] {
 
 /* Rotação dinâmica do ícone dentro de #floating-whatsapp-btn (500ms ease-out exclusivamente no hover ou ao clicar) */
 #floating-whatsapp-btn svg {
+  will-change: transform, opacity;
   transition: transform 500ms ease-out;
   transform-origin: center center;
 }
@@ -996,6 +1097,7 @@ a[id*="whatsapp"] {
 .reveal {
   opacity: 0;
   transform: translate3d(0, var(--reveal-y), 0);
+  will-change: transform, opacity;
   transition:
     opacity var(--dur-reveal) var(--ease-out) var(--reveal-delay),
     transform var(--dur-reveal) var(--ease-out) var(--reveal-delay);
@@ -1024,6 +1126,7 @@ a[id*="whatsapp"] {
   display: inline-block;
   transform: translate3d(0, 110%, 0);
   opacity: 0;
+  will-change: transform, opacity;
   transition:
     transform var(--dur-reveal) var(--ease-out),
     opacity var(--dur-reveal) var(--ease-out);
@@ -1041,6 +1144,7 @@ a[id*="whatsapp"] {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -1048,6 +1152,7 @@ a[id*="whatsapp"] {
 .mask-reveal {
   clip-path: inset(8% 8% 8% 8%);
   opacity: 0;
+  will-change: transform, opacity;
   transition:
     clip-path var(--dur-reveal) var(--ease-out),
     opacity var(--dur-reveal) var(--ease-out);
@@ -1063,6 +1168,7 @@ a[id*="whatsapp"] {
     clip-path: none !important;
     opacity: 1 !important;
     transition: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -1435,6 +1541,7 @@ a[id*="whatsapp"] {
 /* Feedback de pressão (usado por Faq, ProjectBriefBooking, ContactCta).
    Só transform, então não há layout/paint caro. */
 .pressable {
+  will-change: transform, opacity;
   transition: transform var(--dur-press) var(--ease-out);
 }
 
@@ -1537,7 +1644,7 @@ a[id*="whatsapp"] {
   display: flex;
   width: max-content;
   flex-wrap: nowrap;
-  will-change: transform;
+  will-change: transform, opacity;
   contain: content;
   touch-action: pan-y;
   animation-name: niche-marquee;
@@ -1560,7 +1667,7 @@ a[id*="whatsapp"] {
   display: flex;
   width: max-content;
   flex-wrap: nowrap;
-  will-change: transform;
+  will-change: transform, opacity;
   contain: content;
   touch-action: pan-y;
   animation-name: niche-marquee;
@@ -1586,6 +1693,7 @@ a[id*="whatsapp"] {
   box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.09);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  will-change: transform, opacity;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.28s ease,
               box-shadow 0.28s ease;
@@ -1619,10 +1727,12 @@ a[id*="whatsapp"] {
 
 /* View Transitions API: crossfade entre telas (fallback = transição suave atual). */
 ::view-transition-old(root) {
+  will-change: transform, opacity;
   animation: vt-fade-out var(--dur-screen) var(--ease) both;
 }
 
 ::view-transition-new(root) {
+  will-change: transform, opacity;
   animation: vt-fade-in var(--dur-screen) var(--ease) both;
 }
 
@@ -1731,10 +1841,12 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 
 .breakout-layer-front {
   transform: translateZ(36px);
+  will-change: transform, opacity;
 }
 
 .breakout-layer-back {
   transform: translateZ(-20px);
+  will-change: transform, opacity;
 }
 
 /* Breakpoints refinados para tablets pequenos (evita estouro horizontal de layout) */
@@ -1763,7 +1875,7 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
-/* Trilha de brilho e borda animada com conic gradient */
+/* Trilha de brilho e borda animada com conic gradient contínuo nos 4 cantos */
 .glow-border-animated {
   position: relative;
 }
@@ -1773,13 +1885,15 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  padding: 1px;
+  padding: 1.5px;
+  z-index: 25;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    transparent 0deg,
-    rgba(6, 182, 212, 0.7) 120deg,
-    rgba(99, 102, 241, 0.8) 220deg,
-    transparent 360deg
+    rgba(59, 130, 246, 0.85) 0deg,
+    rgba(56, 189, 248, 0.95) 90deg,
+    rgba(129, 140, 248, 0.9) 180deg,
+    rgba(56, 189, 248, 0.95) 270deg,
+    rgba(59, 130, 246, 0.85) 360deg
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;

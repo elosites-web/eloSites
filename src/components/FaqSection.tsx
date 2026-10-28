@@ -114,7 +114,7 @@ export const FaqSection: React.FC = () => {
                         aria-controls={panelId}
                         className="w-full p-4 sm:p-6 lg:p-7 text-left flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-inset min-h-12 transition-colors cursor-pointer"
                       >
-                        <span className="font-display text-base sm:text-lg font-semibold text-white min-w-0 text-pretty text-left">
+                        <span className="font-display text-base sm:text-lg font-semibold tracking-[0.01em] text-white min-w-0 text-pretty text-left">
                           {faq.question}
                         </span>
                         <motion.span

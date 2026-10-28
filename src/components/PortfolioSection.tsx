@@ -57,10 +57,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         onMouseEnter={handleIntentPreload}
         onFocusCapture={handleIntentPreload}
         onTouchStart={handleIntentPreload}
-        className="portfolio-card relative rounded-2xl bg-[#090e26] border border-blue-500/30 hover:border-blue-400/60 flex flex-col h-full overflow-hidden group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/85 bracket-panel transition-all"
+        className="glass-card-interactive surface-card portfolio-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col h-full group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border"
       >
         {/* Top Header / Informações */}
-        <div className="p-6 sm:p-7 border-b border-blue-500/20 bg-[#070b1c] space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+        <div className="pb-5 sm:pb-6 border-b border-white/[0.06] space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
               {project.badge}
@@ -121,7 +121,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Visual Mockup Area com Seletor */}
-        <div className="p-4 sm:p-5 bg-[#04060E] flex-1 flex flex-col justify-between space-y-4 lg:flex-none lg:row-span-3 lg:grid lg:grid-rows-subgrid">
+        <div className="pt-4 sm:pt-5 flex-1 flex flex-col justify-between space-y-4 lg:flex-none lg:row-span-3 lg:grid lg:grid-rows-subgrid">
           {/* Controles de visualização: Composto, Desktop, Mobile */}
           <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 lg:justify-center lg:gap-3">
             <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-blue-500/15 text-xs font-medium">
