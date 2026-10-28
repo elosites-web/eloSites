@@ -366,28 +366,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             })}
           </div>
 
-          {/* Navegação para a Seção de Especialidades Web */}
-          <div className="mt-8 sm:mt-10 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                const el = document.getElementById('solucoes-web');
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  window.location.hash = 'solucoes-web';
-                }
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98 uppercase"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Ver todas as especialidades e capacidades técnicas</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
           {/* SEÇÃO DESTACADA: CONDIÇÕES DE PAGAMENTO ATUALIZADAS */}
-          <div className="mt-14 sm:mt-20">
+          <div className="mt-10 sm:mt-14">
             <div className="max-w-3xl mx-auto text-center mb-10">
               <div className="mb-4">
                 <span className="inline-block text-xs font-mono uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full font-semibold">

@@ -52,15 +52,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   };
 
   return (
-    <Interactive3DCard maxTilt={1.2} animatedBorder={true} className="h-full">
+    <Interactive3DCard maxTilt={1.2} animatedBorder={true} className="h-full w-full flex flex-col">
       <article
         onMouseEnter={handleIntentPreload}
         onFocusCapture={handleIntentPreload}
         onTouchStart={handleIntentPreload}
-        className="glass-card-interactive surface-card portfolio-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col h-full group lg:row-span-8 lg:grid lg:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border"
+        className="glass-card-interactive surface-card portfolio-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col justify-between h-full group shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border !mb-0"
       >
         {/* Top Header / Informações */}
-        <div className="pb-5 sm:pb-6 border-b border-white/[0.06] space-y-4 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+        <div className="pb-5 sm:pb-6 border-b border-white/[0.06] flex-1 flex flex-col justify-between gap-4 w-full">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
               {project.badge}
@@ -86,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </p>
           </div>
 
-          <div className="space-y-2.5 text-xs sm:text-sm text-slate-100 font-medium leading-relaxed">
+          <div className="space-y-2.5 text-xs sm:text-sm text-slate-100 font-medium leading-relaxed flex-1">
             <p>
               <strong className="text-white font-bold">Desafio:</strong> {project.challenge}
             </p>
@@ -121,9 +121,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Visual Mockup Area com Seletor */}
-        <div className="pt-4 sm:pt-5 flex-1 flex flex-col justify-between space-y-4 lg:flex-none lg:row-span-3 lg:grid lg:grid-rows-subgrid">
+        <div className="pt-4 sm:pt-5 flex flex-col justify-between gap-4 w-full shrink-0">
           {/* Controles de visualização: Composto, Desktop, Mobile */}
-          <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 lg:justify-center lg:gap-3">
+          <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 w-full">
             <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-blue-500/15 text-xs font-medium">
               <button
                 type="button"
@@ -182,14 +182,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </button>
           </div>
 
-          {/* Display do Mockup conforme Modo (revelado em máscara, uma vez) */}
+          {/* Display do Mockup conforme Modo (centralizado e padronizado dentro do card) */}
           <Reveal
             variant="mask"
-            className="relative min-h-[300px] sm:min-h-[330px] w-full flex items-center justify-center overflow-hidden rounded-xl bg-slate-950/70 border border-white/[0.05] p-2 sm:p-3"
+            className="relative min-h-[300px] sm:min-h-[330px] w-full mx-auto my-auto flex items-center justify-center overflow-hidden rounded-xl bg-slate-950/70 border border-white/[0.05] p-3 sm:p-4"
           >
             {/* MODO 1: COMPOSTO (Desktop com largura total + Celular sobreposto à direita e abaixo) */}
             {viewMode === 'composite' && (
-              <div className="relative w-full h-full flex items-center justify-center py-2">
+              <div className="relative w-full h-full flex items-center justify-center py-2 px-1 mx-auto my-auto">
                 {/* Desktop Window Frame com largura total expandida */}
                 <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-2xl shadow-black/80 transition-transform duration-300 group-hover:scale-[1.01]">
                   {/* Browser topbar */}
@@ -223,7 +223,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
                 {/* Mobile Phone Mockup Sobreposto com 3D Breakout de Profundidade */}
                 <div
-                  className="absolute right-1 sm:right-2 -bottom-1 sm:bottom-0 w-[36%] sm:w-[33%] max-w-[155px] sm:max-w-[170px] rounded-[20px] p-1.5 sm:p-2 bg-[#090d16] border-2 border-indigo-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.95)] shadow-indigo-950/60 breakout-layer-front cursor-pointer z-20 hover:scale-105 transition-all duration-300"
+                  className="absolute right-2 sm:right-3 bottom-2 sm:bottom-2.5 w-[35%] sm:w-[32%] max-w-[150px] sm:max-w-[165px] rounded-[20px] p-1.5 sm:p-2 bg-[#090d16] border-2 border-indigo-400/50 shadow-[0_20px_50px_rgba(0,0,0,0.95)] shadow-indigo-950/60 breakout-layer-front cursor-pointer z-20 hover:scale-105 transition-all duration-300"
                   style={{ transform: 'translateZ(38px)' }}
                   onClick={() => onOpenImage(project.id, 'mobile')}
                   title="Clique para abrir captura Mobile completa"
@@ -240,7 +240,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     />
                   </div>
                   {/* Badge visual */}
-                  <div className="absolute -bottom-2 -left-2 bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow border border-indigo-400/30">
+                  <div className="absolute -bottom-1.5 -left-1.5 bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow border border-indigo-400/30">
                     📱 Mobile
                   </div>
                 </div>
@@ -249,41 +249,43 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
             {/* MODO 2: APENAS DESKTOP */}
             {viewMode === 'desktop' && (
-              <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-xl">
-                <div className="px-3 py-2 bg-slate-900 border-b border-white/[0.08] flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              <div className="w-full h-full flex items-center justify-center py-2 px-1 mx-auto my-auto">
+                <div className="w-full rounded-xl overflow-hidden border border-white/[0.12] bg-[#0c101a] shadow-xl">
+                  <div className="px-3 py-2 bg-slate-900 border-b border-white/[0.08] flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    </div>
+                    <span className="text-[11px] text-slate-400 font-mono truncate">
+                      {project.urlLabel}
+                    </span>
+                    <span className="text-[10px] text-indigo-400 font-semibold uppercase">Desktop</span>
                   </div>
-                  <span className="text-[11px] text-slate-400 font-mono truncate">
-                    {project.urlLabel}
-                  </span>
-                  <span className="text-[10px] text-indigo-400 font-semibold uppercase">Desktop</span>
-                </div>
-                <div
-                  className="aspect-[16/10] overflow-hidden bg-slate-950 cursor-pointer"
-                  onClick={() => onOpenImage(project.id, 'desktop')}
-                  title="Clique para abrir captura Desktop completa"
-                >
-                  <LazyPortfolioImage
-                    src={project.desktopImage}
-                    alt={`Captura Desktop completa de ${project.title}`}
-                    wrapperClassName="relative w-full h-full overflow-hidden"
-                    className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
-                    rootMargin="500px 0px 500px 0px"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
-                    priority={priority}
-                  />
+                  <div
+                    className="aspect-[16/10] overflow-hidden bg-slate-950 cursor-pointer"
+                    onClick={() => onOpenImage(project.id, 'desktop')}
+                    title="Clique para abrir captura Desktop completa"
+                  >
+                    <LazyPortfolioImage
+                      src={project.desktopImage}
+                      alt={`Captura Desktop completa de ${project.title}`}
+                      wrapperClassName="relative w-full h-full overflow-hidden"
+                      className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+                      rootMargin="500px 0px 500px 0px"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                      priority={priority}
+                    />
+                  </div>
                 </div>
               </div>
             )}
 
             {/* MODO 3: APENAS MOBILE (Largura ampliada e centrada) */}
             {viewMode === 'mobile' && (
-              <div className="flex items-center justify-center py-2 w-full">
+              <div className="flex items-center justify-center py-2 px-1 w-full h-full mx-auto my-auto">
                 <div
-                  className="w-[210px] sm:w-[240px] max-w-full rounded-[26px] p-2 sm:p-2.5 bg-[#090d16] border-2 border-indigo-500/50 shadow-2xl shadow-black cursor-pointer"
+                  className="w-[210px] sm:w-[240px] max-w-full rounded-[26px] p-2 sm:p-2.5 bg-[#090d16] border-2 border-indigo-500/50 shadow-2xl shadow-black cursor-pointer mx-auto"
                   onClick={() => onOpenImage(project.id, 'mobile')}
                   title="Clique para abrir captura Mobile completa"
                 >
@@ -305,7 +307,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </Reveal>
 
           {/* Rodapé do Card com Ações */}
-          <div className="pt-3 border-t border-blue-500/20 flex items-center justify-between gap-2.5">
+          <div className="pt-3 border-t border-blue-500/20 flex items-center justify-between gap-2.5 w-full">
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -333,10 +335,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+              className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
-              <WhatsAppIcon className="w-3.5 h-3.5 text-slate-950" />
-              <span className="text-slate-950 font-black tracking-tight text-center">Quero similar</span>
+              <WhatsAppIcon className="w-3.5 h-3.5 text-white shrink-0" />
+              <span className="text-white font-bold tracking-tight text-center">Quero similar</span>
             </a>
           </div>
         </div>
@@ -456,7 +458,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
 
           {/* Grade de Projetos Reais */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch lg:grid-rows-[repeat(8,auto)] portfolio-list"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 items-stretch portfolio-list"
           >
             {filteredProjects.map((project, index) => {
               return (
@@ -464,9 +466,9 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   key={project.id}
                   direction={index % 2 === 0 ? 'left' : 'right'}
                   index={index}
-                  className="h-full lg:row-span-8 lg:grid lg:grid-rows-subgrid"
+                  className="h-full w-full flex flex-col"
                 >
-                  <Interactive3DCard maxTilt={5} className="h-full w-full">
+                  <Interactive3DCard maxTilt={5} className="h-full w-full flex flex-col">
                     <ProjectCard
                       project={project}
                       priority={index === 0}
@@ -486,7 +488,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.01, margin: '0px 0px 80px 0px' }}
           transition={{ duration: prefersReduced ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 sm:mt-8 w-full"
+          className="mt-6 sm:mt-7 lg:mt-8 w-full"
         >
           <Interactive3DCard maxTilt={3} className="w-full">
             <div className="portfolio-card p-6 sm:p-7 md:p-8 rounded-2xl bg-[#090e26] border border-blue-400/40 hover:border-blue-400/70 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/90 bracket-panel transition-all">

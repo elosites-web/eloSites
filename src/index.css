@@ -305,7 +305,7 @@ article {
 .service-list,
 .differentials-list,
 .process-list {
-  scroll-padding-top: clamp(68px, 11vh, 96px);
+  scroll-padding-top: clamp(5.25rem, 13dvh, 7rem);
 }
 
 /* Ancoragem de rolagem no topo para cada card individual */
@@ -1933,7 +1933,7 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 .faq-list {
   scroll-snap-type: y proximity;
   -webkit-scroll-snap-type: y proximity;
-  scroll-padding-top: clamp(4.5rem, 12vh, 6.5rem);
+  scroll-padding-top: clamp(5.25rem, 13dvh, 7rem);
 }
 
 /* Cards individuais no desktop: alinhamento ao topo com margem de segurança */
@@ -1948,37 +1948,55 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   scroll-snap-align: start;
   -webkit-scroll-snap-align: start;
   scroll-snap-stop: normal;
-  scroll-margin-top: clamp(4.5rem, 12vh, 6.5rem);
+  scroll-margin-top: clamp(5.25rem, 13dvh, 7rem);
   overscroll-behavior-y: auto;
   touch-action: pan-y;
 }
 
 /* ============================================================
    OTIMIZAÇÃO ESPECÍFICA PARA DISPOSITIVOS MÓVEIS (<= 1024px)
-   Garante que os cards de 'Serviços' e 'Processo' fiquem rigorosamente
-   centralizados na viewport móvel, compensando o cabeçalho fixo
-   e o safe-area inferior para eliminar qualquer corte de conteúdo.
+   Garante que os cards de 'Serviços', 'Portfólio' e 'Processo' fiquem
+   perfeitamente centralizados na área útil da viewport móvel, compensando
+   o cabeçalho fixo superior e o safe-area inferior sem sobreposição.
    ============================================================ */
 @media (max-width: 1024px) {
   html {
     scroll-snap-type: y proximity;
     -webkit-scroll-snap-type: y proximity;
-    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
-    scroll-padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px));
+    scroll-padding-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px));
+    scroll-padding-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Seções e listas de cards com rolagem vertical ancorada no centro */
+  /* Seções e listas de cards com rolagem vertical ancorada e compensação do header fixo */
   #servicos,
   #como-funciona,
+  #portfolio,
+  #diferenciais,
+  #faq,
   .service-list,
   .process-list,
+  .portfolio-list,
+  .differentials-list,
   .scroll-snap-y-container,
   .card-list-container {
     scroll-snap-type: y proximity !important;
     -webkit-scroll-snap-type: y proximity !important;
-    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px)) !important;
-    scroll-padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    scroll-padding-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px)) !important;
+    scroll-padding-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px)) !important;
   }
+
+  .scroll-snap-card,
+  .card-snap-item,
+  .service-card,
+  .portfolio-card,
+  .differential-card,
+  .process-card,
+  .benefit-card,
+  .interactive-3d-card-root {
+    scroll-margin-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px)) !important;
+    scroll-margin-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px));
+  }
+
   /* Eliminação total de scroll interno e de limites de altura nos cards:
      Garante que todos os cards expandam naturalmente com seu conteúdo completo,
      sem criar rolagem separada dentro do card. */
@@ -1996,8 +2014,24 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
-/* Celulares compactos (<= 640px): refinamento de espaçamento interno para respiração total */
+/* Celulares compactos (<= 640px): calibração de scroll-padding-top e espaçamento interno */
 @media (max-width: 640px) {
+  html,
+  #servicos,
+  #como-funciona,
+  #portfolio,
+  #diferenciais,
+  #faq,
+  .service-list,
+  .process-list,
+  .portfolio-list,
+  .differentials-list,
+  .scroll-snap-y-container,
+  .card-list-container {
+    scroll-padding-top: calc(clamp(5.25rem, 13.5dvh, 6.25rem) + env(safe-area-inset-top, 0px)) !important;
+    scroll-padding-bottom: calc(clamp(3rem, 7.5dvh, 4rem) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
   .service-card {
     padding: clamp(1.15rem, 4vw, 1.5rem) !important;
   }

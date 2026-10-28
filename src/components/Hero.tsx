@@ -114,14 +114,10 @@ export const Hero: React.FC<HeroProps> = ({
       {(mode === 'home' || mode === 'all') && (
         <section
           id="home"
-          className="hero-home-viewport min-h-[320px] sm:min-h-[460px] md:min-h-[560px] h-[100dvh] w-full flex flex-col items-center justify-center relative select-none px-4 overflow-hidden pointer-events-none"
+          className="hero-home-viewport relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] min-h-[320px] sm:min-h-[460px] md:min-h-[560px] h-[100dvh] w-full flex flex-col items-center justify-center select-none px-4 overflow-hidden pointer-events-none"
         >
-          {/* Fundo de grade azul de espaço-tempo com distorção contínua (exatamente igual ao fundo do menu aberto) */}
-          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-75 pointer-events-none" />
-
-          {/* Halos luminosos elétricos inspirados na og-image.png */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/15 blur-[140px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[250px] bg-indigo-600/20 blur-[100px] rounded-full pointer-events-none" />
+          {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua (idêntico ao rodapé) */}
+          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-50 pointer-events-none" />
 
           <AnimatePresence>
             {!isMenuOpen && (

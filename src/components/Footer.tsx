@@ -274,8 +274,7 @@ export const Footer: React.FC<FooterProps> = ({
                 />
               </button>
             </div>
-            <span className="hidden md:inline text-slate-500/80 mx-0.5 select-none" aria-hidden="true">•</span>
-            <span className="text-slate-400 font-medium shrink-0">SITES PROFISSIONAIS SOB MEDIDA PARA O SEU NEGÓCIO</span>
+            <span className="text-slate-400 font-medium shrink-0">O MELHOR SITE PELO MELHOR PREÇO</span>
           </div>
         </div>
 

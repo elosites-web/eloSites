@@ -431,7 +431,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                 className="w-full inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded py-0.5 group/action"
               >
                 <span>Responder no WhatsApp</span>
-                <ArrowRight className="w-3 h-3 text-blue-400 group-hover/action:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-blue-400 group-hover/action:translate-y-0.5 transition-transform" />
               </a>
             </div>
 
