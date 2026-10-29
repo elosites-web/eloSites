@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, useMotionValue, animate, useReducedMotion } from 'motion/react';
 import {
   Quote,
-  Star,
   ShieldCheck,
   ArrowRight,
   Sparkles,
@@ -24,7 +23,6 @@ export interface TestimonialItem {
   category: string;
   projectUrl: string;
   quote: string;
-  rating?: number;
 }
 
 export type TestimonialCategoryTag = 'all' | 'landing' | 'institutional';
@@ -46,7 +44,6 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     projectUrl: 'https://jvsalvaiapersonal.netlify.app',
     quote:
       'Gostei muito do resultado do site! Ficou profissional, moderno e com a identidade do meu trabalho como personal trainer. Agora consigo apresentar melhor meus serviços e transmitir mais confiança para quem está buscando um profissional para acompanhar seus treinos. O resultado ficou muito bom!',
-    rating: 5,
   },
   {
     id: 'garagem-mailasque',
@@ -57,7 +54,6 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     projectUrl: 'https://www.garagemmailasque.com.br',
     quote:
       'Rapaz, ficou top o trabalho! A ēloSites pegou a ideia da Garagem Mailasque e colocou tudo no site de um jeito organizado, bonito e com a cara da gente. Agora quem chega pela internet consegue conhecer melhor nosso trabalho e ver o que a garagem oferece. Ficou bem feito, sem enrolação, do jeito que tem que ser. Tamo junto!',
-    rating: 5,
   },
   {
     id: 'toledo-seguranca',
@@ -68,7 +64,6 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     projectUrl: 'https://www.toledoseg.com.br',
     quote:
       'O desenvolvimento do site da Toledo Segurança ficou excelente! O projeto transmitiu a seriedade e o profissionalismo que eu queria passar para os nossos clientes. Ter um site próprio faz diferença na apresentação da empresa e fortalece nossa presença na internet. Fiquei muito satisfeito com o resultado e com o trabalho realizado.',
-    rating: 5,
   },
   {
     id: 'duelo-fim-de-ano',
@@ -79,7 +74,6 @@ export const CLIENT_TESTIMONIALS: TestimonialItem[] = [
     projectUrl: 'https://jogodefimdeano.netlify.app',
     quote:
       'A landing page para o nosso evento de fim de ano ficou muito bacana! A proposta era ter uma página que reunisse as principais informações do evento de forma organizada e atrativa, e o resultado atendeu muito bem à ideia. Ficou uma apresentação moderna, prática e com a cara do nosso encontro. Com certeza fez o evento ter uma presença digital ainda mais especial!',
-    rating: 5,
   },
 ];
 
@@ -728,7 +722,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   return (
     <section
       id="avaliacoes"
-      aria-label="Avaliações de Clientes e Prova Social"
+      aria-label="Depoimentos de Clientes"
       className="section-auto-contain pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-hidden"
     >
       {/* Luzes ambiente de fundo azul elétrico e violeta */}
@@ -764,16 +758,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
           {/* Destaque de métricas de confiabilidade */}
           <div className="pt-1 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-slate-300">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400" aria-hidden="true" />
-                ))}
-              </div>
-              <span className="font-semibold text-white">5.0 / 5.0</span>
-              <span className="text-slate-400">• Avaliação dos projetos entregues</span>
-            </div>
-
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 border border-white/[0.08] shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
               <span className="text-slate-300">Projetos reais publicados no ar</span>
@@ -1050,7 +1034,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
                         {/* Conteúdo do Card com composição equilibrada, espaçamento proporcional e clara separação */}
                         <div className="p-5 sm:p-6 md:p-7 flex flex-col justify-between gap-4 sm:gap-5 relative z-10 h-full">
-                          {/* Top Bar do Card: Categoria, Estrelas e Contador */}
+                          {/* Top Bar do Card: Categoria e Contador */}
                           <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-white/[0.08]">
                             <div className="flex items-center gap-2">
                               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950/80 border border-blue-400/30 text-blue-300 text-[11px] font-semibold">
@@ -1063,22 +1047,6 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                             </div>
 
                             <div className="flex items-center gap-2">
-                              {/* Estrelas da avaliação */}
-                              {item.rating ? (
-                                <div
-                                  className="flex items-center gap-0.5 text-amber-400"
-                                  title={`Classificação ${item.rating} de 5 estrelas`}
-                                >
-                                  {[...Array(item.rating)].map((_, starIdx) => (
-                                    <Star
-                                      key={starIdx}
-                                      className="w-3.5 h-3.5 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]"
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                </div>
-                              ) : null}
-
                               {/* Contador de Slides */}
                               <div className="font-mono text-[10px] text-blue-300 px-1.5 py-0.5 rounded bg-slate-900/90 border border-blue-500/20 tabular-nums">
                                 0{idx + 1} / 0{total}
