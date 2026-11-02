@@ -234,16 +234,24 @@ export const Header: React.FC<HeaderProps> = ({
                       onClick={() => onSelectScreen(item.id)}
                       onPointerEnter={() => preloadScreen(item.id)}
                       onFocus={() => preloadScreen(item.id)}
-                      className={`relative px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-150 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                      className={`relative group px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                         isActive
-                          ? 'text-white font-semibold bg-blue-600/15 border border-blue-500/35 shadow-[0_0_12px_rgba(59,130,246,0.2)]'
-                          : 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
+                          ? 'text-white font-semibold bg-blue-600/20 border border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.25)]'
+                          : 'text-slate-300 hover:text-blue-100 hover:bg-blue-500/[0.07] border border-transparent hover:border-blue-500/20'
                       }`}
                     >
-                      <span>{item.label}</span>
+                      <span className="relative z-10">{item.label}</span>
+                      {/* Sublinhado sutil e suave no hover para links inativos */}
+                      {!isActive && (
+                        <span
+                          className="absolute bottom-1 left-2.5 right-2.5 h-[1.5px] rounded-full bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0 opacity-0 scale-x-50 group-hover:opacity-100 group-hover:scale-x-100 transition-all duration-200 ease-out origin-center pointer-events-none"
+                          aria-hidden="true"
+                        />
+                      )}
+                      {/* Marcador luminoso exclusivo do estado ativo */}
                       {isActive && (
                         <span
-                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-blue-400 shadow-[0_0_6px_#3b82f6]"
+                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-blue-400 shadow-[0_0_8px_#3b82f6]"
                           aria-hidden="true"
                         />
                       )}
