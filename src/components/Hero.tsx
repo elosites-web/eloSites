@@ -583,9 +583,11 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Build 100% OK</span>
+                  <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-[10.5px] sm:text-[11px] font-mono text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 px-2 sm:px-2.5 py-1 rounded-lg shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                    <span className="text-center font-mono font-medium leading-tight">
+                      Build <br className="lg:hidden" />100% OK
+                    </span>
                   </div>
                 </motion.div>
 
@@ -685,18 +687,26 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </div>
 
                           {/* Mini Indicador de Pilares na Tela */}
-                          <div className="scroll-fade-text relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
-                            <div className="flex items-center justify-center gap-1">
-                              <span>Design</span>
+                          <div className="scroll-fade-text relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-slate-300">
+                            <div className="flex items-center justify-center text-center py-1 px-1 rounded-md bg-white/[0.04] border border-white/[0.08]">
+                              <span className="font-mono text-[9px] sm:text-[10px] font-semibold text-slate-200 tracking-wider uppercase text-center">
+                                Design
+                              </span>
                             </div>
-                            <div className="flex items-center justify-center gap-1">
-                              <span>Veloz</span>
+                            <div className="flex items-center justify-center text-center py-1 px-1 rounded-md bg-white/[0.04] border border-white/[0.08]">
+                              <span className="font-mono text-[9px] sm:text-[10px] font-semibold text-slate-200 tracking-wider uppercase text-center">
+                                Veloz
+                              </span>
                             </div>
-                            <div className="flex items-center justify-center gap-1">
-                              <span>SEO</span>
+                            <div className="flex items-center justify-center text-center py-1 px-1 rounded-md bg-white/[0.04] border border-white/[0.08]">
+                              <span className="font-mono text-[9px] sm:text-[10px] font-semibold text-slate-200 tracking-wider uppercase text-center">
+                                SEO
+                              </span>
                             </div>
-                            <div className="flex items-center justify-center gap-1">
-                              <span>Mobile</span>
+                            <div className="flex items-center justify-center text-center py-1 px-1 rounded-md bg-white/[0.04] border border-white/[0.08]">
+                              <span className="font-mono text-[9px] sm:text-[10px] font-semibold text-slate-200 tracking-wider uppercase text-center">
+                                Mobile
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -767,7 +777,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     <span>
                       {isShowcaseExpanded
                         ? 'Ocultar resumo dos benefícios práticos'
-                        : 'Clique para ver como esse site ajuda o seu negócio'}
+                        : 'Clique e veja como um site ajuda o seu negócio'}
                     </span>
                   </span>
                   <ArrowDown
@@ -792,12 +802,12 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                 >
                   <div className="overflow-hidden min-h-0 p-1">
                     <div className="bracket-panel relative rounded-2xl bg-slate-950/95 border border-blue-400/40 hover:border-blue-400/60 p-3.5 sm:p-4 space-y-2.5 text-left shadow-[0_0_24px_rgba(37,99,235,0.18),inset_0_1px_0_0_rgba(147,197,253,0.25)] transition-[border-color,box-shadow] duration-300">
-                      <div className="flex items-center justify-between border-b border-blue-500/20 pb-2">
-                        <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                          <span>O que o seu negócio ganha na prática</span>
+                      <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between text-center sm:text-left gap-2 sm:gap-1.5 border-b border-blue-500/20 pb-2">
+                        <span className="text-xs sm:text-[13px] font-semibold text-white flex items-center justify-center sm:justify-start gap-1.5 text-center sm:text-left tracking-tight">
+                          <Sparkles className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                          <span className="text-center sm:text-left font-sans">O que o seu negócio ganha na prática</span>
                         </span>
-                        <span className="text-[10px] font-medium text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-500/30">
+                        <span className="text-[10px] sm:text-[11px] font-mono font-medium text-blue-300 bg-blue-950/70 px-2.5 py-0.5 rounded-md border border-blue-500/30 text-center tracking-wide shrink-0">
                           Simples e direto
                         </span>
                       </div>

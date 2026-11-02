@@ -53,17 +53,15 @@ export const Header: React.FC<HeaderProps> = ({
     // Fallback defensivo (~1030px) caso o elemento de medição ainda não tenha reportado scrollWidth
     const requiredWidth = measuredWidth > 0 ? measuredWidth : 1030;
     const fits = canFitNavbar(containerWidth, requiredWidth, { buffer: 24 });
+    setCanFitHorizontalNav(fits);
+  }, []);
 
-    setCanFitHorizontalNav((prev) => {
-      if (prev !== fits) {
-        if (fits && isMenuOpen) {
-          setIsMenuOpen(false);
-        }
-        return fits;
-      }
-      return prev;
-    });
-  }, [isMenuOpen, setIsMenuOpen]);
+  // Fecha o menu de navegação de forma segura quando a barra horizontal couber confortavelmente
+  useEffect(() => {
+    if (canFitHorizontalNav && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [canFitHorizontalNav, isMenuOpen, setIsMenuOpen]);
 
   useEffect(() => {
     checkNavFit();

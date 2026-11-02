@@ -842,7 +842,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 perspective: `${geometry.perspective}px`,
                 perspectiveOrigin: '50% 50%',
               }}
-              className="relative w-full py-5 sm:py-8 px-1 sm:px-8 md:px-14 select-none touch-pan-y cursor-grab active:cursor-grabbing overflow-visible"
+              className="relative w-full py-5 sm:py-8 px-1 sm:px-8 md:px-14 select-none touch-pan-y cursor-grab active:cursor-grabbing overflow-visible transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-indigo-500/10"
             >
               {/* Iluminação direcional e brilho cinético azul/violeta durante a rotação do cilindro */}
               <div
