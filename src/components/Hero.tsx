@@ -504,7 +504,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900/80 border border-white/10 hover:border-blue-400/40 text-slate-200 hover:text-white transition-all text-sm sm:text-base font-medium inline-flex items-center justify-center gap-2 cursor-pointer backdrop-blur-sm"
                   >
                     <Sparkles className="w-4 h-4 text-blue-400" />
-                    <span>Conhecer projetos reais</span>
+                    <span>Ver projetos reais</span>
                   </button>
                 </div>
               </BiReveal>
@@ -640,11 +640,11 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </div>
 
                           {/* Conteúdo Central da Tela */}
-                          <div className="scroll-fade-text relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
-                            <h2 className="scroll-fade-text text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                          <div className="scroll-fade-text relative z-10 my-auto py-4 space-y-2.5 max-w-sm lg:max-w-none">
+                            <h2 className="scroll-fade-text text-xl sm:text-2xl lg:text-[clamp(1.05rem,1.6vw,1.375rem)] lg:whitespace-nowrap font-extrabold text-white leading-tight">
                               Um site profissional para o seu negócio.
                             </h2>
-                            <p className="scroll-fade-text text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                            <p className="scroll-fade-text text-[11px] sm:text-xs text-slate-300 leading-relaxed max-w-md">
                               Apresente seus serviços com clareza, transmita confiança e receba novos contatos direto no seu WhatsApp.
                             </p>
                             <div className="pt-1">
