@@ -26,6 +26,60 @@ const NAV_ITEMS: { id: ScreenId; label: string }[] = [
   { id: 'faq', label: 'FAQ & Contato' },
 ];
 
+/**
+ * Hook to lock body scrolling when the mobile menu is opened by applying
+ * the 'lock-scroll' utility class and document.body.style.overflow = 'hidden',
+ * and resetting to 'auto' when closed.
+ * Also configures the mobile menu container with the same semi-transparent
+ * background style as the WhatsApp bubble (bg-[#090E23]/95 backdrop-blur-md)
+ * and adjusts z-index to 49 for proper layering.
+ */
+export function useMobileMenuLock(
+  isMenuOpen: boolean,
+  containerRef?: React.RefObject<HTMLDivElement | null>
+) {
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('lock-scroll');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.classList.remove('lock-scroll');
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.classList.remove('lock-scroll');
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (isMenuOpen && containerRef?.current) {
+      containerRef.current.style.zIndex = '49';
+      containerRef.current.style.backgroundColor = 'rgba(9, 14, 35, 0.95)';
+      containerRef.current.style.backdropFilter = 'blur(12px)';
+      (containerRef.current.style as any).webkitBackdropFilter = 'blur(12px)';
+    }
+  }, [isMenuOpen, containerRef]);
+
+  const menuContainerClassName =
+    'fixed inset-0 top-[54px] sm:top-[60px] z-[49] flex flex-col justify-start bg-[#090E23]/95 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/80';
+
+  const menuContainerStyle: React.CSSProperties = {
+    zIndex: 49,
+    backgroundColor: 'rgba(9, 14, 35, 0.95)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+  };
+
+  return {
+    menuContainerClassName,
+    menuContainerStyle,
+  };
+}
+
+export const useMenuScrollLock = useMobileMenuLock;
+
 export const Header: React.FC<HeaderProps> = ({
   currentScreen,
   onSelectScreen,
@@ -43,6 +97,10 @@ export const Header: React.FC<HeaderProps> = ({
   const wasMenuOpenRef = useRef<boolean>(false);
   const isNavigatingToScreenRef = useRef<boolean>(false);
   const [canFitHorizontalNav, setCanFitHorizontalNav] = useState<boolean>(false);
+
+  // Hook que aplica lock-scroll e document.body.style.overflow = 'hidden'/'auto',
+  // além de aplicar estilo idêntico ao balão do WhatsApp com z-index 49
+  const { menuContainerClassName, menuContainerStyle } = useMobileMenuLock(isMenuOpen, drawerRef);
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
@@ -165,56 +223,6 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  // Trava de rolagem absoluta do fundo da página enquanto o menu hambúrguer estiver aberto
-  useEffect(() => {
-    if (!isMenuOpen) return;
-
-    // Captura a posição exata de scroll no momento da abertura
-    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-    const originalBodyPosition = document.body.style.position;
-    const originalBodyTop = document.body.style.top;
-    const originalBodyLeft = document.body.style.left;
-    const originalBodyRight = document.body.style.right;
-    const originalBodyWidth = document.body.style.width;
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalBodyPaddingRight = document.body.style.paddingRight;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
-
-    // Congela a página no scroll atual (prevenindo momentum scrolling no mobile/iOS Safari e mouse wheel no desktop)
-    document.documentElement.style.overflow = 'hidden';
-    document.documentElement.style.overscrollBehavior = 'none';
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-    if (scrollBarWidth > 0) {
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-    }
-
-    return () => {
-      // Restaura estilos originais e posição exata de rolagem sem salto visual
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
-      document.body.style.overflow = originalBodyOverflow;
-      document.body.style.position = originalBodyPosition;
-      document.body.style.top = originalBodyTop;
-      document.body.style.left = originalBodyLeft;
-      document.body.style.right = originalBodyRight;
-      document.body.style.width = originalBodyWidth;
-      document.body.style.paddingRight = originalBodyPaddingRight;
-
-      // Se o fechamento foi apenas dismiss (sem navegar para outra tela), preserva a posição exata anterior
-      if (!isNavigatingToScreenRef.current) {
-        window.scrollTo(0, scrollY);
-      }
-      isNavigatingToScreenRef.current = false;
-    };
-  }, [isMenuOpen]);
 
   // Botão com identidade visual do logotipo ēloSites
   const renderMenuButton = () => (
@@ -369,8 +377,8 @@ export const Header: React.FC<HeaderProps> = ({
           id="multi-screen-navigation-drawer"
           role="dialog"
           aria-modal="true"
-          aria-label="Menu de Navegação das Seções ēloSites"
-          className="fixed inset-0 top-[54px] sm:top-[60px] z-40 flex flex-col justify-start bg-[#090E23]/95 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/80"
+          style={menuContainerStyle}
+          className={menuContainerClassName}
           onClick={handleCloseMenu}
         >
           {/* Painel de links sobre a página atual */}

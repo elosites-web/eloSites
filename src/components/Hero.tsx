@@ -490,7 +490,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-justify [text-align-last:left] hyphens-auto">
+                      <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-center">
                         Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, tem conteúdo organizado para facilitar a leitura pelo Google e funciona bem tanto no celular quanto no computador.
                       </p>
                     </div>

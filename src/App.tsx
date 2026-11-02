@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-import { motion, AnimatePresence, useReducedMotion, type Variants } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion, type Variants, type Transition } from 'motion/react';
 import { SectionErrorBoundary } from './components/SectionErrorBoundary';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -18,7 +18,6 @@ import { ScreenId, SCREENS } from './types';
 import { shouldReduceMedia, getMotionTier } from './mediaPrefs';
 import { withViewTransition, supportsViewTransitions } from './viewTransition';
 import { Sparkles } from 'lucide-react';
-import { BiReveal } from './components/BiReveal';
 import { CaseDetailPage } from './components/CaseDetailPage';
 import { ProjectImageView } from './components/ProjectImageView';
 import { CustomCursor } from './components/CustomCursor';
@@ -953,6 +952,39 @@ export default function App() {
 
   const currentMeta = SCREENS[currentIndex] || SCREENS[0];
 
+  // Configuração única de transição Framer Motion para a seção Hero / Início
+  // Garante sincronia e entrada sequencial escalonada (stagger) para melhor performance
+  const heroTransitionConfig: Transition = {
+    duration: prefersReduced ? 0.05 : 0.45,
+    ease: [0.23, 1, 0.32, 1],
+  };
+
+  const heroContainerVariants: Variants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        ...heroTransitionConfig,
+        staggerChildren: prefersReduced ? 0 : 0.12,
+        delayChildren: prefersReduced ? 0 : 0.04,
+      },
+    },
+  };
+
+  const heroItemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: prefersReduced ? 0 : 18,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: heroTransitionConfig,
+    },
+  };
+
   // Transição discreta de opacidade pura entre telas (sem deslocamento lateral)
   const fadeVariants: Variants = {
     initial: {
@@ -980,11 +1012,19 @@ export default function App() {
     <>
       {/* TELA 01: Início — HERO Institucional com scroll & Apresentação do Fundador */}
       {currentScreen === 'inicio' && (
-        <div className="w-full space-y-0">
-          <Hero
-            mode="inicio"
-            onNavigateToPortfolio={() => navigateToScreen('portfolio')}
-          />
+        <motion.div
+          variants={heroContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className="w-full space-y-0"
+        >
+          <motion.div variants={heroItemVariants}>
+            <Hero
+              mode="inicio"
+              onNavigateToPortfolio={() => navigateToScreen('portfolio')}
+            />
+          </motion.div>
+
           <section
             id="sobre-fundador"
             aria-labelledby="sobre-fundador-heading"
@@ -997,7 +1037,7 @@ export default function App() {
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
 
             <div className="page-shell page-x max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
-              <BiReveal direction="up">
+              <motion.div variants={heroItemVariants}>
                 <div className="text-center max-w-3xl mx-auto space-y-4">
                   <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-500/30 text-cyan-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
                     <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
@@ -1015,9 +1055,9 @@ export default function App() {
                     Acreditamos que todo negócio, autônomo ou empresa local merece um site rápido, claro e fácil de navegar. Desenvolvemos cada projeto com atendimento direto, sem termos complicados e com total respeito ao seu investimento.
                   </p>
                 </div>
-              </BiReveal>
+              </motion.div>
 
-              <div id="fundador" className="scroll-mt-24">
+              <motion.div variants={heroItemVariants} id="fundador" className="scroll-mt-24">
                 <SectionErrorBoundary>
                   <Suspense fallback={<SimpleSectionSkeleton />}>
                     <FounderCard
@@ -1039,17 +1079,19 @@ export default function App() {
                     />
                   </Suspense>
                 </SectionErrorBoundary>
-              </div>
+              </motion.div>
 
               {/* Banner de Base Técnica e Especialidades */}
-              <SectionErrorBoundary>
-                <Suspense fallback={<SimpleSectionSkeleton />}>
-                  <TechnicalSpecialtiesBanner />
-                </Suspense>
-              </SectionErrorBoundary>
+              <motion.div variants={heroItemVariants}>
+                <SectionErrorBoundary>
+                  <Suspense fallback={<SimpleSectionSkeleton />}>
+                    <TechnicalSpecialtiesBanner />
+                  </Suspense>
+                </SectionErrorBoundary>
+              </motion.div>
             </div>
           </section>
-        </div>
+        </motion.div>
       )}
 
       {/* TELA 02: Serviços & Condições Comerciais */}

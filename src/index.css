@@ -54,6 +54,11 @@
   content-visibility: visible;
 }
 
+/* Utility to lock scrolling on body element */
+.lock-scroll {
+  overflow: hidden !important;
+}
+
 /* Aplicação sutil da variável --accent-color em bordas, gradientes e brilhos */
 .accent-border-subtle {
   border-color: rgba(var(--accent-color-rgb, 6, 182, 212), 0.28);
@@ -2181,10 +2186,8 @@ html {
 }
 
 .hero-pillars-expanded-text {
-  text-align: justify;
-  text-align-last: left;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+  text-align: center;
+  text-align-last: center;
 }
 
 /* Celulares no modo paisagem (horizontal): exibe os 4 pilares em 4 colunas compactas e equilibradas */
