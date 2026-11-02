@@ -131,18 +131,16 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
   const showcaseSummaryVariants: Variants = {
     hidden: {
       opacity: 0,
-      y: 20,
       transition: {
         ease: 'easeOut',
-        duration: 0.25,
+        duration: isReduced ? 0 : 0.15,
       },
     },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
         ease: 'easeOut',
-        duration: 0.35,
+        duration: isReduced ? 0 : 0.2,
       },
     },
   };
@@ -762,7 +760,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   onClick={handleToggleShowcaseExpand}
                   aria-expanded={isShowcaseExpanded}
                   aria-controls="hero-showcase-summary"
-                  className="mt-2.5 w-full px-3 py-2 rounded-xl bg-slate-950/60 hover:bg-slate-900/80 border border-blue-500/20 hover:border-blue-400/40 flex items-center justify-between text-xs text-blue-300/90 hover:text-blue-200 font-medium select-none cursor-pointer transition-colors"
+                  className="mt-2.5 w-full px-3 py-2 rounded-xl bg-slate-950/60 hover:bg-slate-900/80 active:bg-slate-900/90 border border-blue-500/20 hover:border-blue-400/40 flex items-center justify-between text-xs text-blue-300/90 hover:text-blue-200 font-medium select-none cursor-pointer transition-colors active:scale-[0.99] touch-manipulation"
                 >
                   <span className="inline-flex items-center gap-1.5 text-left">
                     <Sparkles className="w-3.5 h-3.5 text-blue-400 shrink-0" aria-hidden="true" />
@@ -774,7 +772,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   </span>
                   <ArrowDown
                     aria-hidden="true"
-                    className={`w-3.5 h-3.5 text-blue-400 shrink-0 transition-transform duration-300 ${
+                    className={`w-3.5 h-3.5 text-blue-400 shrink-0 transition-transform duration-200 ${
                       isShowcaseExpanded ? 'rotate-180' : 'rotate-0'
                     }`}
                   />
@@ -786,20 +784,20 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   initial="hidden"
                   animate={isShowcaseExpanded ? 'visible' : 'hidden'}
                   variants={showcaseSummaryVariants}
-                  className={`grid transition-[grid-template-rows,margin] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                  className={`grid transition-[grid-template-rows,margin] duration-200 ease-out will-change-[grid-template-rows] ${
                     isShowcaseExpanded
-                      ? 'grid-rows-[1fr] mt-3'
+                      ? 'grid-rows-[1fr] mt-2.5'
                       : 'grid-rows-[0fr] mt-0 pointer-events-none'
                   }`}
                 >
-                  <div className="overflow-hidden">
-                    <div className="rounded-xl bg-slate-950/90 border border-blue-500/25 p-3.5 sm:p-4 space-y-2.5 text-left shadow-inner">
-                      <div className="flex items-center justify-between border-b border-blue-500/15 pb-2">
+                  <div className="overflow-hidden min-h-0">
+                    <div className="bracket-panel relative rounded-2xl bg-slate-950/95 border border-blue-400/40 hover:border-blue-400/60 p-3.5 sm:p-4 space-y-2.5 text-left shadow-[0_0_24px_rgba(37,99,235,0.18),inset_0_1px_0_0_rgba(147,197,253,0.25)] transition-[border-color,box-shadow] duration-300 contain-paint">
+                      <div className="flex items-center justify-between border-b border-blue-500/20 pb-2">
                         <span className="text-xs font-semibold text-white flex items-center gap-1.5">
                           <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                           <span>O que o seu negócio ganha na prática</span>
                         </span>
-                        <span className="text-[10px] font-medium text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
+                        <span className="text-[10px] font-medium text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-500/30">
                           Simples e direto
                         </span>
                       </div>
@@ -809,7 +807,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                       </p>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0.5">
-                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                        <div className="p-2.5 rounded-xl bg-slate-900/70 border border-blue-500/20 hover:border-blue-400/40 transition-colors">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             <span>Preparado para o Google</span>
@@ -819,7 +817,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </p>
                         </div>
 
-                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                        <div className="p-2.5 rounded-xl bg-slate-900/70 border border-blue-500/20 hover:border-blue-400/40 transition-colors">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             <span>Bom no celular</span>
@@ -829,7 +827,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </p>
                         </div>
 
-                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                        <div className="p-2.5 rounded-xl bg-slate-900/70 border border-blue-500/20 hover:border-blue-400/40 transition-colors">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             <span>Direto no WhatsApp</span>

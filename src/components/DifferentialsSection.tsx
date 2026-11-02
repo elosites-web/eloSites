@@ -208,12 +208,12 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
         {/* Aviso de responsabilidade e alinhamento estratégico */}
         <BiReveal direction="up" delay={150}>
           <div className="mt-10 sm:mt-12 max-w-2xl mx-auto text-center px-4">
-            <p className="inline-flex items-center justify-center gap-3 text-sm sm:text-base text-slate-100 font-medium leading-relaxed bg-[#0b122e] border border-blue-400/40 rounded-2xl px-5 sm:px-6 py-4 shadow-xl shadow-black/70">
+            <p className="inline-flex items-center justify-center gap-3 text-sm sm:text-base text-yellow-200 font-medium leading-relaxed bg-[#0b122e] bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-400/60 rounded-2xl px-5 sm:px-6 py-4 shadow-[0_0_25px_rgba(234,179,8,0.2)]">
               <CheckCircle2
-                className="w-5 h-5 text-emerald-400 shrink-0 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+                className="w-5 h-5 text-yellow-400 shrink-0 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]"
                 aria-hidden="true"
               />
-              <span className="text-white font-medium">
+              <span className="text-yellow-200 font-medium">
                 O site apoia sua divulgação. Você continua responsável por atrair pessoas, atender os contatos e conduzir as vendas.
               </span>
             </p>

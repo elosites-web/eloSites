@@ -217,9 +217,10 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
   }
 
   // Renderiza 3 blocos completos para garantir rolagem contínua infinita tanto para esquerda quanto para direita
-  const renderItemSet = (isKeyRef = false) => (
+  const renderItemSet = (isKeyRef = false, isAriaHidden = false) => (
     <div
       ref={isKeyRef ? singleSetRef : undefined}
+      aria-hidden={isAriaHidden ? 'true' : undefined}
       className="flex items-center gap-4 sm:gap-6 shrink-0"
     >
       {items.map((item, idx) => (
@@ -243,7 +244,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
     <div className={`relative group/marquee ${className}`}>
       {/* Controles de direção táteis e acessíveis nas laterais (desktop e mobile) */}
       {showControls && (
-        <div className="absolute top-1/2 -translate-y-1/2 left-1 right-1 z-20 flex justify-between pointer-events-none opacity-0 group-hover/marquee:opacity-100 transition-opacity duration-300">
+        <div className="absolute top-1/2 -translate-y-1/2 left-1 right-1 z-20 flex justify-between pointer-events-none opacity-0 group-hover/marquee:opacity-100 group-focus-within/marquee:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
           <button
             type="button"
             onClick={(e) => {
@@ -298,9 +299,9 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
           className="flex items-center gap-4 sm:gap-6 will-change-transform whitespace-nowrap"
           style={{ width: 'max-content' }}
         >
-          {renderItemSet(true)}
-          {renderItemSet(false)}
-          {renderItemSet(false)}
+          {renderItemSet(true, false)}
+          {renderItemSet(false, true)}
+          {renderItemSet(false, true)}
         </div>
       </div>
 

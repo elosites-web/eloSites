@@ -1,7 +1,5 @@
-import React, { useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
+import React from 'react';
 import {
-  Code2,
   Sparkles,
   Cpu,
   Layers,
@@ -14,33 +12,23 @@ import {
   BarChart3,
   Target,
 } from 'lucide-react';
-import { shouldReduceMedia } from '../mediaPrefs';
 import { BiReveal } from './BiReveal';
+import { InfiniteMarquee, MarqueeItem } from './InfiniteMarquee';
 
-interface TechBadge {
-  id: string;
-  name: string;
-  tag: string;
-  icon: React.ReactNode;
-}
-
-const TECH_STACK_ITEMS: TechBadge[] = [
+const TECH_STACK_ITEMS: MarqueeItem[] = [
   {
-    id: 'html5',
-    name: 'HTML5',
-    tag: 'Estrutura',
+    text: 'HTML5',
+    badge: 'Estrutura',
     icon: <FileCode2 className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />,
   },
   {
-    id: 'css3',
-    name: 'CSS3',
-    tag: 'Estilização',
+    text: 'CSS3',
+    badge: 'Estilização',
     icon: <Layers className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />,
   },
   {
-    id: 'javascript',
-    name: 'JavaScript',
-    tag: 'Interatividade',
+    text: 'JavaScript',
+    badge: 'Interatividade',
     icon: (
       <span className="w-4 h-4 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center justify-center leading-none">
         JS
@@ -48,9 +36,8 @@ const TECH_STACK_ITEMS: TechBadge[] = [
     ),
   },
   {
-    id: 'typescript',
-    name: 'TypeScript',
-    tag: 'Confiabilidade',
+    text: 'TypeScript',
+    badge: 'Confiabilidade',
     icon: (
       <span className="w-4 h-4 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40 inline-flex items-center justify-center leading-none">
         TS
@@ -58,9 +45,8 @@ const TECH_STACK_ITEMS: TechBadge[] = [
     ),
   },
   {
-    id: 'react',
-    name: 'React',
-    tag: 'Interface moderna',
+    text: 'React',
+    badge: 'Interface moderna',
     icon: (
       <svg
         className="w-3.5 h-3.5 text-cyan-400"
@@ -80,99 +66,60 @@ const TECH_STACK_ITEMS: TechBadge[] = [
     ),
   },
   {
-    id: 'vite',
-    name: 'Vite',
-    tag: 'Velocidade',
+    text: 'Vite',
+    badge: 'Velocidade',
     icon: <Zap className="w-3.5 h-3.5 text-purple-400" aria-hidden="true" />,
   },
   {
-    id: 'tailwind',
-    name: 'Tailwind CSS',
-    tag: 'Design leve',
+    text: 'Tailwind CSS',
+    badge: 'Design leve',
     icon: <Layers className="w-3.5 h-3.5 text-sky-400" aria-hidden="true" />,
   },
   {
-    id: 'motion',
-    name: 'Motion',
-    tag: 'Transições suaves',
+    text: 'Motion',
+    badge: 'Transições suaves',
     icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />,
   },
 ];
 
-const SPECIALTY_ITEMS: TechBadge[] = [
+const SPECIALTY_ITEMS: MarqueeItem[] = [
   {
-    id: 'sites-institucionais',
-    name: 'Sites institucionais',
-    tag: 'Presença completa',
+    text: 'Sites institucionais',
+    badge: 'Presença completa',
     icon: <Globe className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />,
   },
   {
-    id: 'landing-pages',
-    name: 'Landing Pages',
-    tag: 'Foco em conversão',
+    text: 'Landing Pages',
+    badge: 'Foco em conversão',
     icon: <Layout className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />,
   },
   {
-    id: 'design-responsivo',
-    name: 'Design responsivo',
-    tag: 'Celular e PC',
+    text: 'Design responsivo',
+    badge: 'Celular e PC',
     icon: <Smartphone className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />,
   },
   {
-    id: 'seo-tecnico',
-    name: 'SEO técnico essencial',
-    tag: 'Google & Buscadores',
+    text: 'SEO técnico essencial',
+    badge: 'Google & Buscadores',
     icon: <Search className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />,
   },
   {
-    id: 'analytics',
-    name: 'Integração com Analytics',
-    tag: 'Métricas de visitas',
+    text: 'Integração com Analytics',
+    badge: 'Métricas de visitas',
     icon: <BarChart3 className="w-3.5 h-3.5 text-violet-400" aria-hidden="true" />,
   },
   {
-    id: 'pixels-gtm',
-    name: 'Pixels e Tag Manager',
-    tag: 'Acompanhamento',
+    text: 'Pixels e Tag Manager',
+    badge: 'Acompanhamento',
     icon: <Target className="w-3.5 h-3.5 text-pink-400" aria-hidden="true" />,
   },
 ];
 
 export const TechnicalSpecialtiesBanner: React.FC = () => {
-  const systemPrefersReduced = useReducedMotion();
-  const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-  const bannerContainerRef = useRef<HTMLDivElement>(null);
-
-  // Renderiza um conjunto de selos acessíveis
-  const renderBadges = (items: TechBadge[], isAriaHidden = false) => (
-    <div
-      className="flex items-center gap-3 shrink-0"
-      aria-hidden={isAriaHidden ? 'true' : undefined}
-    >
-      {items.map((item) => (
-        <div
-          key={item.id}
-          tabIndex={isAriaHidden ? -1 : 0}
-          role="listitem"
-          className="group/badge inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-[#080d22]/90 hover:bg-[#0e1635] focus-visible:bg-[#0e1635] border border-blue-500/20 hover:border-cyan-400/50 focus-visible:border-cyan-400/60 focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus-visible:outline-none transition-all duration-200 select-none cursor-default shadow-sm shadow-black/40"
-          title={`${item.name} — ${item.tag}`}
-        >
-          <span className="shrink-0">{item.icon}</span>
-          <span className="text-xs sm:text-[13px] font-semibold text-slate-100 whitespace-nowrap tracking-tight group-hover/badge:text-cyan-200 transition-colors">
-            {item.name}
-          </span>
-          <span className="text-[10px] font-mono text-slate-400/90 bg-slate-900/80 px-1.5 py-0.5 rounded border border-white/[0.06] whitespace-nowrap">
-            {item.tag}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <BiReveal direction="up" delay={80} className="w-full">
       <section
-        ref={bannerContainerRef}
+        id="base-tecnica-especialidades"
         aria-labelledby="technical-specialties-heading"
         className="relative w-full rounded-2xl sm:rounded-3xl p-5 sm:p-7 lg:p-8 bg-gradient-to-b from-[#070b1a]/95 to-[#050814]/95 border border-blue-500/20 shadow-2xl shadow-black/70 backdrop-blur-xl overflow-hidden mt-8 sm:mt-10"
       >
@@ -218,167 +165,44 @@ export const TechnicalSpecialtiesBanner: React.FC = () => {
           </div>
         </div>
 
-        {/* CSS Scoped das Trilhas Deslizantes */}
-        <style>{`
-          @keyframes elo-track-slide-left {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-          }
-          @keyframes elo-track-slide-right {
-            0% { transform: translate3d(-50%, 0, 0); }
-            100% { transform: translate3d(0, 0, 0); }
-          }
-          .elo-marquee-left {
-            display: flex;
-            width: max-content;
-            animation: elo-track-slide-left 34s linear infinite;
-          }
-          .elo-marquee-right {
-            display: flex;
-            width: max-content;
-            animation: elo-track-slide-right 32s linear infinite;
-          }
-          .elo-marquee-container:hover .elo-marquee-left,
-          .elo-marquee-container:hover .elo-marquee-right,
-          .elo-marquee-container:focus-within .elo-marquee-left,
-          .elo-marquee-container:focus-within .elo-marquee-right {
-            animation-play-state: paused;
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .elo-marquee-left,
-            .elo-marquee-right {
-              animation: none !important;
-              transform: none !important;
-              width: 100% !important;
-              flex-wrap: wrap !important;
-            }
-            .elo-marquee-left [aria-hidden="true"],
-            .elo-marquee-right [aria-hidden="true"] {
-              display: none !important;
-            }
-          }
-        `}</style>
-
-        {/* Conteúdo com os Selos em Duas Faixas Opostas */}
-        {prefersReduced ? (
-          /* Modo Acessível para Movimento Reduzido: Selos estáticos organizados */
-          <div className="relative z-10 pt-5 space-y-5">
-            <div>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-400 font-semibold mb-2 block">
-                Base Técnica:
+        {/* Conteúdo com os dois banners independentes reutilizando InfiniteMarquee */}
+        <div className="relative z-10 pt-5 sm:pt-6 space-y-6">
+          {/* Faixa 1: BASE TÉCNICA */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
+              <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-300 font-bold">
+                Base Técnica
               </span>
-              <div
-                role="list"
-                aria-label="Lista de tecnologias da base técnica"
-                className="flex flex-wrap gap-2.5"
-              >
-                {TECH_STACK_ITEMS.map((item) => (
-                  <div
-                    key={item.id}
-                    role="listitem"
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#080d22] border border-blue-500/20 text-xs font-semibold text-slate-100"
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.name}</span>
-                    <span className="text-[10px] font-mono text-slate-400">({item.tag})</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-violet-400 font-semibold mb-2 block">
-                Especialidades:
-              </span>
-              <div
-                role="list"
-                aria-label="Lista de especialidades oferecidas"
-                className="flex flex-wrap gap-2.5"
-              >
-                {SPECIALTY_ITEMS.map((item) => (
-                  <div
-                    key={item.id}
-                    role="listitem"
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#080d22] border border-purple-500/20 text-xs font-semibold text-slate-100"
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.name}</span>
-                    <span className="text-[10px] font-mono text-slate-400">({item.tag})</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <InfiniteMarquee
+              items={TECH_STACK_ITEMS}
+              speed={70}
+              reverse={false}
+              showControls={true}
+              ariaLabel="Banner deslizante de tecnologias da base técnica"
+            />
           </div>
-        ) : (
-          /* Modo Padrão: Duas faixas contínuas deslizantes em direções opostas */
-          <div className="relative z-10 pt-5 sm:pt-6 space-y-4">
-            {/* Faixa 1: BASE TÉCNICA (Desliza suavemente para a esquerda) */}
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 px-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
-                <span className="text-[11px] font-mono uppercase tracking-wider text-cyan-300 font-bold">
-                  Base Técnica
-                </span>
-              </div>
 
-              <div
-                className="elo-marquee-container relative overflow-hidden py-1"
-                style={{
-                  maskImage:
-                    'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                  WebkitMaskImage:
-                    'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                }}
-              >
-                <div
-                  role="list"
-                  aria-label="Tecnologias da base técnica (faixa interativa)"
-                  className="elo-marquee-left gap-3"
-                >
-                  {renderBadges(TECH_STACK_ITEMS, false)}
-                  {renderBadges(TECH_STACK_ITEMS, true)}
-                </div>
-              </div>
-            </div>
-
-            {/* Faixa 2: ESPECIALIDADES (Desliza suavemente para a direita) */}
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 px-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-400" aria-hidden="true" />
-                <span className="text-[11px] font-mono uppercase tracking-wider text-violet-300 font-bold">
-                  Especialidades
-                </span>
-              </div>
-
-              <div
-                className="elo-marquee-container relative overflow-hidden py-1"
-                style={{
-                  maskImage:
-                    'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                  WebkitMaskImage:
-                    'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                }}
-              >
-                <div
-                  role="list"
-                  aria-label="Especialidades oferecidas (faixa interativa)"
-                  className="elo-marquee-right gap-3"
-                >
-                  {renderBadges(SPECIALTY_ITEMS, false)}
-                  {renderBadges(SPECIALTY_ITEMS, true)}
-                </div>
-              </div>
-            </div>
-
-            {/* Dica de usabilidade discreta */}
-            <div className="text-center pt-2">
-              <span className="text-[10px] text-slate-400 font-mono">
-                Passe o mouse ou navegue com Tab para pausar os selos
+          {/* Faixa 2: ESPECIALIDADES (Direção inicial oposta) */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400" aria-hidden="true" />
+              <span className="text-[11px] font-mono uppercase tracking-wider text-violet-300 font-bold">
+                Especialidades
               </span>
             </div>
+
+            <InfiniteMarquee
+              items={SPECIALTY_ITEMS}
+              speed={70}
+              reverse={true}
+              showControls={true}
+              ariaLabel="Banner deslizante de especialidades oferecidas"
+            />
           </div>
-        )}
+        </div>
       </section>
     </BiReveal>
   );
