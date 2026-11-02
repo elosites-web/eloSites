@@ -835,7 +835,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
         {/* BANNER DESLIZANTE DOS NICHOS */}
         <div className="mt-14 pt-8 border-t border-blue-500/15 scroll-fade-card">
           <div className="text-center mb-5 flex items-center justify-center">
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(34,211,238,0.35)] hover:scale-102 active:scale-98 uppercase">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/40 border border-cyan-500/30 shadow-sm uppercase select-none cursor-default">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
               <span>Sites sob medida para o seu negócio</span>
               <ArrowDown className="w-3.5 h-3.5" aria-hidden="true" />
