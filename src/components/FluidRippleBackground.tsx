@@ -126,7 +126,7 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       const lineMaterial = new THREE.LineBasicMaterial({
         color: 0x3b82f6,
         transparent: true,
-        opacity: isContained ? 0.32 : 0.22,
+        opacity: isContained ? 0.48 : 0.22,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -136,7 +136,7 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       scene.add(gridMesh);
 
       // 2. Poeira estelar sutil de profundidade
-      const particleCount = isContained ? 36 : 50;
+      const particleCount = isContained ? 48 : 50;
       const particleGeo = new THREE.BufferGeometry();
       const particlePos = new Float32Array(particleCount * 3);
       for (let i = 0; i < particleCount * 3; i += 3) {
@@ -147,9 +147,9 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
       const particleMat = new THREE.PointsMaterial({
         color: 0x60a5fa,
-        size: 0.12,
+        size: isContained ? 0.16 : 0.12,
         transparent: true,
-        opacity: 0.35,
+        opacity: isContained ? 0.55 : 0.35,
         blending: THREE.AdditiveBlending,
       });
       const particleSystem = new THREE.Points(particleGeo, particleMat);

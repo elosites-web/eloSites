@@ -5,6 +5,7 @@ import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { canFitNavbar } from '../navSpace';
+import { FluidRippleBackground } from './FluidRippleBackground';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -56,20 +57,18 @@ export function useMobileMenuLock(
   useEffect(() => {
     if (isMenuOpen && containerRef?.current) {
       containerRef.current.style.zIndex = '49';
-      containerRef.current.style.backgroundColor = 'rgba(9, 14, 35, 0.95)';
-      containerRef.current.style.backdropFilter = 'blur(12px)';
-      (containerRef.current.style as any).webkitBackdropFilter = 'blur(12px)';
+      containerRef.current.style.backgroundColor = '#0b163b';
+      containerRef.current.style.opacity = '1';
     }
   }, [isMenuOpen, containerRef]);
 
   const menuContainerClassName =
-    'fixed inset-0 top-[54px] sm:top-[60px] z-[49] flex flex-col justify-start bg-[#090E23]/95 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/80';
+    'fixed inset-0 top-[54px] sm:top-[60px] z-[49] flex flex-col justify-start bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/90';
 
   const menuContainerStyle: React.CSSProperties = {
     zIndex: 49,
-    backgroundColor: 'rgba(9, 14, 35, 0.95)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
+    backgroundColor: '#0b163b',
+    opacity: 1,
   };
 
   return {
@@ -272,7 +271,7 @@ export const Header: React.FC<HeaderProps> = ({
         ref={headerRef}
         id="header-nav"
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto ${
-          isMenuOpen ? 'bg-[#090E23]/95' : 'bg-[#050814]/90'
+          isMenuOpen ? 'bg-[#090E23]' : 'bg-[#050814]/90'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -381,6 +380,12 @@ export const Header: React.FC<HeaderProps> = ({
           className={menuContainerClassName}
           onClick={handleCloseMenu}
         >
+          {/* Fundo 3D animado do rodapé (FluidRippleBackground) diretamente atrás dos botões do menu */}
+          <FluidRippleBackground
+            variant="contained"
+            className="absolute inset-0 z-0 opacity-90 pointer-events-none"
+          />
+
           {/* Painel de links sobre a página atual */}
           <div
             className="relative z-10 w-full max-w-lg mx-auto py-6 sm:py-8 px-6 flex flex-col items-center pointer-events-auto"
@@ -422,8 +427,8 @@ export const Header: React.FC<HeaderProps> = ({
                       onTouchStart={() => preloadScreen(screen.id)}
                       className={`group relative w-full max-w-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                         isActive
-                          ? 'bg-blue-600/20 border border-blue-500/40 text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]'
-                          : 'bg-slate-900/40 hover:bg-slate-900/70 border border-white/[0.05] hover:border-blue-500/30 text-slate-300 hover:text-white'
+                          ? 'bg-blue-600/95 border border-blue-300 text-white shadow-[0_0_20px_rgba(59,130,246,0.6)] font-bold'
+                          : 'bg-[#09112e]/85 hover:bg-[#0f1d4f]/95 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/60 text-slate-100 hover:text-white shadow-md shadow-black/50'
                       }`}
                     >
                       {isActive && (
@@ -447,8 +452,8 @@ export const Header: React.FC<HeaderProps> = ({
               })}
             </ul>
 
-            {/* Linha discreta de fechamento / dica de navegação */}
-            <div className="mt-6 pt-4 border-t border-white/[0.08] text-center w-full max-w-xs">
+            {/* Dica de navegação */}
+            <div className="mt-6 pt-2 text-center w-full max-w-xs">
               <span className="text-xs text-slate-400">
                 Toque fora ou pressione <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-slate-800 border border-slate-700 rounded text-slate-300">Esc</kbd> para fechar
               </span>
