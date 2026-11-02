@@ -1219,9 +1219,11 @@ a[id*="whatsapp"] {
 }
 
 .nav-menu-link-item {
+  position: relative;
   padding: clamp(0.15rem, 0.6dvh, 0.38rem) clamp(0.75rem, 2.5vw, 1.25rem);
   color: #cbd5e1;
-  transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  border-bottom: 2px solid transparent;
+  transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms ease;
 }
 
 .nav-menu-link-item:focus-visible,
@@ -1236,9 +1238,36 @@ a[id*="whatsapp"] {
   }
 }
 
-.nav-menu-link-item.is-active {
+/* Borda inferior sutil com gradiente (de índigo para azul) que aparece apenas quando o item do menu estiver ativo */
+.nav-menu-link-item.is-active,
+.nav-menu-link-item[aria-current="page"] {
   color: #ffffff;
   font-weight: 700;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, #6366f1, #3b82f6) 1;
+}
+
+/* Linha com gradiente suave também via pseudo-elemento para acabamento refinado com bordas arredondadas */
+.nav-menu-link-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 2px;
+  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  border-radius: 9999px;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+
+.nav-menu-link-item.is-active::after,
+.nav-menu-link-item[aria-current="page"]::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .nav-menu-link-text {

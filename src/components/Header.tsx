@@ -5,7 +5,12 @@ import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { canFitNavbar } from '../navSpace';
-import { FluidRippleBackground } from './FluidRippleBackground';
+import { useCanRun3DEffect } from '../mediaPrefs';
+import { FluidRippleFallback } from './FluidRippleFallback';
+
+const FluidRippleBackground = React.lazy(() =>
+  import('./FluidRippleBackground').then((mod) => ({ default: mod.FluidRippleBackground }))
+);
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -103,6 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
+  const canRun3D = useCanRun3DEffect();
 
   // Verificação dinâmica baseada no espaço real disponível vs largura necessária de logo e links
   const checkNavFit = useCallback(() => {
@@ -334,10 +340,11 @@ export const Header: React.FC<HeaderProps> = ({
                       onClick={() => onSelectScreen(item.id)}
                       onPointerEnter={() => preloadScreen(item.id)}
                       onFocus={() => preloadScreen(item.id)}
-                      className={`relative group px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`nav-menu-link-item relative group px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                         isActive
-                          ? 'text-white font-semibold bg-blue-600/20 border border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.25)]'
-                          : 'text-slate-300 hover:text-blue-100 hover:bg-blue-500/[0.07] border border-transparent hover:border-blue-500/20'
+                          ? 'is-active text-white font-semibold bg-blue-600/20 shadow-[0_0_12px_rgba(59,130,246,0.25)]'
+                          : 'text-slate-300 hover:text-blue-100 hover:bg-blue-500/[0.07] border-transparent hover:border-blue-500/20'
                       }`}
                     >
                       <span className="relative z-10">{item.label}</span>
@@ -345,13 +352,6 @@ export const Header: React.FC<HeaderProps> = ({
                       {!isActive && (
                         <span
                           className="absolute bottom-1 left-2.5 right-2.5 h-[1.5px] rounded-full bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0 opacity-0 scale-x-50 group-hover:opacity-100 group-hover:scale-x-100 transition-all duration-200 ease-out origin-center pointer-events-none"
-                          aria-hidden="true"
-                        />
-                      )}
-                      {/* Marcador luminoso exclusivo do estado ativo */}
-                      {isActive && (
-                        <span
-                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-blue-400 shadow-[0_0_8px_#3b82f6]"
                           aria-hidden="true"
                         />
                       )}
@@ -380,11 +380,27 @@ export const Header: React.FC<HeaderProps> = ({
           className={menuContainerClassName}
           onClick={handleCloseMenu}
         >
-          {/* Fundo 3D animado do rodapé (FluidRippleBackground) diretamente atrás dos botões do menu */}
-          <FluidRippleBackground
-            variant="contained"
-            className="absolute inset-0 z-0 opacity-90 pointer-events-none"
-          />
+          {/* Fundo animado (Three.js sob demanda com Suspense quando permitido, ou fallback CSS estático) */}
+          {canRun3D ? (
+            <React.Suspense
+              fallback={
+                <FluidRippleFallback
+                  variant="contained"
+                  className="absolute inset-0 z-0 opacity-90 pointer-events-none"
+                />
+              }
+            >
+              <FluidRippleBackground
+                variant="contained"
+                className="absolute inset-0 z-0 opacity-90 pointer-events-none"
+              />
+            </React.Suspense>
+          ) : (
+            <FluidRippleFallback
+              variant="contained"
+              className="absolute inset-0 z-0 opacity-90 pointer-events-none"
+            />
+          )}
 
           {/* Painel de links sobre a página atual */}
           <div
@@ -425,9 +441,10 @@ export const Header: React.FC<HeaderProps> = ({
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
                       onTouchStart={() => preloadScreen(screen.id)}
-                      className={`group relative w-full max-w-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`nav-menu-link-item group relative w-full max-w-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                         isActive
-                          ? 'bg-blue-600/95 border border-blue-300 text-white shadow-[0_0_20px_rgba(59,130,246,0.6)] font-bold'
+                          ? 'is-active bg-blue-600/95 text-white shadow-[0_0_20px_rgba(59,130,246,0.6)] font-bold'
                           : 'bg-[#09112e]/85 hover:bg-[#0f1d4f]/95 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/60 text-slate-100 hover:text-white shadow-md shadow-black/50'
                       }`}
                     >

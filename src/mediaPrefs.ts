@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 // Preferências/limitações do aparelho usadas para decidir se animações pesadas devem rodar.
 
 export function prefersReducedMotion(): boolean {
@@ -151,3 +153,57 @@ export function getMotionTier(): MotionTier {
 
   return 'lite';
 }
+
+/**
+ * Decisão antecipada: verifica se o efeito 3D (Three.js) pode rodar no aparelho.
+ * DEVE ser chamada ANTES do import() dinâmico para não baixar Three.js
+ * desnecessariamente quando prefers-reduced-motion: reduce, saveData,
+ * getMotionTier() === 'none' ou WebGL indisponível.
+ */
+export function canRun3DEffect(): boolean {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return false;
+  }
+  if (shouldReduceMedia()) {
+    return false;
+  }
+  if (getMotionTier() === 'none') {
+    return false;
+  }
+  if (!webglSupported()) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Hook React reativo para acompanhar permissão de efeitos 3D,
+ * respondendo em tempo real a alterações de preferência no SO.
+ */
+export function useCanRun3DEffect(): boolean {
+  const [canRun, setCanRun] = useState<boolean>(() => canRun3DEffect());
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const update = () => {
+      setCanRun(canRun3DEffect());
+    };
+
+    try {
+      const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (typeof media.addEventListener === 'function') {
+        media.addEventListener('change', update);
+        return () => media.removeEventListener('change', update);
+      } else if (typeof (media as unknown as { addListener?: (fn: () => void) => void }).addListener === 'function') {
+        (media as unknown as { addListener: (fn: () => void) => void }).addListener(update);
+        return () => (media as unknown as { removeListener: (fn: () => void) => void }).removeListener(update);
+      }
+    } catch {
+      // Navegadores sem suporte a matchMedia
+    }
+  }, []);
+
+  return canRun;
+}
+

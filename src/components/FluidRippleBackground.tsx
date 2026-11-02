@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { getMotionTier, shouldReduceMedia, webglSupported, markWebglFailed } from '../mediaPrefs';
+import { FluidRippleFallback } from './FluidRippleFallback';
 
 interface FluidRippleBackgroundProps {
   className?: string;
@@ -27,13 +28,83 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
     let renderer: THREE.WebGLRenderer | null = null;
     let scene: THREE.Scene | null = null;
     let camera: THREE.PerspectiveCamera | null = null;
+    let gridGeometry: THREE.BufferGeometry | null = null;
+    let lineMaterial: THREE.LineBasicMaterial | null = null;
+    let particleGeo: THREE.BufferGeometry | null = null;
+    let particleMat: THREE.PointsMaterial | null = null;
     let animationFrameId: number | null = null;
     let isPaused = false;
     let resizeObserver: ResizeObserver | null = null;
+    let timerA: ReturnType<typeof setTimeout> | null = null;
+    let timerB: ReturnType<typeof setTimeout> | null = null;
+    let listenersAttached = false;
+
+    let handlePointerRef: ((e: MouseEvent | TouchEvent) => void) | null = null;
+    let handleWindowResizeRef: (() => void) | null = null;
+    let handleVisibilityChangeRef: (() => void) | null = null;
+
+    const cleanupResources = () => {
+      if (timerA) {
+        clearTimeout(timerA);
+        timerA = null;
+      }
+      if (timerB) {
+        clearTimeout(timerB);
+        timerB = null;
+      }
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      if (listenersAttached) {
+        if (handlePointerRef) {
+          window.removeEventListener('mousemove', handlePointerRef);
+          window.removeEventListener('touchmove', handlePointerRef);
+        }
+        if (handleWindowResizeRef) {
+          window.removeEventListener('resize', handleWindowResizeRef);
+          window.removeEventListener('orientationchange', handleWindowResizeRef);
+        }
+        if (handleVisibilityChangeRef) {
+          document.removeEventListener('visibilitychange', handleVisibilityChangeRef);
+        }
+        listenersAttached = false;
+      }
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextcreationerror', handleContextLost);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+      }
+
+      gridGeometry?.dispose();
+      gridGeometry = null;
+      lineMaterial?.dispose();
+      lineMaterial = null;
+      particleGeo?.dispose();
+      particleGeo = null;
+      particleMat?.dispose();
+      particleMat = null;
+
+      if (renderer) {
+        try {
+          const gl = renderer.getContext();
+          const loseExt = gl?.getExtension('WEBGL_lose_context');
+          loseExt?.loseContext();
+        } catch {
+          // ignore
+        }
+        renderer.dispose();
+        renderer = null;
+      }
+      scene = null;
+      camera = null;
+    };
 
     // Se o navegador disparar perda ou erro de criação de contexto WebGL, ativa o fallback visual CSS
     const handleContextLost = (e: Event) => {
       e.preventDefault();
+      cleanupResources();
       markWebglFailed();
       setUseCssFallback(true);
     };
@@ -58,6 +129,7 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       });
 
       if (!renderer || !renderer.getContext()) {
+        cleanupResources();
         markWebglFailed();
         setUseCssFallback(true);
         return;
@@ -119,11 +191,11 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         }
       }
 
-      const gridGeometry = new THREE.BufferGeometry();
+      gridGeometry = new THREE.BufferGeometry();
       gridGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       gridGeometry.setIndex(indices);
 
-      const lineMaterial = new THREE.LineBasicMaterial({
+      lineMaterial = new THREE.LineBasicMaterial({
         color: 0x3b82f6,
         transparent: true,
         opacity: isContained ? 0.48 : 0.22,
@@ -137,7 +209,7 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
 
       // 2. Poeira estelar sutil de profundidade
       const particleCount = isContained ? 48 : 50;
-      const particleGeo = new THREE.BufferGeometry();
+      particleGeo = new THREE.BufferGeometry();
       const particlePos = new Float32Array(particleCount * 3);
       for (let i = 0; i < particleCount * 3; i += 3) {
         particlePos[i] = (Math.random() - 0.5) * baseGridWidth;
@@ -145,7 +217,7 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         particlePos[i + 2] = (Math.random() - 0.5) * 16 - 2;
       }
       particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
-      const particleMat = new THREE.PointsMaterial({
+      particleMat = new THREE.PointsMaterial({
         color: 0x60a5fa,
         size: isContained ? 0.16 : 0.12,
         transparent: true,
@@ -174,13 +246,30 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         targetMouseX = (clientX / window.innerWidth - 0.5) * 2;
         targetMouseY = -(clientY / window.innerHeight - 0.5) * 2;
       };
+      handlePointerRef = handlePointer;
+
+      const handleWindowResize = () => {
+        const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
+        const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
+        updateSize(curW, curH);
+      };
+      handleWindowResizeRef = handleWindowResize;
+
+      const handleVisibilityChange = () => {
+        isPaused = document.hidden;
+      };
+      handleVisibilityChangeRef = handleVisibilityChange;
 
       window.addEventListener('mousemove', handlePointer, { passive: true });
       window.addEventListener('touchmove', handlePointer, { passive: true });
+      window.addEventListener('resize', handleWindowResize, { passive: true });
+      window.addEventListener('orientationchange', handleWindowResize, { passive: true });
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      listenersAttached = true;
 
       // Atualizador de tamanho responsivo com overscan garantido
       const updateSize = (w: number, h: number) => {
-        if (!renderer || !camera) return;
+        if (!renderer || !camera || !gridMesh || !particleSystem) return;
         const width = Math.max(w, 100);
         const height = Math.max(h, 100);
         camera.aspect = width / height;
@@ -206,25 +295,17 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       updateSize(initialWidth, initialHeight);
 
       // Timers para garantir sincronização de tamanho em modais animados ou virada de tela
-      const timerA = setTimeout(() => {
+      timerA = setTimeout(() => {
         const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
         const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
         updateSize(curW, curH);
       }, 50);
 
-      const timerB = setTimeout(() => {
+      timerB = setTimeout(() => {
         const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
         const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
         updateSize(curW, curH);
       }, 180);
-
-      const handleWindowResize = () => {
-        const curW = isContained ? (container.clientWidth || window.innerWidth) : window.innerWidth;
-        const curH = isContained ? (container.clientHeight || window.innerHeight) : window.innerHeight;
-        updateSize(curW, curH);
-      };
-      window.addEventListener('resize', handleWindowResize, { passive: true });
-      window.addEventListener('orientationchange', handleWindowResize, { passive: true });
 
       if (isContained && typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver((entries) => {
@@ -237,12 +318,6 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         });
         resizeObserver.observe(container);
       }
-
-      // Visibility change para pausar quando minimizado
-      const handleVisibilityChange = () => {
-        isPaused = document.hidden;
-      };
-      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       // Loop de animação contínua e aleatória
       let clock = 0;
@@ -311,46 +386,19 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       };
 
       animate();
-
-      return () => {
-        clearTimeout(timerA);
-        clearTimeout(timerB);
-        if (animationFrameId) cancelAnimationFrame(animationFrameId);
-        window.removeEventListener('mousemove', handlePointer);
-        window.removeEventListener('touchmove', handlePointer);
-        window.removeEventListener('resize', handleWindowResize);
-        window.removeEventListener('orientationchange', handleWindowResize);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        if (resizeObserver) resizeObserver.disconnect();
-
-        gridGeometry.dispose();
-        lineMaterial.dispose();
-        particleGeo.dispose();
-        particleMat.dispose();
-        canvas.removeEventListener('webglcontextlost', handleContextLost);
-        canvas.removeEventListener('webglcontextcreationerror', handleContextLost);
-        renderer?.dispose();
-      };
     } catch {
+      cleanupResources();
       markWebglFailed();
       setUseCssFallback(true);
     }
+
+    return () => {
+      cleanupResources();
+    };
   }, [useCssFallback, variant]);
 
   if (useCssFallback) {
-    const isContained = variant === 'contained';
-    return (
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none ${
-          isContained ? 'absolute inset-0' : 'fixed inset-0 -z-20'
-        } overflow-hidden ${className}`}
-      >
-        <div className="absolute top-[-15%] left-[-10%] w-[65vw] h-[65vw] rounded-full bg-blue-600/10 blur-[130px] animate-pulse duration-[8000ms]" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/10 blur-[140px] animate-pulse duration-[10000ms]" />
-        <div className="absolute top-[35%] left-[25%] w-[45vw] h-[45vw] rounded-full bg-blue-500/[0.08] blur-[150px]" />
-      </div>
-    );
+    return <FluidRippleFallback variant={variant} className={className} />;
   }
 
   const isContained = variant === 'contained';

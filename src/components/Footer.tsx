@@ -10,6 +10,8 @@ const FluidRippleBackground = React.lazy(() =>
 );
 
 import { ScreenId } from '../types';
+import { useCanRun3DEffect } from '../mediaPrefs';
+import { FluidRippleFallback } from './FluidRippleFallback';
 
 interface FooterProps {
   onOpenPrivacy: () => void;
@@ -65,10 +67,13 @@ export const Footer: React.FC<FooterProps> = ({
 
   const footerRef = React.useRef<HTMLElement>(null);
   const [shouldLoadEffect, setShouldLoadEffect] = React.useState<boolean>(false);
+  const canRun3D = useCanRun3DEffect();
 
-  // Carregamento sob demanda do efeito Three.js quando o rodapé estiver a 800px da viewport
+  // Carregamento sob demanda do efeito Three.js quando o rodapé estiver a 800px da viewport,
+  // mas SOMENTE se o aparelho tiver suporte e permissão de movimento/dados para rodar 3D
   React.useEffect(() => {
     if (shouldLoadEffect) return;
+    if (!canRun3D) return;
 
     if (typeof IntersectionObserver === 'undefined') {
       setShouldLoadEffect(true);
@@ -101,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [shouldLoadEffect]);
+  }, [shouldLoadEffect, canRun3D]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -112,11 +117,26 @@ export const Footer: React.FC<FooterProps> = ({
       ref={footerRef}
       className="relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] border-t border-blue-400/30 text-slate-300 text-sm pb-[3px] overflow-hidden"
     >
-      {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua carregado sob demanda */}
-      {shouldLoadEffect && (
-        <React.Suspense fallback={null}>
-          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-50 pointer-events-none" />
+      {/* Fundo de grade azul de espaço-tempo sob demanda quando permitido, ou fallback CSS de contingência */}
+      {canRun3D && shouldLoadEffect ? (
+        <React.Suspense
+          fallback={
+            <FluidRippleFallback
+              variant="contained"
+              className="absolute inset-0 z-0 opacity-50 pointer-events-none"
+            />
+          }
+        >
+          <FluidRippleBackground
+            variant="contained"
+            className="absolute inset-0 z-0 opacity-50 pointer-events-none"
+          />
         </React.Suspense>
+      ) : (
+        <FluidRippleFallback
+          variant="contained"
+          className="absolute inset-0 z-0 opacity-50 pointer-events-none"
+        />
       )}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
