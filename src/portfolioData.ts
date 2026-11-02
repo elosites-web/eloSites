@@ -19,7 +19,7 @@ export interface PortfolioProjectData {
 export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   {
     id: 'jv-salvaia',
-    badge: 'PÁGINA ÚNICA (LANDING PAGE)',
+    badge: 'Landing Page para Personal Trainer',
     status: 'Publicado & Ativo',
     title: 'JV Salvaia Personal Trainer',
     category: 'landing',
@@ -42,7 +42,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   },
   {
     id: 'toledo-seguranca',
-    badge: 'SITE INSTITUCIONAL CORPORATIVO',
+    badge: 'Site Institucional para Empresa de Segurança',
     status: 'Publicado & Ativo',
     title: 'Toledo Segurança',
     category: 'institutional',
@@ -65,7 +65,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   },
   {
     id: 'garagem-mailasque',
-    badge: 'PÁGINA ÚNICA & OFICINA',
+    badge: 'Landing Page para Oficina de Funilaria e Pintura',
     status: 'Publicado & Ativo',
     title: 'Garagem Mailasque',
     category: 'landing',
@@ -88,7 +88,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
   },
   {
     id: 'duelo-fim-de-ano',
-    badge: 'LANDING PAGE PARA EVENTO',
+    badge: 'Landing Page para Evento Esportivo',
     status: 'Publicado & Ativo',
     title: 'Duelo de Fim de Ano — Badem vs Becala',
     category: 'landing',

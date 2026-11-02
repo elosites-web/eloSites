@@ -189,35 +189,32 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Especialidades e Foco Técnico */}
+          {/* Serviços e Formatos */}
           <div className="md:col-span-4 space-y-3">
             <button
               type="button"
               onClick={() => {
                 if (onSelectScreen) {
                   onSelectScreen('servicos');
-                  setTimeout(() => {
-                    const el = document.getElementById('solucoes-web');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }, 120);
                 } else {
-                  window.location.hash = 'solucoes-web';
+                  window.location.hash = 'servicos';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
               className="text-left text-xs font-mono font-semibold uppercase tracking-wider text-slate-200 hover:text-cyan-300 transition-colors cursor-pointer group flex items-center gap-1.5"
             >
-              <span>Especialidades & Soluções Web</span>
+              <span>Serviços de Desenvolvimento</span>
               <span className="text-cyan-400 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <p className="text-[13px] text-slate-300/90 leading-relaxed">
-              Criação de páginas únicas (landing pages), sites completos para empresas (institucionais), código visual moderno (frontend), boas práticas de SEO técnico e botões inteligentes de WhatsApp.
+              Criação de landing pages focadas em contato e conversão pelo WhatsApp, e sites institucionais completos para apresentar sua empresa com credibilidade.
             </p>
             <div className="pt-2 text-[11px] text-slate-400 flex items-center gap-2">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
               </span>
-              <span>Engenharia web moderna • Código limpo, rápido e sob medida</span>
+              <span>Projetos sob medida • Atendimento direto com o desenvolvedor</span>
             </div>
           </div>
         </div>

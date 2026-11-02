@@ -164,6 +164,7 @@ export function formatBriefingWhatsappMessage(data: ProjectBriefData): string {
     `*💻 Formato Desejado:* ${data.projectType}`,
     data.investmentRange ? `*💰 Faixa de Investimento:* ${data.investmentRange}` : '',
     `*📱 WhatsApp do Cliente:* ${data.whatsappContact.trim()}`,
+    data.email?.trim() ? `*📧 E-mail:* ${data.email.trim()}` : '',
     data.description.trim() ? `*📝 Detalhes e Objetivos:*\n${data.description.trim()}` : '',
     ``,
     `Gostaria de receber uma proposta comercial personalizada considerando as opções de pagamento (PIX 50/50, 20% à vista no PIX ou cartão de crédito em até 5x sem juros).`,

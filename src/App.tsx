@@ -36,9 +36,6 @@ const TestimonialsSection = lazy(() =>
 const ServicesSection = lazy(() =>
   import('./components/ServicesSection').then((mod) => ({ default: mod.ServicesSection }))
 );
-const SpecialtiesSection = lazy(() =>
-  import('./components/SpecialtiesSection').then((mod) => ({ default: mod.SpecialtiesSection }))
-);
 const DifferentialsSection = lazy(() =>
   import('./components/DifferentialsSection').then((mod) => ({ default: mod.DifferentialsSection }))
 );
@@ -260,10 +257,7 @@ export default function App() {
           }
           return 'servicos';
         });
-        setTimeout(() => {
-          const el = document.getElementById('solucoes-web');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
+        window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
         setCurrentScreen((prev) => {
           if (prev !== 'avaliacoes') {
@@ -639,31 +633,12 @@ export default function App() {
         </div>
       )}
 
-      {/* TELA 03: Serviços & Condições Comerciais + Especialidades Web */}
+      {/* TELA 02: Serviços & Condições Comerciais */}
       {currentScreen === 'servicos' && (
         <div className="w-full space-y-0">
           <SectionErrorBoundary>
             <Suspense fallback={<ServicesSkeleton />}>
               <ServicesSection onNavigateToOrcamento={() => navigateToScreen('orcamento')} />
-            </Suspense>
-          </SectionErrorBoundary>
-          <SectionErrorBoundary>
-            <Suspense fallback={<ServicesSkeleton />}>
-              <SpecialtiesSection
-                onNavigateToContact={() => navigateToScreen('portfolio')}
-                onNavigateToCartao={() => {
-                  navigateToScreen('faq');
-                  window.location.hash = 'cartao-digital';
-                  const scrollToCartao = () => {
-                    const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
-                    if (el) {
-                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  };
-                  setTimeout(scrollToCartao, 120);
-                  setTimeout(scrollToCartao, 350);
-                }}
-              />
             </Suspense>
           </SectionErrorBoundary>
         </div>

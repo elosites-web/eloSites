@@ -44,10 +44,10 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'servicos',
     number: '02',
-    title: 'Serviços & Especialidades Web',
+    title: 'Serviços',
     shortTitle: 'Serviços',
-    badge: 'Formatos & Especialidades',
-    description: 'Formatos sob medida, especialidades técnicas e pagamento flexível.',
+    badge: 'Serviços',
+    description: 'Formatos sob medida com pagamento flexível para o seu negócio.',
     iconName: 'Briefcase',
   },
   {
@@ -174,6 +174,7 @@ export interface ProjectBriefData {
   investmentRange?: string;
   description: string;
   whatsappContact: string;
+  email?: string;
   agreedToLgpd: boolean;
 }
 

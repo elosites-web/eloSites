@@ -6,12 +6,8 @@ type Loader = () => Promise<unknown>;
 
 const screenLoaders: Partial<Record<ScreenId, Loader>> = {
   inicio: () => import('./components/FounderCard'),
-  servicos: () =>
-    Promise.all([
-      import('./components/ServicesSection'),
-      import('./components/SpecialtiesSection'),
-    ]),
-  'solucoes-web': () => import('./components/SpecialtiesSection'),
+  servicos: () => import('./components/ServicesSection'),
+  'solucoes-web': () => import('./components/ServicesSection'),
   portfolio: () => import('./components/PortfolioSection'),
   avaliacoes: () => import('./components/TestimonialsSection'),
   processo: () =>

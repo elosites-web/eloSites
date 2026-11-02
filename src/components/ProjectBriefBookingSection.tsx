@@ -27,6 +27,14 @@ import {
 import { shouldReduceMedia } from '../mediaPrefs';
 import { getDynamicCardVariants } from '../motionVariants';
 import confetti from 'canvas-confetti';
+import {
+  validateEmail,
+  validateName,
+  validateBusinessName,
+  validatePhone,
+  validateLgpd,
+  EMAIL_REGEX,
+} from '../validation';
 
 // Helper de máscara dinâmica para telefone/WhatsApp no padrão brasileiro (10 ou 11 dígitos)
 export const formatPhoneMask = (value: string): string => {
@@ -67,6 +75,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     investmentRange: '',
     description: '',
     whatsappContact: '',
+    email: '',
     agreedToLgpd: false,
   });
 
@@ -93,60 +102,44 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     setTouchedFields((prev) => ({ ...prev, [fieldKey]: true }));
   };
 
+  const handleFieldChange = (fieldKey: string) => {
+    setTouchedFields((prev) => ({ ...prev, [fieldKey]: true }));
+    if (formErrors[fieldKey]) {
+      setFormErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldKey];
+        return next;
+      });
+    }
+  };
+
   // Helper de validação em tempo real para os campos do formulário de orçamento (briefing)
   const getBriefingValidationStatus = (
-    field: 'contactName' | 'businessName' | 'whatsappContact' | 'agreedToLgpd'
+    field: 'contactName' | 'businessName' | 'whatsappContact' | 'email' | 'agreedToLgpd'
   ) => {
     const isTouched = Boolean(touchedFields[field] || formErrors[field]);
     if (!isTouched) {
       return { status: 'idle' as const, message: '' };
     }
 
+    if (field === 'email') {
+      return validateEmail(briefingData.email || '', true);
+    }
+
     if (field === 'contactName') {
-      const val = briefingData.contactName.trim();
-      if (!val) {
-        return { status: 'error' as const, message: 'Por favor, informe seu nome.' };
-      }
-      if (val.length < 2) {
-        return { status: 'error' as const, message: 'O nome deve ter pelo menos 2 caracteres.' };
-      }
-      return { status: 'success' as const, message: 'Nome preenchido corretamente.' };
+      return validateName(briefingData.contactName, true);
     }
 
     if (field === 'businessName') {
-      const val = briefingData.businessName.trim();
-      if (!val) {
-        return { status: 'error' as const, message: 'Por favor, informe o nome do seu negócio ou empresa.' };
-      }
-      if (val.length < 2) {
-        return { status: 'error' as const, message: 'O nome da empresa deve ter pelo menos 2 caracteres.' };
-      }
-      return { status: 'success' as const, message: 'Nome da empresa registrado.' };
+      return validateBusinessName(briefingData.businessName, true);
     }
 
     if (field === 'whatsappContact') {
-      const val = briefingData.whatsappContact.trim();
-      if (!val) {
-        return { status: 'error' as const, message: 'Por favor, informe seu WhatsApp com DDD.' };
-      }
-      const digitsOnly = val.replace(/\D/g, '');
-      if (digitsOnly.length < 10 || digitsOnly.length > 11) {
-        return {
-          status: 'error' as const,
-          message: 'WhatsApp incompleto. Digite DDD + 8 ou 9 dígitos.',
-        };
-      }
-      return { status: 'success' as const, message: 'WhatsApp válido para retorno.' };
+      return validatePhone(briefingData.whatsappContact, true);
     }
 
     if (field === 'agreedToLgpd') {
-      if (!briefingData.agreedToLgpd) {
-        return {
-          status: 'error' as const,
-          message: 'É obrigatório concordar com a política de privacidade para liberar o envio.',
-        };
-      }
-      return { status: 'success' as const, message: 'Consentimento confirmado.' };
+      return validateLgpd(briefingData.agreedToLgpd, true);
     }
 
     return { status: 'idle' as const, message: '' };
@@ -253,6 +246,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
     setTouchedFields((prev) => ({
       ...prev,
       contactName: true,
+      email: true,
       businessName: true,
       whatsappContact: true,
       agreedToLgpd: true,
@@ -260,18 +254,25 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
 
     const errors: { [key: string]: string } = {};
 
-    if (!briefingData.contactName.trim() || briefingData.contactName.trim().length < 2) {
-      errors.contactName = 'Informe seu nome para que possamos te chamar (mínimo 2 caracteres).';
+    const nameRes = validateName(briefingData.contactName, true);
+    if (nameRes.status === 'error') {
+      errors.contactName = nameRes.message;
     }
-    if (!briefingData.businessName.trim() || briefingData.businessName.trim().length < 2) {
-      errors.businessName = 'Informe o nome do seu negócio ou empresa (mínimo 2 caracteres).';
+    const emailRes = validateEmail(briefingData.email || '', true);
+    if (emailRes.status === 'error') {
+      errors.email = emailRes.message;
     }
-    const cleanDigits = briefingData.whatsappContact.replace(/\D/g, '');
-    if (!briefingData.whatsappContact.trim() || cleanDigits.length < 10 || cleanDigits.length > 11) {
-      errors.whatsappContact = 'Informe seu WhatsApp válido com DDD (10 ou 11 dígitos).';
+    const businessRes = validateBusinessName(briefingData.businessName, true);
+    if (businessRes.status === 'error') {
+      errors.businessName = businessRes.message;
     }
-    if (!briefingData.agreedToLgpd) {
-      errors.agreedToLgpd = 'É necessário concordar com a política de privacidade para liberar o envio.';
+    const phoneRes = validatePhone(briefingData.whatsappContact, true);
+    if (phoneRes.status === 'error') {
+      errors.whatsappContact = phoneRes.message;
+    }
+    const lgpdRes = validateLgpd(briefingData.agreedToLgpd, true);
+    if (lgpdRes.status === 'error') {
+      errors.agreedToLgpd = lgpdRes.message;
     }
 
     if (Object.keys(errors).length > 0) {
@@ -497,13 +498,14 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                   <form onSubmit={handleBriefingSubmit} className="space-y-6">
                     {(() => {
                       const nameStatus = getBriefingValidationStatus('contactName');
+                      const emailStatus = getBriefingValidationStatus('email');
                       const whatsappStatus = getBriefingValidationStatus('whatsappContact');
                       const businessStatus = getBriefingValidationStatus('businessName');
                       const agreedStatus = getBriefingValidationStatus('agreedToLgpd');
 
                       return (
                         <>
-                          {/* Linha 1: Dados de Contato Direto (Nome & WhatsApp) */}
+                          {/* Linha 1: Dados de Identificação (Nome & E-mail com validação em tempo real) */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {/* Campo: Seu Nome */}
                             <div>
@@ -522,26 +524,32 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('contactName')}
                                   onChange={(e) => {
                                     setBriefingData((prev) => ({ ...prev, contactName: e.target.value }));
-                                    if (touchedFields.contactName) handleFieldBlur('contactName');
+                                    handleFieldChange('contactName');
                                   }}
                                   placeholder="Ex: Carlos Eduardo"
                                   aria-required="true"
                                   aria-invalid={nameStatus.status === 'error'}
-                                  aria-describedby={nameStatus.status === 'error' ? 'briefing-name-error' : undefined}
+                                  aria-describedby={
+                                    nameStatus.status === 'error'
+                                      ? 'briefing-name-error'
+                                      : nameStatus.status === 'success'
+                                      ? 'briefing-name-success'
+                                      : undefined
+                                  }
                                   className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
                                     nameStatus.status === 'error'
-                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      ? 'border-2 border-rose-500/80 bg-rose-950/10 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
                                       : nameStatus.status === 'success'
-                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      ? 'border border-emerald-500/70 bg-emerald-950/10 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
                                       : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
                                   }`}
                                 />
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
                                   {nameStatus.status === 'success' && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Nome válido" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-in zoom-in-50 duration-200" aria-label="Nome válido" />
                                   )}
                                   {nameStatus.status === 'error' && (
-                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Nome com erro" />
+                                    <AlertCircle className="w-4 h-4 text-rose-400 animate-in zoom-in-50 duration-200" aria-label="Nome com erro" />
                                   )}
                                 </div>
                               </div>
@@ -552,9 +560,80 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                     <span>{nameStatus.message}</span>
                                   </p>
                                 )}
+                                {nameStatus.status === 'success' && (
+                                  <p id="briefing-name-success" className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{nameStatus.message}</span>
+                                  </p>
+                                )}
                               </div>
                             </div>
 
+                            {/* Campo: E-mail com validação em tempo real de formato */}
+                            <div>
+                              <label
+                                htmlFor="briefing-email"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
+                              >
+                                Seu E-mail *
+                              </label>
+                              <div className="relative">
+                                <input
+                                  id="briefing-email"
+                                  type="email"
+                                  required
+                                  value={briefingData.email || ''}
+                                  onBlur={() => handleFieldBlur('email')}
+                                  onChange={(e) => {
+                                    setBriefingData((prev) => ({ ...prev, email: e.target.value }));
+                                    handleFieldChange('email');
+                                  }}
+                                  placeholder="Ex: seu@email.com"
+                                  aria-required="true"
+                                  aria-invalid={emailStatus.status === 'error'}
+                                  aria-describedby={
+                                    emailStatus.status === 'error'
+                                      ? 'briefing-email-error'
+                                      : emailStatus.status === 'success'
+                                      ? 'briefing-email-success'
+                                      : undefined
+                                  }
+                                  className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
+                                    emailStatus.status === 'error'
+                                      ? 'border-2 border-rose-500/80 bg-rose-950/10 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      : emailStatus.status === 'success'
+                                      ? 'border border-emerald-500/70 bg-emerald-950/10 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
+                                  }`}
+                                />
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                                  {emailStatus.status === 'success' && (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-in zoom-in-50 duration-200" aria-label="E-mail válido" />
+                                  )}
+                                  {emailStatus.status === 'error' && (
+                                    <AlertCircle className="w-4 h-4 text-rose-400 animate-in zoom-in-50 duration-200" aria-label="E-mail com erro" />
+                                  )}
+                                </div>
+                              </div>
+                              <div aria-live="polite" className="min-h-[18px] mt-1.5">
+                                {emailStatus.status === 'error' && (
+                                  <p id="briefing-email-error" role="alert" className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{emailStatus.message}</span>
+                                  </p>
+                                )}
+                                {emailStatus.status === 'success' && (
+                                  <p id="briefing-email-success" className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{emailStatus.message}</span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Linha 2: WhatsApp e Empresa (ambos obrigatórios com feedback em tempo real) */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {/* Campo: WhatsApp com Máscara e Validação em tempo real */}
                             <div>
                               <label
@@ -573,27 +652,33 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onChange={(e) => {
                                     const masked = formatPhoneMask(e.target.value);
                                     setBriefingData((prev) => ({ ...prev, whatsappContact: masked }));
-                                    if (touchedFields.whatsappContact) handleFieldBlur('whatsappContact');
+                                    handleFieldChange('whatsappContact');
                                   }}
                                   placeholder="Ex: (11) 99999-9999"
                                   maxLength={15}
                                   aria-required="true"
                                   aria-invalid={whatsappStatus.status === 'error'}
-                                  aria-describedby={whatsappStatus.status === 'error' ? 'briefing-whatsapp-error' : undefined}
+                                  aria-describedby={
+                                    whatsappStatus.status === 'error'
+                                      ? 'briefing-whatsapp-error'
+                                      : whatsappStatus.status === 'success'
+                                      ? 'briefing-whatsapp-success'
+                                      : undefined
+                                  }
                                   className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
                                     whatsappStatus.status === 'error'
-                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      ? 'border-2 border-rose-500/80 bg-rose-950/10 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
                                       : whatsappStatus.status === 'success'
-                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      ? 'border border-emerald-500/70 bg-emerald-950/10 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
                                       : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
                                   }`}
                                 />
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
                                   {whatsappStatus.status === 'success' && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="WhatsApp válido" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-in zoom-in-50 duration-200" aria-label="WhatsApp válido" />
                                   )}
                                   {whatsappStatus.status === 'error' && (
-                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="WhatsApp com erro" />
+                                    <AlertCircle className="w-4 h-4 text-rose-400 animate-in zoom-in-50 duration-200" aria-label="WhatsApp com erro" />
                                   )}
                                 </div>
                               </div>
@@ -604,12 +689,16 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                     <span>{whatsappStatus.message}</span>
                                   </p>
                                 )}
+                                {whatsappStatus.status === 'success' && (
+                                  <p id="briefing-whatsapp-success" className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{whatsappStatus.message}</span>
+                                  </p>
+                                )}
                               </div>
                             </div>
-                          </div>
 
-                          {/* Linha 2: Sobre a Empresa / Negócio (Nome do Negócio & Ramo de Atuação) */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            {/* Campo: Nome do Negócio / Empresa */}
                             <div>
                               <label
                                 htmlFor="briefing-business-name"
@@ -626,26 +715,32 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('businessName')}
                                   onChange={(e) => {
                                     setBriefingData((prev) => ({ ...prev, businessName: e.target.value }));
-                                    if (touchedFields.businessName) handleFieldBlur('businessName');
+                                    handleFieldChange('businessName');
                                   }}
                                   placeholder="Ex: Barbearia Navalha & Estilo"
                                   aria-required="true"
                                   aria-invalid={businessStatus.status === 'error'}
-                                  aria-describedby={businessStatus.status === 'error' ? 'briefing-business-error' : undefined}
+                                  aria-describedby={
+                                    businessStatus.status === 'error'
+                                      ? 'briefing-business-error'
+                                      : businessStatus.status === 'success'
+                                      ? 'briefing-business-success'
+                                      : undefined
+                                  }
                                   className={`w-full pl-4 pr-10 py-3 rounded-xl bg-slate-950/90 text-white text-sm placeholder:text-slate-500 focus:outline-none transition-all ${
                                     businessStatus.status === 'error'
-                                      ? 'border-2 border-rose-500/80 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
+                                      ? 'border-2 border-rose-500/80 bg-rose-950/10 focus:border-rose-400 focus:ring-1 focus:ring-rose-500/30'
                                       : businessStatus.status === 'success'
-                                      ? 'border border-emerald-500/70 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
+                                      ? 'border border-emerald-500/70 bg-emerald-950/10 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40'
                                       : 'border border-blue-500/20 focus:border-blue-400 focus:ring-1 focus:ring-blue-400'
                                   }`}
                                 />
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
                                   {businessStatus.status === 'success' && (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-label="Nome da empresa válido" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-in zoom-in-50 duration-200" aria-label="Nome da empresa válido" />
                                   )}
                                   {businessStatus.status === 'error' && (
-                                    <AlertCircle className="w-4 h-4 text-rose-400" aria-label="Nome da empresa com erro" />
+                                    <AlertCircle className="w-4 h-4 text-rose-400 animate-in zoom-in-50 duration-200" aria-label="Nome da empresa com erro" />
                                   )}
                                 </div>
                               </div>
@@ -656,9 +751,18 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                     <span>{businessStatus.message}</span>
                                   </p>
                                 )}
+                                {businessStatus.status === 'success' && (
+                                  <p id="briefing-business-success" className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                                    <span>{businessStatus.message}</span>
+                                  </p>
+                                )}
                               </div>
                             </div>
+                          </div>
 
+                          {/* Linha 3: Segmento e Formato Desejado */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                               <label
                                 htmlFor="briefing-segment"
@@ -687,34 +791,34 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                               </div>
                               <div className="min-h-[18px] mt-1.5" />
                             </div>
-                          </div>
 
-                          {/* Linha 3: Formato do Site Desejado */}
-                          <div>
-                            <label
-                              htmlFor="briefing-project-type"
-                              className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
-                            >
-                              Tipo de Site Desejado
-                            </label>
-                            <div className="relative">
-                              <select
-                                id="briefing-project-type"
-                                value={briefingData.projectType}
-                                onChange={(e) =>
-                                  setBriefingData((prev) => ({ ...prev, projectType: e.target.value }))
-                                }
-                                className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                            <div>
+                              <label
+                                htmlFor="briefing-project-type"
+                                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2"
                               >
-                                {projectTypesList.map((item) => (
-                                  <option key={item} value={item} className="bg-slate-900 text-white">
-                                    {item}
-                                  </option>
-                                ))}
-                              </select>
-                              <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
-                                ▼
+                                Tipo de Site Desejado
+                              </label>
+                              <div className="relative">
+                                <select
+                                  id="briefing-project-type"
+                                  value={briefingData.projectType}
+                                  onChange={(e) =>
+                                    setBriefingData((prev) => ({ ...prev, projectType: e.target.value }))
+                                  }
+                                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-blue-500/20 text-white text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all appearance-none cursor-pointer"
+                                >
+                                  {projectTypesList.map((item) => (
+                                    <option key={item} value={item} className="bg-slate-900 text-white">
+                                      {item}
+                                    </option>
+                                  ))}
+                                </select>
+                                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+                                  ▼
+                                </div>
                               </div>
+                              <div className="min-h-[18px] mt-1.5" />
                             </div>
                           </div>
 
@@ -790,7 +894,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                 onBlur={() => handleFieldBlur('agreedToLgpd')}
                                 onChange={(e) => {
                                   setBriefingData((prev) => ({ ...prev, agreedToLgpd: e.target.checked }));
-                                  handleFieldBlur('agreedToLgpd');
+                                  handleFieldChange('agreedToLgpd');
                                 }}
                                 aria-required="true"
                                 aria-invalid={agreedStatus.status === 'error'}
@@ -924,7 +1028,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('bookingName')}
                                   onChange={(e) => {
                                     setBookingData({ ...bookingData, name: e.target.value });
-                                    if (touchedFields.bookingName) handleFieldBlur('bookingName');
+                                    handleFieldChange('bookingName');
                                   }}
                                   placeholder="Ex: Juliana Mendes"
                                   aria-required="true"
@@ -973,7 +1077,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('bookingBusiness')}
                                   onChange={(e) => {
                                     setBookingData({ ...bookingData, businessName: e.target.value });
-                                    if (touchedFields.bookingBusiness) handleFieldBlur('bookingBusiness');
+                                    handleFieldChange('bookingBusiness');
                                   }}
                                   placeholder="Ex: Studio Bella Estética"
                                   aria-invalid={businessVal.status === 'error'}
@@ -1018,7 +1122,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('bookingContact')}
                                   onChange={(e) => {
                                     setBookingData({ ...bookingData, whatsappOrEmail: e.target.value });
-                                    if (touchedFields.bookingContact) handleFieldBlur('bookingContact');
+                                    handleFieldChange('bookingContact');
                                   }}
                                   placeholder="(11) 98888-8888"
                                   aria-required="true"
@@ -1069,7 +1173,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                   onBlur={() => handleFieldBlur('bookingDate')}
                                   onChange={(e) => {
                                     setBookingData({ ...bookingData, preferredDate: e.target.value });
-                                    if (touchedFields.bookingDate) handleFieldBlur('bookingDate');
+                                    handleFieldChange('bookingDate');
                                   }}
                                   aria-required="true"
                                   aria-invalid={dateVal.status === 'error'}
@@ -1208,7 +1312,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                 checked={bookingData.agreedToLgpd}
                                 onChange={(e) => {
                                   setBookingData({ ...bookingData, agreedToLgpd: e.target.checked });
-                                  handleFieldBlur('bookingAgreed');
+                                  handleFieldChange('bookingAgreed');
                                 }}
                                 aria-invalid={agreedVal.status === 'error'}
                                 aria-describedby={agreedVal.status === 'error' ? 'booking-lgpd-error' : undefined}

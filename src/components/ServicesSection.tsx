@@ -6,7 +6,6 @@ import {
   Building2,
   Sparkles,
   CheckCircle2,
-  XCircle,
   Info,
   CreditCard,
   Percent,
@@ -67,9 +66,8 @@ interface ServiceCategory {
   title: string;
   description: string;
   icon: LucideIcon;
-  includes: string[];
+  highlights: string[];
   scopeNote: string;
-  excluded?: string[];
   ctaLabel: string;
   ctaId: string;
   ctaMessage: string;
@@ -78,66 +76,36 @@ interface ServiceCategory {
 const SERVICES: ServiceCategory[] = [
   {
     id: 'landing-page',
-    badge: 'Página Única (Foco em WhatsApp)',
+    badge: 'Página Única',
     title: 'Landing Page',
     description:
-      'Uma página única, direta e prática para apresentar o seu trabalho e levar o visitante a chamar você no WhatsApp. É a opção ideal para quem quer começar rápido sem complicações.',
+      'Uma página para apresentar seu negócio, divulgar seus serviços e facilitar o contato com seus clientes.',
     icon: Target,
-    includes: [
-      'Estrutura em página única pensada para leitura rápida',
-      'Apresentação clara dos seus serviços ou produtos',
-      'Destaque para diferenciais e benefícios do seu negócio',
-      'Depoimentos e avaliações de clientes reais (quando fornecidos)',
-      'Galeria com fotos do seu trabalho',
-      'Perguntas frequentes (FAQ) para tirar dúvidas comuns',
-      'Botões de WhatsApp chamativos em pontos estratégicos',
-      'Formulário simples de contato (conforme o escopo contratado)',
-      'Links para suas redes sociais',
-      'Design responsivo adaptado para celulares, tablets e computadores',
-      'Boas práticas de SEO técnico e cartões para redes sociais',
-      'Publicação no ar e testes de funcionamento antes da entrega',
+    highlights: [
+      'Apresentação direta do seu trabalho em página única',
+      'Botões de WhatsApp em pontos estratégicos para contato imediato',
+      'Formato tradicional ou focado em apresentação de vídeo (VSL)',
+      'Design adaptado para celulares, tablets e computadores',
     ],
-    scopeNote: 'O que será desenvolvido é detalhado na proposta e no contrato antes de começar.',
-    excluded: [
-      'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros servidores (o site é publicado na Netlify)',
-      'Criação de logotipo do zero',
-      'Páginas extras fora do escopo combinado',
-    ],
+    scopeNote: 'Os detalhes, seções e conteúdos específicos de cada projeto são combinados e definidos no orçamento individual.',
     ctaLabel: 'Pedir proposta de Landing Page',
     ctaId: 'service-cta-landing-page',
     ctaMessage: SITE_CONFIG.landingPageWhatsappMessage,
   },
   {
     id: 'site-institucional',
-    badge: 'Empresa Completa (Várias Páginas)',
+    badge: 'Múltiplas Páginas',
     title: 'Site Institucional',
     description:
-      'Estrutura completa com várias seções e navegação entre páginas. Perfeito para empresas que precisam mostrar equipe, história, detalhes dos serviços e localização.',
+      'Um site com páginas e seções para apresentar sua empresa, seus serviços e informações importantes.',
     icon: Building2,
-    includes: [
-      'Página inicial com resumo dos principais destaques',
-      'Página Sobre com a história e a credibilidade da sua empresa',
-      'Páginas individuais para detalhar cada serviço',
-      'Seção de diferenciais e motivos para escolher seu negócio',
-      'Portfólio com projetos realizados ou fotos do estabelecimento',
-      'Depoimentos e avaliações reais de clientes',
-      'Perguntas frequentes (FAQ) bem explicadas',
-      'Endereço, mapa de localização e canais de atendimento',
-      'Botões de WhatsApp e links para redes sociais',
-      'Formulário de contato com envio de mensagens (conforme o escopo contratado)',
-      'Design responsivo adaptado para celulares, tablets e computadores',
-      'Boas práticas de SEO técnico e cartões de compartilhamento',
-      'Publicação no ar e testes completos de funcionamento',
+    highlights: [
+      'Páginas e seções dedicadas (Início, Sobre, Serviços, Contato e Localização)',
+      'Apresentação completa da sua história, equipe e credibilidade',
+      'Estrutura com boas práticas para indexação e mecanismos de busca',
+      'Navegação fluida e adaptada para celulares e computadores',
     ],
-    scopeNote:
-      'A quantidade de páginas, seções e botões é combinada com clareza no orçamento.',
-    excluded: [
-      'Registro do domínio (endereço .com.br)',
-      'Hospedagem em outros servidores (o site é publicado na Netlify)',
-      'Criação de logotipo do zero',
-      'Integrações com sistemas externos não combinados',
-    ],
+    scopeNote: 'A quantidade de páginas e seções é combinada com clareza no orçamento individual.',
     ctaLabel: 'Pedir proposta de Site Institucional',
     ctaId: 'service-cta-institucional',
     ctaMessage: SITE_CONFIG.siteInstitucionalWhatsappMessage,
@@ -257,10 +225,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 >
                   <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full md:row-span-5 md:grid md:grid-rows-subgrid">
                     <article
-                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col space-y-5 md:space-y-0 md:row-span-5 md:grid md:grid-rows-subgrid shadow-2xl shadow-black/80 bracket-panel transition-all h-full w-full min-w-0 max-w-full box-border"
+                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border"
                     >
-                      {/* Linha 1: Topo do card + Título + Descrição com Fade-In suave */}
-                      <div className="space-y-4 lg:pb-4">
+                      {/* Topo do card: Ícone + Badge + Título + Descrição */}
+                      <div className="space-y-4">
                         <div className="flex items-center justify-between gap-2.5 min-w-0">
                           <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)]">
                             <Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
@@ -278,71 +246,49 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                             {service.description}
                           </p>
                         </FadeInBlock>
+
+                        {/* Destaques principais do formato */}
+                        <FadeInBlock delay={80} className="space-y-2.5 pt-4 border-t border-white/[0.06]">
+                          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                            Destaques do formato:
+                          </span>
+                          <div className="grid grid-cols-1 gap-2 text-sm text-slate-300 service-list scroll-perf-list">
+                            {service.highlights.map((item) => (
+                              <div key={item} className="flex items-start gap-2">
+                                <CheckCircle2
+                                  className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"
+                                  aria-hidden="true"
+                                />
+                                <span className="text-xs sm:text-sm leading-snug">{item}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </FadeInBlock>
+
+                        {/* Caixa de Nota de Escopo */}
+                        <FadeInBlock delay={110} className="pt-2">
+                          <div className="rounded-xl border border-white/[0.06] bg-slate-950/70 p-3">
+                            <div className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                              <Info className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
+                              <span>{service.scopeNote}</span>
+                            </div>
+                          </div>
+                        </FadeInBlock>
                       </div>
 
-                      {/* Linha 2: Bloco INCLUI com Fade-In suave */}
-                      <FadeInBlock delay={80} className="space-y-2.5 pt-4 border-t border-white/[0.06] lg:pb-4">
-                        <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                          INCLUI:
-                        </span>
-                        <div className="grid grid-cols-1 gap-2 text-sm text-slate-300 service-list scroll-perf-list">
-                          {service.includes.map((item) => (
-                            <div key={item} className="flex items-start gap-2">
-                              <CheckCircle2
-                                className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"
-                                aria-hidden="true"
-                              />
-                              <span className="text-xs sm:text-sm leading-snug">{item}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </FadeInBlock>
-
-                      {/* Linha 3: Caixa de Nota Sutil com Fade-In suave */}
-                      <FadeInBlock delay={110} className="lg:py-3">
-                        <div className="rounded-xl border border-white/[0.06] bg-slate-950/70 p-3">
-                          <div className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-                            <Info className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" aria-hidden="true" />
-                            <span>{service.scopeNote}</span>
-                          </div>
-                        </div>
-                      </FadeInBlock>
-
-                      {/* Linha 4: Bloco NÃO INCLUSO com Fade-In suave */}
-                      <FadeInBlock delay={130} className="space-y-2 pt-4 border-t border-white/[0.06] lg:pb-4">
-                        {service.excluded && (
-                          <>
-                            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                              NÃO INCLUSO:
-                            </span>
-                            <div className="grid grid-cols-1 gap-1.5 text-xs text-slate-400 service-list scroll-perf-list">
-                              {service.excluded.map((item) => (
-                                <div key={item} className="flex items-start gap-2">
-                                  <XCircle
-                                    className="w-4 h-4 text-slate-500 shrink-0 mt-0.5"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="leading-snug">{item}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </>
-                        )}
-                      </FadeInBlock>
-
-                      {/* Linha 5: Orçamento Personalizado & CTA (inicia na mesma posição vertical) */}
-                      <div className="pt-4 border-t border-white/[0.08] space-y-4 flex flex-col justify-end">
-                        <FadeInBlock delay={150} className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.06] space-y-1">
+                      {/* Bloco de Orçamento Personalizado & CTA */}
+                      <div className="pt-5 border-t border-white/[0.08] space-y-4 flex flex-col justify-end mt-6">
+                        <FadeInBlock delay={140} className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.06] space-y-1">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wide">
                               Proposta Comercial
                             </span>
                             <span className="text-[11px] text-emerald-400 font-mono font-medium">
-                              Orçamento Específico
+                              Orçamento Sob Medida
                             </span>
                           </div>
                           <p className="text-xs text-slate-300 leading-relaxed">
-                            Definido por escopo, páginas e urgência. Pagamento facilitado em até 5x sem juros ou desconto no PIX.
+                            Definido por escopo e necessidade. Pagamento em até 5x sem juros ou desconto no PIX.
                           </p>
                         </FadeInBlock>
 

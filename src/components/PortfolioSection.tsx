@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
   ExternalLink,
-  CheckCircle2,
   Maximize2,
   Monitor,
   Smartphone,
@@ -60,7 +59,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         className="glass-card-interactive surface-card portfolio-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col justify-between h-full group shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border !mb-0"
       >
         {/* Top Header / Informações */}
-        <div className="pb-5 sm:pb-6 border-b border-white/[0.06] flex-1 flex flex-col justify-between gap-4 w-full">
+        <div className="pb-3.5 sm:pb-4 border-b border-white/[0.06] flex flex-col gap-2.5 w-full">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
               {project.badge}
@@ -72,58 +71,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
 
           <div>
-            <button
-              type="button"
-              onClick={() => onOpenCase(project.id)}
-              className="text-left font-display text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-200 hover:text-blue-300 transition-colors cursor-pointer w-full drop-shadow-sm"
-              title="Ver o case completo"
-            >
-              {project.title}
-            </button>
-            <p className="mt-1 text-xs text-slate-300 font-mono flex items-center gap-1.5 font-medium">
+            <p className="text-xs text-slate-300 font-mono flex items-center gap-1.5 font-medium">
               <span className="text-blue-400 font-bold">🌐</span>
               <span>{project.urlLabel}</span>
             </p>
           </div>
-
-          <div className="space-y-2.5 text-xs sm:text-sm text-slate-100 font-medium leading-relaxed flex-1">
-            <p>
-              <strong className="text-white font-bold">Desafio:</strong> {project.challenge}
-            </p>
-            <p>
-              <strong className="text-blue-300 font-bold">Solução ēloSites:</strong> {project.solution}
-            </p>
-          </div>
-
-          {/* Ver o Case Completo e Tags */}
-          <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
-            <button
-              type="button"
-              onClick={() => onOpenCase(project.id)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-300 hover:text-blue-200 transition-colors cursor-pointer"
-            >
-              <span>Ver detalhes do projeto (Desafio & Solução)</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 pt-1 portfolio-list scroll-perf-list">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-900 border border-blue-400/30 text-[11px] font-semibold text-slate-200"
-              >
-                <CheckCircle2 className="w-3 h-3 text-blue-400" aria-hidden="true" />
-                {tag}
-              </span>
-            ))}
-          </div>
         </div>
 
         {/* Visual Mockup Area com Seletor */}
-        <div className="pt-4 sm:pt-5 flex flex-col justify-between gap-4 w-full shrink-0">
+        <div className="pt-4 sm:pt-5 flex flex-col justify-between gap-4 w-full flex-1">
           {/* Controles de visualização: Composto, Desktop, Mobile */}
-          <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-3 w-full">
+          <div className="relative flex items-center justify-center gap-2 border-b border-white/[0.06] pb-3 w-full">
             <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-blue-500/15 text-xs font-medium">
               <button
                 type="button"
@@ -174,7 +132,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   viewMode === 'mobile' ? 'mobile' : 'desktop'
                 )
               }
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              className="absolute right-0 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               title="Abrir captura em tela cheia"
               aria-label="Abrir captura em tela cheia"
             >
@@ -314,7 +272,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 onClick={() => onOpenCase(project.id)}
                 className="inline-flex items-center justify-center text-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0c122e] text-blue-200 hover:text-white hover:bg-blue-950/80 border border-blue-400/40 transition-colors shadow-sm cursor-pointer"
               >
-                <span>Ver Case</span>
+                <span>Ver case</span>
                 <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
               </button>
 
