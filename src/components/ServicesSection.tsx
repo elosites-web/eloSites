@@ -210,7 +210,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
 
           {/* Grid dos 2 Serviços */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 max-w-5xl mx-auto min-w-0 items-stretch md:grid-rows-[repeat(5,auto)] service-list p-0.5 overflow-visible"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 max-w-5xl mx-auto w-full min-w-0 items-stretch service-list"
           >
             {SERVICES.map((service, index) => {
               const Icon = service.icon;
@@ -221,14 +221,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                   key={service.id}
                   direction={index === 0 ? 'left' : 'right'}
                   index={index}
-                  className="h-full w-full min-w-0 max-w-full md:row-span-5 md:grid md:grid-rows-subgrid scroll-snap-card card-snap-item"
+                  className="h-full w-full min-w-0 max-w-full flex flex-col scroll-snap-card card-snap-item"
                 >
-                  <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={index === 0} className="h-full w-full min-w-0 max-w-full md:row-span-5 md:grid md:grid-rows-subgrid">
+                  <Interactive3DCard maxTilt={1.2} allowDrag={true} animatedBorder={false} className="h-full w-full min-w-0 max-w-full flex flex-col flex-1">
                     <article
-                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border"
+                      className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 md:p-8 flex flex-col justify-between h-full flex-1 !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all w-full min-w-0 max-w-full box-border"
                     >
                       {/* Topo do card: Ícone + Badge + Título + Descrição */}
-                      <div className="space-y-4">
+                      <div className="space-y-4 pb-6">
                         <div className="flex items-center justify-between gap-2.5 min-w-0">
                           <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)]">
                             <Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
@@ -277,7 +277,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                       </div>
 
                       {/* Bloco de Orçamento Personalizado & CTA */}
-                      <div className="pt-5 border-t border-white/[0.08] space-y-4 flex flex-col justify-end mt-6">
+                      <div className="mt-auto pt-5 border-t border-white/[0.08] space-y-4 flex flex-col justify-end">
                         <FadeInBlock delay={140} className="p-3.5 rounded-xl bg-slate-950/70 border border-white/[0.06] space-y-1">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wide">
@@ -339,7 +339,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 className="h-full scroll-snap-card card-snap-item"
               >
                 <Interactive3DCard maxTilt={1.0} className="h-full">
-                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
+                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
                     <FadeInBlock delay={40} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <Split className="w-5 h-5" />
@@ -365,7 +365,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 className="h-full scroll-snap-card card-snap-item"
               >
                 <Interactive3DCard maxTilt={1.0} className="h-full">
-                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-emerald-500/40 hover:border-emerald-400/70 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all bg-gradient-to-b from-emerald-950/20 to-[#090E23]">
+                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-emerald-500/40 hover:border-emerald-400/70 p-5 sm:p-6 flex flex-col justify-between h-full !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all bg-gradient-to-b from-emerald-950/20 to-[#090E23]">
                     <FadeInBlock delay={60} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-emerald-950/90 border border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                         <Percent className="w-5 h-5" />
@@ -396,7 +396,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 className="h-full scroll-snap-card card-snap-item"
               >
                 <Interactive3DCard maxTilt={1.0} className="h-full">
-                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
+                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
                     <FadeInBlock delay={80} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <CreditCard className="w-5 h-5" />
@@ -422,7 +422,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                 className="h-full scroll-snap-card card-snap-item"
               >
                 <Interactive3DCard maxTilt={1.0} className="h-full">
-                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full shadow-2xl shadow-black/80 bracket-panel transition-all">
+                  <div className="glass-card-interactive surface-card service-card scroll-perf-card scroll-snap-card card-snap-item relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 p-5 sm:p-6 flex flex-col justify-between h-full !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
                     <FadeInBlock delay={100} className="space-y-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <Calendar className="w-5 h-5" />
@@ -445,7 +445,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             {/* Bloco de Orçamento Personalizado sob Medida */}
             <BiReveal direction="up" delay={150} className="mt-8 w-full">
               <Interactive3DCard maxTilt={0} className="w-full">
-                <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 shadow-2xl shadow-black/80 bracket-panel transition-all">
+                <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
                   <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
                     <FadeInBlock delay={30} className="space-y-2 text-center lg:text-left">
                       <div className="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold uppercase">

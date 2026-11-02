@@ -272,7 +272,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 onClick={() => onOpenCase(project.id)}
                 className="cta-primary inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md cursor-pointer group/casebtn"
               >
-                <span>Ver Estudo de Caso</span>
+                <span>Ver case</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white transition-transform group-hover/casebtn:translate-x-0.5" />
               </button>
 

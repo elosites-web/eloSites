@@ -650,7 +650,7 @@ export default function App() {
           <SectionErrorBoundary>
             <Suspense fallback={<PortfolioSkeleton />}>
               <PortfolioSection
-                onNavigateToServices={() => navigateToScreen('avaliacoes')}
+                onNavigateToServices={() => navigateToScreen('servicos')}
                 onOpenCase={(id) => {
                   window.location.hash = `case/${id}`;
                 }}

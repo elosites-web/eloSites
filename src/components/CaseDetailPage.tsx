@@ -329,18 +329,23 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
               </div>
             )}
 
-            {/* Tags tecnológicas */}
+            {/* Temas do projeto */}
             {project.tags && project.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0c122e] border border-blue-400/30 text-xs font-semibold text-slate-200"
-                  >
-                    <Layers className="w-3.5 h-3.5 text-blue-400" />
-                    {tag}
-                  </span>
-                ))}
+              <div className="pt-4 border-t border-blue-500/20 space-y-3">
+                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-300">
+                  Temas do projeto
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0c122e] border border-blue-400/30 text-xs font-semibold text-slate-200"
+                    >
+                      <Layers className="w-3.5 h-3.5 text-blue-400" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </section>

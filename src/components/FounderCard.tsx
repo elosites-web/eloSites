@@ -59,7 +59,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
           aria-hidden="true"
         />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 sm:gap-8 lg:gap-10 my-auto">
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 sm:gap-8 lg:gap-10 my-auto">
           {/* COLUNA ESQUERDA: Retrato Circular do Fundador com Halo e Badge (sempre centralizado) */}
           <div
             onClick={handleNavigateToCartao}
@@ -73,7 +73,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
             tabIndex={0}
             title="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
             aria-label="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
-            className="flex flex-col items-center justify-center shrink-0 self-center pb-3 md:pb-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#070b1a] rounded-full group/avatar-col transition-transform duration-200"
+            className="flex flex-col items-center justify-center shrink-0 self-center pb-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#070b1a] rounded-full group/avatar-col transition-transform duration-200"
           >
             {/* Foto circular com halo gradiente e brilho com zoom/motion/pulse ao passar o mouse ou clicar */}
             <motion.div
@@ -89,7 +89,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
                   : undefined
               }
               transition={{ type: 'spring', stiffness: 280, damping: 18 }}
-              className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center transition-shadow duration-300 group/avatar select-none"
+              className="glow-border-animated relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center transition-shadow duration-300 group/avatar select-none"
             >
               <img
                 src="/eu.png"
@@ -98,16 +98,16 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
                 height={192}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-102"
+                className="glow-border-animated w-full h-full rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-102"
               />
 
-              {/* Selo 'Fundador' posicionado na borda inferior do retrato, flutuando suavemente */}
-              <div className="founder-badge absolute -bottom-3.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050814]/90 border border-slate-700/60 text-slate-300 font-mono text-xs shadow-md shadow-black/40 whitespace-nowrap z-10 transition-transform duration-200 group-hover/avatar:scale-105">
+              {/* Selo do Fundador posicionado na borda inferior do retrato, flutuando suavemente (100% opaco e acima do anel luminoso) */}
+              <div className="founder-badge absolute -bottom-3 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#0b1020] bg-[linear-gradient(180deg,#242e49_0%,#111728_55%,#080b14_100%)] border border-[#475569] text-white opacity-100 shadow-[0_8px_24px_rgba(0,0,0,0.98),0_0_14px_rgba(148,163,184,0.22),inset_0_1px_1px_rgba(255,255,255,0.48),inset_0_-1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap transition-transform duration-200 group-hover/avatar:scale-105">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]" />
                 </span>
-                <span>Fundador</span>
+                <span className="text-xs font-semibold text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]">Fundador</span>
               </div>
             </motion.div>
           </div>
@@ -131,30 +131,19 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
               <strong className="font-bold text-white">ēloSites</strong>. Desenvolvo sites profissionais do zero, pensados para apresentar o seu trabalho com clareza, estruturados com boas práticas para indexação e facilitando o contato de novos clientes pelo WhatsApp.
             </p>
 
-            {/* Linha de Ações */}
-            <div className="pt-2 sm:pt-3 flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-4 w-full">
-              {/* Botão de WhatsApp Corporativo */}
+            {/* Linha de Ações centralizada */}
+            <div className="pt-2 sm:pt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
+              {/* Botão de WhatsApp Corporativo centralizado */}
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer group/wa"
+                className="mx-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer group/wa"
                 aria-label="Conversar diretamente com Everton via WhatsApp"
               >
                 <WhatsAppIcon className="w-4 h-4 text-emerald-400 group-hover/wa:scale-110 transition-transform" />
                 <span>Conversar diretamente com Everton</span>
               </a>
-
-              {/* Botão para ancorar para o Cartão de Visitas na página FAQ & Contato */}
-              <button
-                type="button"
-                onClick={handleNavigateToCartao}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 border border-indigo-500/40 hover:border-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.15)] hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all cursor-pointer group/card"
-                aria-label="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
-              >
-                <span>Ver cartão de visitas</span>
-                <span className="text-indigo-400 group-hover/card:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
-              </button>
             </div>
           </div>
         </div>

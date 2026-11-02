@@ -408,6 +408,9 @@ article {
 .founder-badge {
   animation-duration: 6.2s;
   animation-delay: -1.2s;
+  opacity: 1 !important;
+  background-color: #0b1020 !important;
+  z-index: 30 !important;
 }
 
 .floating-badge {
@@ -2118,50 +2121,8 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   will-change: transform, opacity;
 }
 
-/* Efeito de brilho suave azul animado na borda ao passar o mouse no showcase expansível do Hero */
-@keyframes softBlueBorderGlow {
-  0%, 100% {
-    border-color: rgba(96, 165, 250, 0.5);
-    box-shadow:
-      0 0 22px -4px rgba(59, 130, 246, 0.34),
-      0 0 42px -10px rgba(56, 189, 248, 0.22),
-      inset 0 0 14px rgba(59, 130, 246, 0.08);
-  }
-  50% {
-    border-color: rgba(147, 197, 253, 0.85);
-    box-shadow:
-      0 0 30px -2px rgba(59, 130, 246, 0.52),
-      0 0 54px -8px rgba(56, 189, 248, 0.34),
-      inset 0 0 20px rgba(59, 130, 246, 0.14);
-  }
-}
-
-.hero-showcase-expandable {
-  border-radius: 1.25rem;
-  border: 1px solid rgba(59, 130, 246, 0.18);
-  background: linear-gradient(180deg, rgba(9, 14, 35, 0.45) 0%, rgba(5, 8, 20, 0.65) 100%);
-  padding: 0.75rem;
-  cursor: pointer;
-  transition:
-    border-color 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-    background-color 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.hero-showcase-expandable:hover,
-.hero-showcase-expandable:focus-visible {
-  border-color: rgba(96, 165, 250, 0.7);
-  box-shadow:
-    0 0 26px -4px rgba(59, 130, 246, 0.42),
-    0 0 46px -8px rgba(56, 189, 248, 0.28),
-    inset 0 0 16px rgba(59, 130, 246, 0.1);
-  animation: softBlueBorderGlow 2.8s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .brand-logo-entry,
-  .hero-showcase-expandable:hover,
-  .hero-showcase-expandable:focus-visible {
+  .brand-logo-entry {
     animation: none !important;
   }
 }
@@ -2190,6 +2151,92 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   );
   animation: lightIndigoRipple 0.52s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
+
+@keyframes fadeInZoomIn95 {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in.fade-in.zoom-in-95 {
+  animation: fadeInZoomIn95 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in.fade-in.zoom-in-95 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Padronização tipográfica e de alinhamento dos 4 cards de pilares do Hero
+   Compatível com Desktop, Tablet, Mobile (retrato e paisagem) e WebViews (Instagram / Facebook) */
+.hero-pillars-grid {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.hero-pillar-card {
+  box-sizing: border-box;
+  background-color: #0b1229;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.hero-pillar-title,
+.hero-pillar-subtitle {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.hero-pillars-expanded-text {
+  text-align: justify;
+  text-align-last: left;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Celulares no modo paisagem (horizontal): exibe os 4 pilares em 4 colunas compactas e equilibradas */
+@media (orientation: landscape) and (max-height: 540px) {
+  .hero-pillars-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.5rem !important;
+  }
+
+  .hero-pillar-card {
+    padding: 0.625rem 0.5rem !important;
+  }
+}
+
+/* Telas muito estreitas (<= 360px e WebViews do Instagram/Facebook com fonte ampliada) */
+@media (max-width: 360px) {
+  .hero-pillar-card {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .hero-pillar-title {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .hero-pillar-subtitle {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+}
+
+
 
 
 

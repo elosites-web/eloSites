@@ -16,14 +16,9 @@ import {
   Search,
   Smartphone,
   CheckCircle2,
-  Code2,
   Sparkles,
   ArrowRight,
   ArrowDown,
-  Folder,
-  FileCode,
-  Shield,
-  Check,
   Scissors,
   Dumbbell,
   HeartPulse,
@@ -43,7 +38,56 @@ import {
 import { Interactive3DCard } from './Interactive3DCard';
 import { InfiniteMarquee } from './InfiniteMarquee';
 import { BiReveal } from './BiReveal';
+import { useReveal } from './Reveal';
 import { TypewriterSlogan } from './TypewriterSlogan';
+
+interface HeroCodeLine {
+  text: string;
+  className: string;
+}
+
+interface HeroCodeTypingStep {
+  lineIdx: number;
+  charLen: number;
+  timeOffsetMs: number;
+}
+
+const HERO_CODE_LINES: HeroCodeLine[] = [
+  { text: '// Arquitetura limpa com React 19 + TypeScript', className: 'text-slate-500' },
+  { text: 'export default function Home() {', className: 'text-blue-400' },
+  { text: 'return (', className: 'pl-4 text-slate-300' },
+  { text: '<main className="hero-section">', className: 'pl-8 text-sky-300' },
+  { text: '<h1>Seu site, sob medida.</h1>', className: 'pl-12 text-slate-200' },
+  { text: '<ConversionEngine focus="whatsapp" seo={true} />', className: 'pl-12 text-cyan-300' },
+  { text: '</main>', className: 'pl-8 text-sky-300' },
+  { text: ');', className: 'pl-4 text-slate-300' },
+  { text: '}', className: 'text-blue-400' },
+];
+
+const HERO_CODE_STEPS: HeroCodeTypingStep[] = (() => {
+  const steps: HeroCodeTypingStep[] = [];
+  let cumulativeMs = 0;
+
+  for (let lIdx = 0; lIdx < HERO_CODE_LINES.length; lIdx++) {
+    const lineText = HERO_CODE_LINES[lIdx].text;
+    for (let cLen = 1; cLen <= lineText.length; cLen++) {
+      if (lIdx === 0 && cLen === 1) {
+        cumulativeMs += 14;
+      } else if (cLen === 1) {
+        cumulativeMs += 48;
+      } else {
+        cumulativeMs += 15;
+      }
+      steps.push({
+        lineIdx: lIdx,
+        charLen: cLen,
+        timeOffsetMs: cumulativeMs,
+      });
+    }
+  }
+
+  return steps;
+})();
 
 interface HeroInicioSectionProps {
   mode: 'inicio' | 'all';
@@ -62,6 +106,11 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
   const [isShowcaseExpanded, setIsShowcaseExpanded] = useState<boolean>(false);
+  const [isPillarsExpanded, setIsPillarsExpanded] = useState<boolean>(false);
+  const mockupCardReveal = useReveal<HTMLDivElement>({ once: true });
+  const codeLineTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const codeLineGhostRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const codeCursorRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const handleToggleShowcaseExpand = () => {
     setIsShowcaseExpanded((prev) => !prev);
@@ -74,6 +123,123 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
       setIsShowcaseExpanded((prev) => !prev);
     }
   };
+
+  const handleTogglePillarsExpand = () => {
+    setIsPillarsExpanded((prev) => !prev);
+  };
+
+  const handlePillarsKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setIsPillarsExpanded((prev) => !prev);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab !== 'code') return;
+
+    const lastLineIndex = HERO_CODE_LINES.length - 1;
+
+    if (isReduced) {
+      for (let i = 0; i < HERO_CODE_LINES.length; i++) {
+        const textEl = codeLineTextRefs.current[i];
+        const ghostEl = codeLineGhostRefs.current[i];
+        const cursorEl = codeCursorRefs.current[i];
+        if (textEl) textEl.textContent = HERO_CODE_LINES[i].text;
+        if (ghostEl) ghostEl.textContent = '';
+        if (cursorEl) {
+          cursorEl.style.display = i === lastLineIndex ? 'inline-block' : 'none';
+          cursorEl.classList.remove('animate-typewriter-cursor');
+          cursorEl.classList.add('animate-pulse');
+        }
+      }
+      return;
+    }
+
+    for (let i = 0; i < HERO_CODE_LINES.length; i++) {
+      const textEl = codeLineTextRefs.current[i];
+      const ghostEl = codeLineGhostRefs.current[i];
+      const cursorEl = codeCursorRefs.current[i];
+      if (textEl) textEl.textContent = '';
+      if (ghostEl) ghostEl.textContent = HERO_CODE_LINES[i].text;
+      if (cursorEl) {
+        cursorEl.style.display = i === 0 ? 'inline-block' : 'none';
+        cursorEl.classList.remove('animate-pulse');
+        cursorEl.classList.add('animate-typewriter-cursor');
+      }
+    }
+
+    let rafId = 0;
+    let startTime: number | null = null;
+    let lastAppliedStep = -1;
+    let activeCursorLine = 0;
+
+    const tick = (now: number) => {
+      if (startTime === null) {
+        startTime = now + 80;
+      }
+
+      const elapsed = now - startTime;
+      if (elapsed < 0) {
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      let targetStep = -1;
+      for (let i = lastAppliedStep + 1; i < HERO_CODE_STEPS.length; i++) {
+        if (HERO_CODE_STEPS[i].timeOffsetMs <= elapsed) {
+          targetStep = i;
+        } else {
+          break;
+        }
+      }
+
+      if (targetStep > lastAppliedStep) {
+        for (let s = lastAppliedStep + 1; s <= targetStep; s++) {
+          const step = HERO_CODE_STEPS[s];
+          const fullText = HERO_CODE_LINES[step.lineIdx].text;
+          const textEl = codeLineTextRefs.current[step.lineIdx];
+          const ghostEl = codeLineGhostRefs.current[step.lineIdx];
+
+          if (textEl) {
+            textEl.textContent = fullText.slice(0, step.charLen);
+          }
+          if (ghostEl) {
+            ghostEl.textContent = fullText.slice(step.charLen);
+          }
+
+          if (step.lineIdx !== activeCursorLine) {
+            const prevCursor = codeCursorRefs.current[activeCursorLine];
+            if (prevCursor) prevCursor.style.display = 'none';
+            const nextCursor = codeCursorRefs.current[step.lineIdx];
+            if (nextCursor) nextCursor.style.display = 'inline-block';
+            activeCursorLine = step.lineIdx;
+          }
+        }
+        lastAppliedStep = targetStep;
+      }
+
+      if (lastAppliedStep >= HERO_CODE_STEPS.length - 1) {
+        const finalCursor = codeCursorRefs.current[lastLineIndex];
+        if (finalCursor) {
+          finalCursor.style.display = 'inline-block';
+          finalCursor.classList.remove('animate-typewriter-cursor');
+          finalCursor.classList.add('animate-pulse');
+        }
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    rafId = window.requestAnimationFrame(tick);
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, [activeTab, isReduced]);
 
   const handleScrollToPortfolio = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -234,42 +400,90 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
               style={isReduced ? undefined : { y: pillarsY, opacity: pillarsOpacity }}
               className="w-full flex flex-col items-center lg:items-start"
             >
-              <BiReveal direction="up" delay={200}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2 w-full max-w-xl">
+              <BiReveal direction="up" delay={200} className="w-full max-w-xl">
+                <div
+                  onClick={handleTogglePillarsExpand}
+                  onKeyDown={handlePillarsKeyDown}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isPillarsExpanded}
+                  aria-label="Pilares do seu site: clique para ler a explicação simples"
+                  className="hero-pillars-grid animate-in fade-in zoom-in-95 duration-500 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 pt-2 w-full max-w-xl items-stretch cursor-pointer select-none"
+                >
                   {/* Pilar 1 */}
-                  <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
-                    <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
+                  <div className="hero-pillar-card flex flex-col items-center justify-between text-center p-3 sm:p-3.5 rounded-xl bg-[#0b1229] border border-blue-500/20 shadow-sm group hover:border-blue-400/40 transition-colors h-full min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                       <Monitor className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-semibold text-white text-center">Design sob medida</span>
-                    <span className="text-[11px] text-slate-300 font-medium text-center">Identidade própria</span>
+                    <div className="flex flex-col items-center justify-center flex-1 w-full gap-0.5">
+                      <span className="hero-pillar-title text-[11.5px] sm:text-xs font-semibold text-white text-center leading-tight text-balance w-full">
+                        Design sob medida
+                      </span>
+                      <span className="hero-pillar-subtitle text-[10.5px] sm:text-[11px] text-slate-300 font-medium text-center leading-snug text-balance w-full">
+                        Identidade própria
+                      </span>
+                    </div>
                   </div>
 
                   {/* Pilar 2 */}
-                  <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
-                    <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
+                  <div className="hero-pillar-card flex flex-col items-center justify-between text-center p-3 sm:p-3.5 rounded-xl bg-[#0b1229] border border-blue-500/20 shadow-sm group hover:border-blue-400/40 transition-colors h-full min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                       <Zap className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-semibold text-white text-center">Carregamento rápido</span>
-                    <span className="text-[11px] text-slate-300 font-medium text-center">Sem lentidão</span>
+                    <div className="flex flex-col items-center justify-center flex-1 w-full gap-0.5">
+                      <span className="hero-pillar-title text-[11.5px] sm:text-xs font-semibold text-white text-center leading-tight text-balance w-full">
+                        Carregamento rápido
+                      </span>
+                      <span className="hero-pillar-subtitle text-[10.5px] sm:text-[11px] text-slate-300 font-medium text-center leading-snug text-balance w-full">
+                        Sem lentidão
+                      </span>
+                    </div>
                   </div>
 
                   {/* Pilar 3 */}
-                  <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
-                    <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
+                  <div className="hero-pillar-card flex flex-col items-center justify-between text-center p-3 sm:p-3.5 rounded-xl bg-[#0b1229] border border-blue-500/20 shadow-sm group hover:border-blue-400/40 transition-colors h-full min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                       <Search className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-semibold text-white text-center">Estrutura para indexação</span>
-                    <span className="text-[11px] text-slate-300 font-medium text-center">Preparada para o Google</span>
+                    <div className="flex flex-col items-center justify-center flex-1 w-full gap-0.5">
+                      <span className="hero-pillar-title text-[11.5px] sm:text-xs font-semibold text-white text-center leading-tight text-balance w-full">
+                        Estrutura
+                      </span>
+                      <span className="hero-pillar-subtitle text-[10.5px] sm:text-[11px] text-slate-300 font-medium text-center leading-snug text-balance w-full">
+                        Preparada para o Google
+                      </span>
+                    </div>
                   </div>
 
                   {/* Pilar 4 */}
-                  <div className="flex flex-col items-center text-center p-3 rounded-xl bg-slate-900/60 border border-blue-500/15 shadow-sm backdrop-blur-sm group hover:border-blue-400/40 transition-colors">
-                    <div className="w-8 h-8 rounded-lg bg-blue-950/70 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
+                  <div className="hero-pillar-card flex flex-col items-center justify-between text-center p-3 sm:p-3.5 rounded-xl bg-[#0b1229] border border-blue-500/20 shadow-sm group hover:border-blue-400/40 transition-colors h-full min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2 shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.25)] group-hover:scale-110 transition-transform">
                       <Smartphone className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-semibold text-white text-center">Layout responsivo</span>
-                    <span className="text-[11px] text-slate-300 font-medium text-center">Para diferentes telas</span>
+                    <div className="flex flex-col items-center justify-center flex-1 w-full gap-0.5">
+                      <span className="hero-pillar-title text-[11.5px] sm:text-xs font-semibold text-white text-center leading-tight text-balance w-full">
+                        Layout responsivo
+                      </span>
+                      <span className="hero-pillar-subtitle text-[10.5px] sm:text-[11px] text-slate-300 font-medium text-center leading-snug text-balance w-full">
+                        Para diferentes telas
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Contêiner expansível com parágrafo em linguagem simples para leigos (oculto por padrão) */}
+                  <div
+                    aria-hidden={!isPillarsExpanded}
+                    className={`col-span-2 sm:col-span-4 grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                      isPillarsExpanded
+                        ? 'grid-rows-[1fr] opacity-100 pt-1'
+                        : 'grid-rows-[0fr] opacity-0 pt-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-justify [text-align-last:left] hyphens-auto">
+                        Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, aparece com mais facilidade quando alguém procura seu serviço no Google e funciona perfeitamente tanto no celular quanto no computador.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </BiReveal>
@@ -315,7 +529,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                 role="button"
                 tabIndex={0}
                 aria-expanded={isShowcaseExpanded}
-                aria-label="Painel interativo do projeto: clique para expandir especificações técnicas"
+                aria-label="Painel interativo do site: clique para ver como esse site ajuda o seu negócio"
                 style={
                   isReduced
                     ? undefined
@@ -327,7 +541,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                         opacity: laptopOpacity,
                       }
                 }
-                className="hero-showcase-expandable relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d]"
+                className="relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d] cursor-pointer rounded-2xl transition-all duration-300"
               >
                 
                 {/* Indicador de Status do Mockup com Abas */}
@@ -374,7 +588,10 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
 
                 {/* MOCKUP DO LAPTOP 3D */}
                 <Interactive3DCard maxTilt={5} animatedBorder={true}>
-                  <div className="relative rounded-2xl bg-[#090E23] border border-blue-500/25 p-2 shadow-2xl shadow-black/80 backdrop-blur-xl">
+                  <div
+                    ref={mockupCardReveal.ref}
+                    className={`reveal ${mockupCardReveal.visible ? 'is-visible' : ''} scroll-fade-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 p-2 shadow-2xl shadow-black/80 backdrop-blur-xl`}
+                  >
                     
                     {/* Moldura da Tela do Laptop */}
                     <div className="rounded-xl overflow-hidden bg-[#030712] border border-white/10 shadow-inner relative min-h-[300px] sm:min-h-[340px]">
@@ -386,7 +603,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
                           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
                         </div>
-                        <div className="text-[11px] font-mono text-slate-300 bg-slate-900/80 px-4 py-0.5 rounded-md border border-white/5 flex items-center gap-1.5">
+                        <div className="scroll-fade-text text-[11px] font-mono text-slate-300 bg-slate-900/80 px-4 py-0.5 rounded-md border border-white/5 flex items-center gap-1.5">
                           <span className="text-emerald-400">🔒</span>
                           <span>https://elosites.ia.br</span>
                         </div>
@@ -428,7 +645,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </div>
 
                           {/* Mini Barra de Navegação Interna da Tela */}
-                          <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
+                          <div className="scroll-fade-text relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
                             <div className="flex items-center gap-1.5">
                               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
                                 ē
@@ -444,11 +661,11 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </div>
 
                           {/* Conteúdo Central da Tela */}
-                          <div className="relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
-                            <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                          <div className="scroll-fade-text relative z-10 my-auto py-4 space-y-2.5 max-w-sm">
+                            <h2 className="scroll-fade-text text-xl sm:text-2xl font-extrabold text-white leading-tight">
                               Um site profissional para o seu negócio.
                             </h2>
-                            <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                            <p className="scroll-fade-text text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                               Apresente seus serviços com clareza, transmita confiança e receba novos contatos direto no seu WhatsApp.
                             </p>
                             <div className="pt-1">
@@ -465,7 +682,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           </div>
 
                           {/* Mini Indicador de Pilares na Tela */}
-                          <div className="relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
+                          <div className="scroll-fade-text relative z-10 grid grid-cols-4 gap-1.5 pt-2 border-t border-white/10 text-[9px] text-slate-300">
                             <div className="flex items-center justify-center gap-1">
                               <span>Design</span>
                             </div>
@@ -482,18 +699,44 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                         </div>
                       ) : (
                         <div className="relative p-4 sm:p-5 flex flex-col justify-between min-h-[260px] sm:min-h-[300px] bg-[#020617] font-mono text-[11px] text-slate-300 overflow-hidden">
-                          <div className="space-y-2">
-                            <div className="text-slate-500">// Arquitetura limpa com React 19 + TypeScript</div>
-                            <div className="text-blue-400">export default function Home() {'{'}</div>
-                            <div className="pl-4 text-slate-300">return (</div>
-                            <div className="pl-8 text-sky-300">&lt;main className=&quot;hero-section&quot;&gt;</div>
-                            <div className="pl-12 text-slate-200">&lt;h1&gt;Seu site, sob medida.&lt;/h1&gt;</div>
-                            <div className="pl-12 text-cyan-300">&lt;ConversionEngine focus=&quot;whatsapp&quot; seo={'{'}true{'}'} /&gt;</div>
-                            <div className="pl-8 text-sky-300">&lt;/main&gt;</div>
-                            <div className="pl-4 text-slate-300">);</div>
-                            <div className="text-blue-400">{'}'}</div>
+                          <div className="scroll-fade-text space-y-2" aria-label={HERO_CODE_LINES.map((l) => l.text).join('\n')}>
+                            {HERO_CODE_LINES.map((line, idx) => (
+                              <div key={idx} className={line.className}>
+                                <span
+                                  ref={(el) => {
+                                    codeLineTextRefs.current[idx] = el;
+                                  }}
+                                >
+                                  {isReduced ? line.text : ''}
+                                </span>
+                                <span
+                                  ref={(el) => {
+                                    codeCursorRefs.current[idx] = el;
+                                  }}
+                                  aria-hidden="true"
+                                  style={{
+                                    display:
+                                      isReduced && idx === HERO_CODE_LINES.length - 1
+                                        ? 'inline-block'
+                                        : !isReduced && idx === 0
+                                          ? 'inline-block'
+                                          : 'none',
+                                  }}
+                                  className="w-[6px] h-[13px] ml-[1px] align-middle bg-blue-400 rounded-[1px] shadow-[0_0_8px_rgba(96,165,250,0.85)] animate-typewriter-cursor"
+                                />
+                                <span
+                                  ref={(el) => {
+                                    codeLineGhostRefs.current[idx] = el;
+                                  }}
+                                  aria-hidden="true"
+                                  className="opacity-0 select-none pointer-events-none"
+                                >
+                                  {isReduced ? '' : line.text}
+                                </span>
+                              </div>
+                            ))}
                           </div>
-                          <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
+                          <div className="scroll-fade-text pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
                             <span className="text-emerald-400">✓ 0 erros de sintaxe</span>
                             <span>TypeScript 5.6 • Vite 6</span>
                           </div>
@@ -508,14 +751,14 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   </div>
                 </Interactive3DCard>
 
-                {/* Barra de indicação de expansão e Conteúdo Técnico Oculto Expansível */}
+                {/* Barra de indicação de expansão e Conteúdo Oculto em linguagem simples e acessível */}
                 <div className="mt-2.5 px-2 flex items-center justify-between text-xs text-blue-300/90 font-medium select-none">
                   <span className="inline-flex items-center gap-1.5">
-                    <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                    <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                     <span>
                       {isShowcaseExpanded
-                        ? 'Ocultar especificações da arquitetura'
-                        : 'Clique para expandir especificações técnicas'}
+                        ? 'Ocultar resumo dos benefícios práticos'
+                        : 'Clique para ver como esse site ajuda o seu negócio'}
                     </span>
                   </span>
                   <ArrowDown
@@ -526,6 +769,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                 </div>
 
                 <div
+                  aria-hidden={!isShowcaseExpanded}
                   className={`grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     isShowcaseExpanded
                       ? 'grid-rows-[1fr] opacity-100 mt-3'
@@ -536,42 +780,46 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     <div className="rounded-xl bg-slate-950/90 border border-blue-500/25 p-3.5 sm:p-4 space-y-2.5 text-left shadow-inner">
                       <div className="flex items-center justify-between border-b border-blue-500/15 pb-2">
                         <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-                          <Shield className="w-3.5 h-3.5 text-blue-400" />
-                          <span>Padrão de Engenharia ēloSites</span>
+                          <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                          <span>O que o seu negócio ganha na prática</span>
                         </span>
-                        <span className="text-[10px] font-mono text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
-                          Core Web Vitals Ready
+                        <span className="text-[10px] font-medium text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
+                          Simples e direto
                         </span>
                       </div>
+
+                      <p className="text-xs text-slate-200 leading-relaxed">
+                        Você não precisa entender de programação nem se preocupar com configurações complicadas: nós cuidamos de toda a parte técnica para entregar seu site pronto para receber clientes.
+                      </p>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0.5">
                         <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Performance</span>
+                            <span>Fácil de encontrar</span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-snug">
-                            Imagens AVIF/WebP e carregamento otimizado sem travamentos.
+                            Quando alguém procura pelo seu serviço no Google, encontra sua empresa com facilidade.
                           </p>
                         </div>
 
                         <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>SEO Técnico</span>
+                            <span>Bom no celular</span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-snug">
-                            Dados estruturados Schema.org, Open Graph e Sitemap XML.
+                            Abre rápido e fica fácil de ler tanto no celular quanto no computador, sem travar.
                           </p>
                         </div>
 
                         <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Conversão</span>
+                            <span>Direto no WhatsApp</span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-snug">
-                            Integração direta com WhatsApp e navegação mobile-first.
+                            O cliente conhece o seu trabalho e já chama você no WhatsApp com apenas um clique.
                           </p>
                         </div>
                       </div>
