@@ -76,7 +76,6 @@ interface FloatingWhatsAppProps {
 }
 
 export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStateChange, currentScreen }) => {
-  const isHomeScreen = currentScreen === 'home';
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [isSkeletonLoading, setIsSkeletonLoading] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
@@ -283,10 +282,6 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
 
   const floatingWhatsappUrl = whatsappUrl(SITE_CONFIG.floatingWhatsappMessage);
 
-  if (isHomeScreen) {
-    return null;
-  }
-
   return (
     <aside
       aria-label="Atendimento rápido via WhatsApp"
@@ -358,14 +353,14 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
             <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-2 min-w-0">
                 <a
-                  href="#home"
+                  href="#inicio"
                   onClick={(e) => {
                     e.preventDefault();
-                    window.location.hash = 'home';
+                    window.location.hash = 'inicio';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   className="w-6 h-6 rounded-full bg-slate-900 border border-blue-500/30 p-0.5 flex items-center justify-center shrink-0 overflow-hidden hover:scale-105 transition-transform cursor-pointer"
-                  aria-label="ēloSites — Ir para a Página Inicial (Home)"
+                  aria-label="ēloSites — Ir para a Página Inicial (Início)"
                 >
                   <img
                     src="/favicon-32x32.png"

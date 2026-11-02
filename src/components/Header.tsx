@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { EloLogo } from './EloLogo';
-import { FluidRippleBackground } from './FluidRippleBackground';
 import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
 
@@ -20,7 +19,6 @@ export const Header: React.FC<HeaderProps> = ({
   isMenuOpen,
   setIsMenuOpen,
 }) => {
-  const isHome = currentScreen === 'home';
   const savedScrollPositionRef = useRef<number>(0);
 
   // Tecla de atalho: Escape para fechar o menu, 'm' ou 'M' para abrir/fechar o menu
@@ -129,22 +127,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Menu Fechado na Home: Botão de menu centralizado */}
-      {isHome && !isMenuOpen && (
-        <header
-          id="header-nav"
-          className="fixed top-5 sm:top-7 left-0 right-0 z-50 pointer-events-none px-4 sm:px-6 lg:px-8"
-        >
-          <div className="max-w-7xl mx-auto flex items-center justify-center">
-            <div className="pointer-events-auto flex items-center justify-center">
-              {renderMenuButton()}
-            </div>
-          </div>
-        </header>
-      )}
-
-      {/* Menu Fechado nas demais telas: Cabeçalho com Logo e Menu Hambúrguer */}
-      {!isHome && !isMenuOpen && (
+      {/* Menu Fechado: Cabeçalho com Logo e Menu Hambúrguer */}
+      {!isMenuOpen && (
         <header
           id="header-nav"
           className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#050814]/90 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto"
@@ -156,9 +140,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   type="button"
                   id="brand-logo-link"
-                  onClick={() => onSelectScreen('home')}
+                  onClick={() => onSelectScreen('inicio')}
                   className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center gap-2.5 shrink-0 cursor-pointer"
-                  aria-label="ēloSites — Ir para a Página Inicial (Home)"
+                  aria-label="ēloSites — Ir para a Página Inicial (Início)"
                 >
                   <EloLogo size="md" />
                 </button>
@@ -173,19 +157,16 @@ export const Header: React.FC<HeaderProps> = ({
         </header>
       )}
 
-      {/* MODAL DO MENU DE NAVEGAÇÃO COMPLETO COM BACKGROUND DE ESPAÇO-TEMPO E MOVIMENTO FLUTUANTE */}
+      {/* MODAL DO MENU DE NAVEGAÇÃO COMPLETO */}
       {isMenuOpen && (
         <div
           id="multi-screen-navigation-modal"
           role="dialog"
           aria-modal="true"
           aria-label="Menu de Navegação das Seções ēloSites"
-          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 bg-[#050814]/92 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto overscroll-contain"
+          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 bg-[#050814]/95 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto overscroll-contain"
           onClick={handleCloseMenuWithoutNav}
         >
-          {/* Fundo de grade azul de espaço-tempo com bolha em movimento contínuo e aleatório */}
-          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-70 pointer-events-none" />
-
           {/* Botão de Fechar ('X') */}
           <header
             id="header-nav-active"
@@ -281,7 +262,7 @@ export const Header: React.FC<HeaderProps> = ({
               taglineClassName="whitespace-nowrap"
               onClick={() => {
                 setIsMenuOpen(false);
-                onSelectScreen('home');
+                onSelectScreen('inicio');
               }}
             />
           </div>

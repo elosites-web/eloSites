@@ -25,13 +25,45 @@ export function lowEndDevice(): boolean {
   }
 }
 
+let _webglCached: boolean | null = null;
+
 export function webglSupported(): boolean {
-  try {
-    const canvas = document.createElement('canvas');
-    return Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'));
-  } catch {
+  if (_webglCached !== null) return _webglCached;
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
     return false;
   }
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = (canvas.getContext('webgl2', { depth: false, stencil: false }) ||
+      canvas.getContext('webgl', { depth: false, stencil: false }) ||
+      canvas.getContext('experimental-webgl', { depth: false, stencil: false })) as WebGLRenderingContext | null;
+
+    if (!gl) {
+      _webglCached = false;
+      return false;
+    }
+
+    if (typeof gl.isContextLost === 'function' && gl.isContextLost()) {
+      _webglCached = false;
+      return false;
+    }
+
+    // Libera o contexto de teste imediatamente para não estourar o limite de contextos WebGL do navegador
+    const loseExt = gl.getExtension('WEBGL_lose_context');
+    if (loseExt) {
+      loseExt.loseContext();
+    }
+
+    _webglCached = true;
+    return true;
+  } catch {
+    _webglCached = false;
+    return false;
+  }
+}
+
+export function markWebglFailed(): void {
+  _webglCached = false;
 }
 
 export function isInAppBrowser(): boolean {

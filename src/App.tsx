@@ -76,7 +76,7 @@ const SitemapModal = lazy(() =>
 );
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
+  const [currentScreen, setCurrentScreen] = useState<ScreenId>('inicio');
   const [direction, setDirection] = useState<number>(1);
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
   const [isSitemapOpen, setIsSitemapOpen] = useState<boolean>(false);
@@ -92,7 +92,7 @@ export default function App() {
 
   // Armazenamento em memória das posições de scroll de cada página/view para restauração suave
   const scrollPositionsRef = useRef<Record<string, number>>({});
-  const currentRouteKeyRef = useRef<string>('home');
+  const currentRouteKeyRef = useRef<string>('inicio');
 
   // Desativa restauração automática truncada do navegador para controle milimétrico de scroll
   useEffect(() => {
@@ -176,7 +176,6 @@ export default function App() {
   // Sincronização inicial e bidirecional com a hash da URL (telas oficiais + cases + imagens)
   useEffect(() => {
     const validIds: ScreenId[] = [
-      'home',
       'inicio',
       'servicos',
       'portfolio',
@@ -231,6 +230,17 @@ export default function App() {
       setActiveCaseId(null);
       setActiveImageView(null);
 
+      // 4. Redirecionamento de compatibilidade para links legados (#home e #sobre -> #inicio)
+      if (rawHash === 'home' || rawHash === 'sobre') {
+        setCurrentScreen('inicio');
+        currentRouteKeyRef.current = 'inicio';
+        if (window.location.hash !== '#inicio') {
+          history.replaceState(null, '', '#inicio');
+        }
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        return;
+      }
+
       if (rawHash === 'portfolio') {
         setCurrentScreen('portfolio');
         currentRouteKeyRef.current = 'portfolio';
@@ -238,19 +248,8 @@ export default function App() {
         window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
         return;
       }
-      if (rawHash === 'sobre') {
-        setCurrentScreen((prev) => {
-          if (prev !== 'inicio') {
-            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
-            if (nextIdx !== -1 && prevIdx !== -1) {
-              setDirection(nextIdx > prevIdx ? 1 : -1);
-            }
-          }
-          return 'inicio';
-        });
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
+
+      if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
         setCurrentScreen((prev) => {
           if (prev !== 'servicos') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -438,115 +437,7 @@ export default function App() {
     }
   }, [nextScreen, navigateToScreen]);
 
-  // Suporte a navegação por setas do teclado (Esquerda e Direita)
-  useEffect(() => {
-    const handleKeyNav = (e: KeyboardEvent) => {
-      // Atalhos com modificadores pertencem ao navegador (ex.: Alt+Seta = voltar)
-      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
 
-      const target = e.target as HTMLElement | null;
-      if (target) {
-        const targetTag = target.tagName?.toLowerCase();
-        if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select') {
-          return;
-        }
-        if (target.isContentEditable) return;
-        // O carrossel de depoimentos trata as setas por conta própria
-        if (target.closest('[data-testimonials-carousel]')) return;
-      }
-
-      // Não navegar quando visualizando um case, imagem ampliada ou com modal aberto
-      if (activeCaseId || activeImageView || isMenuOpen || legalModal !== null || isSitemapOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) return;
-
-      if (e.key === 'ArrowLeft' && previousScreen) {
-        handlePrevious();
-      } else if (e.key === 'ArrowRight' && nextScreen) {
-        handleNext();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyNav);
-    return () => window.removeEventListener('keydown', handleKeyNav);
-  }, [previousScreen, nextScreen, handlePrevious, handleNext]);
-
-  // Suporte a gestos de swipe em dispositivos móveis (Swipe-to-navigate entre seções)
-  useEffect(() => {
-    // Detecta dispositivos com capacidade de toque
-    const hasTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    if (!hasTouch) return;
-
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let isSwipingIgnored = false;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      // Ignora gestos multi-toque (ex.: pinça/zoom)
-      if (e.touches.length !== 1) {
-        isSwipingIgnored = true;
-        return;
-      }
-
-      // Ignora se o menu ou algum modal/diálogo ou tela de case/imagem estiver aberto
-      if (activeCaseId || activeImageView || isMenuOpen || legalModal !== null || isSitemapOpen || document.querySelector('[role="dialog"][aria-modal="true"]')) {
-        isSwipingIgnored = true;
-        return;
-      }
-
-      const target = e.target as HTMLElement | null;
-      if (target) {
-        const targetTag = target.tagName?.toLowerCase();
-        // Não interfere em formulários ou elementos editáveis
-        if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || target.isContentEditable) {
-          isSwipingIgnored = true;
-          return;
-        }
-        // Não interfere em elementos horizontais dedicados (ex.: carrossel de depoimentos Embla)
-        if (target.closest('[data-testimonials-carousel]') || target.closest('[data-no-swipe]')) {
-          isSwipingIgnored = true;
-          return;
-        }
-      }
-
-      const touch = e.touches[0];
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-      touchStartTime = Date.now();
-      isSwipingIgnored = false;
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (isSwipingIgnored) return;
-      if (e.changedTouches.length !== 1) return;
-
-      const touch = e.changedTouches[0];
-      const deltaX = touch.clientX - touchStartX;
-      const deltaY = touch.clientY - touchStartY;
-      const deltaTime = Date.now() - touchStartTime;
-
-      // Critérios rigorosos para disparo de swipe horizontal intencional:
-      // 1. Duração <= 650ms (gesto rápido e deliberado, não toque demorado)
-      // 2. Deslocamento horizontal >= 50px
-      // 3. Predominância horizontal (Math.abs(deltaX) > Math.abs(deltaY) * 1.5) para não colidir com a rolagem vertical de leitura
-      if (deltaTime <= 650 && Math.abs(deltaX) >= 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        if (deltaX < 0 && nextScreen) {
-          // Deslizar para a esquerda -> avança para a próxima tela
-          handleNext();
-        } else if (deltaX > 0 && previousScreen) {
-          // Deslizar para a direita -> volta para a tela anterior
-          handlePrevious();
-        }
-      }
-    };
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isMenuOpen, legalModal, isSitemapOpen, nextScreen, previousScreen, handleNext, handlePrevious, activeCaseId, activeImageView]);
 
   // Sincronização dinâmica de meta tags OpenGraph, Twitter Cards, Canonical e Title para cada seção/tela/case
   useEffect(() => {
@@ -622,7 +513,7 @@ export default function App() {
 
     // Caso 3: Telas institucionais regulares
     const meta = SCREENS.find((s) => s.id === currentScreen) || SCREENS[0];
-    const isHome = currentScreen === 'home' || currentScreen === 'inicio';
+    const isHome = currentScreen === 'inicio';
 
     const pageTitle = isHome
       ? 'ēloSites — Criação de Sites Profissionais com SEO Técnico e Conversão'
@@ -662,81 +553,32 @@ export default function App() {
 
   const currentMeta = SCREENS[currentIndex] || SCREENS[0];
 
-  // 'SlideFade' transition variant for AnimatePresence:
-  // Uses a smooth deceleration curve [0.16, 1, 0.3, 1] on entrance,
-  // and a distinctly differentiated exit easing curve [0.7, 0, 0.84, 0] (anticipation & swift departure)
-  const slideFadeVariants: Variants = {
-    initial: (dir: number) => ({
+  // Transição discreta de opacidade pura entre telas (sem deslocamento lateral)
+  const fadeVariants: Variants = {
+    initial: {
       opacity: 0,
-      x: prefersReduced ? 0 : dir >= 0 ? 16 : -16,
-      y: prefersReduced ? 0 : dir >= 0 ? 8 : -8,
-      scale: prefersReduced ? 1 : 0.995,
-    }),
+    },
     animate: {
       opacity: 1,
-      x: 0,
-      y: 0,
-      scale: 1,
       transition: {
-        x: {
-          duration: prefersReduced ? 0 : 0.26,
-          ease: [0.16, 1, 0.3, 1], // Deceleration entrance curve
-        },
-        y: {
-          duration: prefersReduced ? 0 : 0.26,
-          ease: [0.16, 1, 0.3, 1],
-        },
-        scale: {
-          duration: prefersReduced ? 0 : 0.24,
-          ease: [0.16, 1, 0.3, 1],
-        },
-        opacity: {
-          duration: prefersReduced ? 0.15 : 0.22,
-          ease: 'easeOut',
-        },
+        duration: prefersReduced ? 0.08 : 0.2,
+        ease: 'easeOut',
       },
     },
-    exit: (dir: number) => ({
+    exit: {
       opacity: 0,
-      x: prefersReduced ? 0 : dir >= 0 ? -16 : 16,
-      y: prefersReduced ? 0 : dir >= 0 ? -8 : 8,
-      scale: prefersReduced ? 1 : 0.99,
       transition: {
-        x: {
-          duration: prefersReduced ? 0 : 0.18,
-          ease: [0.7, 0, 0.84, 0], // Differentiated exit easing curve (crisp anticipation acceleration)
-        },
-        y: {
-          duration: prefersReduced ? 0 : 0.18,
-          ease: [0.7, 0, 0.84, 0],
-        },
-        scale: {
-          duration: prefersReduced ? 0 : 0.16,
-          ease: [0.7, 0, 0.84, 0],
-        },
-        opacity: {
-          duration: prefersReduced ? 0.12 : 0.15,
-          ease: [0.4, 0, 1, 1],
-        },
+        duration: prefersReduced ? 0.06 : 0.15,
+        ease: 'easeIn',
       },
-    }),
+    },
   };
 
   // Conteúdo da tela ativa, reutilizado pelos dois caminhos de transição:
   // View Transitions (crossfade) ou AnimatePresence (fallback suave atual).
   const renderActiveScreen = () => (
     <>
-      {/* TELA 01: Home (Background-only Hero com Menu Centralizado e Logo Flutuante) */}
-      {currentScreen === 'home' && (
-        <div className="w-full">
-          <Hero
-            mode="home"
-            isMenuOpen={isMenuOpen}
-          />
-        </div>
-      )}
-
-      {/* TELA 02: Sobre a ēloSites & Apresentação do Fundador */}
+      {/* TELA 01: Início — HERO Institucional com scroll & Apresentação do Fundador */}
       {currentScreen === 'inicio' && (
         <div className="w-full space-y-0">
           <Hero
@@ -1005,15 +847,14 @@ export default function App() {
             {renderActiveScreen()}
           </div>
         ) : (
-          <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={currentScreen}
-              custom={direction}
-              variants={slideFadeVariants}
+              variants={fadeVariants}
               initial="initial"
               animate="animate"
               exit="exit"
-              style={{ contain: 'layout style', willChange: 'transform, opacity' }}
+              style={{ contain: 'layout style', willChange: 'opacity' }}
               className="w-full [contain:layout_style]"
             >
               {renderActiveScreen()}
@@ -1022,8 +863,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Rodapé Institucional com Links de Telas e Termos Legais — Oculto exclusivamente na tela inicial (Home) */}
-      {!isMenuOpen && currentScreen !== 'home' && (
+      {/* Rodapé Institucional com Links de Telas e Termos Legais */}
+      {!isMenuOpen && (
         <Footer
           onOpenPrivacy={() => setLegalModal('privacy')}
           onOpenTerms={() => setLegalModal('terms')}
@@ -1033,8 +874,8 @@ export default function App() {
         />
       )}
 
-      {/* Botão Flutuante Oficial do WhatsApp — Oculto na tela Home e com menu aberto */}
-      {!isMenuOpen && currentScreen !== 'home' && (
+      {/* Botão Flutuante Oficial do WhatsApp */}
+      {!isMenuOpen && (
         <FloatingWhatsApp
           currentScreen={currentScreen}
           onBubbleStateChange={setIsWhatsAppBubbleOpen}

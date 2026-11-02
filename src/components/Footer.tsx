@@ -49,9 +49,9 @@ export const Footer: React.FC<FooterProps> = ({
 
   const handleNavigateHome = () => {
     if (onSelectScreen) {
-      onSelectScreen('home');
+      onSelectScreen('inicio');
     } else {
-      window.location.hash = 'home';
+      window.location.hash = 'inicio';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({
               id="footer-brand-logo-link"
               onClick={handleNavigateHome}
               className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center shrink-0 cursor-pointer"
-              aria-label="ēloSites — Ir para a Página Inicial (Home)"
+              aria-label="ēloSites — Ir para a Página Inicial (Início)"
             >
               <EloLogo size="md" isFooter />
             </button>
@@ -116,15 +116,14 @@ export const Footer: React.FC<FooterProps> = ({
                 const getScreenFromHref = (href: string): ScreenId => {
                   const clean = href.replace('#', '').toLowerCase().trim();
                   if (clean === 'avaliacoes' || clean.includes('avalia') || clean.includes('depoimento') || clean.includes('testemunho')) return 'avaliacoes';
-                  if (clean === 'home') return 'home';
-                  if (clean === 'inicio' || clean === 'sobre') return 'inicio';
+                  if (clean === 'home' || clean === 'inicio' || clean === 'sobre') return 'inicio';
                   if (clean === 'servicos' || clean.includes('servico')) return 'servicos';
                   if (clean === 'portfolio' || clean.includes('portfolio')) return 'portfolio';
                   if (clean === 'processo' || clean.includes('processo') || clean.includes('como-funciona') || clean.includes('diferencia')) return 'processo';
                   if (clean === 'orcamento' || clean.includes('orcamento') || clean.includes('briefing')) return 'orcamento';
                   if (clean === 'parceria-trafego' || clean.includes('parceria') || clean.includes('trafego')) return 'parceria-trafego';
                   if (clean === 'faq' || clean.includes('faq') || clean.includes('contato')) return 'faq';
-                  return 'home';
+                  return 'inicio';
                 };
 
                 const screenId = getScreenFromHref(item.href);

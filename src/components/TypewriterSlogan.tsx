@@ -3,7 +3,7 @@ import { useReducedMotion } from 'motion/react';
 import { getMotionTier, shouldReduceMedia } from '../mediaPrefs';
 
 interface TypewriterSloganProps {
-  mode?: 'home' | 'inicio' | 'all';
+  mode?: 'inicio' | 'all';
   className?: string;
 }
 

@@ -9,7 +9,6 @@ export interface NavItem {
 }
 
 export type ScreenId =
-  | 'home'
   | 'inicio'
   | 'servicos'
   | 'solucoes-web'
@@ -34,26 +33,17 @@ export interface ScreenMeta {
 
 export const SCREENS: ScreenMeta[] = [
   {
-    id: 'home',
-    number: '01',
-    title: 'Home',
-    shortTitle: 'Home',
-    badge: 'Home',
-    description: 'Presença profissional estruturada com boas práticas de indexação, além das redes sociais.',
-    iconName: 'Sparkles',
-  },
-  {
     id: 'inicio',
-    number: '02',
-    title: 'Sobre a ēloSites',
-    shortTitle: 'Sobre',
-    badge: 'Sobre',
-    description: 'Tecnologia, criatividade e propósito em cada projeto.',
+    number: '01',
+    title: 'Início',
+    shortTitle: 'Início',
+    badge: 'Início',
+    description: 'Presença profissional estruturada com boas práticas de indexação e contato pelo WhatsApp.',
     iconName: 'Sparkles',
   },
   {
     id: 'servicos',
-    number: '03',
+    number: '02',
     title: 'Serviços & Especialidades Web',
     shortTitle: 'Serviços',
     badge: 'Formatos & Especialidades',
@@ -62,7 +52,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'portfolio',
-    number: '04',
+    number: '03',
     title: 'Portfólio de Projetos Reais',
     shortTitle: 'Portfólio',
     badge: 'Sites no Ar',
@@ -71,7 +61,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'avaliacoes',
-    number: '05',
+    number: '04',
     title: 'Avaliações de Clientes Reais',
     shortTitle: 'Avaliações',
     badge: 'Avaliações',
@@ -80,7 +70,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'processo',
-    number: '06',
+    number: '05',
     title: 'Como Funciona o Processo & Diferenciais',
     shortTitle: 'Como Funciona',
     badge: 'Como Funciona',
@@ -89,7 +79,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'orcamento',
-    number: '07',
+    number: '06',
     title: 'Planejamento Estratégico & Agendamento',
     shortTitle: 'Orçamento',
     badge: 'Orçamento',
@@ -98,7 +88,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'parceria-trafego',
-    number: '08',
+    number: '07',
     title: 'Tráfego Pago (Anúncios na Internet) & Contatos',
     shortTitle: 'Tráfego Pago',
     badge: 'Tráfego Pago',
@@ -107,7 +97,7 @@ export const SCREENS: ScreenMeta[] = [
   },
   {
     id: 'faq',
-    number: '09',
+    number: '08',
     title: 'Perguntas Frequentes (FAQ) & Contato',
     shortTitle: 'FAQ & Contato',
     badge: 'FAQ & Contato',
@@ -268,8 +258,7 @@ export const SITE_CONFIG = {
 };
 
 export const NAVIGATION_ITEMS: NavItem[] = [
-  { label: 'Home', href: '#home', id: 'nav-home' },
-  { label: 'Sobre', href: '#inicio', id: 'nav-inicio' },
+  { label: 'Início', href: '#inicio', id: 'nav-inicio' },
   { label: 'Serviços', href: '#servicos', id: 'nav-servicos' },
   { label: 'Portfólio', href: '#portfolio', id: 'nav-portfolio' },
   { label: 'Avaliações', href: '#avaliacoes', id: 'nav-avaliacoes' },

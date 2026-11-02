@@ -54,7 +54,7 @@ export const SitemapModal: React.FC<SitemapModalProps> = ({
   const sitemapEntries: SitemapEntry[] = useMemo(() => {
     const cleanBase = baseUrl.replace(/\/+$/, '');
     return SCREENS.map((s) => {
-      const isHome = s.id === 'home';
+      const isHome = s.id === 'inicio';
       return {
         path: isHome ? '/' : `/#${s.id}`,
         url: isHome ? `${cleanBase}/` : `${cleanBase}/#${s.id}`,

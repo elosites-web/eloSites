@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { getMotionTier, shouldReduceMedia, webglSupported } from '../mediaPrefs';
+import { getMotionTier, shouldReduceMedia, webglSupported, markWebglFailed } from '../mediaPrefs';
 
 interface FluidRippleBackgroundProps {
   className?: string;
@@ -31,17 +31,37 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
     let isPaused = false;
     let resizeObserver: ResizeObserver | null = null;
 
+    // Se o navegador disparar perda ou erro de criação de contexto WebGL, ativa o fallback visual CSS
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      markWebglFailed();
+      setUseCssFallback(true);
+    };
+    canvas.addEventListener('webglcontextlost', handleContextLost, { once: true });
+    canvas.addEventListener('webglcontextcreationerror', handleContextLost, { once: true });
+
     try {
       const isContained = variant === 'contained';
       const initialWidth = isContained ? (container.clientWidth || 300) : window.innerWidth;
       const initialHeight = isContained ? (container.clientHeight || 300) : window.innerHeight;
 
+      // Desativa depth e stencil buffers: a malha ortogonal é composta exclusivamente por linhas e pontos aditivos,
+      // eliminando a exigência de OES_packed_depth_stencil que falha em GPUs virtuais/ANGLE.
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
         antialias: false,
         powerPreference: 'low-power',
+        depth: false,
+        stencil: false,
+        failIfMajorPerformanceCaveat: false,
       });
+
+      if (!renderer || !renderer.getContext()) {
+        markWebglFailed();
+        setUseCssFallback(true);
+        return;
+      }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
       renderer.setSize(initialWidth, initialHeight);
 
@@ -307,9 +327,12 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         lineMaterial.dispose();
         particleGeo.dispose();
         particleMat.dispose();
+        canvas.removeEventListener('webglcontextlost', handleContextLost);
+        canvas.removeEventListener('webglcontextcreationerror', handleContextLost);
         renderer?.dispose();
       };
     } catch {
+      markWebglFailed();
       setUseCssFallback(true);
     }
   }, [useCssFallback, variant]);
