@@ -2,9 +2,12 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { EloLogo } from './EloLogo';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { FluidRippleBackground } from './FluidRippleBackground';
 import { NAVIGATION_ITEMS, SITE_CONFIG, whatsappUrl } from '../types';
 import { Mail, ArrowUp } from 'lucide-react';
+
+const FluidRippleBackground = React.lazy(() =>
+  import('./FluidRippleBackground').then((mod) => ({ default: mod.FluidRippleBackground }))
+);
 
 import { ScreenId } from '../types';
 
@@ -60,14 +63,61 @@ export const Footer: React.FC<FooterProps> = ({
     handleSelectInstitutionalScreen('inicio');
   };
 
+  const footerRef = React.useRef<HTMLElement>(null);
+  const [shouldLoadEffect, setShouldLoadEffect] = React.useState<boolean>(false);
+
+  // Carregamento sob demanda do efeito Three.js quando o rodapé estiver a 800px da viewport
+  React.useEffect(() => {
+    if (shouldLoadEffect) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setShouldLoadEffect(true);
+      return;
+    }
+
+    const target = footerRef.current;
+    if (!target) {
+      setShouldLoadEffect(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && (entry.isIntersecting || entry.intersectionRatio > 0)) {
+          setShouldLoadEffect(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '800px 0px',
+        threshold: 0,
+      }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [shouldLoadEffect]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] border-t border-blue-400/30 text-slate-300 text-sm pb-[3px] overflow-hidden">
-      {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua */}
-      <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-50 pointer-events-none" />
+    <footer
+      ref={footerRef}
+      className="relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] border-t border-blue-400/30 text-slate-300 text-sm pb-[3px] overflow-hidden"
+    >
+      {/* Fundo de grade azul de espaço-tempo com curvatura e distorção contínua carregado sob demanda */}
+      {shouldLoadEffect && (
+        <React.Suspense fallback={null}>
+          <FluidRippleBackground variant="contained" className="absolute inset-0 z-0 opacity-50 pointer-events-none" />
+        </React.Suspense>
+      )}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">

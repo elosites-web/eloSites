@@ -652,9 +652,13 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                           {/* Mini Barra de Navegação Interna da Tela */}
                           <div className="scroll-fade-text relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
                             <div className="flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_8px_#3b82f6]">
-                                ē
-                              </div>
+                              <img
+                                src="/favicon-32x32.png"
+                                alt="Ícone ēloSites"
+                                width={20}
+                                height={20}
+                                className="w-5 h-5 rounded-full object-contain shrink-0 shadow-[0_0_8px_#3b82f6]"
+                              />
                               <span className="font-bold text-xs tracking-tight text-white">ēloSites</span>
                             </div>
                             <div className="flex items-center gap-2.5 text-[10px] text-slate-300 font-medium">
