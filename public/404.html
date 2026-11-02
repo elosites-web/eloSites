@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>404 — Página não encontrada | ēloSites</title>
+    <meta
+      name="description"
+      content="Ops! O endereço que você procura não foi encontrado ou mudou de lugar. Conheça a ēloSites e nossos projetos."
+    />
+    <meta name="theme-color" content="#050814" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Fonts: Plus Jakarta Sans, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+    />
+
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+        color-scheme: dark;
+        scroll-behavior: smooth;
+        background-color: #050814;
+      }
+
+      body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: #050814;
+        color: #f8fafc;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 460;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+      }
+
+      /* Luzes ambientes atmosféricas */
+      .glow-orb {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+        filter: blur(120px);
+        opacity: 0.45;
+      }
+
+      .glow-blue {
+        top: -100px;
+        left: -100px;
+        width: 420px;
+        height: 420px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent 70%);
+      }
+
+      .glow-violet {
+        bottom: -120px;
+        right: -100px;
+        width: 480px;
+        height: 480px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.35), transparent 70%);
+      }
+
+      .glow-cyan {
+        top: 40%;
+        left: 55%;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.22), transparent 70%);
+      }
+
+      /* Container Principal */
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 20px 32px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header Superior com Logotipo Oficial */
+      .header-brand {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-bottom: 24px;
+      }
+
+      .brand-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        outline: none;
+        border-radius: 10px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .brand-link:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+      }
+
+      .brand-link:focus-visible {
+        outline: 2px solid #60a5fa;
+        outline-offset: 4px;
+      }
+
+      .brand-logo {
+        height: 34px;
+        width: auto;
+        display: block;
+      }
+
+      /* Conteúdo Principal — Grid responsiva */
+      .main-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 0 24px;
+      }
+
+      @media (min-width: 992px) {
+        .main-grid {
+          grid-template-columns: 1.15fr 1fr;
+          gap: 56px;
+          padding: 28px 0 40px;
+        }
+      }
+
+      /* Coluna de Texto */
+      .content-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      @media (min-width: 992px) {
+        .content-col {
+          align-items: flex-start;
+          text-align: left;
+        }
+      }
+
+      /* Kicker / Badge */
+      .badge-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 14px;
+        border-radius: 999px;
+        background: rgba(30, 58, 138, 0.45);
+        border: 1px solid rgba(59, 130, 246, 0.35);
+        color: #93c5fd;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+        box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
+      }
+
+      .badge-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #38bdf8;
+        box-shadow: 0 0 8px #38bdf8;
+        animation: pulseDot 2.4s infinite ease-in-out;
+      }
+
+      @keyframes pulseDot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
+      }
+
+      /* Tipografia do 404 */
+      .error-code {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(4rem, 10vw, 7.5rem);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        background: linear-gradient(135deg, #ffffff 15%, #93c5fd 55%, #a855f7 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+        user-select: none;
+      }
+
+      .error-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+        font-weight: 700;
+        line-height: 1.25;
+        color: #ffffff;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+
+      .error-text {
+        font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+        line-height: 1.65;
+        color: #cbd5e1;
+        max-width: 520px;
+        margin-bottom: 28px;
+      }
+
+      .error-text strong {
+        color: #ffffff;
+        font-weight: 600;
+      }
+
+      /* Grupo de Ações */
+      .actions-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 420px;
+      }
+
+      @media (min-width: 480px) {
+        .actions-group {
+          flex-direction: row;
+          align-items: center;
+          max-width: none;
+        }
+      }
+
+      /* Botões */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 48px;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 14.5px;
+        font-weight: 700;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.18s ease, filter 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        user-select: none;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #2563eb, #6366f1);
+        color: #ffffff;
+        border: 1px solid rgba(147, 197, 253, 0.4);
+        box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #3b82f6, #4f46e5);
+        box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: rgba(15, 23, 42, 0.7);
+        color: #f1f5f9;
+        border: 1.5px solid rgba(59, 130, 246, 0.35);
+        backdrop-filter: blur(8px);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(30, 58, 138, 0.3);
+        border-color: rgba(96, 165, 250, 0.65);
+        color: #ffffff;
+        transform: translateY(-2px);
+      }
+
+      .btn:focus-visible {
+        outline: 2px solid #60a5fa;
+        outline-offset: 3px;
+      }
+
+      /* Link discreto de retorno */
+      .back-history-wrap {
+        margin-top: 20px;
+      }
+
+      .back-history-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #94a3b8;
+        text-decoration: none;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: color 0.18s ease;
+      }
+
+      .back-history-link:hover {
+        color: #93c5fd;
+      }
+
+      .back-history-link:focus-visible {
+        outline: 2px solid #60a5fa;
+        outline-offset: 2px;
+      }
+
+      /* Coluna Visual — Ilustração Nano Banana */
+      .artwork-col {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      .artwork-frame {
+        position: relative;
+        width: 100%;
+        max-width: 540px;
+        border-radius: 20px;
+        padding: 2px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.2));
+        box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.75), 0 0 28px rgba(59, 130, 246, 0.2);
+        overflow: hidden;
+      }
+
+      .artwork-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #090e23;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .artwork-img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      .artwork-frame:hover .artwork-img {
+        transform: scale(1.02);
+      }
+
+      /* Fallback elegante caso a imagem falhe ao carregar */
+      .artwork-fallback {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 48px 24px;
+        width: 100%;
+        min-height: 280px;
+        background: radial-gradient(circle at center, #0f1838, #050814 80%);
+        border-radius: 18px;
+        color: #93c5fd;
+        text-align: center;
+      }
+
+      .artwork-fallback svg {
+        width: 48px;
+        height: 48px;
+        stroke: #3b82f6;
+      }
+
+      .image-broken .artwork-img {
+        display: none;
+      }
+
+      .image-broken .artwork-fallback {
+        display: flex;
+      }
+
+      /* Rodapé Institucional */
+      .footer-simple {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-top: 24px;
+        border-top: 1px solid rgba(59, 130, 246, 0.15);
+        font-size: 12.5px;
+        color: #94a3b8;
+      }
+
+      .footer-contact {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #cbd5e1;
+        text-decoration: none;
+        transition: color 0.18s ease;
+      }
+
+      .footer-contact:hover {
+        color: #60a5fa;
+      }
+
+      /* Acessibilidade de Movimento Reduzido */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .actions-group .btn {
+          width: 100%;
+        }
+        .error-code {
+          font-size: 4.2rem;
+        }
+        .error-title {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Iluminação de fundo -->
+    <div class="glow-orb glow-blue" aria-hidden="true"></div>
+    <div class="glow-orb glow-violet" aria-hidden="true"></div>
+    <div class="glow-orb glow-cyan" aria-hidden="true"></div>
+
+    <div class="page-wrap">
+      <!-- Topo: Marca Oficial -->
+      <header class="header-brand">
+        <a href="/#inicio" class="brand-link" aria-label="ēloSites — Ir para a Página Inicial">
+          <img
+            src="/logo-elosites-1360.png"
+            alt="ēloSites"
+            class="brand-logo"
+            width="150"
+            height="37"
+            fetchpriority="high"
+          />
+        </a>
+      </header>
+
+      <!-- Grade Principal -->
+      <main class="main-grid">
+        <!-- Coluna de Texto e Ações -->
+        <section class="content-col" aria-labelledby="heading-404">
+          <div class="badge-kicker">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span>Erro 404 &bull; Rota Desconhecida</span>
+          </div>
+
+          <div class="error-code" aria-hidden="true">404</div>
+
+          <h1 id="heading-404" class="error-title">Página não encontrada</h1>
+
+          <p class="error-text">
+            Ops! Parece que esse endereço saiu do caminho.<br /><br />
+            A página que você procura pode ter mudado de lugar ou não estar mais disponível. Mas o caminho para conhecer a <strong>ēloSites</strong> continua aberto.
+          </p>
+
+          <nav class="actions-group" aria-label="Ações de recuperação">
+            <a href="/#inicio" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              <span>Voltar ao início</span>
+            </a>
+
+            <a href="/#portfolio" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="7" height="7" x="3" y="3" rx="1" />
+                <rect width="7" height="7" x="14" y="3" rx="1" />
+                <rect width="7" height="7" x="14" y="14" rx="1" />
+                <rect width="7" height="7" x="3" y="14" rx="1" />
+              </svg>
+              <span>Conhecer nossos projetos</span>
+            </a>
+          </nav>
+
+          <div class="back-history-wrap">
+            <button
+              type="button"
+              onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/#inicio'; }"
+              class="back-history-link"
+              aria-label="Voltar para a página anterior do histórico de navegação"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span>Voltar à página anterior</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Coluna Visual com a Arte Digital Gerada -->
+        <aside class="artwork-col" aria-label="Ilustração conceitual de conexão interrompida">
+          <div class="artwork-frame" id="artwork-container">
+            <div class="artwork-inner">
+              <picture>
+                <!-- Arte Mobile vertical para telas até 767px -->
+                <source
+                  media="(max-width: 767px)"
+                  srcset="/assets/404/not_found_mobile.avif 1x, /assets/404/not_found_mobile.webp 1x"
+                  type="image/avif"
+                />
+                <source
+                  media="(max-width: 767px)"
+                  srcset="/assets/404/not_found_mobile.webp"
+                  type="image/webp"
+                />
+                <!-- Arte Desktop horizontal para telas a partir de 768px -->
+                <source
+                  media="(min-width: 768px)"
+                  srcset="/assets/404/not_found_desktop.avif 1x, /assets/404/not_found_desktop.webp 1x"
+                  type="image/avif"
+                />
+                <source
+                  media="(min-width: 768px)"
+                  srcset="/assets/404/not_found_desktop.webp"
+                  type="image/webp"
+                />
+                <img
+                  src="/assets/404/not_found_desktop.jpg"
+                  alt="Ilustração conceitual de trilhas de conexão digital divergentes e dissolvidas"
+                  class="artwork-img"
+                  width="1376"
+                  height="768"
+                  loading="eager"
+                  decoding="async"
+                  onerror="document.getElementById('artwork-container').classList.add('image-broken')"
+                />
+              </picture>
+
+              <!-- Fallback em caso de falha de carregamento -->
+              <div class="artwork-fallback" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                </svg>
+                <p style="font-size: 14px; font-weight: 600;">Conexão digital fora de alcance</p>
+                <p style="font-size: 12px; color: #64748b;">Navegue pelos botões ao lado para retornar ao site oficial.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- Rodapé Simples -->
+      <footer class="footer-simple">
+        <div>
+          <span>&copy; <span id="year"></span> ēloSites &bull; Presença digital estratégica.</span>
+        </div>
+        <div>
+          <a
+            href="https://api.whatsapp.com/send?phone=5511995722584&text=Ol%C3%A1!%20Estava%20navegando%20no%20site%20da%20%C4%93loSites%20e%20gostaria%20de%20falar%20com%20voc%C3%AAs."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-contact"
+          >
+            <span>WhatsApp: +55 (11) 99572-2584</span>
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Atualiza ano atual sem dependências externas
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

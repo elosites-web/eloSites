@@ -256,6 +256,8 @@ export const Footer: React.FC<FooterProps> = ({
                   alt="ēloSites"
                   width={1360}
                   height={337}
+                  loading="lazy"
+                  decoding="async"
                   className="h-[14px] sm:h-[16px] w-auto shrink-0 inline-block align-middle object-contain"
                 />
               </button>

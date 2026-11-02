@@ -91,15 +91,19 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
               transition={{ type: 'spring', stiffness: 280, damping: 18 }}
               className="glow-border-animated relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center transition-shadow duration-300 group/avatar select-none"
             >
-              <img
-                src="/eu.png"
-                alt="Everton Lopes — Fundador da ēloSites"
-                width={192}
-                height={192}
-                loading="lazy"
-                decoding="async"
-                className="glow-border-animated w-full h-full rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-102"
-              />
+              <picture className="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+                <source type="image/avif" srcSet="/eu-192w.avif 1x, /eu-384w.avif 2x" />
+                <source type="image/webp" srcSet="/eu-192w.webp 1x, /eu-384w.webp 2x" />
+                <img
+                  src="/eu.png"
+                  alt="Everton Lopes — Fundador da ēloSites"
+                  width={192}
+                  height={192}
+                  loading="lazy"
+                  decoding="async"
+                  className="glow-border-animated w-full h-full rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-102"
+                />
+              </picture>
 
               {/* Selo do Fundador posicionado na borda inferior do retrato, flutuando suavemente (100% opaco e acima do anel luminoso) */}
               <div className="founder-badge absolute -bottom-3 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#0b1020] bg-[linear-gradient(180deg,#242e49_0%,#111728_55%,#080b14_100%)] border border-[#475569] text-white opacity-100 shadow-[0_8px_24px_rgba(0,0,0,0.98),0_0_14px_rgba(148,163,184,0.22),inset_0_1px_1px_rgba(255,255,255,0.48),inset_0_-1px_2px_rgba(0,0,0,0.9)] whitespace-nowrap transition-transform duration-200 group-hover/avatar:scale-105">

@@ -1185,7 +1185,7 @@ export default function App() {
       <main
         style={{ willChange: 'transform, opacity' }}
         className={`flex-1 relative z-10 overflow-x-hidden transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-0 pointer-events-none invisible' : 'opacity-100'
+          isMenuOpen ? 'pointer-events-none select-none' : ''
         }`}
         id="main-content"
         tabIndex={-1}
@@ -1249,23 +1249,19 @@ export default function App() {
       </main>
 
       {/* Rodapé Institucional com Links de Telas e Termos Legais */}
-      {!isMenuOpen && (
-        <Footer
-          onOpenPrivacy={() => setLegalModal('privacy')}
-          onOpenTerms={() => setLegalModal('terms')}
-          onSelectScreen={navigateToScreen}
-          currentScreen={currentScreen}
-          isWhatsAppBubbleOpen={isWhatsAppBubbleOpen}
-        />
-      )}
+      <Footer
+        onOpenPrivacy={() => setLegalModal('privacy')}
+        onOpenTerms={() => setLegalModal('terms')}
+        onSelectScreen={navigateToScreen}
+        currentScreen={currentScreen}
+        isWhatsAppBubbleOpen={isWhatsAppBubbleOpen}
+      />
 
       {/* Botão Flutuante Oficial do WhatsApp */}
-      {!isMenuOpen && (
-        <FloatingWhatsApp
-          currentScreen={currentScreen}
-          onBubbleStateChange={setIsWhatsAppBubbleOpen}
-        />
-      )}
+      <FloatingWhatsApp
+        currentScreen={currentScreen}
+        onBubbleStateChange={setIsWhatsAppBubbleOpen}
+      />
 
       {/* Modais Legais (Política de Privacidade e Termos de Uso) */}
       <Suspense fallback={null}>

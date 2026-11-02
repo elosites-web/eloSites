@@ -343,7 +343,9 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
       errors.bookingDate = 'Selecione uma data para a reunião.';
     }
     if (!bookingData.agreedToLgpd) {
-      errors.bookingAgreed = 'É necessário concordar com os termos de privacidade.';
+      setFormErrors({ bookingAgreed: 'É necessário concordar com os termos de privacidade.' });
+      error('Consentimento obrigatório', 'É necessário concordar com a política de privacidade antes de confirmar o agendamento.');
+      return;
     }
 
     if (Object.keys(errors).length > 0) {
@@ -1350,7 +1352,13 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                     <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                       <button
                         type="submit"
-                        className="cta-primary inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-white pressable min-h-12 flex-1"
+                        disabled={!bookingData.agreedToLgpd}
+                        aria-disabled={!bookingData.agreedToLgpd}
+                        className={`cta-primary inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-white min-h-12 flex-1 transition-all ${
+                          !bookingData.agreedToLgpd
+                            ? 'opacity-40 cursor-not-allowed bg-slate-800 border border-slate-700/60 shadow-none pointer-events-auto'
+                            : 'pressable'
+                        }`}
                       >
                         <WhatsAppIcon className="w-5 h-5 shrink-0" />
                         <span className="text-center">Confirmar Agendamento</span>
@@ -1365,6 +1373,13 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                         <span className="text-center">Salvar no Google Agenda</span>
                       </button>
                     </div>
+
+                    {!bookingData.agreedToLgpd && (
+                      <p className="mt-3 text-xs text-amber-300/85 flex items-center gap-1.5 font-medium">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0 text-amber-400" aria-hidden="true" />
+                        <span>Marque a caixa de consentimento com a Política de Privacidade acima para liberar a confirmação do agendamento.</span>
+                      </p>
+                    )}
                   </form>
                 </motion.div>
               )}

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { EloLogo } from './EloLogo';
 import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
+import { shouldReduceMedia } from '../mediaPrefs';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -13,15 +14,90 @@ interface HeaderProps {
   setIsMenuOpen: (isOpen: boolean) => void;
 }
 
+const NAV_ITEMS: { id: ScreenId; label: string }[] = [
+  { id: 'inicio', label: 'Início' },
+  { id: 'servicos', label: 'Serviços' },
+  { id: 'portfolio', label: 'Portfólio' },
+  { id: 'avaliacoes', label: 'Avaliações' },
+  { id: 'processo', label: 'Como Funciona' },
+  { id: 'orcamento', label: 'Orçamento' },
+  { id: 'parceria-trafego', label: 'Tráfego Pago' },
+  { id: 'faq', label: 'FAQ & Contato' },
+];
+
 export const Header: React.FC<HeaderProps> = ({
   currentScreen,
   onSelectScreen,
   isMenuOpen,
   setIsMenuOpen,
 }) => {
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstMenuItemRef = useRef<HTMLButtonElement>(null);
   const savedScrollPositionRef = useRef<number>(0);
+  const [canFitHorizontalNav, setCanFitHorizontalNav] = useState<boolean>(false);
 
-  // Tecla de atalho: Escape para fechar o menu, 'm' ou 'M' para abrir/fechar o menu
+  const systemPrefersReduced = useReducedMotion();
+  const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
+
+  // Verificação responsiva se o cabeçalho comporta os 8 links horizontais com conforto
+  const checkNavFit = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const width = window.innerWidth;
+    const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+    // Em desktop (>= 1024px) ou em tablets em orientação paisagem com largura suficiente (>= 960px)
+    const fits = width >= 1024 || (isLandscape && width >= 960);
+    setCanFitHorizontalNav(fits);
+
+    // Se a tela for expandida para um tamanho com navbar horizontal, fecha o menu dropdown aberto
+    if (fits && isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [isMenuOpen, setIsMenuOpen]);
+
+  useEffect(() => {
+    checkNavFit();
+
+    if (typeof window === 'undefined') return;
+    window.addEventListener('resize', checkNavFit, { passive: true });
+    window.addEventListener('orientationchange', checkNavFit, { passive: true });
+
+    let ro: ResizeObserver | null = null;
+    if (headerRef.current && typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const width = entry.contentRect.width;
+          const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+          const fits = width >= 980 || (isLandscape && width >= 940);
+          setCanFitHorizontalNav(fits);
+          if (fits && isMenuOpen) {
+            setIsMenuOpen(false);
+          }
+        }
+      });
+      ro.observe(headerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', checkNavFit);
+      window.removeEventListener('orientationchange', checkNavFit);
+      if (ro) ro.disconnect();
+    };
+  }, [checkNavFit, isMenuOpen, setIsMenuOpen]);
+
+  // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre, e restaura ao botão ao fechar
+  useEffect(() => {
+    if (isMenuOpen) {
+      const timer = setTimeout(() => {
+        firstMenuItemRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    } else {
+      menuButtonRef.current?.focus();
+    }
+  }, [isMenuOpen]);
+
+  // Tecla Escape para fechar o menu; atalho 'm' para abrir/fechar quando focado fora de inputs
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
@@ -30,11 +106,11 @@ export const Header: React.FC<HeaderProps> = ({
       }
 
       if (e.key === 'Escape' && isMenuOpen) {
-        handleCloseMenuWithoutNav();
+        handleCloseMenu();
       } else if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey && !e.altKey) {
         if (isMenuOpen) {
-          handleCloseMenuWithoutNav();
-        } else {
+          handleCloseMenu();
+        } else if (!canFitHorizontalNav) {
           handleOpenMenu();
         }
       }
@@ -42,30 +118,26 @@ export const Header: React.FC<HeaderProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen]);
+  }, [isMenuOpen, canFitHorizontalNav]);
 
-  // Abre o menu salvando a posição de scroll anterior e travando a rolagem do documento
   const handleOpenMenu = () => {
     savedScrollPositionRef.current = window.scrollY || window.pageYOffset || 0;
     setIsMenuOpen(true);
   };
 
-  // Fecha o menu sem navegação: restaura o scroll para a posição salva
-  const handleCloseMenuWithoutNav = () => {
+  const handleCloseMenu = () => {
     setIsMenuOpen(false);
-    window.scrollTo({ top: savedScrollPositionRef.current, behavior: 'instant' });
   };
 
-  // Alterna o estado de abertura do menu
   const toggleMenu = () => {
     if (isMenuOpen) {
-      handleCloseMenuWithoutNav();
+      handleCloseMenu();
     } else {
       handleOpenMenu();
     }
   };
 
-  // Travar o scroll da página enquanto o menu de navegação estiver aberto
+  // Trava de rolagem suave enquanto o menu suspenso estiver aberto
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -80,22 +152,18 @@ export const Header: React.FC<HeaderProps> = ({
     };
   }, [isMenuOpen]);
 
-  const currentMeta = SCREENS.find((s) => s.id === currentScreen) || SCREENS[0];
-
-  // Componente do Botão de Menu com a identidade visual do logotipo ēloSites
-  // Traço superior e inferior com degradê de "ēlo" (púrpura ao azul elétrico)
-  // Traço do meio alinhado à esquerda com degradê de "Sites" (branco prateado puro)
+  // Botão com identidade visual do logotipo ēloSites
   const renderMenuButton = () => (
     <button
+      ref={menuButtonRef}
       id="menu-de-navegacao-btn"
       type="button"
       onClick={toggleMenu}
       aria-expanded={isMenuOpen}
-      aria-controls="multi-screen-navigation-modal"
+      aria-controls="multi-screen-navigation-drawer"
       aria-label={isMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
-      className="relative group p-2.5 flex items-center justify-center bg-transparent border-0 shadow-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 rounded-lg transition-transform duration-200 hover:scale-108 active:scale-95"
+      className="relative group p-2.5 flex items-center justify-center bg-transparent border-0 shadow-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 rounded-lg transition-transform duration-200 hover:scale-105 active:scale-95 shrink-0"
     >
-      {/* Container com largura exata dos traços oficiais */}
       <div className="relative w-7 h-5 flex items-center pointer-events-none">
         {/* Traço superior (degradê púrpura para azul de 'ēlo') / Diagonal 1 do X */}
         <span
@@ -106,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({
           }`}
         />
 
-        {/* Traço do meio (degradê branco de 'Sites', alinhado estritamente à esquerda) */}
+        {/* Traço do meio (degradê branco de 'Sites') */}
         <span
           className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full origin-left bg-gradient-to-r from-white via-slate-100 to-slate-200 shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all duration-200 ease-out ${
             isMenuOpen ? 'w-0 opacity-0 scale-x-0' : 'w-[17px] opacity-100 scale-x-100 group-hover:w-[20px]'
@@ -127,97 +195,112 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Menu Fechado: Cabeçalho com Logo e Menu Hambúrguer */}
-      {!isMenuOpen && (
-        <header
-          id="header-nav"
-          className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#050814]/90 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto"
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="flex items-center justify-between gap-4 sm:gap-6 min-h-[46px]">
-              {/* Logo Wordmark oficial */}
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-10">
-                <button
-                  type="button"
-                  id="brand-logo-link"
-                  onClick={() => onSelectScreen('inicio')}
-                  className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center gap-2.5 shrink-0 cursor-pointer"
-                  aria-label="ēloSites — Ir para a Página Inicial (Início)"
-                >
-                  <EloLogo size="md" className="brand-logo-entry" />
-                </button>
-              </div>
+      {/* Cabeçalho Fixo — Permanece visível continuamente, com ou sem menu aberto */}
+      <header
+        ref={headerRef}
+        id="header-nav"
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#050814]/90 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="flex items-center justify-between gap-3 sm:gap-6 min-h-[46px]">
+            {/* Logo Wordmark oficial */}
+            <div className="flex items-center gap-2 shrink-0 z-10">
+              <button
+                type="button"
+                id="brand-logo-link"
+                onClick={() => {
+                  if (isMenuOpen) setIsMenuOpen(false);
+                  onSelectScreen('inicio');
+                }}
+                className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center gap-2.5 shrink-0 cursor-pointer"
+                aria-label="ēloSites — Ir para a Página Inicial (Início)"
+              >
+                <EloLogo size="md" className="brand-logo-entry" />
+              </button>
+            </div>
 
-              {/* Botão do Menu Hambúrguer */}
+            {/* Navbar Horizontal para Desktop e Tablets com largura suficiente */}
+            {canFitHorizontalNav ? (
+              <nav
+                aria-label="Navegação institucional"
+                className="flex items-center gap-1 xl:gap-1.5 ml-auto shrink-0 z-10"
+              >
+                {NAV_ITEMS.map((item) => {
+                  const isActive = currentScreen === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => onSelectScreen(item.id)}
+                      onPointerEnter={() => preloadScreen(item.id)}
+                      onFocus={() => preloadScreen(item.id)}
+                      className={`relative px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-150 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                        isActive
+                          ? 'text-white font-semibold bg-blue-600/15 border border-blue-500/35 shadow-[0_0_12px_rgba(59,130,246,0.2)]'
+                          : 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {isActive && (
+                        <span
+                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-blue-400 shadow-[0_0_6px_#3b82f6]"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+            ) : (
+              /* Botão Hambúrguer quando a barra horizontal não couber confortavelmente */
               <div className="flex items-center ml-auto shrink-0 z-10 pointer-events-auto">
                 {renderMenuButton()}
               </div>
-            </div>
+            )}
           </div>
-        </header>
-      )}
+        </div>
+      </header>
 
-      {/* MODAL DO MENU DE NAVEGAÇÃO COMPLETO */}
-      {isMenuOpen && (
+      {/* CAMADA DE NAVEGAÇÃO DO MENU HAMBÚRGUER ABERTO */}
+      {isMenuOpen && !canFitHorizontalNav && (
         <div
-          id="multi-screen-navigation-modal"
+          id="multi-screen-navigation-drawer"
           role="dialog"
           aria-modal="true"
           aria-label="Menu de Navegação das Seções ēloSites"
-          className="nav-menu-modal-container fixed inset-0 z-[100] flex flex-col items-center justify-between pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 bg-[#050814]/95 backdrop-blur-xl animate-in fade-in duration-200 select-none overflow-y-auto overscroll-contain"
-          onClick={handleCloseMenuWithoutNav}
+          className="fixed inset-0 top-[54px] sm:top-[60px] z-40 flex flex-col justify-start bg-[#050814]/80 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200"
+          onClick={handleCloseMenu}
         >
-          {/* Botão de Fechar ('X') */}
-          <header
-            id="header-nav-active"
-            className="w-full shrink-0 relative z-20 flex justify-center items-center pt-2 sm:pt-3 pb-2 sm:pb-3 px-4 sm:px-8 pointer-events-auto max-w-5xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-center">
-              {renderMenuButton()}
-            </div>
-          </header>
-
-          {/* Lista de seções minimalista com movimento flutuante suave */}
+          {/* Painel de links sobre a página atual */}
           <div
-            className="nav-menu-list-wrap relative z-20 w-full flex flex-col items-center justify-center text-center my-auto px-4 pointer-events-auto"
+            className="relative z-10 w-full max-w-lg mx-auto py-6 sm:py-8 px-6 flex flex-col items-center pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <ul className="nav-menu-list flex flex-col items-center justify-center py-1 w-full gap-[1px] sm:gap-[3px]">
+            <ul className="flex flex-col items-center justify-center w-full gap-2 sm:gap-2.5">
               {SCREENS.map((screen, index) => {
                 const isActive = screen.id === currentScreen;
 
                 return (
                   <motion.li
                     key={screen.id}
+                    initial={
+                      prefersReduced
+                        ? { opacity: 0 }
+                        : { opacity: 0, y: -10 }
+                    }
                     animate={{
-                      y: [-4, 4, -4],
-                      x: [2, -2, 2],
-                      rotate: [-0.25, 0.25, -0.25],
+                      opacity: 1,
+                      y: 0,
                     }}
                     transition={{
-                      y: {
-                        duration: 6.5 + (index % 3) * 0.8,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.12,
-                      },
-                      x: {
-                        duration: 7.2 + (index % 2) * 0.9,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.12,
-                      },
-                      rotate: {
-                        duration: 8.0,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.1,
-                      },
+                      duration: prefersReduced ? 0.15 : 0.24,
+                      delay: prefersReduced ? 0 : index * 0.035,
+                      ease: [0.23, 1, 0.32, 1],
                     }}
-                    className="nav-menu-list-item w-full flex justify-center py-[1px]"
+                    className="w-full flex justify-center"
                   >
                     <button
+                      ref={index === 0 ? firstMenuItemRef : undefined}
                       type="button"
                       onClick={() => {
                         setIsMenuOpen(false);
@@ -226,20 +309,23 @@ export const Header: React.FC<HeaderProps> = ({
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
                       onTouchStart={() => preloadScreen(screen.id)}
-                      className={`nav-menu-link-item group relative px-4 py-1 sm:py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/80 rounded-lg flex items-center justify-center gap-2.5 cursor-pointer transition-colors duration-200 ${
+                      className={`group relative w-full max-w-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                         isActive
-                          ? 'text-white'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-blue-600/20 border border-blue-500/40 text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]'
+                          : 'bg-slate-900/40 hover:bg-slate-900/70 border border-white/[0.05] hover:border-blue-500/30 text-slate-300 hover:text-white'
                       }`}
                     >
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 shadow-[0_0_8px_#3b82f6]" />
+                        <span
+                          className="w-2 h-2 rounded-full bg-blue-400 shrink-0 shadow-[0_0_8px_#3b82f6]"
+                          aria-hidden="true"
+                        />
                       )}
                       <span
-                        className={`font-display text-[17px] sm:text-[19px] md:text-[22px] tracking-tight transition-colors duration-200 ${
+                        className={`font-display text-[17px] sm:text-[18px] tracking-tight ${
                           isActive
                             ? 'text-white font-bold'
-                            : 'font-medium text-slate-300 group-hover:text-white'
+                            : 'font-medium text-slate-200 group-hover:text-white'
                         }`}
                       >
                         {screen.shortTitle}
@@ -249,26 +335,16 @@ export const Header: React.FC<HeaderProps> = ({
                 );
               })}
             </ul>
-          </div>
 
-          {/* Logotipo oficial centralizado no rodapé do modal sem sobreposição */}
-          <div
-            className="nav-menu-logo-wrap shrink-0 flex flex-col items-center justify-center pointer-events-auto mt-auto pt-4 pb-4 sm:pb-6 relative z-20 min-h-[56px] overflow-visible"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <EloLogo
-              size="menu"
-              showTagline={true}
-              taglineClassName="whitespace-nowrap"
-              onClick={() => {
-                setIsMenuOpen(false);
-                onSelectScreen('inicio');
-              }}
-            />
+            {/* Linha discreta de fechamento / dica de navegação */}
+            <div className="mt-6 pt-4 border-t border-white/[0.08] text-center w-full max-w-xs">
+              <span className="text-xs text-slate-400">
+                Toque fora ou pressione <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-slate-800 border border-slate-700 rounded text-slate-300">Esc</kbd> para fechar
+              </span>
+            </div>
           </div>
         </div>
       )}
     </>
   );
 };
-

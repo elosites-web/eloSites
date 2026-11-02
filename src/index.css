@@ -2056,26 +2056,29 @@ html {
   }
 }
 
-/* Entrada suave do logotipo no cabeçalho (fade-in com leve slide-down) */
+/* Entrada suave do logotipo no cabeçalho (fade-in sutil e escala sincronizada ao carregamento) */
 @keyframes brandLogoHeaderEntry {
   0% {
     opacity: 0;
-    transform: translate3d(0, -10px, 0) scale(0.98);
+    transform: scale(0.94);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: scale(1);
   }
 }
 
 .brand-logo-entry {
-  animation: brandLogoHeaderEntry 0.56s cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation: brandLogoHeaderEntry 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
+  transform-origin: left center;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .brand-logo-entry {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

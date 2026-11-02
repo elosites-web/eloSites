@@ -287,10 +287,9 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
       aria-label="Atendimento rápido via WhatsApp"
       style={{
         display: isButtonVisible ? 'flex' : 'none',
-        opacity: isButtonVisible ? 1 : 0,
       }}
       className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] ${
-        !isButtonVisible ? 'hidden opacity-0 pointer-events-none' : ''
+        !isButtonVisible ? 'hidden opacity-0 pointer-events-none' : 'animate-fade-in-up'
       }`}
     >
       {/* Balão de Pop-up estilo Chat Preview Premium */}
@@ -461,7 +460,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
 
       {/* Botão Flutuante Principal com Skeleton Loader na transição de oculto para visível */}
       {isButtonVisible && (
-        <div className="relative pointer-events-auto w-14 h-14 shrink-0 [contain:layout_style]">
+        <div className="relative pointer-events-auto w-14 h-14 shrink-0 [contain:layout_style] animate-fade-in-up">
           <AnimatePresence mode="wait">
             {isSkeletonLoading ? (
               <motion.div
@@ -501,7 +500,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                   initial={
                     prefersReduced
                       ? { opacity: 0 }
-                      : { opacity: 0, y: -16 }
+                      : { opacity: 0, y: 8 }
                   }
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}

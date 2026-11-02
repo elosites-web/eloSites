@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import fs from 'fs';
 import {defineConfig} from 'vite';
 
 import type { Plugin } from 'vite';
@@ -15,6 +16,15 @@ function cartaoFallbackPlugin(): Plugin {
         if (pathname === '/cartao' || pathname === '/cartao/') {
           const search = rawUrl.includes('?') ? '?' + rawUrl.split('?')[1] : '';
           req.url = '/cartao/index.html' + search;
+        } else if (pathname === '/404' || pathname === '/404/' || pathname === '/404.html') {
+          const filePath = path.resolve(__dirname, 'public/404.html');
+          if (fs.existsSync(filePath)) {
+            const html = fs.readFileSync(filePath, 'utf-8');
+            _res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            _res.statusCode = 404;
+            _res.end(html);
+            return;
+          }
         }
         next();
       });
@@ -26,6 +36,15 @@ function cartaoFallbackPlugin(): Plugin {
         if (pathname === '/cartao' || pathname === '/cartao/') {
           const search = rawUrl.includes('?') ? '?' + rawUrl.split('?')[1] : '';
           req.url = '/cartao/index.html' + search;
+        } else if (pathname === '/404' || pathname === '/404/' || pathname === '/404.html') {
+          const filePath = path.resolve(__dirname, 'public/404.html');
+          if (fs.existsSync(filePath)) {
+            const html = fs.readFileSync(filePath, 'utf-8');
+            _res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            _res.statusCode = 404;
+            _res.end(html);
+            return;
+          }
         }
         next();
       });

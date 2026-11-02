@@ -46,7 +46,8 @@ export const EloLogo: React.FC<EloLogoProps> = ({
           alt="ēloSites — Logotipo Oficial"
           width={1360}
           height={337}
-          fetchPriority="high"
+          loading="lazy"
+          decoding="async"
           className={`${heights} w-auto shrink-0 object-contain ${className}`}
         />
         <span

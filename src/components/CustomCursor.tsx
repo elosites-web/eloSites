@@ -6,7 +6,7 @@ const INTERACTIVE_SELECTOR =
 const TEXT_INPUT_SELECTOR =
   'input:not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select, [contenteditable="true"]';
 
-const TRAIL_COUNT = 3;
+const TRAIL_COUNT = 2; // Rastro discreto e leve com apenas 2 elementos auxiliares
 
 export const CustomCursor: React.FC = React.memo(function CustomCursor() {
   const [isSupported, setIsSupported] = useState<boolean>(() => {
@@ -74,6 +74,14 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
       }
     };
 
+    const updateNativeCursorState = (shouldHideNative: boolean) => {
+      if (shouldHideNative) {
+        document.documentElement.classList.add('custom-cursor-active');
+      } else {
+        document.documentElement.classList.remove('custom-cursor-active');
+      }
+    };
+
     const renderFrame = () => {
       rafIdRef.current = null;
 
@@ -84,9 +92,9 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
       const tx = targetPosRef.current.x;
       const ty = targetPosRef.current.y;
       const reduced = prefersReducedMotionRef.current;
-      const scale = isInteractiveRef.current ? 1.32 : 1;
+      const scale = isInteractiveRef.current ? 1.3 : 1;
 
-      // Ponto central acompanha o ponteiro imediatamente
+      // Ponto central da mira acompanha o ponteiro imediatamente sem latência
       dotEl.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) translate(-50%, -50%)`;
 
       if (reduced) {
@@ -100,9 +108,9 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
         return;
       }
 
-      // Anel da mira acompanha com resposta rápida e coesa
-      const rx = ringPosRef.current.x + (tx - ringPosRef.current.x) * 0.65;
-      const ry = ringPosRef.current.y + (ty - ringPosRef.current.y) * 0.65;
+      // Anel da mira acompanha com amortecimento ágil (0.78) para máxima responsividade
+      const rx = ringPosRef.current.x + (tx - ringPosRef.current.x) * 0.78;
+      const ry = ringPosRef.current.y + (ty - ringPosRef.current.y) * 0.78;
       ringPosRef.current.x = rx;
       ringPosRef.current.y = ry;
 
@@ -112,25 +120,37 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
       let leadX = rx;
       let leadY = ry;
 
+      // Rastro curto e suave: converge rapidamente sem movimentos residuais longos
       for (let i = 0; i < TRAIL_COUNT; i++) {
         const current = trailPosRef.current[i];
-        const factor = 0.42 - i * 0.08;
+        const factor = 0.58 - i * 0.12;
         current.x += (leadX - current.x) * factor;
         current.y += (leadY - current.y) * factor;
-        maxDelta = Math.max(maxDelta, Math.hypot(leadX - current.x, leadY - current.y));
+        const trailDelta = Math.hypot(leadX - current.x, leadY - current.y);
+        maxDelta = Math.max(maxDelta, trailDelta);
 
         const tEl = trailRefs.current[i];
         if (tEl) {
           tEl.style.transform = `translate3d(${current.x.toFixed(1)}px, ${current.y.toFixed(1)}px, 0) translate(-50%, -50%)`;
-          tEl.style.opacity = isVisibleRef.current && !isOverTextRef.current ? String(0.32 - i * 0.09) : '0';
+          // Rastro discreto com opacidade decrescente
+          tEl.style.opacity = isVisibleRef.current && !isOverTextRef.current ? String(0.28 - i * 0.1) : '0';
         }
 
         leadX = current.x;
         leadY = current.y;
       }
 
-      if (maxDelta > 0.15 && isVisibleRef.current) {
+      // Evita loops permanentes quando o cursor estiver parado: se delta < 0.2px, estabiliza e para o RAF
+      if (maxDelta > 0.2 && isVisibleRef.current) {
         rafIdRef.current = window.requestAnimationFrame(renderFrame);
+      } else {
+        // Estabiliza as coordenadas para prevenir drift
+        ringPosRef.current.x = tx;
+        ringPosRef.current.y = ty;
+        for (let i = 0; i < TRAIL_COUNT; i++) {
+          trailPosRef.current[i].x = tx;
+          trailPosRef.current[i].y = ty;
+        }
       }
     };
 
@@ -144,12 +164,16 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
       const container = containerRef.current;
       if (!container) return;
       container.dataset.visible = visible ? 'true' : 'false';
-      if (visible) {
-        document.documentElement.classList.add('custom-cursor-active');
-      }
+      // Só oculta o cursor nativo após a mira estar inicializada e visível
+      updateNativeCursorState(isInitializedRef.current && visible);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    // Detecção com Pointer Events; ignora toques e canetas stylus
+    const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType && e.pointerType !== 'mouse') {
+        return;
+      }
+
       const x = e.clientX;
       const y = e.clientY;
       targetPosRef.current.x = x;
@@ -191,29 +215,41 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
       scheduleFrame();
     };
 
-    const handleMouseLeaveWindow = () => {
+    const handlePointerLeaveWindow = () => {
       isVisibleRef.current = false;
       setContainerVisibility(false);
       stopLoop();
     };
 
-    const handleMouseEnterWindow = () => {
+    const handlePointerEnterWindow = (e: PointerEvent) => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
       if (!isInitializedRef.current) return;
       isVisibleRef.current = true;
       setContainerVisibility(!isOverTextRef.current);
       scheduleFrame();
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeaveWindow, { passive: true });
-    document.addEventListener('mouseenter', handleMouseEnterWindow, { passive: true });
+    // Pausa processamento ao ocultar a aba
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isVisibleRef.current = false;
+        setContainerVisibility(false);
+        stopLoop();
+      }
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    document.addEventListener('pointerleave', handlePointerLeaveWindow, { passive: true });
+    document.addEventListener('pointerenter', handlePointerEnterWindow, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
 
     return () => {
       stopLoop();
-      document.documentElement.classList.remove('custom-cursor-active');
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeaveWindow);
-      document.removeEventListener('mouseenter', handleMouseEnterWindow);
+      updateNativeCursorState(false);
+      window.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerleave', handlePointerLeaveWindow);
+      document.removeEventListener('pointerenter', handlePointerEnterWindow);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [isSupported]);
 
@@ -230,7 +266,7 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
     >
       {/* Rastro curto e delicado */}
       {Array.from({ length: TRAIL_COUNT }).map((_, idx) => {
-        const sizePx = 5 - idx * 1.2;
+        const sizePx = 4.5 - idx * 1.0;
         return (
           <div
             key={idx}
@@ -242,7 +278,7 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
               width: `${sizePx}px`,
               height: `${sizePx}px`,
               opacity: 0,
-              boxShadow: '0 0 8px rgba(56, 189, 248, 0.45)',
+              boxShadow: '0 0 6px rgba(56, 189, 248, 0.4)',
               willChange: 'transform, opacity',
             }}
           />
@@ -271,5 +307,3 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
     </div>
   );
 });
-
-

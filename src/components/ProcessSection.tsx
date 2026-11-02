@@ -86,7 +86,7 @@ export const ProcessSection: React.FC = () => {
       number: '04',
       title: 'Site no ar e publicado',
       description:
-        'Publicamos o site no serviço de hospedagem definido para o projeto. Quando o domínio fizer parte do orçamento, registramos em seu CPF ou CNPJ e configuramos os DNS. Na entrega, transferimos os arquivos, o repositório e os acessos da infraestrutura para você.',
+        'Publicamos o site na hospedagem definida, registramos o domínio em seu CPF ou CNPJ quando previsto no orçamento, configuramos os DNS e entregamos arquivos, repositório e acessos.',
       icon: Globe2,
     },
   ];
@@ -120,9 +120,9 @@ export const ProcessSection: React.FC = () => {
           </div>
         </BiReveal>
 
-        {/* Grade 4 Etapas com BiReveal alternado */}
+        {/* Grade 4 Etapas: empilhamento no mobile, 2 colunas em tablets/telas médias e 4 colunas em desktops amplos */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative min-w-0 process-list scroll-perf-list scroll-snap-y-container card-list-container"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch relative min-w-0 process-list scroll-perf-list scroll-snap-y-container card-list-container"
         >
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -131,11 +131,11 @@ export const ProcessSection: React.FC = () => {
                 key={step.number}
                 direction={index % 2 === 0 ? 'left' : 'right'}
                 index={index}
-                className="h-full scroll-snap-card card-snap-item"
+                className="h-full flex flex-col scroll-snap-card card-snap-item"
               >
-                <Interactive3DCard maxTilt={1.2} className="h-full">
+                <Interactive3DCard maxTilt={1.2} className="h-full flex flex-col flex-1">
                   <article
-                    className="relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 h-full w-full p-5 sm:p-6 md:p-8 flex flex-col justify-between group shadow-2xl shadow-black/80 bracket-panel transition-all process-card scroll-perf-card scroll-snap-card card-snap-item"
+                    className="relative rounded-2xl bg-[#090E23] border border-blue-500/20 hover:border-blue-400/50 h-full w-full p-6 sm:p-7 lg:p-8 flex flex-col justify-between flex-1 group shadow-2xl shadow-black/80 bracket-panel transition-all process-card scroll-perf-card scroll-snap-card card-snap-item"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2.5 mb-6">
@@ -149,7 +149,7 @@ export const ProcessSection: React.FC = () => {
                       <h3 className="font-display text-xl font-bold tracking-tight text-white mb-3 group-hover:text-blue-100 transition-colors">
                         {step.title}
                       </h3>
-                      <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                      <p className="text-sm sm:text-[15px] xl:text-base text-slate-300 leading-relaxed font-normal">
                         {step.description}
                       </p>
                     </div>
