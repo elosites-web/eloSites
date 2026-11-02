@@ -265,22 +265,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </Reveal>
 
           {/* Rodapé do Card com Ações */}
-          <div className="pt-3 border-t border-blue-500/20 flex items-center justify-between gap-2.5 w-full">
+          <div className="pt-3 border-t border-blue-500/20 flex flex-wrap items-center justify-between gap-2.5 w-full">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => onOpenCase(project.id)}
-                className="inline-flex items-center justify-center text-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0c122e] text-blue-200 hover:text-white hover:bg-blue-950/80 border border-blue-400/40 transition-colors shadow-sm cursor-pointer"
+                className="cta-primary inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md cursor-pointer group/casebtn"
               >
-                <span>Ver case</span>
-                <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
+                <span>Ver Estudo de Caso</span>
+                <ArrowRight className="w-3.5 h-3.5 text-white transition-transform group-hover/casebtn:translate-x-0.5" />
               </button>
 
               <a
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center text-center gap-1 text-xs font-semibold text-slate-200 hover:text-white bg-[#0c122e] hover:bg-blue-950/80 border border-blue-400/40 rounded-lg p-1.5 transition-colors shadow-sm"
+                className="inline-flex items-center justify-center text-center gap-1 text-xs font-semibold text-slate-200 hover:text-white bg-[#0c122e] hover:bg-blue-950/80 border border-blue-400/40 rounded-lg p-2 transition-colors shadow-sm"
                 title="Abrir site publicado em nova aba"
               >
                 <ExternalLink className="w-3.5 h-3.5 text-slate-200" aria-hidden="true" />
@@ -415,8 +415,12 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
           </div>
 
           {/* Grade de Projetos Reais */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 items-stretch portfolio-list"
+          <motion.div
+            initial={{ opacity: 0, y: prefersReduced ? 0 : 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05, margin: '0px 0px 80px 0px' }}
+            transition={{ duration: prefersReduced ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 lg:gap-8 items-stretch portfolio-list scroll-fade-card"
           >
             {filteredProjects.map((project, index) => {
               return (
@@ -437,7 +441,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                 </BiReveal>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* Banner Inferior com Conversão Direta e 3D Tilt */}

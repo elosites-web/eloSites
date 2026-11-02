@@ -2166,6 +2166,32 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
+/* Efeito ripple sutil em índigo claro ao clicar no botão de ação */
+@keyframes lightIndigoRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+.indigo-ripple-circle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(165, 180, 252, 0.55) 0%,
+    rgba(129, 140, 248, 0.35) 55%,
+    rgba(99, 102, 241, 0) 100%
+  );
+  animation: lightIndigoRipple 0.52s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+
 
 
 

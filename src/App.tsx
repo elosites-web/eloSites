@@ -669,7 +669,7 @@ export default function App() {
           <SectionErrorBoundary>
             <Suspense fallback={<PortfolioSkeleton />}>
               <TestimonialsSection
-                onNavigateToServices={() => navigateToScreen('processo')}
+                onNavigateToServices={() => navigateToScreen('servicos')}
               />
             </Suspense>
           </SectionErrorBoundary>

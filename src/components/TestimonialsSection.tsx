@@ -1206,11 +1206,33 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             {onNavigateToServices && (
               <button
                 type="button"
-                onClick={onNavigateToServices}
-                className="inline-flex items-center justify-center text-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 border border-white/[0.08] transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer"
+                onClick={(e) => {
+                  const btn = e.currentTarget;
+                  const rect = btn.getBoundingClientRect();
+                  const size = Math.max(rect.width, rect.height) * 1.25;
+                  const x = e.clientX ? e.clientX - rect.left : rect.width / 2;
+                  const y = e.clientY ? e.clientY - rect.top : rect.height / 2;
+
+                  const ripple = document.createElement('span');
+                  ripple.className = 'indigo-ripple-circle';
+                  ripple.style.width = `${size}px`;
+                  ripple.style.height = `${size}px`;
+                  ripple.style.left = `${x}px`;
+                  ripple.style.top = `${y}px`;
+                  btn.appendChild(ripple);
+
+                  window.setTimeout(() => {
+                    ripple.remove();
+                  }, 520);
+
+                  window.setTimeout(() => {
+                    onNavigateToServices();
+                  }, 140);
+                }}
+                className="relative overflow-hidden inline-flex items-center justify-center text-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-200 bg-slate-800/80 hover:bg-indigo-950/70 border border-indigo-400/25 hover:border-indigo-300/50 transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] cursor-pointer"
               >
-                <span className="text-center">Ver Serviços & Condições</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span className="relative z-10 text-center">Ver Serviços & Condições</span>
+                <ArrowRight className="relative z-10 w-3.5 h-3.5" />
               </button>
             )}
             <a
@@ -1228,3 +1250,4 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     </section>
   );
 };
+
