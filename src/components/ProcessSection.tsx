@@ -86,7 +86,7 @@ export const ProcessSection: React.FC = () => {
       number: '04',
       title: 'Site no ar e publicado',
       description:
-        'Publicamos o site no servidor seguro da Netlify. O endereço (.com.br) fica registrado em seu próprio nome para total controle.',
+        'Publicamos o site no serviço de hospedagem definido para o projeto. Quando o domínio fizer parte do orçamento, registramos em seu CPF ou CNPJ e configuramos os DNS. Na entrega, transferimos os arquivos, o repositório e os acessos da infraestrutura para você.',
       icon: Globe2,
     },
   ];
@@ -115,7 +115,7 @@ export const ProcessSection: React.FC = () => {
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              O processo é direto e acompanhado de perto. Usamos <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#a855f7] font-semibold">tecnologia de ponta</span> para ganhar velocidade — mas o site nunca é entregue de forma totalmente automática.
+              O processo é direto e acompanhado de perto. Cuidamos da criação com agilidade e revisão humana em cada detalhe para que o site represente bem o seu negócio.
             </p>
           </div>
         </BiReveal>
@@ -165,7 +165,7 @@ export const ProcessSection: React.FC = () => {
           <div className="mt-12 sm:mt-16 max-w-3xl mx-auto rounded-2xl border border-blue-500/20 bg-blue-950/30 p-5 sm:p-6 space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed text-center shadow-lg">
             <p>
               <ShieldCheck className="w-4 h-4 text-blue-400 inline-block mr-1.5" />
-              A publicação no servidor seguro da Netlify já está inclusa na entrega. O endereço na internet (domínio .com.br) fica registrado em seu próprio nome para garantir que o site seja sempre seu.
+              A publicação no serviço de hospedagem definido para o projeto já faz parte da entrega. Quando o domínio estiver previsto no orçamento, realizamos o registro em seu CPF ou CNPJ, configuramos os DNS e, na conclusão, entregamos os arquivos, o repositório e os acessos da infraestrutura para você.
             </p>
           </div>
         </BiReveal>

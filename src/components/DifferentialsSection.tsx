@@ -80,9 +80,9 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
     isWhatsApp?: boolean;
   }[] = [
     {
-      title: 'Código limpo & carregamento ágil',
+      title: 'Navegação leve e carregamento ágil',
       description:
-        'Desenvolvimento autoral, leve e otimizado para abrir com rapidez no celular e no computador. Sem modelos genéricos ou ferramentas pesadas que deixam a navegação lenta.',
+        'Desenvolvimento leve e pensado para abrir com agilidade no celular e no computador, sem modelos pesados que dificultam a leitura do visitante.',
       icon: Zap,
     },
     {
@@ -92,9 +92,9 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
       icon: User,
     },
     {
-      title: 'Tecnologia moderna e publicação estável',
+      title: 'Infraestrutura entregue sob seu controle',
       description:
-        'Tecnologia atual e confiável, com entrega padrão do site no ar pela Netlify. O endereço personalizado (como seunegocio.com.br) é registrado em sua própria conta para garantir sua titularidade.',
+        'Cuidamos da publicação e das configurações técnicas do projeto. Quando o domínio faz parte do orçamento, registramos em seu CPF ou CNPJ e configuramos os DNS. Na entrega, você recebe os arquivos, o repositório e os acessos da estrutura.',
       icon: Server,
     },
     {
@@ -151,11 +151,7 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
 
         {/* Grade 3 Colunas dos Diferenciais com BiReveal alternado */}
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 relative min-w-0 differentials-list scroll-perf-list scroll-snap-y-container card-list-container"
-          style={{
-            scrollSnapType: 'y mandatory',
-            scrollPaddingTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 relative min-w-0 differentials-list scroll-perf-list"
         >
           {differentials.map((item, index) => {
             const Icon = item.icon;
@@ -164,12 +160,7 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
                 key={item.title}
                 direction={index % 2 === 0 ? 'left' : 'right'}
                 index={index}
-                className="h-full scroll-snap-card card-snap-item"
-                style={{
-                  scrollSnapAlign: 'start',
-                  scrollSnapStop: 'normal',
-                  scrollMarginTop: 'clamp(4.5rem, 12vh, 6.5rem)',
-                }}
+                className="h-full"
               >
                 <Interactive3DCard maxTilt={1.2} className="h-full">
                   <article

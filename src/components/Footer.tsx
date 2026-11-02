@@ -47,13 +47,17 @@ export const Footer: React.FC<FooterProps> = ({
 
   const footerWhatsappUrl = whatsappUrl(SITE_CONFIG.footerWhatsappMessage);
 
-  const handleNavigateHome = () => {
+  const handleSelectInstitutionalScreen = (screenId: ScreenId) => {
     if (onSelectScreen) {
-      onSelectScreen('inicio');
+      onSelectScreen(screenId);
     } else {
-      window.location.hash = 'inicio';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.location.hash = screenId;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
+  };
+
+  const handleNavigateHome = () => {
+    handleSelectInstitutionalScreen('inicio');
   };
 
   const scrollToTop = () => {
@@ -79,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              Desenvolvemos sites profissionais com boas práticas de SEO técnico, estrutura adequada para indexação e acesso facilitado ao contato pelo WhatsApp.
+              Desenvolvemos sites profissionais com apresentação clara do seu negócio, estrutura organizada para os mecanismos de busca e acesso facilitado ao contato pelo WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a
@@ -160,14 +164,7 @@ export const Footer: React.FC<FooterProps> = ({
                   >
                     <button
                       type="button"
-                      onClick={() => {
-                        if (onSelectScreen) {
-                          onSelectScreen(screenId);
-                        } else {
-                          window.location.hash = screenId;
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                      }}
+                      onClick={() => handleSelectInstitutionalScreen(screenId)}
                       className={`text-left transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200 relative flex items-center gap-2 py-0.5 cursor-pointer group hover:-translate-y-0.5 hover:translate-x-1 ${
                         isActive
                           ? 'text-cyan-300 font-semibold drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
@@ -193,14 +190,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="md:col-span-4 space-y-3">
             <button
               type="button"
-              onClick={() => {
-                if (onSelectScreen) {
-                  onSelectScreen('servicos');
-                } else {
-                  window.location.hash = 'servicos';
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
+              onClick={() => handleSelectInstitutionalScreen('servicos')}
               className="text-left text-xs font-mono font-semibold uppercase tracking-wider text-slate-200 hover:text-cyan-300 transition-colors cursor-pointer group flex items-center gap-1.5"
             >
               <span>Serviços de Desenvolvimento</span>

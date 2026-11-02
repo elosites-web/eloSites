@@ -80,7 +80,7 @@ export function formatWhatsAppMessage(params?: WhatsAppContextParams | string): 
   }
 
   if (params.location === 'service-institucional') {
-    return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
+    return 'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura organizada para o Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?';
   }
 
   if (params.location === 'process') {

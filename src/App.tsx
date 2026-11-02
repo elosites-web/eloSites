@@ -21,6 +21,7 @@ import { Sparkles } from 'lucide-react';
 import { BiReveal } from './components/BiReveal';
 import { CaseDetailPage } from './components/CaseDetailPage';
 import { ProjectImageView } from './components/ProjectImageView';
+import { CustomCursor } from './components/CustomCursor';
 import { getProjectById } from './portfolioData';
 
 // Code-splitting via React.lazy para acelerar a carga inicial da tela Início
@@ -87,9 +88,201 @@ export default function App() {
     imageType: 'desktop' | 'mobile';
   } | null>(null);
 
-  // Armazenamento em memória das posições de scroll de cada página/view para restauração suave
+  // Armazenamento em memória das posições de scroll exclusivamente para o fluxo Portfólio <-> Case <-> Imagem
   const scrollPositionsRef = useRef<Record<string, number>>({});
   const currentRouteKeyRef = useRef<string>('inicio');
+  const isRestoringScrollRef = useRef<boolean>(false);
+  const activeScrollJobCancelRef = useRef<(() => void) | null>(null);
+
+  const cancelActiveScrollJob = useCallback(() => {
+    if (activeScrollJobCancelRef.current) {
+      activeScrollJobCancelRef.current();
+      activeScrollJobCancelRef.current = null;
+    }
+    isRestoringScrollRef.current = false;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      cancelActiveScrollJob();
+    };
+  }, [cancelActiveScrollJob]);
+
+  // Calcula a posição exata de rolagem descontando a altura real do cabeçalho fixo
+  const computeAnchorScrollTop = useCallback((el: HTMLElement): number => {
+    const headerEl = document.getElementById('site-header') || document.querySelector('header');
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 72;
+    const rect = el.getBoundingClientRect();
+    const currentScrollY = window.scrollY || window.pageYOffset || 0;
+
+    if (el.tagName === 'SECTION') {
+      const computedStyle = window.getComputedStyle(el);
+      const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+      const desiredGap = 24;
+      const contentTopInDoc = rect.top + currentScrollY + paddingTop;
+      return Math.max(0, Math.round(contentTopInDoc - (headerHeight + desiredGap)));
+    }
+
+    const elementTopInDoc = rect.top + currentScrollY;
+    return Math.max(0, Math.round(elementTopInDoc - (headerHeight + 20)));
+  }, []);
+
+  // Garante abertura no topo (scrollY = 0) para telas institucionais, inclusive após transições
+  const scrollToInstitutionalTop = useCallback(() => {
+    cancelActiveScrollJob();
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    let cancelled = false;
+    const timers: number[] = [];
+    const rafId = window.requestAnimationFrame(() => {
+      if (!cancelled) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    });
+
+    const onUserScroll = () => {
+      cancelled = true;
+    };
+
+    window.addEventListener('wheel', onUserScroll, { passive: true, once: true });
+    window.addEventListener('touchstart', onUserScroll, { passive: true, once: true });
+    window.addEventListener('keydown', onUserScroll, { passive: true, once: true });
+
+    [60, 180].forEach((ms) => {
+      const tid = window.setTimeout(() => {
+        if (!cancelled) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+      }, ms);
+      timers.push(tid);
+    });
+
+    activeScrollJobCancelRef.current = () => {
+      cancelled = true;
+      window.cancelAnimationFrame(rafId);
+      timers.forEach((tid) => window.clearTimeout(tid));
+      window.removeEventListener('wheel', onUserScroll);
+      window.removeEventListener('touchstart', onUserScroll);
+      window.removeEventListener('keydown', onUserScroll);
+    };
+  }, [cancelActiveScrollJob]);
+
+  // Aguarda o elemento de âncora existir no DOM (mesmo com lazy loading / Suspense) e posiciona abaixo do header fixo
+  const scrollToAnchorWhenReady = useCallback(
+    (candidateIds: string[]) => {
+      cancelActiveScrollJob();
+      preloadAllScreens();
+
+      let cancelled = false;
+      let attempts = 0;
+      const maxAttempts = 60;
+      const timers: number[] = [];
+      let pollTimer: number | null = null;
+      let observer: MutationObserver | null = null;
+
+      const onUserInteracted = () => {
+        cancelled = true;
+      };
+
+      window.addEventListener('wheel', onUserInteracted, { passive: true, once: true });
+      window.addEventListener('touchstart', onUserInteracted, { passive: true, once: true });
+      window.addEventListener('keydown', onUserInteracted, { passive: true, once: true });
+
+      const findReadyTarget = (): HTMLElement | null => {
+        for (const id of candidateIds) {
+          const el = document.getElementById(id);
+          if (el && el.isConnected) {
+            const rect = el.getBoundingClientRect();
+            if (rect.height > 0) {
+              return el;
+            }
+          }
+        }
+        return null;
+      };
+
+      const applyScrollToElement = (el: HTMLElement, behavior: ScrollBehavior) => {
+        if (cancelled) return;
+        const targetY = computeAnchorScrollTop(el);
+        window.scrollTo({ top: targetY, left: 0, behavior });
+      };
+
+      const scheduleStabilization = () => {
+        [100, 220, 380, 560].forEach((delayMs) => {
+          const tid = window.setTimeout(() => {
+            if (cancelled) return;
+            const currentEl = findReadyTarget();
+            if (!currentEl) return;
+            const targetY = computeAnchorScrollTop(currentEl);
+            if (Math.abs((window.scrollY || 0) - targetY) > 3) {
+              window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+            }
+          }, delayMs);
+          timers.push(tid);
+        });
+      };
+
+      const tryResolve = (): boolean => {
+        if (cancelled) return true;
+        const el = findReadyTarget();
+        const mainEl = document.getElementById('main-content');
+        const hasPendingSkeleton = Boolean(mainEl?.querySelector('[aria-busy="true"]'));
+
+        if (el && (!hasPendingSkeleton || attempts > 18)) {
+          if (observer) {
+            observer.disconnect();
+            observer = null;
+          }
+          if (pollTimer !== null) {
+            window.clearTimeout(pollTimer);
+            pollTimer = null;
+          }
+          applyScrollToElement(el, 'instant');
+          scheduleStabilization();
+          return true;
+        }
+        return false;
+      };
+
+      const step = () => {
+        if (cancelled) return;
+        if (tryResolve()) return;
+        attempts += 1;
+        if (attempts < maxAttempts) {
+          pollTimer = window.setTimeout(step, 45);
+        }
+      };
+
+      const mainRoot = document.getElementById('main-content') || document.body;
+      if (typeof MutationObserver !== 'undefined' && mainRoot) {
+        observer = new MutationObserver(() => {
+          tryResolve();
+        });
+        observer.observe(mainRoot, { childList: true, subtree: true });
+      }
+
+      window.requestAnimationFrame(() => {
+        step();
+      });
+
+      activeScrollJobCancelRef.current = () => {
+        cancelled = true;
+        if (pollTimer !== null) {
+          window.clearTimeout(pollTimer);
+          pollTimer = null;
+        }
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+        timers.forEach((tid) => window.clearTimeout(tid));
+        window.removeEventListener('wheel', onUserInteracted);
+        window.removeEventListener('touchstart', onUserInteracted);
+        window.removeEventListener('keydown', onUserInteracted);
+      };
+    },
+    [cancelActiveScrollJob, computeAnchorScrollTop]
+  );
 
   // Desativa restauração automática truncada do navegador para controle milimétrico de scroll
   useEffect(() => {
@@ -98,14 +291,21 @@ export default function App() {
     }
   }, []);
 
-  // Monitora continuamente e salva a posição de rolagem vertical da rota ativa
+  // Monitora continuamente e salva a posição de rolagem vertical apenas das rotas de portfólio, case e imagem
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (currentRouteKeyRef.current) {
-            scrollPositionsRef.current[currentRouteKeyRef.current] = window.scrollY || window.pageYOffset || 0;
+          if (!isRestoringScrollRef.current) {
+            const routeKey = currentRouteKeyRef.current;
+            if (
+              routeKey === 'portfolio' ||
+              routeKey.startsWith('case/') ||
+              routeKey.startsWith('imagem/')
+            ) {
+              scrollPositionsRef.current[routeKey] = window.scrollY || window.pageYOffset || 0;
+            }
           }
           ticking = false;
         });
@@ -187,6 +387,30 @@ export default function App() {
     const handleHashChange = () => {
       const rawHash = window.location.hash.replace('#', '');
 
+      const restoreSavedPosition = (targetY: number) => {
+        cancelActiveScrollJob();
+        isRestoringScrollRef.current = true;
+        window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+        const timers: number[] = [];
+        const rafId = window.requestAnimationFrame(() => {
+          window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+        });
+        [50, 120, 220].forEach((ms, idx) => {
+          const tid = window.setTimeout(() => {
+            window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+            if (idx === 2) {
+              isRestoringScrollRef.current = false;
+            }
+          }, ms);
+          timers.push(tid);
+        });
+        activeScrollJobCancelRef.current = () => {
+          window.cancelAnimationFrame(rafId);
+          timers.forEach((tid) => window.clearTimeout(tid));
+          isRestoringScrollRef.current = false;
+        };
+      };
+
       // 1. Rota de captura de imagem em alta resolução:
       // #case/:id/:type ou #case/:id/imagem/:type ou #imagem/:id/:type
       const imageMatch = rawHash.match(/^(?:case\/([a-z0-9-]+)\/(?:imagem\/)?(desktop|mobile)|imagem\/([a-z0-9-]+)\/(desktop|mobile)|case-([a-z0-9-]+)-(desktop|mobile))$/);
@@ -195,13 +419,20 @@ export default function App() {
         const iType = (imageMatch[2] || imageMatch[4] || imageMatch[6]) as 'desktop' | 'mobile';
         const project = getProjectById(pId);
         if (project) {
+          const prevRouteKey = currentRouteKeyRef.current;
+          if (
+            !isRestoringScrollRef.current &&
+            (prevRouteKey === 'portfolio' || prevRouteKey.startsWith('case/'))
+          ) {
+            scrollPositionsRef.current[prevRouteKey] = window.scrollY || window.pageYOffset || 0;
+          }
+          const routeKey = `case/${pId}/${iType}`;
+          const savedY = scrollPositionsRef.current[routeKey];
+          currentRouteKeyRef.current = routeKey;
           setCurrentScreen('portfolio');
           setActiveCaseId(null);
           setActiveImageView({ projectId: pId, imageType: iType });
-          const routeKey = `case/${pId}/${iType}`;
-          currentRouteKeyRef.current = routeKey;
-          const savedY = scrollPositionsRef.current[routeKey];
-          window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+          restoreSavedPosition(typeof savedY === 'number' ? savedY : 0);
           return;
         }
       }
@@ -212,13 +443,19 @@ export default function App() {
         const pId = caseMatch[1] || caseMatch[2];
         const project = getProjectById(pId);
         if (project) {
+          const prevRouteKey = currentRouteKeyRef.current;
+          if (!isRestoringScrollRef.current && prevRouteKey === 'portfolio') {
+            scrollPositionsRef.current['portfolio'] = window.scrollY || window.pageYOffset || 0;
+          }
+          const isReturningFromImage =
+            prevRouteKey.startsWith(`case/${pId}/`) || prevRouteKey.startsWith(`imagem/${pId}/`);
+          const routeKey = `case/${pId}`;
+          const savedY = isReturningFromImage ? scrollPositionsRef.current[routeKey] : 0;
+          currentRouteKeyRef.current = routeKey;
           setCurrentScreen('portfolio');
           setActiveImageView(null);
           setActiveCaseId(pId);
-          const routeKey = `case/${pId}`;
-          currentRouteKeyRef.current = routeKey;
-          const savedY = scrollPositionsRef.current[routeKey];
-          window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+          restoreSavedPosition(typeof savedY === 'number' ? savedY : 0);
           return;
         }
       }
@@ -227,26 +464,35 @@ export default function App() {
       setActiveCaseId(null);
       setActiveImageView(null);
 
-      // 4. Redirecionamento de compatibilidade para links legados (#home e #sobre -> #inicio)
-      if (rawHash === 'home' || rawHash === 'sobre') {
+      // 4. Redirecionamento de compatibilidade para links legados (#home -> #inicio)
+      if (rawHash === 'home') {
         setCurrentScreen('inicio');
         currentRouteKeyRef.current = 'inicio';
         if (window.location.hash !== '#inicio') {
           history.replaceState(null, '', '#inicio');
         }
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        scrollToInstitutionalTop();
         return;
       }
 
       if (rawHash === 'portfolio') {
-        setCurrentScreen('portfolio');
-        currentRouteKeyRef.current = 'portfolio';
+        const prevRouteKey = currentRouteKeyRef.current;
+        const isReturningFromCase =
+          prevRouteKey.startsWith('case/') || prevRouteKey.startsWith('imagem/');
         const savedY = scrollPositionsRef.current['portfolio'];
-        window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
+        currentRouteKeyRef.current = 'portfolio';
+        setCurrentScreen('portfolio');
+        if (isReturningFromCase) {
+          restoreSavedPosition(typeof savedY === 'number' ? savedY : 0);
+        } else {
+          scrollPositionsRef.current['portfolio'] = 0;
+          scrollToInstitutionalTop();
+        }
         return;
       }
 
       if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
+        currentRouteKeyRef.current = 'servicos';
         setCurrentScreen((prev) => {
           if (prev !== 'servicos') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -257,8 +503,9 @@ export default function App() {
           }
           return 'servicos';
         });
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        scrollToInstitutionalTop();
       } else if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
+        currentRouteKeyRef.current = 'avaliacoes';
         setCurrentScreen((prev) => {
           if (prev !== 'avaliacoes') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -269,8 +516,9 @@ export default function App() {
           }
           return 'avaliacoes';
         });
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        scrollToInstitutionalTop();
       } else if (rawHash === 'parceria' || rawHash === 'trafego' || rawHash === 'trafego-pago') {
+        currentRouteKeyRef.current = 'parceria-trafego';
         setCurrentScreen((prev) => {
           if (prev !== 'parceria-trafego') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -281,21 +529,9 @@ export default function App() {
           }
           return 'parceria-trafego';
         });
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (validIds.includes(rawHash as ScreenId)) {
-        const targetScreen = rawHash as ScreenId;
-        setCurrentScreen((prev) => {
-          if (prev !== targetScreen) {
-            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === targetScreen);
-            if (nextIdx !== -1 && prevIdx !== -1) {
-              setDirection(nextIdx > prevIdx ? 1 : -1);
-            }
-          }
-          return targetScreen;
-        });
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (rawHash === 'diferenciais') {
+        scrollToInstitutionalTop();
+      } else if (rawHash === 'como-funciona') {
+        currentRouteKeyRef.current = 'processo';
         setCurrentScreen((prev) => {
           if (prev !== 'processo') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -306,11 +542,49 @@ export default function App() {
           }
           return 'processo';
         });
-        setTimeout(() => {
-          const el = document.getElementById('diferenciais');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
+        scrollToInstitutionalTop();
+      } else if (rawHash === 'agendamento') {
+        currentRouteKeyRef.current = 'orcamento';
+        setCurrentScreen((prev) => {
+          if (prev !== 'orcamento') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'orcamento');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'orcamento';
+        });
+        scrollToInstitutionalTop();
+      } else if (validIds.includes(rawHash as ScreenId)) {
+        const targetScreen = rawHash as ScreenId;
+        currentRouteKeyRef.current = targetScreen;
+        setCurrentScreen((prev) => {
+          if (prev !== targetScreen) {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === targetScreen);
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return targetScreen;
+        });
+        scrollToInstitutionalTop();
+      } else if (rawHash === 'diferenciais') {
+        currentRouteKeyRef.current = 'processo';
+        setCurrentScreen((prev) => {
+          if (prev !== 'processo') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'processo');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'processo';
+        });
+        scrollToAnchorWhenReady(['diferenciais']);
       } else if (rawHash === 'contato') {
+        currentRouteKeyRef.current = 'faq';
         setCurrentScreen((prev) => {
           if (prev !== 'faq') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -321,16 +595,14 @@ export default function App() {
           }
           return 'faq';
         });
-        setTimeout(() => {
-          const el = document.getElementById('contato');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
+        scrollToAnchorWhenReady(['contato']);
       } else if (
         rawHash === 'cartao-digital' ||
         rawHash === 'cartao' ||
         rawHash === 'cartao-visitas' ||
         rawHash === 'cartao-de-visitas'
       ) {
+        currentRouteKeyRef.current = 'faq';
         setCurrentScreen((prev) => {
           if (prev !== 'faq') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -341,21 +613,13 @@ export default function App() {
           }
           return 'faq';
         });
-        const scrollToCartao = () => {
-          const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        };
-        setTimeout(scrollToCartao, 120);
-        setTimeout(scrollToCartao, 350);
-      } else if (rawHash === 'apresentacao') {
-        setCurrentScreen('inicio');
-        setTimeout(() => {
-          const el = document.getElementById('apresentacao');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
-      } else if (rawHash === 'fundador' || rawHash === 'card-do-fundador' || rawHash === 'sobre-fundador') {
+        const candidates =
+          rawHash === 'cartao-de-visitas'
+            ? ['cartao-de-visitas', 'cartao-digital']
+            : ['cartao-digital', 'cartao-de-visitas'];
+        scrollToAnchorWhenReady(candidates);
+      } else if (rawHash === 'apresentacao' || rawHash === 'sobre') {
+        currentRouteKeyRef.current = 'inicio';
         setCurrentScreen((prev) => {
           if (prev !== 'inicio') {
             const prevIdx = SCREENS.findIndex((s) => s.id === prev);
@@ -366,25 +630,24 @@ export default function App() {
           }
           return 'inicio';
         });
-        let founderScrollAttempts = 0;
-        const scrollToFounder = () => {
-          const el = document.getElementById('fundador');
-          if (!el) {
-            if (founderScrollAttempts < 30) {
-              founderScrollAttempts += 1;
-              setTimeout(scrollToFounder, 150);
+        scrollToAnchorWhenReady(['sobre-fundador', 'apresentacao', 'fundador']);
+      } else if (rawHash === 'fundador' || rawHash === 'card-do-fundador' || rawHash === 'sobre-fundador') {
+        currentRouteKeyRef.current = 'inicio';
+        setCurrentScreen((prev) => {
+          if (prev !== 'inicio') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
             }
-            return;
           }
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setTimeout(() => {
-            const target = document.getElementById('fundador');
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }, 700);
-        };
-        setTimeout(scrollToFounder, 120);
+          return 'inicio';
+        });
+        const candidates =
+          rawHash === 'sobre-fundador'
+            ? ['sobre-fundador', 'fundador']
+            : ['fundador', 'sobre-fundador'];
+        scrollToAnchorWhenReady(candidates);
       } else if (rawHash === 'sitemap' || rawHash === 'mapa-do-site') {
         setIsSitemapOpen(true);
       }
@@ -395,9 +658,9 @@ export default function App() {
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [cancelActiveScrollJob, scrollToAnchorWhenReady, scrollToInstitutionalTop]);
 
-  // Ao trocar de tela, atualiza o hash, a direção do slide lateral e rola para o topo
+  // Ao trocar de tela institucional pelo menu superior, rodapé ou CTAs, abre sempre no topo (scrollY = 0)
   const navigateToScreen = useCallback((screenId: ScreenId) => {
     setIsMenuOpen(false);
     setActiveCaseId(null);
@@ -405,15 +668,17 @@ export default function App() {
     const prevIdx = SCREENS.findIndex((s) => s.id === currentScreen);
     const nextIdx = SCREENS.findIndex((s) => s.id === screenId);
     const nextDirection = nextIdx !== -1 && prevIdx !== -1 && nextIdx !== prevIdx ? (nextIdx > prevIdx ? 1 : -1) : direction;
+    scrollPositionsRef.current[screenId] = 0;
     currentRouteKeyRef.current = screenId;
     withViewTransition(() => {
       setDirection(nextDirection);
       setCurrentScreen(screenId);
     });
-    window.location.hash = screenId;
-    const savedY = scrollPositionsRef.current[screenId];
-    window.scrollTo({ top: typeof savedY === 'number' ? savedY : 0, behavior: 'instant' });
-  }, [currentScreen, direction]);
+    if (window.location.hash !== `#${screenId}`) {
+      window.history.pushState(null, '', `#${screenId}`);
+    }
+    scrollToInstitutionalTop();
+  }, [currentScreen, direction, scrollToInstitutionalTop]);
 
   const currentIndex = SCREENS.findIndex((s) => s.id === currentScreen);
   const previousScreen = currentIndex > 0 ? SCREENS[currentIndex - 1] : null;
@@ -510,12 +775,12 @@ export default function App() {
     const isHome = currentScreen === 'inicio';
 
     const pageTitle = isHome
-      ? 'ēloSites — Criação de Sites Profissionais com SEO Técnico e Conversão'
-      : `${meta.title} | ēloSites — Sites Profissionais com SEO Técnico`;
+      ? 'ēloSites | Sites profissionais e landing pages'
+      : `${meta.title} | ēloSites — Sites profissionais e landing pages`;
 
     const pageDesc = isHome
-      ? 'Criação de sites profissionais e landing pages com SEO técnico e foco em conversão para pequenos negócios e profissionais liberais. Alta performance e código limpo.'
-      : `${meta.description} Desenvolvimento de sites institucionais e landing pages de alta conversão pela ēloSites.`;
+      ? 'Criação de sites institucionais e landing pages responsivas, organizados para facilitar a compreensão pelos mecanismos de busca e o contato pelo WhatsApp.'
+      : `${meta.description} Desenvolvimento de sites institucionais e landing pages pela ēloSites.`;
 
     const canonicalUrl = 'https://elosites.ia.br/';
 
@@ -613,16 +878,17 @@ export default function App() {
                   <Suspense fallback={<SimpleSectionSkeleton />}>
                     <FounderCard
                       onNavigateToCartao={() => {
-                        navigateToScreen('faq');
-                        window.location.hash = 'cartao-digital';
-                        const scrollToCartao = () => {
-                          const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          }
-                        };
-                        setTimeout(scrollToCartao, 120);
-                        setTimeout(scrollToCartao, 350);
+                        setIsMenuOpen(false);
+                        setActiveCaseId(null);
+                        setActiveImageView(null);
+                        currentRouteKeyRef.current = 'faq';
+                        withViewTransition(() => {
+                          setCurrentScreen('faq');
+                        });
+                        if (window.location.hash !== '#cartao-digital') {
+                          window.history.pushState(null, '', '#cartao-digital');
+                        }
+                        scrollToAnchorWhenReady(['cartao-digital', 'cartao-de-visitas']);
                       }}
                     />
                   </Suspense>
@@ -736,6 +1002,9 @@ export default function App() {
 
   return (
     <div className={`min-h-screen-dvh text-slate-800 flex flex-col selection:bg-blue-600 selection:text-white relative ${isHighContrast ? 'high-contrast' : ''}`}>
+      {/* Cursor personalizado de mira redonda para dispositivos desktop com ponteiro fino */}
+      <CustomCursor />
+
       {/* Link de pular para o conteúdo (primeiro elemento focável) */}
       <a
         href="#main-content"

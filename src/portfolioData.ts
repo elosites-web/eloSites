@@ -35,7 +35,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     features: [
       'Botões de WhatsApp com mensagem pronta para cada plano de treino',
       'Site com layout responsivo para celular e computador',
-      'Carregamento rápido das imagens e boas práticas de SEO técnico',
+      'Carregamento rápido das imagens e informações organizadas para os mecanismos de busca',
     ],
     resultsNote: 'Contatos organizados pelo WhatsApp, com mensagens que já identificam o serviço desejado pelo aluno.',
     highlightNote: 'Desenvolvido para abrir rápido no celular e facilitar o primeiro contato pelo WhatsApp.',
@@ -70,7 +70,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
     title: 'Garagem Mailasque',
     category: 'landing',
     challenge:
-      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava de estrutura adequada para indexação local e agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
+      'Oficina especializada em funilaria, pintura automotiva e polimento em São Roque e região. Precisava de uma página organizada para os mecanismos de busca e para agilizar orçamentos de reparos pelo WhatsApp, inclusive com envio de fotos dos veículos.',
     solution:
       'Criamos uma página direta e fácil de navegar no celular, apresentando os serviços de funilaria, pintura e restauração, mapa de localização e botão de WhatsApp preparado para o cliente enviar fotos do veículo batido ou arranhado.',
     tags: ['Funilaria & Pintura', 'São Roque e Região', 'Envio de Fotos do Carro', 'Orçamento no WhatsApp'],
@@ -83,7 +83,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProjectData[] = [
       'Apresentação clara dos serviços automotivos de funilaria, pintura e polimento',
       'Endereço e mapa para ajudar motoristas de São Roque e região a encontrar a oficina',
     ],
-    resultsNote: 'Estrutura preparada para indexação local e canal direto de WhatsApp para pedidos de orçamento com envio de fotos.',
+    resultsNote: 'Estrutura organizada para buscas locais e canal direto de WhatsApp para pedidos de orçamento com envio de fotos.',
     highlightNote: 'Estruturado para apresentar serviços com clareza e levar o cliente direto para o WhatsApp.',
   },
   {

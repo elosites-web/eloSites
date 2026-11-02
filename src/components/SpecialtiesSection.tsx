@@ -91,22 +91,22 @@ const SPECIALTIES: SpecialtyItem[] = [
   },
   {
     id: 'seo-tecnico-performance',
-    category: 'Boas Práticas de SEO Técnico & Indexação',
-    badge: 'SEO & Indexação',
+    category: 'Estrutura Organizada para Mecanismos de Busca',
+    badge: 'Leitura no Google',
     icon: ShieldCheck,
-    iconAlt: 'Boas práticas de SEO técnico e indexação',
+    iconAlt: 'Estrutura organizada para mecanismos de busca',
     iconGlow: 'shadow-[0_0_20px_rgba(251,191,36,0.35)] border-amber-500/40 text-amber-400',
-    highlight: 'Boas práticas de SEO técnico, estrutura adequada para indexação e conteúdo organizado para facilitar a leitura pelos mecanismos de busca, como o Google.',
+    highlight: 'Conteúdo e estrutura organizados para facilitar a compreensão das informações pelos mecanismos de busca, como o Google.',
     items: [
-      'Estrutura lógica de títulos (arquitetura semântica): ajuda as pessoas e o Google a entender o assunto principal de cada seção',
+      'Estrutura lógica de títulos: ajuda as pessoas e o Google a entender o assunto principal de cada seção',
       'Descrições de página (meta tags): textos resumidos exibidos abaixo do nome do seu site nas buscas do Google',
       'Cartões de compartilhamento (Open Graph): ao enviar o link do site no WhatsApp ou redes sociais, aparece uma prévia bonita com foto e título',
-      'Etiquetas técnicas (Schema.org / Dados estruturados): código padronizado que informa ao Google seu nome, telefone, endereço e serviços',
+      'Dados estruturados (Schema.org): informações padronizadas que apresentam seu nome, telefone, endereço e serviços aos buscadores',
       'Imagens leves (formato WebP): fotos otimizadas para abrir com rapidez, sem consumir a franquia de internet do celular',
-      'Revisão técnica de links: verificação para prevenir links quebrados e inconsistências de navegação',
+      'Revisão de links: verificação para prevenir links quebrados e inconsistências de navegação',
     ],
     technicalClarification:
-      'O SEO técnico organiza o site conforme as boas práticas dos mecanismos de busca. Isso facilita a leitura e a indexação do seu negócio, sem promessa de garantia de posicionamento ou visibilidade.',
+      'Organizamos o site conforme as boas práticas dos mecanismos de busca para facilitar a leitura das informações do seu negócio, sem promessa de garantia de posicionamento ou primeiro lugar.',
     tagColor: 'from-amber-500/20 to-yellow-500/10 text-amber-300 border-amber-500/30',
   },
   {
@@ -129,21 +129,21 @@ const SPECIALTIES: SpecialtyItem[] = [
   },
   {
     id: 'tecnologias-stack',
-    category: 'Tecnologias Modernas & Base Segura',
-    badge: 'Tecnologia Segura',
+    category: 'Estrutura Leve & Base Confiável',
+    badge: 'Base Confiável',
     icon: Cpu,
-    iconAlt: 'Arquitetura tecnológica moderna de alta performance',
+    iconAlt: 'Estrutura leve e confiável',
     iconGlow: 'shadow-[0_0_20px_rgba(129,140,248,0.35)] border-indigo-500/40 text-indigo-400',
-    highlight: 'Tecnologia moderna e confiável para o seu site carregar com agilidade, ter boa estabilidade e oferecer uma navegação consistente.',
+    highlight: 'Desenvolvimento cuidadoso para o seu site carregar com agilidade, ter boa estabilidade e oferecer uma navegação consistente.',
     items: [
-      'React e TypeScript: tecnologias consagradas para criar páginas modernas, bem estruturadas e com código padronizado',
-      'HTML5 e CSS organizados: código limpo que estrutura textos e visual de forma rápida e acessível',
-      'Tailwind CSS: ferramenta moderna de estilo que mantém o visual bonito e o tamanho dos arquivos leve',
-      'Vite: sistema de última geração que faz as páginas abrirem com agilidade no celular',
+      'React e TypeScript: ferramentas consagradas para criar páginas bem estruturadas e padronizadas',
+      'HTML5 e CSS organizados: estrutura que apresenta textos e visual de forma rápida e acessível',
+      'Tailwind CSS: estilização que mantém o visual consistente e o tamanho dos arquivos leve',
+      'Vite: sistema que prepara as páginas para abrirem com agilidade no celular e no computador',
       'Ícones e animações sutis: detalhes que deixam o site elegante sem pesar na conexão do visitante',
     ],
     technicalClarification:
-      'Utilizamos programação moderna em código limpo, sem plugins desnecessários ou modelos engessados. Isso contribui para um carregamento ágil, navegação estável e facilidade de manutenção para a sua empresa.',
+      'Desenvolvemos cada projeto sem plugins desnecessários ou modelos engessados. Isso contribui para um carregamento ágil, navegação estável e facilidade de atualização para a sua empresa.',
     tagColor: 'from-indigo-500/20 to-violet-500/10 text-indigo-300 border-indigo-500/30',
   },
 ];
@@ -164,7 +164,7 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
       : SPECIALTIES.filter((s) => s.id === activeCategory);
 
   const specialtiesWhatsappMessage =
-    'Olá! ⚡ Estive analisando a seção de *Especialidades e Soluções Web* da *ēloSites*.\n\nGostaria de entender como essas soluções em desenvolvimento frontend, SEO técnico e integração com WhatsApp podem ser aplicadas ao meu negócio!';
+    'Olá! ⚡ Estive analisando a seção de *Especialidades e Soluções Web* da *ēloSites*.\n\nGostaria de entender como essas soluções de criação de sites, organização para o Google e contato pelo WhatsApp podem ser aplicadas ao meu negócio!';
 
   const ctaUrl = whatsappUrl(specialtiesWhatsappMessage);
 
@@ -313,10 +313,10 @@ export const SpecialtiesSection: React.FC<SpecialtiesSectionProps> = ({ onNaviga
             items={[
               { text: 'React 19 & TypeScript', icon: <Code2 className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Base Moderna' },
               { text: 'Vite & Tailwind CSS', icon: <Zap className="w-3.5 h-3.5 text-sky-400" />, badge: 'Visual Leve' },
-              { text: 'SEO Técnico & Schema.org', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Indexação' },
+              { text: 'Estrutura Organizada para o Google', icon: <Sparkles className="w-3.5 h-3.5 text-indigo-400" />, badge: 'Buscadores' },
               { text: 'Google Analytics 4 & Tag Manager', icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Visitas' },
               { text: 'Carregamento Otimizado', icon: <Zap className="w-3.5 h-3.5 text-amber-300" />, badge: 'Rapidez' },
-              { text: 'Código Organizado & Semântico', icon: <Code2 className="w-3.5 h-3.5 text-teal-400" />, badge: 'Código Limpo' },
+              { text: 'Estrutura Leve & Organizada', icon: <Code2 className="w-3.5 h-3.5 text-teal-400" />, badge: 'Leitura Fácil' },
               { text: 'Adaptado para Celular e Computador', icon: <Smartphone className="w-3.5 h-3.5 text-fuchsia-400" />, badge: 'Responsivo' },
               { text: 'Canal Direto no WhatsApp', icon: <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />, badge: 'Contato' },
               { text: 'Landing Pages (Página Única)', icon: <Layout className="w-3.5 h-3.5 text-cyan-400" />, badge: 'Mais Clientes' },

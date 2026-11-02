@@ -116,14 +116,6 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
     setIsShowcaseExpanded((prev) => !prev);
   };
 
-  const handleShowcaseKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setIsShowcaseExpanded((prev) => !prev);
-    }
-  };
-
   const handleTogglePillarsExpand = () => {
     setIsPillarsExpanded((prev) => !prev);
   };
@@ -481,7 +473,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   >
                     <div className="overflow-hidden">
                       <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-justify [text-align-last:left] hyphens-auto">
-                        Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, aparece com mais facilidade quando alguém procura seu serviço no Google e funciona perfeitamente tanto no celular quanto no computador.
+                        Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, tem conteúdo organizado para facilitar a leitura pelo Google e funciona bem tanto no celular quanto no computador.
                       </p>
                     </div>
                   </div>
@@ -524,12 +516,6 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
           <div className="lg:col-span-6 relative mt-6 lg:mt-0">
             <BiReveal direction="right" delay={150}>
               <motion.div
-                onClick={handleToggleShowcaseExpand}
-                onKeyDown={handleShowcaseKeyDown}
-                role="button"
-                tabIndex={0}
-                aria-expanded={isShowcaseExpanded}
-                aria-label="Painel interativo do site: clique para ver como esse site ajuda o seu negócio"
                 style={
                   isReduced
                     ? undefined
@@ -541,21 +527,17 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                         opacity: laptopOpacity,
                       }
                 }
-                className="relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d] cursor-pointer rounded-2xl transition-all duration-300"
+                className="relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d] rounded-2xl transition-all duration-300"
               >
                 
                 {/* Indicador de Status do Mockup com Abas */}
                 <div className="flex items-center justify-between mb-3 px-2">
                   <div
                     className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md"
-                    onClick={(e) => e.stopPropagation()}
                   >
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveTab('preview');
-                      }}
+                      onClick={() => setActiveTab('preview')}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                         activeTab === 'preview'
                           ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
@@ -566,10 +548,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveTab('code');
-                      }}
+                      onClick={() => setActiveTab('code')}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                         activeTab === 'code'
                           ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
@@ -751,10 +730,16 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   </div>
                 </Interactive3DCard>
 
-                {/* Barra de indicação de expansão e Conteúdo Oculto em linguagem simples e acessível */}
-                <div className="mt-2.5 px-2 flex items-center justify-between text-xs text-blue-300/90 font-medium select-none">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                {/* Botão semântico de expansão e Conteúdo Oculto em linguagem simples e acessível */}
+                <button
+                  type="button"
+                  onClick={handleToggleShowcaseExpand}
+                  aria-expanded={isShowcaseExpanded}
+                  aria-controls="hero-showcase-summary"
+                  className="mt-2.5 w-full px-3 py-2 rounded-xl bg-slate-950/60 hover:bg-slate-900/80 border border-blue-500/20 hover:border-blue-400/40 flex items-center justify-between text-xs text-blue-300/90 hover:text-blue-200 font-medium select-none cursor-pointer transition-colors"
+                >
+                  <span className="inline-flex items-center gap-1.5 text-left">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-400 shrink-0" aria-hidden="true" />
                     <span>
                       {isShowcaseExpanded
                         ? 'Ocultar resumo dos benefícios práticos'
@@ -762,13 +747,15 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </span>
                   </span>
                   <ArrowDown
-                    className={`w-3.5 h-3.5 text-blue-400 transition-transform duration-300 ${
+                    aria-hidden="true"
+                    className={`w-3.5 h-3.5 text-blue-400 shrink-0 transition-transform duration-300 ${
                       isShowcaseExpanded ? 'rotate-180' : 'rotate-0'
                     }`}
                   />
-                </div>
+                </button>
 
                 <div
+                  id="hero-showcase-summary"
                   aria-hidden={!isShowcaseExpanded}
                   className={`grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     isShowcaseExpanded
@@ -796,10 +783,10 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                         <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Fácil de encontrar</span>
+                            <span>Preparado para o Google</span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-snug">
-                            Quando alguém procura pelo seu serviço no Google, encontra sua empresa com facilidade.
+                            Conteúdo organizado para facilitar a compreensão das informações pelos mecanismos de busca.
                           </p>
                         </div>
 

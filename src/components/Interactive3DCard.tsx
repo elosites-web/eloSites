@@ -16,7 +16,7 @@ interface Interactive3DCardProps {
 export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
   children,
   className = '',
-  maxTilt = 1.5,
+  maxTilt: _maxTilt = 1.5,
   glare = true,
   animatedBorder = false,
   style = {},
@@ -25,94 +25,57 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
   const rafIdRef = useRef<number | null>(null);
-  const settleTimerRef = useRef<number | null>(null);
+  const pointerPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
   const tier = getMotionTier();
-  const tiltEnabled = !prefersReduced && tier === 'full' && maxTilt > 0;
+  const glareEnabled = glare && !prefersReduced && tier !== 'none';
 
   useEffect(() => {
     return () => {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      if (settleTimerRef.current) window.clearTimeout(settleTimerRef.current);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
     };
   }, []);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Tilt 3D ativado ESTRITAMENTE para mouse de desktop.
-    // Toques de dedo (touch) nunca sofrem tilt, garantindo scroll nativo 100% fluido e livre.
-    if (!tiltEnabled || e.pointerType !== 'mouse') return;
-    const card = cardRef.current;
-    if (!card) return;
+    if (!glareEnabled || (e.pointerType && e.pointerType !== 'mouse')) return;
 
-    // ESTABILIZAÇÃO DE CLIQUES E BOTÕES:
-    // Se o ponteiro estiver sobre botões de CTA, links, inputs ou controles interativos,
-    // o cartão repousa plano (0deg), garantindo cliques firmes e sem balanço instável.
-    const target = e.target as HTMLElement | null;
-    const isOverInteractive = Boolean(
-      target?.closest(
-        'button, a, input, select, textarea, label, [role="button"], .cta-primary, .cta-secondary, .pressable, [data-interactive]'
-      )
-    );
+    pointerPosRef.current.x = e.clientX;
+    pointerPosRef.current.y = e.clientY;
 
-    if (isOverInteractive) {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      card.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = 'none';
-      if (glareRef.current) glareRef.current.style.opacity = '0';
-      return;
-    }
+    if (rafIdRef.current !== null) return;
 
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-
-    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null;
       const el = cardRef.current;
-      if (!el) return;
+      const glareEl = glareRef.current;
+      if (!el || !glareEl) return;
+
       const rect = el.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
+      if (rect.width <= 0 || rect.height <= 0) return;
 
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+      const x = pointerPosRef.current.x - rect.left;
+      const y = pointerPosRef.current.y - rect.top;
+      const gx = Math.max(0, Math.min(100, Math.round((x / rect.width) * 100)));
+      const gy = Math.max(0, Math.min(100, Math.round((y / rect.height) * 100)));
 
-      const rotateX = Number((((y - centerY) / centerY) * -maxTilt).toFixed(2));
-      const rotateY = Number((((x - centerX) / centerX) * maxTilt).toFixed(2));
-
-      if (settleTimerRef.current) {
-        window.clearTimeout(settleTimerRef.current);
-        settleTimerRef.current = null;
-      }
-      el.style.transition = 'transform 0.16s cubic-bezier(0.16, 1, 0.3, 1)';
-      el.style.willChange = 'transform';
-      el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-      if (glare && glareRef.current) {
-        const gx = Math.round((x / rect.width) * 100);
-        const gy = Math.round((y / rect.height) * 100);
-        glareRef.current.style.background = `radial-gradient(circle 280px at ${gx}% ${gy}%, rgba(59, 130, 246, 0.12), transparent 70%)`;
-        glareRef.current.style.opacity = '1';
-      }
+      glareEl.style.background = `radial-gradient(circle 280px at ${gx}% ${gy}%, rgba(59, 130, 246, 0.12), transparent 70%)`;
+      glareEl.style.opacity = '1';
     });
   };
 
   const handlePointerLeave = () => {
-    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-    const card = cardRef.current;
-    if (card) {
-      card.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = 'none';
-      if (settleTimerRef.current) window.clearTimeout(settleTimerRef.current);
-      settleTimerRef.current = window.setTimeout(() => {
-        if (!cardRef.current) return;
-        cardRef.current.style.willChange = 'auto';
-        cardRef.current.style.transform = 'none';
-        cardRef.current.style.transition = '';
-      }, 350);
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
     }
-    if (glareRef.current) glareRef.current.style.opacity = '0';
+    if (glareRef.current) {
+      glareRef.current.style.opacity = '0';
+    }
   };
 
   return (
@@ -121,9 +84,9 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
       onClick={onClick}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
+      onPointerCancel={handlePointerLeave}
       className={`interactive-3d-card-root relative rounded-2xl ${animatedBorder ? 'glow-border-animated' : ''} ${className}`}
       style={{
-        transformStyle: tiltEnabled ? 'preserve-3d' : undefined,
         touchAction: 'pan-y',
         overscrollBehaviorY: 'auto',
         ...style,
@@ -132,7 +95,7 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
       {children}
 
       {/* Brilho especular dinâmico no mouse — pointer-events-none para nunca interceptar cliques/scroll */}
-      {glare && tiltEnabled && (
+      {glareEnabled && (
         <div
           ref={glareRef}
           aria-hidden="true"
@@ -143,3 +106,4 @@ export const Interactive3DCard: React.FC<Interactive3DCardProps> = ({
     </div>
   );
 };
+

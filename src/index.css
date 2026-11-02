@@ -49,11 +49,9 @@
   --accent-border: rgba(59, 130, 246, 0.3);
 }
 
-/* Otimização de renderização e economia de GPU/memória com content-visibility */
+/* Renderização direta com altura real previsível para navegação e ancoragem precisas */
 .section-auto-contain {
-  content-visibility: auto;
-  contain-intrinsic-size: 750px;
-  contain-intrinsic-size: auto 750px;
+  content-visibility: visible;
 }
 
 /* Aplicação sutil da variável --accent-color em bordas, gradientes e brilhos */
@@ -299,16 +297,15 @@ article {
   overscroll-behavior-y: contain;
 }
 
-/* Rolagem livre e natural nos containers de cards */
+/* Rolagem livre e natural nos containers de cards (sem soma de margens ou interferência de snap) */
 .card-snap-container,
 .portfolio-list,
 .service-list,
 .differentials-list,
 .process-list {
-  scroll-padding-top: clamp(5.25rem, 13dvh, 7rem);
+  scroll-snap-type: none;
 }
 
-/* Ancoragem de rolagem no topo para cada card individual */
 .card-snap-item,
 .portfolio-card,
 .service-card,
@@ -317,8 +314,7 @@ article {
 .service-list > div,
 .differentials-list > div,
 .process-list > div {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
+  scroll-snap-align: none;
 }
 
 .font-display {
@@ -531,16 +527,13 @@ article.portfolio-card.bracket-panel::after {
 
 .glass-card-interactive,
 .surface-card {
-  will-change: transform, opacity;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s ease,
+  transition: border-color 0.35s ease,
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .glass-card-interactive:hover,
   .surface-card:hover {
-    transform: translateY(-2px);
     border-color: rgba(129, 140, 248, 0.5);
     box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7),
                 0 0 20px -2px rgba(99, 102, 241, 0.25),
@@ -1924,8 +1917,16 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
-/* ===== Rolagem Vertical Ancorada e Fluida (CSS Scroll Snap) ===== */
-/* Containers de listas de cards com rolagem vertical ancorada e fluida */
+/* ===== Deslocamento Padronizado pelo Cabeçalho Fixo (Sem interferência de Scroll Snap) ===== */
+:root {
+  --header-scroll-offset: 5rem;
+}
+
+html {
+  scroll-padding-top: var(--header-scroll-offset);
+  scroll-snap-type: none;
+}
+
 .scroll-snap-y-container,
 .card-list-container,
 .service-list,
@@ -1934,12 +1935,9 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 .process-list,
 .benefits-list,
 .faq-list {
-  scroll-snap-type: y proximity;
-  -webkit-scroll-snap-type: y proximity;
-  scroll-padding-top: clamp(5.25rem, 13dvh, 7rem);
+  scroll-snap-type: none;
 }
 
-/* Cards individuais no desktop: alinhamento ao topo com margem de segurança */
 .scroll-snap-card,
 .card-snap-item,
 .service-card,
@@ -1948,61 +1946,28 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
 .process-card,
 .benefit-card,
 .interactive-3d-card-root {
-  scroll-snap-align: start;
-  -webkit-scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  scroll-margin-top: clamp(5.25rem, 13dvh, 7rem);
+  scroll-snap-align: none;
+  scroll-margin-top: 0;
   overscroll-behavior-y: auto;
   touch-action: pan-y;
 }
 
-/* ============================================================
-   OTIMIZAÇÃO ESPECÍFICA PARA DISPOSITIVOS MÓVEIS (<= 1024px)
-   Garante que os cards de 'Serviços', 'Portfólio' e 'Processo' fiquem
-   perfeitamente centralizados na área útil da viewport móvel, compensando
-   o cabeçalho fixo superior e o safe-area inferior sem sobreposição.
-   ============================================================ */
+/* Evita soma duplicada entre scroll-padding-top do html e scroll-margin-top das âncoras */
+#fundador,
+#cartao-digital,
+#cartao-de-visitas,
+#diferenciais,
+#contato,
+#sobre-fundador {
+  scroll-margin-top: 0;
+}
+
 @media (max-width: 1024px) {
-  html {
-    scroll-snap-type: y proximity;
-    -webkit-scroll-snap-type: y proximity;
-    scroll-padding-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px));
-    scroll-padding-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px));
+  :root {
+    --header-scroll-offset: calc(4.75rem + env(safe-area-inset-top, 0px));
   }
 
-  /* Seções e listas de cards com rolagem vertical ancorada e compensação do header fixo */
-  #servicos,
-  #como-funciona,
-  #portfolio,
-  #diferenciais,
-  #faq,
-  .service-list,
-  .process-list,
-  .portfolio-list,
-  .differentials-list,
-  .scroll-snap-y-container,
-  .card-list-container {
-    scroll-snap-type: y proximity !important;
-    -webkit-scroll-snap-type: y proximity !important;
-    scroll-padding-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px)) !important;
-    scroll-padding-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px)) !important;
-  }
-
-  .scroll-snap-card,
-  .card-snap-item,
-  .service-card,
-  .portfolio-card,
-  .differential-card,
-  .process-card,
-  .benefit-card,
-  .interactive-3d-card-root {
-    scroll-margin-top: calc(clamp(5.5rem, 14dvh, 6.75rem) + env(safe-area-inset-top, 0px)) !important;
-    scroll-margin-bottom: calc(clamp(3.25rem, 8dvh, 4.5rem) + env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Eliminação total de scroll interno e de limites de altura nos cards:
-     Garante que todos os cards expandam naturalmente com seu conteúdo completo,
-     sem criar rolagem separada dentro do card. */
+  /* Garante que todos os cards expandam naturalmente com seu conteúdo completo */
   .service-card,
   .process-card,
   .portfolio-card,
@@ -2017,22 +1982,9 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
-/* Celulares compactos (<= 640px): calibração de scroll-padding-top e espaçamento interno */
 @media (max-width: 640px) {
-  html,
-  #servicos,
-  #como-funciona,
-  #portfolio,
-  #diferenciais,
-  #faq,
-  .service-list,
-  .process-list,
-  .portfolio-list,
-  .differentials-list,
-  .scroll-snap-y-container,
-  .card-list-container {
-    scroll-padding-top: calc(clamp(5.25rem, 13.5dvh, 6.25rem) + env(safe-area-inset-top, 0px)) !important;
-    scroll-padding-bottom: calc(clamp(3rem, 7.5dvh, 4rem) + env(safe-area-inset-bottom, 0px)) !important;
+  :root {
+    --header-scroll-offset: calc(4.5rem + env(safe-area-inset-top, 0px));
   }
 
   .service-card {
@@ -2236,9 +2188,50 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   }
 }
 
+/* ============================================================
+   CURSOR PERSONALIZADO DE MIRA REDONDA (Exclusivo Desktop Fine Pointer)
+   ============================================================ */
+.custom-cursor-root {
+  opacity: 0;
+}
 
+.custom-cursor-root[data-visible="true"] {
+  opacity: 1;
+}
 
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active [role="button"],
+  html.custom-cursor-active summary,
+  html.custom-cursor-active label {
+    cursor: none !important;
+  }
 
+  /* Preserva cursor nativo sobre campos de edição e seleção */
+  html.custom-cursor-active input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  html.custom-cursor-active textarea,
+  html.custom-cursor-active [contenteditable="true"] {
+    cursor: text !important;
+  }
 
+  html.custom-cursor-active select {
+    cursor: pointer !important;
+  }
 
+  .custom-cursor-ring[data-interactive="true"] {
+    border-color: rgba(56, 189, 248, 0.9);
+    background-color: rgba(59, 130, 246, 0.12);
+    box-shadow:
+      0 0 18px rgba(56, 189, 248, 0.45),
+      inset 0 0 8px rgba(56, 189, 248, 0.25);
+  }
+
+  .custom-cursor-dot[data-interactive="true"] {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 1);
+  }
+}
 

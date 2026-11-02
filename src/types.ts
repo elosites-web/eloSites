@@ -38,7 +38,7 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Início',
     shortTitle: 'Início',
     badge: 'Início',
-    description: 'Presença profissional estruturada com boas práticas de indexação e contato pelo WhatsApp.',
+    description: 'Presença profissional estruturada para facilitar a leitura pelos mecanismos de busca e o contato pelo WhatsApp.',
     iconName: 'Sparkles',
   },
   {
@@ -194,8 +194,8 @@ export const SITE_CONFIG = {
   name: 'ēloSites',
   domain: 'elosites.ia.br',
   canonicalUrl: 'https://elosites.ia.br',
-  tagline: 'ēloSites | Sites profissionais e landing pages estruturados com boas práticas de SEO técnico e contato pelo WhatsApp.',
-  subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho com clareza, estruturado com boas práticas técnicas para facilitar a indexação pelos mecanismos de busca e o contato pelo WhatsApp.',
+  tagline: 'ēloSites | Sites profissionais e landing pages estruturados para o Google e contato pelo WhatsApp.',
+  subtagline: 'Seu negócio merece mais do que um perfil nas redes sociais. Tenha um site profissional para apresentar seu trabalho com clareza, organizado para facilitar a compreensão pelos mecanismos de busca e o contato pelo WhatsApp.',
   email: 'contato@elosites.ia.br',
   // Número oficial da ēloSites
   whatsappNumber: '5511995722584',
@@ -219,7 +219,7 @@ export const SITE_CONFIG = {
 
   // 5) Serviços - Site completo (Tela 03)
   siteInstitucionalWhatsappMessage:
-    'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura adequada para indexação no Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
+    'Olá! 🏢 Tenho interesse no formato *Site completo* da *ēloSites*.\n\nQuero apresentar minha empresa com estrutura organizada para o Google, detalhes dos serviços, fotos reais e localização. Poderia me enviar uma proposta?',
 
   // 7) Processo / Como Funciona (Tela 04)
   processoWhatsappMessage:

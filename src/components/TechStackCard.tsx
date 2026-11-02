@@ -109,9 +109,9 @@ const TECHNOLOGIES: TechItem[] = [
   },
   {
     id: 'seo-tecnico',
-    name: 'SEO Técnico',
-    description: 'Estrutura adequada para leitura e indexação',
-    category: 'Indexação & Leitura',
+    name: 'Estrutura para o Google',
+    description: 'Informações organizadas para os mecanismos de busca',
+    category: 'Leitura no Google',
     tagColor: 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30',
     borderHover: 'hover:border-emerald-400/60',
     glowColor: 'group-hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]',
@@ -192,7 +192,7 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
                 <span className="font-semibold text-white">Site adaptável ao celular (Frontend)</span>
               </div>
               <span className="hidden sm:inline text-slate-600" aria-hidden="true">•</span>
-              <span className="text-slate-400 text-[11px]">Código limpo e navegação ágil</span>
+              <span className="text-slate-400 text-[11px]">Estrutura leve e navegação ágil</span>
             </div>
           </div>
         </div>

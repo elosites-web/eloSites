@@ -102,7 +102,7 @@ const SERVICES: ServiceCategory[] = [
     highlights: [
       'Páginas e seções dedicadas (Início, Sobre, Serviços, Contato e Localização)',
       'Apresentação completa da sua história, equipe e credibilidade',
-      'Estrutura com boas práticas para indexação e mecanismos de busca',
+      'Estrutura organizada para facilitar a leitura pelos mecanismos de busca',
       'Navegação fluida e adaptada para celulares e computadores',
     ],
     scopeNote: 'A quantidade de páginas e seções é combinada com clareza no orçamento individual.',
@@ -494,7 +494,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
         <div className="mt-12 sm:mt-16 max-w-3xl mx-auto rounded-2xl border border-white/[0.07] bg-slate-950/50 p-5 sm:p-6 space-y-2 text-xs sm:text-sm text-slate-400 leading-relaxed text-center">
           <p>
             <ShieldCheck className="w-4 h-4 text-indigo-400 inline-block mr-1.5" />
-            A entrega inclui o site publicado no ar e testado no servidor seguro da Netlify. O registro do seu endereço na internet (domínio .com.br ou .com) é feito diretamente em sua própria conta e nome para garantir que o site seja sempre 100% seu.
+            A entrega inclui a publicação do site no serviço de hospedagem definido para o projeto. Quando o domínio faz parte do orçamento, realizamos o registro em seu CPF ou CNPJ, configuramos os servidores DNS e, ao final, entregamos os arquivos, o repositório e os acessos da infraestrutura para você.
           </p>
         </div>
       </div>

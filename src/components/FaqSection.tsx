@@ -32,19 +32,19 @@ export const FaqSection: React.FC = () => {
       id: 'faq-4',
       question: 'A publicação e a hospedagem estão inclusas?',
       answer:
-        'A entrega inclui o site pronto, publicado e testado na plataforma segura da Netlify. O endereço do site (o domínio, como seunegocio.com.br) e eventuais servidores externos são contratados diretamente em seu nome, garantindo que você tenha 100% de controle e titularidade. A ēloSites cuida de toda a configuração técnica para colocar o site no ar.',
+        'A entrega inclui a configuração técnica e a publicação inicial do site no serviço de hospedagem definido para o projeto, conforme o escopo contratado. Caso o projeto necessite de recursos adicionais ou ferramentas específicas, todas as condições são informadas previamente no orçamento.',
     },
     {
       id: 'faq-5',
       question: 'O domínio personalizado está incluso?',
       answer:
-        'Não. O registro do domínio (o endereço oficial do seu site, como seunegocio.com.br) é uma anuidade paga diretamente aos órgãos oficiais (como o Registro.br, cerca de R$ 40/ano) e fica 100% no seu nome ou CNPJ. A ēloSites não retém seu endereço e ajuda você a registrar e conectar ao site com total facilidade.',
+        'Quando incluído no orçamento do projeto, a ēloSites realiza a contratação e o registro do domínio utilizando os dados de CPF ou CNPJ do próprio cliente, mediante autorização, além de configurar os servidores DNS. O custo do registro varia conforme o período escolhido e é repassado e discriminado no orçamento. A renovação do domínio é periódica, e as condições ficam detalhadas no orçamento e na documentação de entrega.',
     },
     {
       id: 'faq-6',
       question: 'Depois do projeto eu continuo tendo controle do site?',
       answer:
-        'Sim. O site é seu: após a confirmação do pagamento final, o conteúdo, o layout e o código desenvolvidos para o seu projeto passam a ser seus. Quando você quiser, pode pedir a transferência do repositório e das informações de publicação para a sua conta. O domínio e a hospedagem ficam sempre no seu nome.',
+        'Sim. Na conclusão do projeto, você recebe os arquivos, o repositório, as informações de publicação, os acessos e as orientações necessárias para administrar a infraestrutura entregue, com o domínio registrado em seu CPF ou CNPJ.',
     },
     {
       id: 'faq-7',
