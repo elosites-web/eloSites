@@ -61,6 +61,19 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
   motionTier,
 }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
+  const [isShowcaseExpanded, setIsShowcaseExpanded] = useState<boolean>(false);
+
+  const handleToggleShowcaseExpand = () => {
+    setIsShowcaseExpanded((prev) => !prev);
+  };
+
+  const handleShowcaseKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setIsShowcaseExpanded((prev) => !prev);
+    }
+  };
 
   const handleScrollToPortfolio = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -297,6 +310,12 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
           <div className="lg:col-span-6 relative mt-6 lg:mt-0">
             <BiReveal direction="right" delay={150}>
               <motion.div
+                onClick={handleToggleShowcaseExpand}
+                onKeyDown={handleShowcaseKeyDown}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isShowcaseExpanded}
+                aria-label="Painel interativo do projeto: clique para expandir especificações técnicas"
                 style={
                   isReduced
                     ? undefined
@@ -308,15 +327,21 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                         opacity: laptopOpacity,
                       }
                 }
-                className="relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d]"
+                className="hero-showcase-expandable relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d]"
               >
                 
                 {/* Indicador de Status do Mockup com Abas */}
                 <div className="flex items-center justify-between mb-3 px-2">
-                  <div className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md">
+                  <div
+                    className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       type="button"
-                      onClick={() => setActiveTab('preview')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTab('preview');
+                      }}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                         activeTab === 'preview'
                           ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
@@ -327,7 +352,10 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={() => setActiveTab('code')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTab('code');
+                      }}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
                         activeTab === 'code'
                           ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
@@ -428,6 +456,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                                 href={heroWhatsappUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold shadow-md shadow-blue-950/50 cursor-pointer"
                               >
                                 <span>Solicitar orçamento</span>
@@ -478,6 +507,77 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </div>
                   </div>
                 </Interactive3DCard>
+
+                {/* Barra de indicação de expansão e Conteúdo Técnico Oculto Expansível */}
+                <div className="mt-2.5 px-2 flex items-center justify-between text-xs text-blue-300/90 font-medium select-none">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                    <span>
+                      {isShowcaseExpanded
+                        ? 'Ocultar especificações da arquitetura'
+                        : 'Clique para expandir especificações técnicas'}
+                    </span>
+                  </span>
+                  <ArrowDown
+                    className={`w-3.5 h-3.5 text-blue-400 transition-transform duration-300 ${
+                      isShowcaseExpanded ? 'rotate-180' : 'rotate-0'
+                    }`}
+                  />
+                </div>
+
+                <div
+                  className={`grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                    isShowcaseExpanded
+                      ? 'grid-rows-[1fr] opacity-100 mt-3'
+                      : 'grid-rows-[0fr] opacity-0 mt-0'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="rounded-xl bg-slate-950/90 border border-blue-500/25 p-3.5 sm:p-4 space-y-2.5 text-left shadow-inner">
+                      <div className="flex items-center justify-between border-b border-blue-500/15 pb-2">
+                        <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                          <Shield className="w-3.5 h-3.5 text-blue-400" />
+                          <span>Padrão de Engenharia ēloSites</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-blue-300 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
+                          Core Web Vitals Ready
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0.5">
+                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>Performance</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-snug">
+                            Imagens AVIF/WebP e carregamento otimizado sem travamentos.
+                          </p>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>SEO Técnico</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-snug">
+                            Dados estruturados Schema.org, Open Graph e Sitemap XML.
+                          </p>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-slate-900/70 border border-blue-500/15">
+                          <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-300 mb-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>Conversão</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 leading-snug">
+                            Integração direta com WhatsApp e navegação mobile-first.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </BiReveal>
           </div>

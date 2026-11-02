@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center gap-2.5 shrink-0 cursor-pointer"
                   aria-label="ēloSites — Ir para a Página Inicial (Início)"
                 >
-                  <EloLogo size="md" />
+                  <EloLogo size="md" className="brand-logo-entry" />
                 </button>
               </div>
 
