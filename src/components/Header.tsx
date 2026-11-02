@@ -4,6 +4,7 @@ import { EloLogo } from './EloLogo';
 import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
 import { shouldReduceMedia } from '../mediaPrefs';
+import { canFitNavbar } from '../navSpace';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -32,27 +33,36 @@ export const Header: React.FC<HeaderProps> = ({
   setIsMenuOpen,
 }) => {
   const headerRef = useRef<HTMLElement>(null);
+  const navContainerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMenuItemRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const savedScrollPositionRef = useRef<number>(0);
+  const wasMenuOpenRef = useRef<boolean>(false);
   const [canFitHorizontalNav, setCanFitHorizontalNav] = useState<boolean>(false);
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
 
-  // Verificação responsiva se o cabeçalho comporta os 8 links horizontais com conforto
+  // Verificação dinâmica baseada no espaço real disponível vs largura necessária de logo e links
   const checkNavFit = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    const width = window.innerWidth;
-    const isLandscape = window.matchMedia('(orientation: landscape)').matches;
-    // Em desktop (>= 1024px) ou em tablets em orientação paisagem com largura suficiente (>= 960px)
-    const fits = width >= 1024 || (isLandscape && width >= 960);
-    setCanFitHorizontalNav(fits);
+    if (!navContainerRef.current) return;
+    const containerWidth = navContainerRef.current.clientWidth;
+    const measuredWidth = measureRef.current ? measureRef.current.scrollWidth : 0;
+    // Fallback defensivo (~1030px) caso o elemento de medição ainda não tenha reportado scrollWidth
+    const requiredWidth = measuredWidth > 0 ? measuredWidth : 1030;
+    const fits = canFitNavbar(containerWidth, requiredWidth, { buffer: 24 });
 
-    // Se a tela for expandida para um tamanho com navbar horizontal, fecha o menu dropdown aberto
-    if (fits && isMenuOpen) {
-      setIsMenuOpen(false);
-    }
+    setCanFitHorizontalNav((prev) => {
+      if (prev !== fits) {
+        if (fits && isMenuOpen) {
+          setIsMenuOpen(false);
+        }
+        return fits;
+      }
+      return prev;
+    });
   }, [isMenuOpen, setIsMenuOpen]);
 
   useEffect(() => {
@@ -63,19 +73,11 @@ export const Header: React.FC<HeaderProps> = ({
     window.addEventListener('orientationchange', checkNavFit, { passive: true });
 
     let ro: ResizeObserver | null = null;
-    if (headerRef.current && typeof ResizeObserver !== 'undefined') {
-      ro = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const width = entry.contentRect.width;
-          const isLandscape = window.matchMedia('(orientation: landscape)').matches;
-          const fits = width >= 980 || (isLandscape && width >= 940);
-          setCanFitHorizontalNav(fits);
-          if (fits && isMenuOpen) {
-            setIsMenuOpen(false);
-          }
-        }
+    if (navContainerRef.current && typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        checkNavFit();
       });
-      ro.observe(headerRef.current);
+      ro.observe(navContainerRef.current);
     }
 
     return () => {
@@ -83,42 +85,63 @@ export const Header: React.FC<HeaderProps> = ({
       window.removeEventListener('orientationchange', checkNavFit);
       if (ro) ro.disconnect();
     };
-  }, [checkNavFit, isMenuOpen, setIsMenuOpen]);
+  }, [checkNavFit]);
 
-  // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre, e restaura ao botão ao fechar
+  // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre,
+  // e devolve o foco ao botão de abertura APENAS quando o menu tiver sido previamente aberto
   useEffect(() => {
     if (isMenuOpen) {
+      wasMenuOpenRef.current = true;
       const timer = setTimeout(() => {
         firstMenuItemRef.current?.focus();
       }, 50);
       return () => clearTimeout(timer);
-    } else {
+    } else if (wasMenuOpenRef.current) {
+      wasMenuOpenRef.current = false;
       menuButtonRef.current?.focus();
     }
   }, [isMenuOpen]);
 
-  // Tecla Escape para fechar o menu; atalho 'm' para abrir/fechar quando focado fora de inputs
+  // Focus trap por teclado (Tab e Shift+Tab em ciclo fechado) e tecla Escape para fechamento
   useEffect(() => {
+    if (!isMenuOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
-      if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select') {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleCloseMenu();
         return;
       }
 
-      if (e.key === 'Escape' && isMenuOpen) {
-        handleCloseMenu();
-      } else if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        if (isMenuOpen) {
-          handleCloseMenu();
-        } else if (!canFitHorizontalNav) {
-          handleOpenMenu();
+      if (e.key === 'Tab') {
+        const drawer = drawerRef.current;
+        if (!drawer) return;
+
+        const focusableElements = drawer.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen, canFitHorizontalNav]);
+  }, [isMenuOpen]);
 
   const handleOpenMenu = () => {
     savedScrollPositionRef.current = window.scrollY || window.pageYOffset || 0;
@@ -202,7 +225,7 @@ export const Header: React.FC<HeaderProps> = ({
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#050814]/90 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="flex items-center justify-between gap-3 sm:gap-6 min-h-[46px]">
+          <div ref={navContainerRef} className="flex items-center justify-between gap-3 sm:gap-6 min-h-[46px]">
             {/* Logo Wordmark oficial */}
             <div className="flex items-center gap-2 shrink-0 z-10">
               <button
@@ -217,6 +240,28 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <EloLogo size="md" className="brand-logo-entry" />
               </button>
+            </div>
+
+            {/* Medidor fora da tela para apurar dinamicamente o espaço real exigido pela logo e pelos 8 links */}
+            <div
+              ref={measureRef}
+              aria-hidden="true"
+              className="absolute left-0 -top-[9999px] invisible pointer-events-none flex items-center gap-6 whitespace-nowrap select-none"
+              style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none', left: '-9999px' }}
+            >
+              <div className="flex items-center gap-2 shrink-0">
+                <EloLogo size="md" />
+              </div>
+              <nav className="flex items-center gap-1 xl:gap-1.5 shrink-0">
+                {NAV_ITEMS.map((item) => (
+                  <span
+                    key={item.id}
+                    className="px-2.5 py-1.5 text-[13px] xl:text-[14px] font-medium"
+                  >
+                    {item.label}
+                  </span>
+                ))}
+              </nav>
             </div>
 
             {/* Navbar Horizontal para Desktop e Tablets com largura suficiente */}
@@ -272,6 +317,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* CAMADA DE NAVEGAÇÃO DO MENU HAMBÚRGUER ABERTO */}
       {isMenuOpen && !canFitHorizontalNav && (
         <div
+          ref={drawerRef}
           id="multi-screen-navigation-drawer"
           role="dialog"
           aria-modal="true"

@@ -28,6 +28,11 @@ import { getProjectById } from './portfolioData';
 const FounderCard = lazy(() =>
   import('./components/FounderCard').then((mod) => ({ default: mod.FounderCard }))
 );
+const TechnicalSpecialtiesBanner = lazy(() =>
+  import('./components/TechnicalSpecialtiesBanner').then((mod) => ({
+    default: mod.TechnicalSpecialtiesBanner,
+  }))
+);
 const PortfolioSection = lazy(() =>
   import('./components/PortfolioSection').then((mod) => ({ default: mod.PortfolioSection }))
 );
@@ -1035,6 +1040,13 @@ export default function App() {
                   </Suspense>
                 </SectionErrorBoundary>
               </div>
+
+              {/* Banner de Base Técnica e Especialidades */}
+              <SectionErrorBoundary>
+                <Suspense fallback={<SimpleSectionSkeleton />}>
+                  <TechnicalSpecialtiesBanner />
+                </Suspense>
+              </SectionErrorBoundary>
             </div>
           </section>
         </div>
@@ -1189,6 +1201,8 @@ export default function App() {
         }`}
         id="main-content"
         tabIndex={-1}
+        aria-hidden={isMenuOpen ? 'true' : undefined}
+        inert={isMenuOpen}
       >
         {activeImageView && activeProject ? (
           <div
@@ -1249,19 +1263,25 @@ export default function App() {
       </main>
 
       {/* Rodapé Institucional com Links de Telas e Termos Legais */}
-      <Footer
-        onOpenPrivacy={() => setLegalModal('privacy')}
-        onOpenTerms={() => setLegalModal('terms')}
-        onSelectScreen={navigateToScreen}
-        currentScreen={currentScreen}
-        isWhatsAppBubbleOpen={isWhatsAppBubbleOpen}
-      />
+      <div
+        className="contents"
+        aria-hidden={isMenuOpen ? 'true' : undefined}
+        inert={isMenuOpen}
+      >
+        <Footer
+          onOpenPrivacy={() => setLegalModal('privacy')}
+          onOpenTerms={() => setLegalModal('terms')}
+          onSelectScreen={navigateToScreen}
+          currentScreen={currentScreen}
+          isWhatsAppBubbleOpen={isWhatsAppBubbleOpen}
+        />
 
-      {/* Botão Flutuante Oficial do WhatsApp */}
-      <FloatingWhatsApp
-        currentScreen={currentScreen}
-        onBubbleStateChange={setIsWhatsAppBubbleOpen}
-      />
+        {/* Botão Flutuante Oficial do WhatsApp */}
+        <FloatingWhatsApp
+          currentScreen={currentScreen}
+          onBubbleStateChange={setIsWhatsAppBubbleOpen}
+        />
+      </div>
 
       {/* Modais Legais (Política de Privacidade e Termos de Uso) */}
       <Suspense fallback={null}>
