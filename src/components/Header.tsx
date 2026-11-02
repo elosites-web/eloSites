@@ -37,6 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   const measureRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMenuItemRef = useRef<HTMLButtonElement>(null);
+  const firstDesktopNavItemRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const savedScrollPositionRef = useRef<number>(0);
   const wasMenuOpenRef = useRef<boolean>(false);
@@ -60,6 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     if (canFitHorizontalNav && isMenuOpen) {
       setIsMenuOpen(false);
+      firstDesktopNavItemRef.current?.focus();
     }
   }, [canFitHorizontalNav, isMenuOpen, setIsMenuOpen]);
 
@@ -86,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, [checkNavFit]);
 
   // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre,
-  // e devolve o foco ao botão de abertura APENAS quando o menu tiver sido previamente aberto
+  // e devolve o foco ao botão de abertura no mobile, ou para a navegação desktop ao redimensionar
   useEffect(() => {
     if (isMenuOpen) {
       wasMenuOpenRef.current = true;
@@ -96,9 +98,13 @@ export const Header: React.FC<HeaderProps> = ({
       return () => clearTimeout(timer);
     } else if (wasMenuOpenRef.current) {
       wasMenuOpenRef.current = false;
-      menuButtonRef.current?.focus();
+      if (canFitHorizontalNav) {
+        firstDesktopNavItemRef.current?.focus();
+      } else {
+        menuButtonRef.current?.focus();
+      }
     }
-  }, [isMenuOpen]);
+  }, [isMenuOpen, canFitHorizontalNav]);
 
   // Focus trap por teclado (Tab e Shift+Tab em ciclo fechado) e tecla Escape para fechamento
   useEffect(() => {
@@ -268,11 +274,13 @@ export const Header: React.FC<HeaderProps> = ({
                 aria-label="Navegação institucional"
                 className="flex items-center gap-1 xl:gap-1.5 ml-auto shrink-0 z-10"
               >
-                {NAV_ITEMS.map((item) => {
+                {NAV_ITEMS.map((item, index) => {
                   const isActive = currentScreen === item.id;
                   return (
                     <button
                       key={item.id}
+                      ref={index === 0 ? firstDesktopNavItemRef : undefined}
+                      id={index === 0 ? 'desktop-nav-first-item' : undefined}
                       type="button"
                       onClick={() => onSelectScreen(item.id)}
                       onPointerEnter={() => preloadScreen(item.id)}

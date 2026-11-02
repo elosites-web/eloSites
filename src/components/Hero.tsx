@@ -557,7 +557,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   className="flex items-center justify-between mb-3 px-2"
                 >
                   <div
-                    className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md"
+                    className="glow-border-animated inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md"
                   >
                     <button
                       type="button"
