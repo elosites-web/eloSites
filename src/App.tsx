@@ -108,9 +108,12 @@ export default function App() {
     };
   }, [cancelActiveScrollJob]);
 
-  // Calcula a posição exata de rolagem descontando a altura real do cabeçalho fixo
+  // Calcula a posição exata de rolagem descontando a altura real do cabeçalho fixo (#header-nav)
   const computeAnchorScrollTop = useCallback((el: HTMLElement): number => {
-    const headerEl = document.getElementById('site-header') || document.querySelector('header');
+    const headerEl =
+      document.getElementById('header-nav') ||
+      document.getElementById('site-header') ||
+      document.querySelector('header');
     const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 72;
     const rect = el.getBoundingClientRect();
     const currentScrollY = window.scrollY || window.pageYOffset || 0;
@@ -118,13 +121,15 @@ export default function App() {
     if (el.tagName === 'SECTION') {
       const computedStyle = window.getComputedStyle(el);
       const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+      // Respiro de 24px entre a borda inferior do cabeçalho fixo e o início do conteúdo da seção
       const desiredGap = 24;
-      const contentTopInDoc = rect.top + currentScrollY + paddingTop;
+      const effectivePadding = paddingTop >= 16 ? paddingTop : 0;
+      const contentTopInDoc = rect.top + currentScrollY + effectivePadding;
       return Math.max(0, Math.round(contentTopInDoc - (headerHeight + desiredGap)));
     }
 
     const elementTopInDoc = rect.top + currentScrollY;
-    return Math.max(0, Math.round(elementTopInDoc - (headerHeight + 20)));
+    return Math.max(0, Math.round(elementTopInDoc - (headerHeight + 24)));
   }, []);
 
   // Garante abertura no topo (scrollY = 0) para telas institucionais, inclusive após transições
@@ -133,38 +138,44 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
     let cancelled = false;
-    const timers: number[] = [];
-    const rafId = window.requestAnimationFrame(() => {
+    let rafId: number | null = null;
+    let timerId: number | null = null;
+
+    const cleanup = () => {
+      cancelled = true;
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (timerId !== null) {
+        window.clearTimeout(timerId);
+        timerId = null;
+      }
+      window.removeEventListener('wheel', cleanup);
+      window.removeEventListener('touchstart', cleanup);
+      window.removeEventListener('pointerdown', cleanup);
+      window.removeEventListener('keydown', cleanup);
+    };
+
+    window.addEventListener('wheel', cleanup, { passive: true, once: true });
+    window.addEventListener('touchstart', cleanup, { passive: true, once: true });
+    window.addEventListener('pointerdown', cleanup, { passive: true, once: true });
+    window.addEventListener('keydown', cleanup, { passive: true, once: true });
+
+    rafId = window.requestAnimationFrame(() => {
       if (!cancelled) {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     });
 
-    const onUserScroll = () => {
-      cancelled = true;
-    };
+    timerId = window.setTimeout(() => {
+      if (!cancelled) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+      cleanup();
+    }, 80);
 
-    window.addEventListener('wheel', onUserScroll, { passive: true, once: true });
-    window.addEventListener('touchstart', onUserScroll, { passive: true, once: true });
-    window.addEventListener('keydown', onUserScroll, { passive: true, once: true });
-
-    [60, 180].forEach((ms) => {
-      const tid = window.setTimeout(() => {
-        if (!cancelled) {
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        }
-      }, ms);
-      timers.push(tid);
-    });
-
-    activeScrollJobCancelRef.current = () => {
-      cancelled = true;
-      window.cancelAnimationFrame(rafId);
-      timers.forEach((tid) => window.clearTimeout(tid));
-      window.removeEventListener('wheel', onUserScroll);
-      window.removeEventListener('touchstart', onUserScroll);
-      window.removeEventListener('keydown', onUserScroll);
-    };
+    activeScrollJobCancelRef.current = cleanup;
   }, [cancelActiveScrollJob]);
 
   // Aguarda o elemento de âncora existir no DOM (mesmo com lazy loading / Suspense) e posiciona abaixo do header fixo
@@ -175,18 +186,41 @@ export default function App() {
 
       let cancelled = false;
       let attempts = 0;
-      const maxAttempts = 60;
-      const timers: number[] = [];
+      const maxAttempts = 50; // Limite de 50 tentativas (~2s) para nunca manter observadores ativos indefinidamente
       let pollTimer: number | null = null;
       let observer: MutationObserver | null = null;
+      let rafId: number | null = null;
+      let stabilizeTimer: number | null = null;
 
-      const onUserInteracted = () => {
+      const cleanup = () => {
         cancelled = true;
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+        if (pollTimer !== null) {
+          window.clearTimeout(pollTimer);
+          pollTimer = null;
+        }
+        if (rafId !== null) {
+          window.cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        if (stabilizeTimer !== null) {
+          window.clearTimeout(stabilizeTimer);
+          stabilizeTimer = null;
+        }
+        window.removeEventListener('wheel', cleanup);
+        window.removeEventListener('touchstart', cleanup);
+        window.removeEventListener('pointerdown', cleanup);
+        window.removeEventListener('keydown', cleanup);
       };
 
-      window.addEventListener('wheel', onUserInteracted, { passive: true, once: true });
-      window.addEventListener('touchstart', onUserInteracted, { passive: true, once: true });
-      window.addEventListener('keydown', onUserInteracted, { passive: true, once: true });
+      // Interrupção imediata quando o usuário interagir
+      window.addEventListener('wheel', cleanup, { passive: true, once: true });
+      window.addEventListener('touchstart', cleanup, { passive: true, once: true });
+      window.addEventListener('pointerdown', cleanup, { passive: true, once: true });
+      window.addEventListener('keydown', cleanup, { passive: true, once: true });
 
       const findReadyTarget = (): HTMLElement | null => {
         for (const id of candidateIds) {
@@ -201,34 +235,14 @@ export default function App() {
         return null;
       };
 
-      const applyScrollToElement = (el: HTMLElement, behavior: ScrollBehavior) => {
-        if (cancelled) return;
-        const targetY = computeAnchorScrollTop(el);
-        window.scrollTo({ top: targetY, left: 0, behavior });
-      };
-
-      const scheduleStabilization = () => {
-        [100, 220, 380, 560].forEach((delayMs) => {
-          const tid = window.setTimeout(() => {
-            if (cancelled) return;
-            const currentEl = findReadyTarget();
-            if (!currentEl) return;
-            const targetY = computeAnchorScrollTop(currentEl);
-            if (Math.abs((window.scrollY || 0) - targetY) > 3) {
-              window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
-            }
-          }, delayMs);
-          timers.push(tid);
-        });
-      };
-
       const tryResolve = (): boolean => {
         if (cancelled) return true;
         const el = findReadyTarget();
         const mainEl = document.getElementById('main-content');
         const hasPendingSkeleton = Boolean(mainEl?.querySelector('[aria-busy="true"]'));
 
-        if (el && (!hasPendingSkeleton || attempts > 18)) {
+        if (el && (!hasPendingSkeleton || attempts > 15)) {
+          // Desconecta MutationObserver e encerra o polling imediatamente
           if (observer) {
             observer.disconnect();
             observer = null;
@@ -237,8 +251,25 @@ export default function App() {
             window.clearTimeout(pollTimer);
             pollTimer = null;
           }
-          applyScrollToElement(el, 'instant');
-          scheduleStabilization();
+
+          const targetY = computeAnchorScrollTop(el);
+          window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+
+          // Único ajuste pós-renderização no próximo frame para compensar carregamento de fontes/imagens
+          rafId = window.requestAnimationFrame(() => {
+            if (cancelled) return;
+            const currentEl = findReadyTarget();
+            if (currentEl) {
+              const updatedY = computeAnchorScrollTop(currentEl);
+              if (Math.abs((window.scrollY || 0) - updatedY) > 2) {
+                window.scrollTo({ top: updatedY, left: 0, behavior: 'instant' });
+              }
+            }
+            stabilizeTimer = window.setTimeout(() => {
+              cleanup();
+            }, 80);
+          });
+
           return true;
         }
         return false;
@@ -248,38 +279,28 @@ export default function App() {
         if (cancelled) return;
         if (tryResolve()) return;
         attempts += 1;
-        if (attempts < maxAttempts) {
-          pollTimer = window.setTimeout(step, 45);
+        if (attempts >= maxAttempts) {
+          cleanup();
+          return;
         }
+        pollTimer = window.setTimeout(step, 40);
       };
 
       const mainRoot = document.getElementById('main-content') || document.body;
       if (typeof MutationObserver !== 'undefined' && mainRoot) {
         observer = new MutationObserver(() => {
-          tryResolve();
+          if (!cancelled) {
+            tryResolve();
+          }
         });
         observer.observe(mainRoot, { childList: true, subtree: true });
       }
 
-      window.requestAnimationFrame(() => {
+      rafId = window.requestAnimationFrame(() => {
         step();
       });
 
-      activeScrollJobCancelRef.current = () => {
-        cancelled = true;
-        if (pollTimer !== null) {
-          window.clearTimeout(pollTimer);
-          pollTimer = null;
-        }
-        if (observer) {
-          observer.disconnect();
-          observer = null;
-        }
-        timers.forEach((tid) => window.clearTimeout(tid));
-        window.removeEventListener('wheel', onUserInteracted);
-        window.removeEventListener('touchstart', onUserInteracted);
-        window.removeEventListener('keydown', onUserInteracted);
-      };
+      activeScrollJobCancelRef.current = cleanup;
     },
     [cancelActiveScrollJob, computeAnchorScrollTop]
   );
@@ -370,50 +391,84 @@ export default function App() {
     };
   }, []);
 
-  // Sincronização inicial e bidirecional com a hash da URL (telas oficiais + cases + imagens)
-  useEffect(() => {
-    const validIds: ScreenId[] = [
-      'inicio',
-      'servicos',
-      'portfolio',
-      'avaliacoes',
-      'processo',
-      'orcamento',
-      'parceria-trafego',
-      'trafego-pago',
-      'faq',
-    ];
+  // Referências para deduplicação precisa de eventos popstate e hashchange
+  const lastHandledHashRef = useRef<string | null>(null);
+  const lastHandledTimeRef = useRef<number>(0);
 
-    const handleHashChange = () => {
-      const rawHash = window.location.hash.replace('#', '');
+  // Sincronização centralizada e bidirecional do histórico (popstate + hashchange)
+  const syncRouteFromHash = useCallback(
+    (source: 'init' | 'popstate' | 'hashchange' | 'direct') => {
+      const rawHash = (window.location.hash || '').replace(/^#\/?/, '').trim();
+      const now = Date.now();
+
+      // Deduplicação estrita: se a mesma rota foi processada nos últimos 80ms, ignora disparo redundante
+      if (
+        source !== 'init' &&
+        source !== 'direct' &&
+        lastHandledHashRef.current === rawHash &&
+        now - lastHandledTimeRef.current < 80
+      ) {
+        return;
+      }
+
+      lastHandledHashRef.current = rawHash;
+      lastHandledTimeRef.current = now;
+
+      // Fecha o menu móvel ao sincronizar rota
+      setIsMenuOpen(false);
 
       const restoreSavedPosition = (targetY: number) => {
         cancelActiveScrollJob();
         isRestoringScrollRef.current = true;
         window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
-        const timers: number[] = [];
-        const rafId = window.requestAnimationFrame(() => {
-          window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
-        });
-        [50, 120, 220].forEach((ms, idx) => {
-          const tid = window.setTimeout(() => {
-            window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
-            if (idx === 2) {
-              isRestoringScrollRef.current = false;
-            }
-          }, ms);
-          timers.push(tid);
-        });
-        activeScrollJobCancelRef.current = () => {
-          window.cancelAnimationFrame(rafId);
-          timers.forEach((tid) => window.clearTimeout(tid));
+
+        let cancelled = false;
+        let rafId: number | null = null;
+        let timerId: number | null = null;
+
+        const cleanup = () => {
+          cancelled = true;
+          if (rafId !== null) {
+            window.cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+          if (timerId !== null) {
+            window.clearTimeout(timerId);
+            timerId = null;
+          }
+          window.removeEventListener('wheel', cleanup);
+          window.removeEventListener('touchstart', cleanup);
+          window.removeEventListener('pointerdown', cleanup);
+          window.removeEventListener('keydown', cleanup);
           isRestoringScrollRef.current = false;
         };
+
+        window.addEventListener('wheel', cleanup, { passive: true, once: true });
+        window.addEventListener('touchstart', cleanup, { passive: true, once: true });
+        window.addEventListener('pointerdown', cleanup, { passive: true, once: true });
+        window.addEventListener('keydown', cleanup, { passive: true, once: true });
+
+        rafId = window.requestAnimationFrame(() => {
+          if (!cancelled) {
+            window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+          }
+        });
+
+        timerId = window.setTimeout(() => {
+          if (!cancelled) {
+            window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+          }
+          cleanup();
+        }, 100);
+
+        activeScrollJobCancelRef.current = cleanup;
       };
 
       // 1. Rota de captura de imagem em alta resolução:
-      // #case/:id/:type ou #case/:id/imagem/:type ou #imagem/:id/:type
-      const imageMatch = rawHash.match(/^(?:case\/([a-z0-9-]+)\/(?:imagem\/)?(desktop|mobile)|imagem\/([a-z0-9-]+)\/(desktop|mobile)|case-([a-z0-9-]+)-(desktop|mobile))$/);
+      // #case/:id/:type ou #case/:id/imagem/:type ou #imagem/:id/:type ou #case-:id-:type
+      const imageMatch = rawHash.match(
+        /^(?:case\/([a-z0-9-]+)\/(?:imagem\/)?(desktop|mobile)|imagem\/([a-z0-9-]+)\/(desktop|mobile)|case-([a-z0-9-]+)-(desktop|mobile))$/
+      );
       if (imageMatch) {
         const pId = imageMatch[1] || imageMatch[3] || imageMatch[5];
         const iType = (imageMatch[2] || imageMatch[4] || imageMatch[6]) as 'desktop' | 'mobile';
@@ -469,19 +524,46 @@ export default function App() {
         setCurrentScreen('inicio');
         currentRouteKeyRef.current = 'inicio';
         if (window.location.hash !== '#inicio') {
-          history.replaceState(null, '', '#inicio');
+          window.history.replaceState(null, '', '#inicio');
         }
         scrollToInstitutionalTop();
         return;
       }
 
+      // 5. Rota raiz vazia ou Início oficial
+      if (rawHash === '' || rawHash === 'inicio') {
+        currentRouteKeyRef.current = 'inicio';
+        setCurrentScreen((prev) => {
+          if (prev !== 'inicio') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'inicio';
+        });
+        scrollToInstitutionalTop();
+        return;
+      }
+
+      // 6. Portfólio de projetos
       if (rawHash === 'portfolio') {
         const prevRouteKey = currentRouteKeyRef.current;
         const isReturningFromCase =
           prevRouteKey.startsWith('case/') || prevRouteKey.startsWith('imagem/');
         const savedY = scrollPositionsRef.current['portfolio'];
         currentRouteKeyRef.current = 'portfolio';
-        setCurrentScreen('portfolio');
+        setCurrentScreen((prev) => {
+          if (prev !== 'portfolio') {
+            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
+            const nextIdx = SCREENS.findIndex((s) => s.id === 'portfolio');
+            if (nextIdx !== -1 && prevIdx !== -1) {
+              setDirection(nextIdx > prevIdx ? 1 : -1);
+            }
+          }
+          return 'portfolio';
+        });
         if (isReturningFromCase) {
           restoreSavedPosition(typeof savedY === 'number' ? savedY : 0);
         } else {
@@ -490,6 +572,19 @@ export default function App() {
         }
         return;
       }
+
+      // 7. Aliases e rotas institucionais
+      const validIds: ScreenId[] = [
+        'inicio',
+        'servicos',
+        'portfolio',
+        'avaliacoes',
+        'processo',
+        'orcamento',
+        'parceria-trafego',
+        'trafego-pago',
+        'faq',
+      ];
 
       if (rawHash === 'solucoes-web' || rawHash === 'solucoes' || rawHash === 'especialidades') {
         currentRouteKeyRef.current = 'servicos';
@@ -504,7 +599,12 @@ export default function App() {
           return 'servicos';
         });
         scrollToInstitutionalTop();
-      } else if (rawHash === 'testemunhos' || rawHash === 'depoimentos' || rawHash === 'social-proof' || rawHash === 'avaliacoes') {
+      } else if (
+        rawHash === 'testemunhos' ||
+        rawHash === 'depoimentos' ||
+        rawHash === 'social-proof' ||
+        rawHash === 'avaliacoes'
+      ) {
         currentRouteKeyRef.current = 'avaliacoes';
         setCurrentScreen((prev) => {
           if (prev !== 'avaliacoes') {
@@ -630,8 +730,12 @@ export default function App() {
           }
           return 'inicio';
         });
-        scrollToAnchorWhenReady(['sobre-fundador', 'apresentacao', 'fundador']);
-      } else if (rawHash === 'fundador' || rawHash === 'card-do-fundador' || rawHash === 'sobre-fundador') {
+        scrollToAnchorWhenReady(['apresentacao', 'sobre-fundador', 'fundador']);
+      } else if (
+        rawHash === 'fundador' ||
+        rawHash === 'card-do-fundador' ||
+        rawHash === 'sobre-fundador'
+      ) {
         currentRouteKeyRef.current = 'inicio';
         setCurrentScreen((prev) => {
           if (prev !== 'inicio') {
@@ -645,40 +749,72 @@ export default function App() {
         });
         const candidates =
           rawHash === 'sobre-fundador'
-            ? ['sobre-fundador', 'fundador']
-            : ['fundador', 'sobre-fundador'];
+            ? ['sobre-fundador', 'fundador', 'apresentacao']
+            : ['fundador', 'sobre-fundador', 'apresentacao'];
         scrollToAnchorWhenReady(candidates);
       } else if (rawHash === 'sitemap' || rawHash === 'mapa-do-site') {
         setIsSitemapOpen(true);
       }
+    },
+    [cancelActiveScrollJob, scrollToAnchorWhenReady, scrollToInstitutionalTop]
+  );
+
+  // Registro unificado de listeners popstate e hashchange com sincronização na montagem
+  useEffect(() => {
+    // Sincronização inicial direta
+    syncRouteFromHash('init');
+
+    const handlePopState = () => {
+      syncRouteFromHash('popstate');
     };
 
-    // Lê na carga inicial
-    handleHashChange();
+    const handleHashChange = () => {
+      syncRouteFromHash('hashchange');
+    };
 
+    window.addEventListener('popstate', handlePopState);
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [cancelActiveScrollJob, scrollToAnchorWhenReady, scrollToInstitutionalTop]);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [syncRouteFromHash]);
 
   // Ao trocar de tela institucional pelo menu superior, rodapé ou CTAs, abre sempre no topo (scrollY = 0)
-  const navigateToScreen = useCallback((screenId: ScreenId) => {
-    setIsMenuOpen(false);
-    setActiveCaseId(null);
-    setActiveImageView(null);
-    const prevIdx = SCREENS.findIndex((s) => s.id === currentScreen);
-    const nextIdx = SCREENS.findIndex((s) => s.id === screenId);
-    const nextDirection = nextIdx !== -1 && prevIdx !== -1 && nextIdx !== prevIdx ? (nextIdx > prevIdx ? 1 : -1) : direction;
-    scrollPositionsRef.current[screenId] = 0;
-    currentRouteKeyRef.current = screenId;
-    withViewTransition(() => {
-      setDirection(nextDirection);
-      setCurrentScreen(screenId);
-    });
-    if (window.location.hash !== `#${screenId}`) {
-      window.history.pushState(null, '', `#${screenId}`);
-    }
-    scrollToInstitutionalTop();
-  }, [currentScreen, direction, scrollToInstitutionalTop]);
+  const navigateToScreen = useCallback(
+    (screenId: ScreenId) => {
+      setIsMenuOpen(false);
+      setActiveCaseId(null);
+      setActiveImageView(null);
+      const prevIdx = SCREENS.findIndex((s) => s.id === currentScreen);
+      const nextIdx = SCREENS.findIndex((s) => s.id === screenId);
+      const nextDirection =
+        nextIdx !== -1 && prevIdx !== -1 && nextIdx !== prevIdx
+          ? nextIdx > prevIdx
+            ? 1
+            : -1
+          : direction;
+      scrollPositionsRef.current[screenId] = 0;
+      currentRouteKeyRef.current = screenId;
+
+      const targetHash = `#${screenId}`;
+      lastHandledHashRef.current = screenId;
+      lastHandledTimeRef.current = Date.now();
+
+      withViewTransition(() => {
+        setDirection(nextDirection);
+        setCurrentScreen(screenId);
+      });
+
+      if (window.location.hash !== targetHash) {
+        window.history.pushState(null, '', targetHash);
+      }
+
+      scrollToInstitutionalTop();
+    },
+    [currentScreen, direction, scrollToInstitutionalTop]
+  );
 
   const currentIndex = SCREENS.findIndex((s) => s.id === currentScreen);
   const previousScreen = currentIndex > 0 ? SCREENS[currentIndex - 1] : null;
@@ -849,6 +985,9 @@ export default function App() {
             aria-labelledby="sobre-fundador-heading"
             className="section-auto-contain pt-16 pb-20 sm:pt-20 sm:pb-24 lg:pt-24 lg:pb-28 bg-[#050814]/90 border-t border-blue-500/15 relative overflow-hidden"
           >
+            {/* Âncora dedicada para compatibilidade com #apresentacao */}
+            <div id="apresentacao" className="scroll-mt-24 pointer-events-none" aria-hidden="true" />
+
             {/* Luz ambiente sutil */}
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
 
@@ -882,6 +1021,8 @@ export default function App() {
                         setActiveCaseId(null);
                         setActiveImageView(null);
                         currentRouteKeyRef.current = 'faq';
+                        lastHandledHashRef.current = 'cartao-digital';
+                        lastHandledTimeRef.current = Date.now();
                         withViewTransition(() => {
                           setCurrentScreen('faq');
                         });

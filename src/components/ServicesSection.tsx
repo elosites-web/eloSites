@@ -102,7 +102,7 @@ const SERVICES: ServiceCategory[] = [
     highlights: [
       'Páginas e seções dedicadas (Início, Sobre, Serviços, Contato e Localização)',
       'Apresentação completa da sua história, equipe e credibilidade',
-      'Estrutura organizada para facilitar a leitura pelos mecanismos de busca',
+      'Informações organizadas para que o Google entenda o conteúdo do seu site.',
       'Navegação fluida e adaptada para celulares e computadores',
     ],
     scopeNote: 'A quantidade de páginas e seções é combinada com clareza no orçamento individual.',

@@ -2128,6 +2128,31 @@ html {
   }
 }
 
+/* Animação de fade-in com leve movimento vertical (slide-in) */
+@keyframes fadeInSlideUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInSlideUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* Padronização tipográfica e de alinhamento dos 4 cards de pilares do Hero
    Compatível com Desktop, Tablet, Mobile (retrato e paisagem) e WebViews (Instagram / Facebook) */
 .hero-pillars-grid {

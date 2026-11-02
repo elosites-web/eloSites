@@ -6,6 +6,7 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  type Variants,
 } from 'motion/react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_CONFIG, whatsappUrl } from '../types';
@@ -125,6 +126,25 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
       e.preventDefault();
       setIsPillarsExpanded((prev) => !prev);
     }
+  };
+
+  const showcaseSummaryVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        ease: 'easeOut',
+        duration: 0.25,
+      },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        ease: 'easeOut',
+        duration: 0.35,
+      },
+    },
   };
 
   useEffect(() => {
@@ -531,7 +551,13 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
               >
                 
                 {/* Indicador de Status do Mockup com Abas */}
-                <div className="flex items-center justify-between mb-3 px-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="flex items-center justify-between mb-3 px-2"
+                >
                   <div
                     className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-slate-950/80 border border-blue-500/20 backdrop-blur-md"
                   >
@@ -563,7 +589,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Build 100% OK</span>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* MOCKUP DO LAPTOP 3D */}
                 <Interactive3DCard maxTilt={5} animatedBorder={true}>
@@ -754,13 +780,16 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   />
                 </button>
 
-                <div
+                <motion.div
                   id="hero-showcase-summary"
                   aria-hidden={!isShowcaseExpanded}
-                  className={`grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                  initial="hidden"
+                  animate={isShowcaseExpanded ? 'visible' : 'hidden'}
+                  variants={showcaseSummaryVariants}
+                  className={`grid transition-[grid-template-rows,margin] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                     isShowcaseExpanded
-                      ? 'grid-rows-[1fr] opacity-100 mt-3'
-                      : 'grid-rows-[0fr] opacity-0 mt-0'
+                      ? 'grid-rows-[1fr] mt-3'
+                      : 'grid-rows-[0fr] mt-0 pointer-events-none'
                   }`}
                 >
                   <div className="overflow-hidden">
@@ -812,7 +841,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </BiReveal>
           </div>
