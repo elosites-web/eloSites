@@ -41,6 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
   const drawerRef = useRef<HTMLDivElement>(null);
   const savedScrollPositionRef = useRef<number>(0);
   const wasMenuOpenRef = useRef<boolean>(false);
+  const isNavigatingToScreenRef = useRef<boolean>(false);
   const [canFitHorizontalNav, setCanFitHorizontalNav] = useState<boolean>(false);
 
   const systemPrefersReduced = useReducedMotion();
@@ -164,18 +165,54 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  // Trava de rolagem suave enquanto o menu suspenso estiver aberto
+  // Trava de rolagem absoluta do fundo da página enquanto o menu hambúrguer estiver aberto
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+    if (!isMenuOpen) return;
+
+    // Captura a posição exata de scroll no momento da abertura
+    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    const originalBodyPosition = document.body.style.position;
+    const originalBodyTop = document.body.style.top;
+    const originalBodyLeft = document.body.style.left;
+    const originalBodyRight = document.body.style.right;
+    const originalBodyWidth = document.body.style.width;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyPaddingRight = document.body.style.paddingRight;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    // Congela a página no scroll atual (prevenindo momentum scrolling no mobile/iOS Safari e mouse wheel no desktop)
+    document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
     }
+
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      // Restaura estilos originais e posição exata de rolagem sem salto visual
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.position = originalBodyPosition;
+      document.body.style.top = originalBodyTop;
+      document.body.style.left = originalBodyLeft;
+      document.body.style.right = originalBodyRight;
+      document.body.style.width = originalBodyWidth;
+      document.body.style.paddingRight = originalBodyPaddingRight;
+
+      // Se o fechamento foi apenas dismiss (sem navegar para outra tela), preserva a posição exata anterior
+      if (!isNavigatingToScreenRef.current) {
+        window.scrollTo(0, scrollY);
+      }
+      isNavigatingToScreenRef.current = false;
     };
   }, [isMenuOpen]);
 
@@ -226,7 +263,9 @@ export const Header: React.FC<HeaderProps> = ({
       <header
         ref={headerRef}
         id="header-nav"
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#050814]/90 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b border-blue-500/20 py-2 sm:py-2.5 shadow-xl shadow-black/60 pointer-events-auto ${
+          isMenuOpen ? 'bg-[#090E23]/95' : 'bg-[#050814]/90'
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div ref={navContainerRef} className="flex items-center justify-between gap-3 sm:gap-6 min-h-[46px]">
@@ -236,7 +275,10 @@ export const Header: React.FC<HeaderProps> = ({
                 type="button"
                 id="brand-logo-link"
                 onClick={() => {
-                  if (isMenuOpen) setIsMenuOpen(false);
+                  if (isMenuOpen) {
+                    isNavigatingToScreenRef.current = true;
+                    setIsMenuOpen(false);
+                  }
                   onSelectScreen('inicio');
                 }}
                 className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1 -ml-1 transition-opacity hover:opacity-90 text-left flex items-center gap-2.5 shrink-0 cursor-pointer"
@@ -328,7 +370,7 @@ export const Header: React.FC<HeaderProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label="Menu de Navegação das Seções ēloSites"
-          className="fixed inset-0 top-[54px] sm:top-[60px] z-40 flex flex-col justify-start bg-[#050814]/80 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200"
+          className="fixed inset-0 top-[54px] sm:top-[60px] z-40 flex flex-col justify-start bg-[#090E23]/95 backdrop-blur-md select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/80"
           onClick={handleCloseMenu}
         >
           {/* Painel de links sobre a página atual */}
@@ -363,6 +405,7 @@ export const Header: React.FC<HeaderProps> = ({
                       ref={index === 0 ? firstMenuItemRef : undefined}
                       type="button"
                       onClick={() => {
+                        isNavigatingToScreenRef.current = true;
                         setIsMenuOpen(false);
                         onSelectScreen(screen.id);
                       }}
