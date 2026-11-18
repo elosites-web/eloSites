@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
@@ -21,9 +21,8 @@ import { MagneticButton } from './MagneticButton';
 import {
   PORTFOLIO_PROJECTS,
   PortfolioProjectData,
-  preloadProjectWebpImages,
-  preloadAllPortfolioWebpImages,
 } from '../portfolioData';
+import { preloadCaseViews } from '../preloadScreens';
 
 export type { PortfolioProjectData };
 export { PORTFOLIO_PROJECTS };
@@ -45,9 +44,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('composite');
 
-  // Disparo de preload imediato por intenção de navegação
+  // Disparo de preload do chunk da página de case/imagem por intenção de navegação
   const handleIntentPreload = () => {
-    preloadProjectWebpImages(project);
+    preloadCaseViews();
   };
 
   return (
@@ -322,11 +321,6 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
 
-  // Pré-carregamento estratégico em segundo plano (idle) das capturas WebP dos projetos
-  useEffect(() => {
-    preloadAllPortfolioWebpImages({ idle: true });
-  }, []);
-
   const filteredProjects = PORTFOLIO_PROJECTS.filter((p) => {
     if (filter === 'all') return true;
     return p.category === filter;
@@ -494,5 +488,3 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
     </section>
   );
 };
-
-export { TestimonialsSection } from './TestimonialsSection';

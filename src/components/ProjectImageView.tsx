@@ -7,7 +7,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { PortfolioProjectData, preloadProjectWebpImages } from '../portfolioData';
+import { PortfolioProjectData } from '../portfolioData';
 import { whatsappUrl } from '../types';
 import { getPortfolioImageSource } from '../portfolioResponsiveImages';
 
@@ -24,10 +24,6 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
   onBack,
   onSwitchType,
 }) => {
-  // Pré-carrega ambas as capturas WebP do projeto para alternância instantânea entre Desktop e Mobile
-  useEffect(() => {
-    preloadProjectWebpImages(project, 'high');
-  }, [project]);
   // Tecla Escape para voltar ao case
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

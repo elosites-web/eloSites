@@ -2073,7 +2073,6 @@ html {
       animation: scrollProgressiveFadeInCard linear both;
       animation-timeline: view();
       animation-range: entry 2% cover 20%;
-      will-change: transform, opacity;
     }
 
     /* Elementos de texto e títulos com revelação progressiva suave */
@@ -2085,7 +2084,6 @@ html {
       animation: scrollProgressiveFadeInText linear both;
       animation-timeline: view();
       animation-range: entry 4% cover 20%;
-      will-change: transform, opacity;
     }
   }
 }

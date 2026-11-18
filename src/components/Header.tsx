@@ -108,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-  const canRun3D = useCanRun3DEffect();
+  const canRun3D = useCanRun3DEffect(isMenuOpen);
 
   // Verificação dinâmica baseada no espaço real disponível vs largura necessária de logo e links
   const checkNavFit = useCallback(() => {

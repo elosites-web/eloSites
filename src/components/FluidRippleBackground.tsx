@@ -33,8 +33,11 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
     let particleGeo: THREE.BufferGeometry | null = null;
     let particleMat: THREE.PointsMaterial | null = null;
     let animationFrameId: number | null = null;
-    let isPaused = false;
+    let isDocHidden = typeof document !== 'undefined' ? document.hidden : false;
+    let isInViewport = true;
+    let isPaused = isDocHidden;
     let resizeObserver: ResizeObserver | null = null;
+    let intersectionObserver: IntersectionObserver | null = null;
     let timerA: ReturnType<typeof setTimeout> | null = null;
     let timerB: ReturnType<typeof setTimeout> | null = null;
     let listenersAttached = false;
@@ -75,6 +78,10 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       if (resizeObserver) {
         resizeObserver.disconnect();
         resizeObserver = null;
+      }
+      if (intersectionObserver) {
+        intersectionObserver.disconnect();
+        intersectionObserver = null;
       }
 
       gridGeometry?.dispose();
@@ -118,8 +125,44 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
 
       // Desativa depth e stencil buffers: a malha ortogonal é composta exclusivamente por linhas e pontos aditivos,
       // eliminando a exigência de OES_packed_depth_stencil que falha em GPUs virtuais/ANGLE.
+      const contextAttributes: WebGLContextAttributes = {
+        alpha: true,
+        antialias: false,
+        powerPreference: 'low-power',
+        depth: false,
+        stencil: false,
+        failIfMajorPerformanceCaveat: false,
+      };
+      const preflightGl = (
+        canvas.getContext('webgl2', contextAttributes) ||
+        canvas.getContext('webgl', contextAttributes)
+      ) as WebGLRenderingContext | null;
+
+      const vtxPrec = preflightGl?.getShaderPrecisionFormat?.(preflightGl.VERTEX_SHADER, preflightGl.HIGH_FLOAT);
+      const fragPrec = preflightGl?.getShaderPrecisionFormat?.(preflightGl.FRAGMENT_SHADER, preflightGl.HIGH_FLOAT);
+      const glVersion = preflightGl?.getParameter?.(preflightGl.VERSION);
+
+      if (
+        !preflightGl ||
+        (typeof preflightGl.isContextLost === 'function' && preflightGl.isContextLost()) ||
+        !vtxPrec ||
+        !fragPrec ||
+        !glVersion
+      ) {
+        try {
+          preflightGl?.getExtension('WEBGL_lose_context')?.loseContext();
+        } catch {
+          // ignore
+        }
+        cleanupResources();
+        markWebglFailed();
+        setUseCssFallback(true);
+        return;
+      }
+
       renderer = new THREE.WebGLRenderer({
         canvas,
+        context: preflightGl,
         alpha: true,
         antialias: false,
         powerPreference: 'low-power',
@@ -256,7 +299,8 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
       handleWindowResizeRef = handleWindowResize;
 
       const handleVisibilityChange = () => {
-        isPaused = document.hidden;
+        isDocHidden = document.hidden;
+        syncAnimationLoop();
       };
       handleVisibilityChangeRef = handleVisibilityChange;
 
@@ -319,11 +363,40 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         resizeObserver.observe(container);
       }
 
-      // Loop de animação contínua e aleatória
+      // Loop de animação contínua — interrompe RAF quando oculto ou fora da viewport
       let clock = 0;
+      const stopLoop = () => {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      };
+
+      const syncAnimationLoop = () => {
+        isPaused = isDocHidden || !isInViewport;
+        if (isPaused) {
+          stopLoop();
+        } else if (animationFrameId === null && renderer && scene && camera) {
+          animationFrameId = requestAnimationFrame(animate);
+        }
+      };
+
+      if (isContained && typeof IntersectionObserver !== 'undefined') {
+        intersectionObserver = new IntersectionObserver(
+          ([entry]) => {
+            isInViewport = entry.isIntersecting;
+            syncAnimationLoop();
+          },
+          { rootMargin: '150px 0px' }
+        );
+        intersectionObserver.observe(container);
+      }
+
       const animate = () => {
-        animationFrameId = requestAnimationFrame(animate);
-        if (isPaused || !renderer || !scene || !camera) return;
+        if (isPaused || !renderer || !scene || !camera) {
+          animationFrameId = null;
+          return;
+        }
 
         clock += 0.016;
 
@@ -383,9 +456,12 @@ export const FluidRippleBackground: React.FC<FluidRippleBackgroundProps> = ({
         particleSystem.rotation.x = clock * 0.008;
 
         renderer.render(scene, camera);
+        animationFrameId = requestAnimationFrame(animate);
       };
 
-      animate();
+      if (!isPaused) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
     } catch {
       cleanupResources();
       markWebglFailed();

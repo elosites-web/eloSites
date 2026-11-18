@@ -176,7 +176,7 @@ export function getAllPortfolioWebpImages(): string[] {
  * O uso de img.decode() assegura que a decodificação ocorra fora da thread principal de renderização.
  */
 export function preloadWebpImage(src: string, priority: 'high' | 'low' = 'low'): Promise<void> {
-  if (typeof window === 'undefined' || !src || preloadedWebpCache.has(src)) {
+  if (typeof window === 'undefined' || !src || preloadedWebpCache.has(src) || isNetworkRestricted()) {
     return Promise.resolve();
   }
 
@@ -217,6 +217,7 @@ export function preloadProjectWebpImages(
   projectOrId: PortfolioProjectData | string,
   priority: 'high' | 'low' = 'high'
 ): Promise<void[]> {
+  if (isNetworkRestricted()) return Promise.resolve([]);
   const urls = getProjectWebpImages(projectOrId);
   return Promise.all(urls.map((url) => preloadWebpImage(url, priority)));
 }

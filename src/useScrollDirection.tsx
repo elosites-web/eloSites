@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useMemo } from 'react';
 
 export type ScrollDirection = 'down' | 'up';
 
@@ -16,50 +16,51 @@ const ScrollDirectionContext = createContext<ScrollDirectionContextType>({
 
 export const ScrollDirectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [direction, setDirection] = useState<ScrollDirection>('down');
-  const [scrollY, setScrollY] = useState<number>(0);
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
 
+  const directionRef = useRef<ScrollDirection>('down');
   const lastScrollYRef = useRef<number>(0);
-  const tickingRef = useRef<boolean>(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    lastScrollYRef.current = window.scrollY || window.pageYOffset || 0;
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY || window.pageYOffset || 0;
+      if (rafIdRef.current !== null) return;
 
-      if (!tickingRef.current) {
-        window.requestAnimationFrame(() => {
-          const diff = currentScrollY - lastScrollYRef.current;
-          // Threshold of 3px to avoid jitter
-          if (Math.abs(diff) > 3) {
-            const newDirection: ScrollDirection = diff > 0 ? 'down' : 'up';
+      rafIdRef.current = window.requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const currentScrollY = window.scrollY || window.pageYOffset || 0;
+        const diff = currentScrollY - lastScrollYRef.current;
+
+        if (Math.abs(diff) > 3) {
+          const newDirection: ScrollDirection = diff > 0 ? 'down' : 'up';
+          if (newDirection !== directionRef.current) {
+            directionRef.current = newDirection;
             setDirection(newDirection);
-            setScrollY(currentScrollY);
           }
           lastScrollYRef.current = currentScrollY;
-          tickingRef.current = false;
-        });
-        tickingRef.current = true;
-      }
-
-      setIsScrolling(true);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 150);
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
     };
   }, []);
 
+  const contextValue = useMemo<ScrollDirectionContextType>(
+    () => ({ direction, scrollY: 0, isScrolling: false }),
+    [direction]
+  );
+
   return (
-    <ScrollDirectionContext.Provider value={{ direction, scrollY, isScrolling }}>
+    <ScrollDirectionContext.Provider value={contextValue}>
       {children}
     </ScrollDirectionContext.Provider>
   );

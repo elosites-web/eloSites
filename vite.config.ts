@@ -57,6 +57,18 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss(), cartaoFallbackPlugin()],
     build: {
       target: 'es2019',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return undefined;
+            if (id.includes('/three/')) return 'vendor-three';
+            if (id.includes('/motion/') || id.includes('/framer-motion/')) return 'vendor-motion';
+            if (id.includes('/react-dom/') || id.includes('/react/')) return 'vendor-react';
+            if (id.includes('/lucide-react/')) return 'vendor-icons';
+            return undefined;
+          },
+        },
+      },
     },
     resolve: {
       alias: {

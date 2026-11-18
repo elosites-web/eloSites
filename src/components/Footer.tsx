@@ -10,12 +10,13 @@ const FluidRippleBackground = React.lazy(() =>
 );
 
 import { ScreenId } from '../types';
-import { useCanRun3DEffect } from '../mediaPrefs';
+import { useCanRun3DEffect, getMotionTier, shouldReduceMedia } from '../mediaPrefs';
 import { FluidRippleFallback } from './FluidRippleFallback';
 
 interface FooterProps {
   onOpenPrivacy: () => void;
   onOpenTerms: () => void;
+  onPrefetchLegal?: () => void;
   onSelectScreen?: (screenId: ScreenId) => void;
   currentScreen?: ScreenId;
   isWhatsAppBubbleOpen?: boolean;
@@ -24,6 +25,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({
   onOpenPrivacy,
   onOpenTerms,
+  onPrefetchLegal,
   onSelectScreen,
   currentScreen,
   isWhatsAppBubbleOpen = false,
@@ -67,36 +69,28 @@ export const Footer: React.FC<FooterProps> = ({
 
   const footerRef = React.useRef<HTMLElement>(null);
   const [shouldLoadEffect, setShouldLoadEffect] = React.useState<boolean>(false);
-  const canRun3D = useCanRun3DEffect();
+  const [isFooterInView, setIsFooterInView] = React.useState<boolean>(false);
+  const canRun3D = useCanRun3DEffect(isFooterInView);
+  const canFloatLinks = !shouldReduceMedia() && getMotionTier() !== 'none';
 
-  // Carregamento sob demanda do efeito Three.js quando o rodapé estiver a 800px da viewport,
-  // mas SOMENTE se o aparelho tiver suporte e permissão de movimento/dados para rodar 3D
+  // Observa visibilidade do rodapé tanto para carregar Three.js perto da viewport quanto para pausar animações fora de tela
   React.useEffect(() => {
-    if (shouldLoadEffect) return;
-    if (!canRun3D) return;
-
-    if (typeof IntersectionObserver === 'undefined') {
-      setShouldLoadEffect(true);
-      return;
-    }
-
     const target = footerRef.current;
-    if (!target) {
-      setShouldLoadEffect(true);
+    if (!target || typeof IntersectionObserver === 'undefined') {
+      setIsFooterInView(true);
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry && (entry.isIntersecting || entry.intersectionRatio > 0)) {
-          setShouldLoadEffect(true);
-          observer.disconnect();
-        }
+        if (!entry) return;
+        const nearViewport = entry.isIntersecting || entry.intersectionRatio > 0;
+        setIsFooterInView(nearViewport);
       },
       {
         root: null,
-        rootMargin: '800px 0px',
+        rootMargin: '400px 0px',
         threshold: 0,
       }
     );
@@ -106,7 +100,13 @@ export const Footer: React.FC<FooterProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [shouldLoadEffect, canRun3D]);
+  }, []);
+
+  React.useEffect(() => {
+    if (isFooterInView && canRun3D && !shouldLoadEffect) {
+      setShouldLoadEffect(true);
+    }
+  }, [isFooterInView, canRun3D, shouldLoadEffect]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -206,31 +206,39 @@ export const Footer: React.FC<FooterProps> = ({
                 return (
                   <motion.li
                     key={`footer-${item.id}`}
-                    animate={{
-                      y: [-2.5, 2.5, -2.5],
-                      x: [1.2, -1.2, 1.2],
-                      rotate: [-0.18, 0.18, -0.18],
-                    }}
-                    transition={{
-                      y: {
-                        duration: 6.2 + (index % 3) * 0.7,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.12,
-                      },
-                      x: {
-                        duration: 7.0 + (index % 2) * 0.8,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.12,
-                      },
-                      rotate: {
-                        duration: 7.8,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.1,
-                      },
-                    }}
+                    animate={
+                      isFooterInView && canFloatLinks
+                        ? {
+                            y: [-2.5, 2.5, -2.5],
+                            x: [1.2, -1.2, 1.2],
+                            rotate: [-0.18, 0.18, -0.18],
+                          }
+                        : { y: 0, x: 0, rotate: 0 }
+                    }
+                    transition={
+                      isFooterInView && canFloatLinks
+                        ? {
+                            y: {
+                              duration: 6.2 + (index % 3) * 0.7,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                              delay: index * 0.12,
+                            },
+                            x: {
+                              duration: 7.0 + (index % 2) * 0.8,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                              delay: index * 0.12,
+                            },
+                            rotate: {
+                              duration: 7.8,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                              delay: index * 0.1,
+                            },
+                          }
+                        : { duration: 0.2 }
+                    }
                   >
                     <button
                       type="button"
@@ -286,6 +294,8 @@ export const Footer: React.FC<FooterProps> = ({
             <button
               type="button"
               onClick={onOpenPrivacy}
+              onPointerEnter={onPrefetchLegal}
+              onFocus={onPrefetchLegal}
               className="text-slate-400 hover:text-indigo-300 transition-colors underline-offset-4 hover:underline cursor-pointer"
             >
               Política de Privacidade
@@ -293,6 +303,8 @@ export const Footer: React.FC<FooterProps> = ({
             <button
               type="button"
               onClick={onOpenTerms}
+              onPointerEnter={onPrefetchLegal}
+              onFocus={onPrefetchLegal}
               className="text-slate-400 hover:text-indigo-300 transition-colors underline-offset-4 hover:underline cursor-pointer"
             >
               Termos de Uso
@@ -321,15 +333,18 @@ export const Footer: React.FC<FooterProps> = ({
                 className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded transition-transform hover:scale-105 active:scale-95 inline-flex items-center align-middle cursor-pointer"
                 aria-label="ēloSites — Ir para a Página Inicial (Home)"
               >
-                <img
-                  src="/logo-elosites-1360.png"
-                  alt="ēloSites"
-                  width={1360}
-                  height={337}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-[14px] sm:h-[16px] w-auto shrink-0 inline-block align-middle object-contain"
-                />
+                <picture className="inline-flex shrink-0">
+                  <source type="image/webp" srcSet="/cartao/logo.webp" />
+                  <img
+                    src="/logo-elosites-1360.png"
+                    alt="ēloSites"
+                    width={1360}
+                    height={337}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-[14px] sm:h-[16px] w-auto shrink-0 inline-block align-middle object-contain"
+                  />
+                </picture>
               </button>
             </div>
             <span className="text-slate-400 font-medium shrink-0">O MELHOR SITE PELO MELHOR PREÇO</span>

@@ -1,21 +1,19 @@
 // Service Worker básico para ēloSites — Caching e Suporte Offline
-const CACHE_NAME = 'elosites-cache-v8';
+const CACHE_NAME = 'elosites-cache-v9';
 const CARD_PAGE_PATH = '/cartao/index.html';
 
-// Recursos estáticos essenciais do shell
+// Recursos estáticos essenciais do shell (sem imagens pesadas de OG ou fallback redundante)
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   CARD_PAGE_PATH,
   '/cartao/eu.webp',
   '/cartao/logo.webp',
-  '/cartao/og-cartao.png',
   '/manifest.json',
   '/favicon.ico',
   '/favicon-32x32.png',
   '/favicon-16x16.png',
   '/apple-touch-icon.png',
-  '/logo-elosites-1360.png',
 ];
 
 function isCardPage(url) {
@@ -66,9 +64,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const url = new URL(request.url);
+  const isSameOrigin = url.origin === self.location.origin;
+  const isGoogleFont =
+    url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+
+  if (!isSameOrigin && !isGoogleFont) {
+    return;
+  }
+
   // Navegações de página
   if (request.mode === 'navigate') {
-    const isCard = isCardPage(new URL(request.url));
+    const isCard = isCardPage(url);
 
     event.respondWith(
       fetch(request)
@@ -98,18 +105,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const isImmutableHashedAsset = isSameOrigin && url.pathname.startsWith('/assets/');
+
   // Ativos estáticos e fontes
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Atualiza o cache em segundo plano (stale-while-revalidate)
-        fetch(request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
-            }
-          })
-          .catch(() => {});
+        // Chunks e ativos com hash do Vite (/assets/) são imutáveis: cache-first puro sem revalidação redundante
+        if (!isImmutableHashedAsset) {
+          fetch(request)
+            .then((networkResponse) => {
+              if (networkResponse && networkResponse.status === 200) {
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
+              }
+            })
+            .catch(() => {});
+        }
         return cachedResponse;
       }
 

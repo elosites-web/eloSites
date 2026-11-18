@@ -5,11 +5,13 @@ import { useRef, useState, useEffect } from 'react';
  * à largura real renderizada do logotipo da ēloSites (ícone + tipografia),
  * garantindo centralização e prevenindo transbordamento visual em qualquer viewport.
  */
-export function useLogoTaglineWidth<T extends HTMLElement = HTMLImageElement>() {
+export function useLogoTaglineWidth<T extends HTMLElement = HTMLImageElement>(enabled = true) {
   const logoRef = useRef<T>(null);
   const [logoWidth, setLogoWidth] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const updateWidth = () => {
       if (logoRef.current) {
         const rect = logoRef.current.getBoundingClientRect();
@@ -39,9 +41,10 @@ export function useLogoTaglineWidth<T extends HTMLElement = HTMLImageElement>() 
       if (ro) ro.disconnect();
       window.removeEventListener('resize', updateWidth);
     };
-  }, []);
+  }, [enabled]);
 
   const handleImageLoad = () => {
+    if (!enabled) return;
     if (logoRef.current) {
       const rect = logoRef.current.getBoundingClientRect();
       if (rect.width > 0) {

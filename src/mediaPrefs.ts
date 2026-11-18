@@ -50,10 +50,25 @@ export function webglSupported(): boolean {
       return false;
     }
 
+    const vtxPrec =
+      typeof gl.getShaderPrecisionFormat === 'function'
+        ? gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT)
+        : null;
+    const fragPrec =
+      typeof gl.getShaderPrecisionFormat === 'function'
+        ? gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT)
+        : null;
+    const glVersion = typeof gl.getParameter === 'function' ? gl.getParameter(gl.VERSION) : null;
+
     // Libera o contexto de teste imediatamente para não estourar o limite de contextos WebGL do navegador
     const loseExt = gl.getExtension('WEBGL_lose_context');
     if (loseExt) {
       loseExt.loseContext();
+    }
+
+    if (!vtxPrec || !fragPrec || !glVersion) {
+      _webglCached = false;
+      return false;
     }
 
     _webglCached = true;
@@ -178,17 +193,23 @@ export function canRun3DEffect(): boolean {
 
 /**
  * Hook React reativo para acompanhar permissão de efeitos 3D,
- * respondendo em tempo real a alterações de preferência no SO.
+ * adiando a verificação síncrona de contexto WebGL para após o primeiro paint
+ * e respeitando habilitação condicional (ex.: elemento próximo da viewport).
  */
-export function useCanRun3DEffect(): boolean {
-  const [canRun, setCanRun] = useState<boolean>(() => canRun3DEffect());
+export function useCanRun3DEffect(enabled = true): boolean {
+  const [canRun, setCanRun] = useState<boolean>(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !enabled) {
+      setCanRun(false);
+      return;
+    }
 
     const update = () => {
       setCanRun(canRun3DEffect());
     };
+
+    update();
 
     try {
       const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -202,7 +223,7 @@ export function useCanRun3DEffect(): boolean {
     } catch {
       // Navegadores sem suporte a matchMedia
     }
-  }, []);
+  }, [enabled]);
 
   return canRun;
 }

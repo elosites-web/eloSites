@@ -47,6 +47,10 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
   const isHoveredRef = useRef<boolean>(false);
   const rafIdRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
+  const isInViewRef = useRef<boolean>(true);
+  const isDocHiddenRef = useRef<boolean>(
+    typeof document !== 'undefined' ? document.hidden : false
+  );
 
   const systemPrefersReduced = useReducedMotion();
   const isReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
@@ -65,7 +69,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
     isDraggingRef.current = isDragging;
   }, [isDragging]);
 
-  // Mede a largura de 1 bloco de itens
+  // Mede a largura de 1 bloco de itens via ResizeObserver (zero leituras de layout no loop RAF)
   const updateSingleWidth = useCallback(() => {
     if (singleSetRef.current) {
       const rect = singleSetRef.current.getBoundingClientRect();
@@ -77,23 +81,43 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
 
   useEffect(() => {
     updateSingleWidth();
+    const target = singleSetRef.current;
+    let observer: ResizeObserver | null = null;
+    if (target && typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(() => {
+        updateSingleWidth();
+      });
+      observer.observe(target);
+    }
     const handleResize = () => updateSingleWidth();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
   }, [updateSingleWidth, items]);
 
-  // Loop contínuo com requestAnimationFrame
+  // Loop contínuo com requestAnimationFrame — pausado completamente fora da viewport ou em aba oculta
   useEffect(() => {
     if (isReduced) return;
 
-    lastTimeRef.current = performance.now();
+    const stopLoop = () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
 
     const loop = (currentTime: number) => {
+      if (!isInViewRef.current || isDocHiddenRef.current) {
+        rafIdRef.current = null;
+        return;
+      }
+
       const dt = Math.min((currentTime - lastTimeRef.current) / 1000, 0.1);
       lastTimeRef.current = currentTime;
 
-      const singleWidth = singleWidthRef.current || (singleSetRef.current?.getBoundingClientRect().width ?? 1200);
-      singleWidthRef.current = singleWidth;
+      const singleWidth = singleWidthRef.current;
 
       if (!isDraggingRef.current && singleWidth > 0) {
         // Velocidade base em pixels por segundo
@@ -118,10 +142,46 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
       rafIdRef.current = requestAnimationFrame(loop);
     };
 
-    rafIdRef.current = requestAnimationFrame(loop);
+    const startLoop = () => {
+      if (rafIdRef.current !== null || !isInViewRef.current || isDocHiddenRef.current) return;
+      lastTimeRef.current = performance.now();
+      rafIdRef.current = requestAnimationFrame(loop);
+    };
+
+    const handleVisibilityChange = () => {
+      isDocHiddenRef.current = document.hidden;
+      if (document.hidden) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let intersectionObserver: IntersectionObserver | null = null;
+    const containerEl = containerRef.current;
+    if (containerEl && typeof IntersectionObserver !== 'undefined') {
+      intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          isInViewRef.current = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            startLoop();
+          } else {
+            stopLoop();
+          }
+        },
+        { rootMargin: '50px 0px' }
+      );
+      intersectionObserver.observe(containerEl);
+    }
+
+    startLoop();
 
     return () => {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      stopLoop();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      intersectionObserver?.disconnect();
     };
   }, [isReduced, speed]);
 

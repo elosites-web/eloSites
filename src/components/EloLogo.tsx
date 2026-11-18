@@ -34,22 +34,27 @@ export const EloLogo: React.FC<EloLogoProps> = ({
     menu: 'text-[6.5px] min-[360px]:text-[7px] sm:text-[7.5px] md:text-[8px] tracking-[0.08em] sm:tracking-[0.11em]',
   }[size];
 
-  const { logoRef, logoWidth, handleImageLoad } = useLogoTaglineWidth<HTMLImageElement>();
+  const { logoRef, logoWidth, handleImageLoad } = useLogoTaglineWidth<HTMLImageElement>(
+    !isFooter && showTagline
+  );
 
   // Exceção explícita: no rodapé o layout original (alinhado ao início com estilos preexistentes)
   // é rigorosamente preservado conforme especificação
   if (isFooter && showTagline) {
     const footerContent = (
       <div className="elo-logo-floating inline-flex flex-col items-start leading-tight">
-        <img
-          src="/logo-elosites-1360.png"
-          alt="ēloSites — Logotipo Oficial"
-          width={1360}
-          height={337}
-          loading="lazy"
-          decoding="async"
-          className={`${heights} w-auto shrink-0 object-contain ${className}`}
-        />
+        <picture className="inline-flex shrink-0">
+          <source type="image/webp" srcSet="/cartao/logo.webp" />
+          <img
+            src="/logo-elosites-1360.png"
+            alt="ēloSites — Logotipo Oficial"
+            width={1360}
+            height={337}
+            loading="lazy"
+            decoding="async"
+            className={`${heights} w-auto shrink-0 object-contain ${className}`}
+          />
+        </picture>
         <span
           className={`font-semibold uppercase text-slate-400 select-none tracking-wider mt-0.5 ${taglineSizes} ${taglineClassName}`}
         >
@@ -80,18 +85,22 @@ export const EloLogo: React.FC<EloLogoProps> = ({
   const effectiveTaglineWidth = logoWidth ? logoWidth + 2 : undefined;
 
   const imgElement = (
-    <img
-      ref={logoRef}
-      src="/logo-elosites-1360.png"
-      alt="ēloSites — Logotipo Oficial"
-      width={1360}
-      height={337}
-      fetchPriority="high"
-      onLoad={handleImageLoad}
-      className={`${heights} w-auto shrink-0 object-contain ${
-        isMenu ? 'drop-shadow-[0_0_24px_rgba(59,130,246,0.45)]' : ''
-      } ${className}`}
-    />
+    <picture className="inline-flex shrink-0">
+      <source type="image/webp" srcSet="/cartao/logo.webp" />
+      <img
+        ref={logoRef}
+        src="/logo-elosites-1360.png"
+        alt="ēloSites — Logotipo Oficial"
+        width={1360}
+        height={337}
+        loading={isFooter ? 'lazy' : undefined}
+        decoding="async"
+        onLoad={handleImageLoad}
+        className={`${heights} w-auto shrink-0 object-contain ${
+          isMenu ? 'drop-shadow-[0_0_24px_rgba(59,130,246,0.45)]' : ''
+        } ${className}`}
+      />
+    </picture>
   );
 
   const content = showTagline ? (

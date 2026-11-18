@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
-import { shouldReduceMedia } from '../mediaPrefs';
+import React from 'react';
 import {
   Zap,
   User,
@@ -12,7 +10,6 @@ import {
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SplitLines } from './SplitLines';
-import { SITE_CONFIG, whatsappUrl } from '../types';
 import { Interactive3DCard } from './Interactive3DCard';
 import { BiReveal } from './BiReveal';
 
@@ -21,57 +18,6 @@ interface DifferentialsSectionProps {
 }
 
 export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
-  const [isInViewport, setIsInViewport] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const hasPrefetchedRef = useRef(false);
-
-  // Lazy loading dos componentes da seção e prefetch inteligente de mídias de alta resolução
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      setIsInViewport(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setIsInViewport(true);
-
-            // Prefetch inteligente em momento ocioso do navegador para otimizar TTI da próxima navegação
-            if (!hasPrefetchedRef.current) {
-              hasPrefetchedRef.current = true;
-              const prefetchNextMedia = () => {
-                const targetImages = [
-                  '/portifolio-jvsalvaia-mobile.webp',
-                  '/portifolio-toledoseguranca-mobile.webp',
-                ];
-                targetImages.forEach((src) => {
-                  const img = new Image();
-                  img.decoding = 'async';
-                  img.src = src;
-                });
-              };
-
-              if (typeof window.requestIdleCallback === 'function') {
-                window.requestIdleCallback(prefetchNextMedia, { timeout: 3000 });
-              } else {
-                window.setTimeout(prefetchNextMedia, 1500);
-              }
-            }
-          }
-        }
-      },
-      {
-        rootMargin: '180px 0px 180px 0px',
-        threshold: 0.05,
-      }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   const differentials: {
     title: string;
@@ -120,7 +66,6 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
 
   return (
     <section
-      ref={sectionRef}
       id="diferenciais"
       className="section-auto-contain pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-x-clip"
     >

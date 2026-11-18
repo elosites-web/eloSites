@@ -13,77 +13,148 @@ import {
   BookingSkeleton,
   SimpleSectionSkeleton,
 } from './components/SectionSkeletons';
-import { preloadAllScreens } from './preloadScreens';
+import { preloadDeferredChrome } from './preloadScreens';
 import { ScreenId, SCREENS } from './types';
 import { shouldReduceMedia, getMotionTier } from './mediaPrefs';
 import { withViewTransition, supportsViewTransitions } from './viewTransition';
 import { Sparkles } from 'lucide-react';
-import { CaseDetailPage } from './components/CaseDetailPage';
-import { ProjectImageView } from './components/ProjectImageView';
 import { CustomCursor } from './components/CustomCursor';
 import { getProjectById } from './portfolioData';
 
+const resolvedLazyModules = new Set<string>();
+const lazyModuleListeners = new Set<() => void>();
+
+function subscribeLazyModuleResolved(listener: () => void): () => void {
+  lazyModuleListeners.add(listener);
+  return () => {
+    lazyModuleListeners.delete(listener);
+  };
+}
+
+function lazyTracked<P>(
+  key: string,
+  loader: () => Promise<{ default: React.ComponentType<P> }>
+) {
+  return lazy(() =>
+    loader().then((mod) => {
+      resolvedLazyModules.add(key);
+      lazyModuleListeners.forEach((listener) => listener());
+      return mod;
+    })
+  );
+}
+
+function isScreenSyncReady(screenId: ScreenId): boolean {
+  switch (screenId) {
+    case 'inicio':
+      return (
+        resolvedLazyModules.has('FounderCard') &&
+        resolvedLazyModules.has('TechnicalSpecialtiesBanner')
+      );
+    case 'servicos':
+    case 'solucoes-web':
+      return resolvedLazyModules.has('ServicesSection');
+    case 'portfolio':
+      return resolvedLazyModules.has('PortfolioSection');
+    case 'avaliacoes':
+      return resolvedLazyModules.has('TestimonialsSection');
+    case 'processo':
+      return (
+        resolvedLazyModules.has('ProcessSection') &&
+        resolvedLazyModules.has('DifferentialsSection')
+      );
+    case 'orcamento':
+      return resolvedLazyModules.has('ProjectBriefBookingSection');
+    case 'parceria-trafego':
+    case 'trafego-pago':
+      return resolvedLazyModules.has('PaidTrafficPartnershipSection');
+    case 'faq':
+      return (
+        resolvedLazyModules.has('FaqSection') &&
+        resolvedLazyModules.has('ContactCtaSection') &&
+        resolvedLazyModules.has('DigitalCardSection')
+      );
+    default:
+      return false;
+  }
+}
+
 // Code-splitting via React.lazy para acelerar a carga inicial da tela Início
-const FounderCard = lazy(() =>
+const FounderCard = lazyTracked('FounderCard', () =>
   import('./components/FounderCard').then((mod) => ({ default: mod.FounderCard }))
 );
-const TechnicalSpecialtiesBanner = lazy(() =>
+const TechnicalSpecialtiesBanner = lazyTracked('TechnicalSpecialtiesBanner', () =>
   import('./components/TechnicalSpecialtiesBanner').then((mod) => ({
     default: mod.TechnicalSpecialtiesBanner,
   }))
 );
-const PortfolioSection = lazy(() =>
+const PortfolioSection = lazyTracked('PortfolioSection', () =>
   import('./components/PortfolioSection').then((mod) => ({ default: mod.PortfolioSection }))
 );
-const TestimonialsSection = lazy(() =>
+const TestimonialsSection = lazyTracked('TestimonialsSection', () =>
   import('./components/TestimonialsSection').then((mod) => ({ default: mod.TestimonialsSection }))
 );
-const ServicesSection = lazy(() =>
+const ServicesSection = lazyTracked('ServicesSection', () =>
   import('./components/ServicesSection').then((mod) => ({ default: mod.ServicesSection }))
 );
-const DifferentialsSection = lazy(() =>
+const DifferentialsSection = lazyTracked('DifferentialsSection', () =>
   import('./components/DifferentialsSection').then((mod) => ({ default: mod.DifferentialsSection }))
 );
-const ProjectBriefBookingSection = lazy(() =>
+const ProjectBriefBookingSection = lazyTracked('ProjectBriefBookingSection', () =>
   import('./components/ProjectBriefBookingSection').then((mod) => ({
     default: mod.ProjectBriefBookingSection,
   }))
 );
-const ProcessSection = lazy(() =>
+const ProcessSection = lazyTracked('ProcessSection', () =>
   import('./components/ProcessSection').then((mod) => ({ default: mod.ProcessSection }))
 );
-const FaqSection = lazy(() =>
+const FaqSection = lazyTracked('FaqSection', () =>
   import('./components/FaqSection').then((mod) => ({ default: mod.FaqSection }))
 );
-const ContactCtaSection = lazy(() =>
+const ContactCtaSection = lazyTracked('ContactCtaSection', () =>
   import('./components/ContactCtaSection').then((mod) => ({
     default: mod.ContactCtaSection,
   }))
 );
-const DigitalCardSection = lazy(() =>
+const DigitalCardSection = lazyTracked('DigitalCardSection', () =>
   import('./components/DigitalCardSection').then((mod) => ({
     default: mod.DigitalCardSection,
   }))
 );
-const PaidTrafficPartnershipSection = lazy(() =>
+const PaidTrafficPartnershipSection = lazyTracked('PaidTrafficPartnershipSection', () =>
   import('./components/PaidTrafficPartnershipSection').then((mod) => ({
     default: mod.PaidTrafficPartnershipSection,
   }))
 );
-const LegalModals = lazy(() =>
+const LegalModals = lazyTracked('LegalModals', () =>
   import('./components/LegalModals').then((mod) => ({ default: mod.LegalModals }))
 );
-const SitemapModal = lazy(() =>
+const SitemapModal = lazyTracked('SitemapModal', () =>
   import('./components/SitemapModal').then((mod) => ({ default: mod.SitemapModal }))
+);
+const CaseDetailPage = lazyTracked('CaseDetailPage', () =>
+  import('./components/CaseDetailPage').then((mod) => ({ default: mod.CaseDetailPage }))
+);
+const ProjectImageView = lazyTracked('ProjectImageView', () =>
+  import('./components/ProjectImageView').then((mod) => ({ default: mod.ProjectImageView }))
 );
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('inicio');
   const [direction, setDirection] = useState<number>(1);
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
+  const [hasMountedLegal, setHasMountedLegal] = useState<boolean>(false);
   const [isSitemapOpen, setIsSitemapOpen] = useState<boolean>(false);
+  const [hasMountedSitemap, setHasMountedSitemap] = useState<boolean>(false);
   const [isWhatsAppBubbleOpen, setIsWhatsAppBubbleOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [, setLazyLoadTick] = useState<number>(0);
+
+  useEffect(() => {
+    return subscribeLazyModuleResolved(() => {
+      setLazyLoadTick((tick) => tick + 1);
+    });
+  }, []);
 
   // Estados dedicados de navegação para Case e Captura de Imagem (Substituição de modais por páginas)
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
@@ -186,7 +257,6 @@ export default function App() {
   const scrollToAnchorWhenReady = useCallback(
     (candidateIds: string[]) => {
       cancelActiveScrollJob();
-      preloadAllScreens();
 
       let cancelled = false;
       let attempts = 0;
@@ -359,41 +429,7 @@ export default function App() {
     }
   });
 
-  // Pré-carrega os chunks das telas secundárias e dos modais quando o navegador
-  // estiver ocioso (ou no primeiro toque/clique/foco), para trocas instantâneas.
-  useEffect(() => {
-    let idleId: number | undefined;
-    let timeoutId: number | undefined;
-    let done = false;
-
-    const run = () => {
-      if (done) return;
-      done = true;
-      preloadAllScreens();
-    };
-
-    const onFirstInteraction = () => run();
-
-    if (typeof window.requestIdleCallback === 'function') {
-      idleId = window.requestIdleCallback(run, { timeout: 3000 });
-    } else {
-      timeoutId = window.setTimeout(run, 3000);
-    }
-
-    window.addEventListener('pointerdown', onFirstInteraction, { once: true, passive: true });
-    window.addEventListener('touchstart', onFirstInteraction, { once: true, passive: true });
-    window.addEventListener('keydown', onFirstInteraction, { once: true });
-
-    return () => {
-      if (idleId !== undefined && typeof window.cancelIdleCallback === 'function') {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-      window.removeEventListener('pointerdown', onFirstInteraction);
-      window.removeEventListener('touchstart', onFirstInteraction);
-      window.removeEventListener('keydown', onFirstInteraction);
-    };
-  }, []);
+  // Registro de limpeza automática caso o usuário abra modais jurídicos sob demanda
 
   // Referências para deduplicação precisa de eventos popstate e hashchange
   const lastHandledHashRef = useRef<string | null>(null);
@@ -757,6 +793,7 @@ export default function App() {
             : ['fundador', 'sobre-fundador', 'apresentacao'];
         scrollToAnchorWhenReady(candidates);
       } else if (rawHash === 'sitemap' || rawHash === 'mapa-do-site') {
+        setHasMountedSitemap(true);
         setIsSitemapOpen(true);
       }
     },
@@ -806,10 +843,16 @@ export default function App() {
       lastHandledHashRef.current = screenId;
       lastHandledTimeRef.current = Date.now();
 
-      withViewTransition(() => {
+      const applyScreenUpdate = () => {
         setDirection(nextDirection);
         setCurrentScreen(screenId);
-      });
+      };
+
+      if (isScreenSyncReady(screenId)) {
+        withViewTransition(applyScreenUpdate);
+      } else {
+        applyScreenUpdate();
+      }
 
       if (window.location.hash !== targetHash) {
         window.history.pushState(null, '', targetHash);
@@ -1014,16 +1057,16 @@ export default function App() {
       {currentScreen === 'inicio' && (
         <motion.div
           variants={heroContainerVariants}
-          initial="hidden"
+          initial={false}
           animate="visible"
           className="w-full space-y-0"
         >
-          <motion.div variants={heroItemVariants}>
+          <div>
             <Hero
               mode="inicio"
               onNavigateToPortfolio={() => navigateToScreen('portfolio')}
             />
-          </motion.div>
+          </div>
 
           <section
             id="sobre-fundador"
@@ -1068,9 +1111,13 @@ export default function App() {
                         currentRouteKeyRef.current = 'faq';
                         lastHandledHashRef.current = 'cartao-digital';
                         lastHandledTimeRef.current = Date.now();
-                        withViewTransition(() => {
+                        if (isScreenSyncReady('faq')) {
+                          withViewTransition(() => {
+                            setCurrentScreen('faq');
+                          });
+                        } else {
                           setCurrentScreen('faq');
-                        });
+                        }
                         if (window.location.hash !== '#cartao-digital') {
                           window.history.pushState(null, '', '#cartao-digital');
                         }
@@ -1156,7 +1203,12 @@ export default function App() {
         <div className="w-full">
           <SectionErrorBoundary>
             <Suspense fallback={<BookingSkeleton />}>
-              <ProjectBriefBookingSection onOpenPrivacy={() => setLegalModal('privacy')} />
+              <ProjectBriefBookingSection
+                onOpenPrivacy={() => {
+                  setHasMountedLegal(true);
+                  setLegalModal('privacy');
+                }}
+              />
             </Suspense>
           </SectionErrorBoundary>
         </div>
@@ -1237,7 +1289,6 @@ export default function App() {
 
       {/* Conteúdo Principal — Exibição Estratégica da Tela Ativa */}
       <main
-        style={{ willChange: 'transform, opacity' }}
         className={`flex-1 relative z-10 overflow-x-hidden transition-opacity duration-300 ${
           isMenuOpen ? 'pointer-events-none select-none' : ''
         }`}
@@ -1249,40 +1300,46 @@ export default function App() {
         {activeImageView && activeProject ? (
           <div
             key={`image-${activeImageView.projectId}-${activeImageView.imageType}`}
-            style={{ willChange: 'transform, opacity' }}
             className="w-full"
           >
-            <ProjectImageView
-              project={activeProject}
-              imageType={activeImageView.imageType}
-              onBack={() => {
-                window.location.hash = `case/${activeProject.id}`;
-              }}
-              onSwitchType={(type) => {
-                window.location.hash = `case/${activeProject.id}/${type}`;
-              }}
-            />
+            <SectionErrorBoundary>
+              <Suspense fallback={<PortfolioSkeleton />}>
+                <ProjectImageView
+                  project={activeProject}
+                  imageType={activeImageView.imageType}
+                  onBack={() => {
+                    window.location.hash = `case/${activeProject.id}`;
+                  }}
+                  onSwitchType={(type) => {
+                    window.location.hash = `case/${activeProject.id}/${type}`;
+                  }}
+                />
+              </Suspense>
+            </SectionErrorBoundary>
           </div>
         ) : activeCaseId && activeProject ? (
           <div
             key={`case-${activeCaseId}`}
-            style={{ willChange: 'transform, opacity' }}
             className="w-full"
           >
-            <CaseDetailPage
-              project={activeProject}
-              onBack={() => {
-                window.location.hash = 'portfolio';
-              }}
-              onOpenImage={(type) => {
-                window.location.hash = `case/${activeProject.id}/${type}`;
-              }}
-            />
+            <SectionErrorBoundary>
+              <Suspense fallback={<PortfolioSkeleton />}>
+                <CaseDetailPage
+                  project={activeProject}
+                  onBack={() => {
+                    window.location.hash = 'portfolio';
+                  }}
+                  onOpenImage={(type) => {
+                    window.location.hash = `case/${activeProject.id}/${type}`;
+                  }}
+                />
+              </Suspense>
+            </SectionErrorBoundary>
           </div>
         ) : useViewTransitions ? (
           <div
             key={currentScreen}
-            style={{ contain: 'layout style', willChange: 'transform, opacity' }}
+            style={{ contain: 'layout style' }}
             className="w-full [contain:layout_style]"
           >
             {renderActiveScreen()}
@@ -1295,7 +1352,7 @@ export default function App() {
               initial="initial"
               animate="animate"
               exit="exit"
-              style={{ contain: 'layout style', willChange: 'opacity' }}
+              style={{ contain: 'layout style' }}
               className="w-full [contain:layout_style]"
             >
               {renderActiveScreen()}
@@ -1311,8 +1368,15 @@ export default function App() {
         inert={isMenuOpen}
       >
         <Footer
-          onOpenPrivacy={() => setLegalModal('privacy')}
-          onOpenTerms={() => setLegalModal('terms')}
+          onOpenPrivacy={() => {
+            setHasMountedLegal(true);
+            setLegalModal('privacy');
+          }}
+          onOpenTerms={() => {
+            setHasMountedLegal(true);
+            setLegalModal('terms');
+          }}
+          onPrefetchLegal={preloadDeferredChrome}
           onSelectScreen={navigateToScreen}
           currentScreen={currentScreen}
           isWhatsAppBubbleOpen={isWhatsAppBubbleOpen}
@@ -1325,23 +1389,27 @@ export default function App() {
         />
       </div>
 
-      {/* Modais Legais (Política de Privacidade e Termos de Uso) */}
-      <Suspense fallback={null}>
-        <LegalModals
-          isOpen={legalModal !== null}
-          type={legalModal}
-          onClose={() => setLegalModal(null)}
-        />
-      </Suspense>
+      {/* Modais Legais (Política de Privacidade e Termos de Uso) — carregados somente sob demanda */}
+      {(hasMountedLegal || legalModal !== null) && (
+        <Suspense fallback={null}>
+          <LegalModals
+            isOpen={legalModal !== null}
+            type={legalModal}
+            onClose={() => setLegalModal(null)}
+          />
+        </Suspense>
+      )}
 
-      {/* Modal do Mapa do Site Dinâmico XML (Google Search Console) */}
-      <Suspense fallback={null}>
-        <SitemapModal
-          isOpen={isSitemapOpen}
-          onClose={() => setIsSitemapOpen(false)}
-          onNavigateToScreen={navigateToScreen}
-        />
-      </Suspense>
+      {/* Modal do Mapa do Site Dinâmico XML (Google Search Console) — carregado somente sob demanda */}
+      {(hasMountedSitemap || isSitemapOpen) && (
+        <Suspense fallback={null}>
+          <SitemapModal
+            isOpen={isSitemapOpen}
+            onClose={() => setIsSitemapOpen(false)}
+            onNavigateToScreen={navigateToScreen}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

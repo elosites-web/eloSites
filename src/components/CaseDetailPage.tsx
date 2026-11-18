@@ -13,7 +13,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { PortfolioProjectData, preloadProjectWebpImages } from '../portfolioData';
+import { PortfolioProjectData } from '../portfolioData';
 import { whatsappUrl } from '../types';
 import { getPortfolioImageSource } from '../portfolioResponsiveImages';
 
@@ -28,10 +28,6 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
   onBack,
   onOpenImage,
 }) => {
-  // Pré-carrega imediatamente com alta prioridade as imagens WebP deste projeto (desktop e mobile)
-  useEffect(() => {
-    preloadProjectWebpImages(project, 'high');
-  }, [project]);
 
   // Tecla Escape para voltar ao portfólio
   useEffect(() => {

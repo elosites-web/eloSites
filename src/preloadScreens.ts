@@ -1,11 +1,14 @@
 import { saveDataEnabled } from './mediaPrefs';
 import type { ScreenId } from './types';
-import { preloadAllPortfolioWebpImages } from './portfolioData';
 
-type Loader = () => Promise<unknown>;
+export type Loader = () => Promise<unknown>;
 
-const screenLoaders: Partial<Record<ScreenId, Loader>> = {
-  inicio: () => import('./components/FounderCard'),
+export const screenLoaders: Partial<Record<ScreenId, Loader>> = {
+  inicio: () =>
+    Promise.all([
+      import('./components/FounderCard'),
+      import('./components/TechnicalSpecialtiesBanner'),
+    ]),
   servicos: () => import('./components/ServicesSection'),
   'solucoes-web': () => import('./components/ServicesSection'),
   portfolio: () => import('./components/PortfolioSection'),
@@ -26,8 +29,9 @@ const screenLoaders: Partial<Record<ScreenId, Loader>> = {
     ]),
 };
 
-function slowConnection(): boolean {
+export function isSlowConnection(): boolean {
   try {
+    if (typeof navigator === 'undefined') return false;
     const conn = (navigator as Navigator & { connection?: { effectiveType?: string } }).connection;
     const type = conn?.effectiveType;
     return type === 'slow-2g' || type === '2g';
@@ -36,36 +40,92 @@ function slowConnection(): boolean {
   }
 }
 
-function prefetchBlocked(): boolean {
-  return saveDataEnabled() || slowConnection();
+export function isPrefetchBlocked(): boolean {
+  return saveDataEnabled() || isSlowConnection();
 }
 
-function ignoreFailure(promise: Promise<unknown>): void {
-  promise.catch(() => {});
+export interface ScreenPreloaderOptions {
+  loaders: Partial<Record<string, Loader>>;
+  isBlocked?: () => boolean;
 }
+
+export function createScreenPreloader({
+  loaders,
+  isBlocked = isPrefetchBlocked,
+}: ScreenPreloaderOptions) {
+  const loadedKeys = new Set<string>();
+  const inFlightKeys = new Map<string, Promise<void>>();
+
+  const preloadKey = (key: string): Promise<void> => {
+    if (loadedKeys.has(key)) {
+      return Promise.resolve();
+    }
+
+    const existing = inFlightKeys.get(key);
+    if (existing) {
+      return existing;
+    }
+
+    if (isBlocked()) {
+      return Promise.resolve();
+    }
+
+    const loader = loaders[key];
+    if (!loader) {
+      return Promise.resolve();
+    }
+
+    const promise = Promise.resolve()
+      .then(() => loader())
+      .then(() => {
+        loadedKeys.add(key);
+      })
+      .catch(() => {
+        // Permite nova tentativa em interação futura se houve falha transitória de rede
+      })
+      .finally(() => {
+        inFlightKeys.delete(key);
+      });
+
+    inFlightKeys.set(key, promise);
+    return promise;
+  };
+
+  return {
+    preload: preloadKey,
+    hasLoaded: (key: string) => loadedKeys.has(key),
+    isInFlight: (key: string) => inFlightKeys.has(key),
+  };
+}
+
+const defaultScreenPreloader = createScreenPreloader({
+  loaders: screenLoaders,
+});
+
+const chromePreloader = createScreenPreloader({
+  loaders: {
+    chrome: () =>
+      Promise.all([
+        import('./components/LegalModals'),
+        import('./components/SitemapModal'),
+      ]),
+    caseDetail: () =>
+      Promise.all([
+        import('./components/CaseDetailPage'),
+        import('./components/ProjectImageView'),
+      ]),
+  },
+});
 
 export function preloadScreen(screenId: ScreenId): void {
-  if (prefetchBlocked()) return;
-  const loader = screenLoaders[screenId];
-  if (loader) ignoreFailure(loader());
-  if (screenId === 'portfolio') {
-    preloadAllPortfolioWebpImages({ idle: true });
-  }
+  void defaultScreenPreloader.preload(screenId);
 }
 
 export function preloadDeferredChrome(): void {
-  if (prefetchBlocked()) return;
-  ignoreFailure(
-    Promise.all([
-      import('./components/LegalModals'),
-      import('./components/SitemapModal'),
-    ])
-  );
+  void chromePreloader.preload('chrome');
 }
 
-export function preloadAllScreens(): void {
-  if (prefetchBlocked()) return;
-  preloadDeferredChrome();
-  Object.values(screenLoaders).forEach((loader) => ignoreFailure(loader()));
-  preloadAllPortfolioWebpImages({ idle: true });
+export function preloadCaseViews(): void {
+  void chromePreloader.preload('caseDetail');
 }
+

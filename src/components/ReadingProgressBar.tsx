@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 
@@ -24,20 +24,20 @@ export const ReadingProgressBar: React.FC<ReadingProgressBarProps> = ({ currentS
     restDelta: 0.0005,
   });
 
-  const [percent, setPercent] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
   const lastPercentRef = useRef(0);
+  const pendingRafRef = useRef<number | null>(null);
 
-  // Mapeia o progresso para largura percentual com um valor mínimo sutil (0.4%)
+  // Mapeia o progresso para largura percentual com um valor mínimo sutil (0.3%)
   // para que a pontinha brilhante fique elegantemente visível desde o início
   const width = useTransform(springProgress, (val) => {
     const clamped = Math.max(0, Math.min(1, val));
-    // Garante que haja pelo menos uma pontinha visível (ou 0 quando na largada estrita)
     const pct = clamped * 100;
     return `${Math.max(0.3, pct)}%`;
   });
 
-  // Cálculo robusto do progresso de rolagem vertical da página
-  const updateScrollProgress = useCallback(() => {
+  // Cálculo do progresso de rolagem vertical sem causar re-renders em React
+  const measureProgress = useCallback(() => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
@@ -51,35 +51,46 @@ export const ReadingProgressBar: React.FC<ReadingProgressBarProps> = ({ currentS
     const intPercent = Math.round(ratio * 100);
     if (intPercent !== lastPercentRef.current) {
       lastPercentRef.current = intPercent;
-      setPercent(intPercent);
+      barRef.current?.setAttribute('aria-valuenow', String(intPercent));
     }
   }, [progressMotion]);
 
   useEffect(() => {
-    // Atualização imediata na montagem
-    updateScrollProgress();
+    const scheduleMeasure = () => {
+      if (pendingRafRef.current !== null) return;
+      pendingRafRef.current = window.requestAnimationFrame(() => {
+        pendingRafRef.current = null;
+        measureProgress();
+      });
+    };
 
-    // Reavalia após a renderização da tela/seção (caso haja lazy loading ou expansão do DOM)
-    const rafId = requestAnimationFrame(updateScrollProgress);
-    const timeoutId = setTimeout(updateScrollProgress, 120);
+    // Atualização imediata na montagem e após estabilização inicial
+    measureProgress();
+    const rafId = window.requestAnimationFrame(measureProgress);
+    const timeoutId = window.setTimeout(measureProgress, 120);
 
-    window.addEventListener('scroll', updateScrollProgress, { passive: true });
-    window.addEventListener('resize', updateScrollProgress, { passive: true });
+    window.addEventListener('scroll', scheduleMeasure, { passive: true });
+    window.addEventListener('resize', scheduleMeasure, { passive: true });
 
     return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(timeoutId);
-      window.removeEventListener('scroll', updateScrollProgress);
-      window.removeEventListener('resize', updateScrollProgress);
+      window.cancelAnimationFrame(rafId);
+      if (pendingRafRef.current !== null) {
+        window.cancelAnimationFrame(pendingRafRef.current);
+        pendingRafRef.current = null;
+      }
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('scroll', scheduleMeasure);
+      window.removeEventListener('resize', scheduleMeasure);
     };
-  }, [updateScrollProgress, currentScreen]);
+  }, [measureProgress, currentScreen]);
 
   return (
     <div
+      ref={barRef}
       className="fixed top-0 left-0 right-0 z-[80] pointer-events-none h-[3.5px] bg-slate-950/70 border-b border-white/[0.04]"
       role="progressbar"
       aria-label="Progresso de leitura da página"
-      aria-valuenow={percent}
+      aria-valuenow={0}
       aria-valuemin={0}
       aria-valuemax={100}
     >

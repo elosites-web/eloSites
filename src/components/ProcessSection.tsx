@@ -1,65 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { MessageSquare, Layers, Code2, Globe2, ShieldCheck, Sparkles } from 'lucide-react';
 import { SplitLines } from './SplitLines';
 import { Interactive3DCard } from './Interactive3DCard';
 import { BiReveal } from './BiReveal';
 
-// Lista de assets de mídia para prefetch inteligente em segundo plano durante a leitura
-const SUBSEQUENT_MEDIA_ASSETS = [
-  '/portifolio-jvsalvaia-desktop.webp',
-  '/portifolio-toledoseguranca-desktop.webp',
-  '/portifolio-jogodefimdeano-desktop.webp',
-];
-
 export const ProcessSection: React.FC = () => {
-  const [isInViewport, setIsInViewport] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const hasPrefetchedRef = useRef(false);
-
-  // Lazy loading dos componentes da seção e prefetch inteligente de mídia para reduzir o TTI inicial
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      setIsInViewport(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setIsInViewport(true);
-
-            // Prefetch inteligente em momento ocioso do navegador
-            if (!hasPrefetchedRef.current) {
-              hasPrefetchedRef.current = true;
-              const prefetchMedia = () => {
-                SUBSEQUENT_MEDIA_ASSETS.forEach((src) => {
-                  const img = new Image();
-                  img.decoding = 'async';
-                  img.src = src;
-                });
-              };
-
-              if (typeof window.requestIdleCallback === 'function') {
-                window.requestIdleCallback(prefetchMedia, { timeout: 2500 });
-              } else {
-                window.setTimeout(prefetchMedia, 1200);
-              }
-            }
-          }
-        }
-      },
-      {
-        rootMargin: '180px 0px 180px 0px',
-        threshold: 0.05,
-      }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const steps = [
     {
       number: '01',
@@ -93,7 +38,6 @@ export const ProcessSection: React.FC = () => {
 
   return (
     <section
-      ref={sectionRef}
       id="como-funciona"
       className="section-auto-contain pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-x-clip"
     >

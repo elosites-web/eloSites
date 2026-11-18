@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion, type Variants } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import {
   Target,
@@ -117,70 +117,6 @@ interface ServicesSectionProps {
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOrcamento }) => {
-  // Detecção de preferências de acessibilidade e redução de movimento
-  const systemPrefersReduced = useReducedMotion();
-  const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-
-  // Variantes dinâmicas de entrada com Framer Motion para fluidez máxima ao rolar (service-card)
-  const serviceCardVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      scale: prefersReduced ? 1 : 0.93,
-      y: prefersReduced ? 0 : 42,
-      filter: prefersReduced ? 'none' : 'blur(8px)',
-    },
-    visible: (i: number = 0) => ({
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        y: prefersReduced
-          ? { duration: 0 }
-          : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.12 },
-        scale: prefersReduced
-          ? { duration: 0 }
-          : { type: 'spring', damping: 22, stiffness: 105, mass: 0.85, delay: i * 0.12 },
-        opacity: prefersReduced
-          ? { duration: 0 }
-          : { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 },
-        filter: prefersReduced
-          ? { duration: 0 }
-          : { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 },
-      },
-    }),
-  };
-
-  // Variantes para os cartões de regras comerciais (service-card)
-  const commercialCardVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      scale: prefersReduced ? 1 : 0.95,
-      y: prefersReduced ? 0 : 32,
-      filter: prefersReduced ? 'none' : 'blur(6px)',
-    },
-    visible: (i: number = 0) => ({
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        y: prefersReduced
-          ? { duration: 0 }
-          : { type: 'spring', damping: 24, stiffness: 110, mass: 0.8, delay: i * 0.09 },
-        scale: prefersReduced
-          ? { duration: 0 }
-          : { type: 'spring', damping: 24, stiffness: 110, mass: 0.8, delay: i * 0.09 },
-        opacity: prefersReduced
-          ? { duration: 0 }
-          : { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: i * 0.09 },
-        filter: prefersReduced
-          ? { duration: 0 }
-          : { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: i * 0.09 },
-      },
-    }),
-  };
-
   return (
     <section
       id="servicos"
