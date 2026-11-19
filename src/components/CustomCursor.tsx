@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 
 const INTERACTIVE_SELECTOR =
   'a, button, [role="button"], summary, label, input[type="submit"], input[type="button"], input[type="reset"], input[type="checkbox"], input[type="radio"], .pressable, .cta-primary, .cta-secondary';
@@ -6,327 +6,144 @@ const INTERACTIVE_SELECTOR =
 const TEXT_INPUT_SELECTOR =
   'input:not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select, [contenteditable="true"]';
 
-// 6 partículas em cascata para um rastro com desvanecimento dinâmico suave
-const TRAIL_COUNT = 6;
+// 6 partículas para um rastro com desvanecimento dinâmico suave
 const TRAIL_SIZES = [5.5, 4.6, 3.8, 3.0, 2.3, 1.6];
 const MAX_FADE_DISTANCE = 160; // Distância limite de dispersão para o desvanecimento progressivo
 
-export const CustomCursor: React.FC = React.memo(function CustomCursor() {
-  const [isSupported, setIsSupported] = useState<boolean>(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      return false;
-    }
-    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  });
+function centeredTransform(x: number, y: number) {
+  return `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+}
 
+export const CustomCursor: React.FC = React.memo(function CustomCursor() {
   const containerRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const rafIdRef = useRef<number | null>(null);
-  const targetPosRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
-  const prevTargetPosRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
-  const ringPosRef = useRef<{ x: number; y: number }>({ x: -100, y: -100 });
-  const trailPosRef = useRef<{ x: number; y: number }[]>(
-    Array.from({ length: TRAIL_COUNT }, () => ({ x: -100, y: -100 }))
-  );
+  const pointer = useRef({ x: 0, y: 0 });
 
-  // Estados de física e dinâmica
-  const velocityRef = useRef<number>(0);
-  const ringScaleRef = useRef<number>(1);
-  const isMouseDownRef = useRef<boolean>(false);
-  const isVisibleRef = useRef<boolean>(false);
-  const isOverTextRef = useRef<boolean>(false);
-  const isInteractiveRef = useRef<boolean>(false);
-  const isInitializedRef = useRef<boolean>(false);
-  const prefersReducedMotionRef = useRef<boolean>(
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  );
+  useLayoutEffect(() => {
+    const root = containerRef.current;
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!root || !dot || !ring) return;
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      return;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const particles = trailRefs.current.flatMap((element, i) => element ? [{
+      element, x: 0, y: 0,
+      // Constante de tempo em ms: a cauda alcança o ponteiro depois da cabeça.
+      decayMs: 14 + i * 7,
+      alpha: 0.75 * ((TRAIL_SIZES.length - i) / TRAIL_SIZES.length) ** 1.15,
+    }] : []);
+    let visible = false;
+    let frame: number | null = null;
+    let previousTime = 0;
+
+    function resetTrail() {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      for (const particle of particles) {
+        particle.x = pointer.current.x;
+        particle.y = pointer.current.y;
+        particle.element.style.opacity = '0';
+      }
     }
 
-    const pointerMq = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const motionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function animateTrail(time: number) {
+      frame = null;
+      const dt = Math.max(0, time - previousTime);
+      previousTime = time;
+      const { x, y } = pointer.current;
+      let moving = false;
+      for (const p of particles) {
+        const weight = -Math.expm1(-dt / p.decayMs);
+        p.x += (x - p.x) * weight;
+        p.y += (y - p.y) * weight;
+        const distance = Math.hypot(x - p.x, y - p.y);
+        if (distance < 0.1) {
+          p.x = x;
+          p.y = y;
+          p.element.style.opacity = '0';
+          continue;
+        }
+        moving = true;
+        p.element.style.transform = centeredTransform(p.x, p.y);
+        const fade = Math.max(0, 1 - distance / MAX_FADE_DISTANCE) * Math.min(1, distance / 3);
+        p.element.style.opacity = String(p.alpha * fade);
+      }
+      if (moving) frame = requestAnimationFrame(animateTrail);
+    }
 
-    const syncCapabilities = () => {
-      prefersReducedMotionRef.current = motionMq.matches;
-      setIsSupported(pointerMq.matches);
+    const hide = () => {
+      if (!visible) return;
+      document.documentElement.classList.remove('custom-cursor-active');
+      root.dataset.visible = 'false';
+      visible = false;
+      resetTrail();
     };
 
-    syncCapabilities();
+    const update = (event: PointerEvent) => {
+      const target = event.target;
+      if (event.pointerType !== 'mouse' || document.hidden ||
+          (target instanceof Element && target.closest(TEXT_INPUT_SELECTOR))) {
+        hide();
+        return;
+      }
 
-    pointerMq.addEventListener('change', syncCapabilities);
-    motionMq.addEventListener('change', syncCapabilities);
+      const x = event.clientX;
+      const y = event.clientY;
+      const moved = x !== pointer.current.x || y !== pointer.current.y;
+      pointer.current.x = x;
+      pointer.current.y = y;
 
+      // O ponteiro principal é atualizado no evento. Só o rastro precisa de frames adicionais.
+      const interactive = target instanceof Element && !!target.closest(INTERACTIVE_SELECTOR);
+      const pressed = event.buttons !== 0;
+      const scale = interactive ? (pressed ? 1.05 : 1.35) : (pressed ? 0.82 : 1);
+      const position = centeredTransform(x, y);
+      dot.style.transform = position;
+      ring.style.transform = position + ` scale(${scale})`;
+      if (ring.dataset.interactive !== String(interactive)) {
+        dot.dataset.interactive = ring.dataset.interactive = String(interactive);
+      }
+
+      if (!visible) {
+        resetTrail();
+        root.dataset.visible = 'true';
+        document.documentElement.classList.add('custom-cursor-active');
+        visible = true;
+      } else if (moved && !motion.matches && frame === null) {
+        previousTime = performance.now();
+        frame = requestAnimationFrame(animateTrail);
+      }
+    };
+
+    const onVisibility = () => { if (document.hidden) hide(); };
+    // A captura também acompanha controles que interrompem a propagação.
+    const events = ['pointermove', 'pointerover', 'pointerdown', 'pointerup'] as const;
+    for (const type of events) window.addEventListener(type, update, { capture: true, passive: true });
+    document.addEventListener('pointerleave', hide);
+    window.addEventListener('pointercancel', hide, true);
+    window.addEventListener('blur', hide);
+    document.addEventListener('visibilitychange', onVisibility);
+    motion.addEventListener('change', resetTrail);
     return () => {
-      pointerMq.removeEventListener('change', syncCapabilities);
-      motionMq.removeEventListener('change', syncCapabilities);
+      hide();
+      for (const type of events) window.removeEventListener(type, update, true);
+      document.removeEventListener('pointerleave', hide);
+      window.removeEventListener('pointercancel', hide, true);
+      window.removeEventListener('blur', hide);
+      document.removeEventListener('visibilitychange', onVisibility);
+      motion.removeEventListener('change', resetTrail);
     };
   }, []);
-
-  useEffect(() => {
-    if (!isSupported) {
-      document.documentElement.classList.remove('custom-cursor-active');
-      return;
-    }
-
-    const stopLoop = () => {
-      if (rafIdRef.current !== null) {
-        window.cancelAnimationFrame(rafIdRef.current);
-        rafIdRef.current = null;
-      }
-    };
-
-    const updateNativeCursorState = (shouldHideNative: boolean) => {
-      if (shouldHideNative) {
-        document.documentElement.classList.add('custom-cursor-active');
-      } else {
-        document.documentElement.classList.remove('custom-cursor-active');
-      }
-    };
-
-    const renderFrame = () => {
-      rafIdRef.current = null;
-
-      const dotEl = dotRef.current;
-      const ringEl = ringRef.current;
-      if (!dotEl || !ringEl) return;
-
-      const tx = targetPosRef.current.x;
-      const ty = targetPosRef.current.y;
-      const reduced = prefersReducedMotionRef.current;
-
-      // 1. Ponto central da mira: acompanha instantaneamente com latência zero
-      dotEl.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) translate(-50%, -50%)`;
-
-      if (reduced) {
-        ringPosRef.current.x = tx;
-        ringPosRef.current.y = ty;
-        ringEl.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) translate(-50%, -50%)`;
-        for (let i = 0; i < TRAIL_COUNT; i++) {
-          const tEl = trailRefs.current[i];
-          if (tEl) tEl.style.opacity = '0';
-        }
-        return;
-      }
-
-      // Calcula a velocidade do mouse para complementar o rastro dinâmico
-      const dxMove = tx - prevTargetPosRef.current.x;
-      const dyMove = ty - prevTargetPosRef.current.y;
-      const instantVelocity = Math.hypot(dxMove, dyMove);
-      velocityRef.current += (instantVelocity - velocityRef.current) * 0.35;
-      prevTargetPosRef.current.x = tx;
-      prevTargetPosRef.current.y = ty;
-
-      // 2. Interpolação suave de escala do anel com lerping (hover em links/botões e clique)
-      let targetScale = 1;
-      if (isInteractiveRef.current) {
-        targetScale = isMouseDownRef.current ? 1.05 : 1.35;
-      } else if (isMouseDownRef.current) {
-        targetScale = 0.82;
-      }
-      ringScaleRef.current += (targetScale - ringScaleRef.current) * 0.22;
-      const currentScale = ringScaleRef.current;
-
-      // 3. Interpolação com lerping (desaceleração suavizada) para o anel externo
-      const ringLerp = 0.40;
-      const rx = ringPosRef.current.x + (tx - ringPosRef.current.x) * ringLerp;
-      const ry = ringPosRef.current.y + (ty - ringPosRef.current.y) * ringLerp;
-      ringPosRef.current.x = rx;
-      ringPosRef.current.y = ry;
-
-      ringEl.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0) translate(-50%, -50%) scale(${currentScale.toFixed(3)})`;
-
-      let maxDelta = Math.hypot(tx - rx, ty - ry);
-      let leaderX = rx;
-      let leaderY = ry;
-
-      // 4. Perseguição orgânica em cascata (lerping) e desvanecimento dinâmico por distância
-      for (let i = 0; i < TRAIL_COUNT; i++) {
-        const current = trailPosRef.current[i];
-
-        // Lerping com desaceleração progressiva: cada ponto segue o anterior com amortecimento suave
-        const lerpFactor = 0.44 - i * 0.045; // 0.44, 0.395, 0.35, 0.305, 0.26, 0.215
-        current.x += (leaderX - current.x) * lerpFactor;
-        current.y += (leaderY - current.y) * lerpFactor;
-
-        const deltaFromLeader = Math.hypot(leaderX - current.x, leaderY - current.y);
-        maxDelta = Math.max(maxDelta, deltaFromLeader);
-
-        // Distância euclidiana exata deste ponto em relação à posição atual do mouse (tx, ty)
-        const distFromMouse = Math.hypot(current.x - tx, current.y - ty);
-
-        // Desvanecimento dinâmico do rastro com base na distância em relação ao mouse:
-        // A opacidade diminui progressivamente conforme o ponto se afasta da posição do mouse
-        const distanceFade = Math.max(0, 1 - distFromMouse / MAX_FADE_DISTANCE);
-        const rankFade = Math.pow((TRAIL_COUNT - i) / TRAIL_COUNT, 1.15); // Decaimento progressivo ao longo do rastro
-        // Suavização no repouso: ao aproximar do centro (< 3px), o rastro se extingue suavemente
-        const motionFade = Math.min(1, distFromMouse / 3.0);
-
-        const targetOpacity =
-          isVisibleRef.current && !isOverTextRef.current
-            ? Math.max(0, Math.min(0.75, 0.75 * rankFade * distanceFade * motionFade)).toFixed(3)
-            : '0';
-
-        const tEl = trailRefs.current[i];
-        if (tEl) {
-          tEl.style.transform = `translate3d(${current.x.toFixed(1)}px, ${current.y.toFixed(1)}px, 0) translate(-50%, -50%)`;
-          tEl.style.opacity = targetOpacity;
-        }
-
-        leaderX = current.x;
-        leaderY = current.y;
-      }
-
-      // Ciclo contínuo no requestAnimationFrame enquanto houver movimento (> 0.06px); repousa quando estabilizado
-      if ((maxDelta > 0.06 || velocityRef.current > 0.04) && isVisibleRef.current) {
-        rafIdRef.current = window.requestAnimationFrame(renderFrame);
-      } else {
-        // Estabiliza e economiza 100% de CPU com o cursor em repouso
-        ringPosRef.current.x = tx;
-        ringPosRef.current.y = ty;
-        velocityRef.current = 0;
-        for (let i = 0; i < TRAIL_COUNT; i++) {
-          trailPosRef.current[i].x = tx;
-          trailPosRef.current[i].y = ty;
-          const tEl = trailRefs.current[i];
-          if (tEl) tEl.style.opacity = '0';
-        }
-      }
-    };
-
-    const scheduleFrame = () => {
-      if (rafIdRef.current === null) {
-        rafIdRef.current = window.requestAnimationFrame(renderFrame);
-      }
-    };
-
-    const setContainerVisibility = (visible: boolean) => {
-      const container = containerRef.current;
-      if (!container) return;
-      container.dataset.visible = visible ? 'true' : 'false';
-      updateNativeCursorState(isInitializedRef.current && visible);
-    };
-
-    const handlePointerMove = (e: PointerEvent) => {
-      if (e.pointerType && e.pointerType !== 'mouse') {
-        return;
-      }
-
-      const x = e.clientX;
-      const y = e.clientY;
-      targetPosRef.current.x = x;
-      targetPosRef.current.y = y;
-
-      if (!isInitializedRef.current) {
-        isInitializedRef.current = true;
-        prevTargetPosRef.current.x = x;
-        prevTargetPosRef.current.y = y;
-        ringPosRef.current.x = x;
-        ringPosRef.current.y = y;
-        for (let i = 0; i < TRAIL_COUNT; i++) {
-          trailPosRef.current[i].x = x;
-          trailPosRef.current[i].y = y;
-        }
-      }
-
-      const target = e.target as Element | null;
-      const overText = Boolean(target && typeof target.closest === 'function' && target.closest(TEXT_INPUT_SELECTOR));
-      const overInteractive = Boolean(
-        !overText && target && typeof target.closest === 'function' && target.closest(INTERACTIVE_SELECTOR)
-      );
-
-      if (overText !== isOverTextRef.current) {
-        isOverTextRef.current = overText;
-      }
-
-      if (overInteractive !== isInteractiveRef.current) {
-        isInteractiveRef.current = overInteractive;
-        if (ringRef.current) {
-          ringRef.current.dataset.interactive = overInteractive ? 'true' : 'false';
-        }
-        if (dotRef.current) {
-          dotRef.current.dataset.interactive = overInteractive ? 'true' : 'false';
-        }
-      }
-
-      const shouldShow = !overText;
-      isVisibleRef.current = true;
-      setContainerVisibility(shouldShow);
-      scheduleFrame();
-    };
-
-    const handlePointerDown = (e: PointerEvent) => {
-      if (e.pointerType && e.pointerType !== 'mouse') return;
-      isMouseDownRef.current = true;
-      scheduleFrame();
-    };
-
-    const handlePointerUp = (e: PointerEvent) => {
-      if (e.pointerType && e.pointerType !== 'mouse') return;
-      isMouseDownRef.current = false;
-      scheduleFrame();
-    };
-
-    const handlePointerLeaveWindow = () => {
-      isVisibleRef.current = false;
-      isMouseDownRef.current = false;
-      setContainerVisibility(false);
-      stopLoop();
-    };
-
-    const handlePointerEnterWindow = (e: PointerEvent) => {
-      if (e.pointerType && e.pointerType !== 'mouse') return;
-      if (!isInitializedRef.current) return;
-      isVisibleRef.current = true;
-      setContainerVisibility(!isOverTextRef.current);
-      scheduleFrame();
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        isVisibleRef.current = false;
-        isMouseDownRef.current = false;
-        setContainerVisibility(false);
-        stopLoop();
-      }
-    };
-
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
-    window.addEventListener('pointerup', handlePointerUp, { passive: true });
-    document.addEventListener('pointerleave', handlePointerLeaveWindow, { passive: true });
-    document.addEventListener('pointerenter', handlePointerEnterWindow, { passive: true });
-    document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
-
-    return () => {
-      stopLoop();
-      updateNativeCursorState(false);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerdown', handlePointerDown);
-      window.removeEventListener('pointerup', handlePointerUp);
-      document.removeEventListener('pointerleave', handlePointerLeaveWindow);
-      document.removeEventListener('pointerenter', handlePointerEnterWindow);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [isSupported]);
-
-  if (!isSupported) {
-    return null;
-  }
 
   return (
     <div
       ref={containerRef}
       aria-hidden="true"
       data-visible="false"
-      className="custom-cursor-root pointer-events-none fixed inset-0 z-[9999] overflow-hidden transition-opacity duration-150"
+      className="custom-cursor-root pointer-events-none fixed inset-0 z-[9999] overflow-hidden"
     >
       {/* Série de pontos do rastro com desvanecimento dinâmico por distância */}
       {TRAIL_SIZES.map((sizePx, idx) => {
@@ -338,7 +155,7 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
             ref={(el) => {
               trailRefs.current[idx] = el;
             }}
-            className={`custom-cursor-trail pointer-events-none fixed top-0 left-0 rounded-full transition-transform duration-75 ease-out ${
+            className={`custom-cursor-trail pointer-events-none fixed top-0 left-0 rounded-full ${
               isHead
                 ? 'bg-cyan-400'
                 : isMid
@@ -360,7 +177,7 @@ export const CustomCursor: React.FC = React.memo(function CustomCursor() {
         );
       })}
 
-      {/* Anel circular da mira com escala suave e brilho de alta fidelidade */}
+      {/* Anel circular da mira com escala de interação e brilho de alta fidelidade */}
       <div
         ref={ringRef}
         data-interactive="false"

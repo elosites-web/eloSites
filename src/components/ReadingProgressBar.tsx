@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 
@@ -26,7 +26,6 @@ export const ReadingProgressBar: React.FC<ReadingProgressBarProps> = ({ currentS
 
   const barRef = useRef<HTMLDivElement>(null);
   const lastPercentRef = useRef(0);
-  const pendingRafRef = useRef<number | null>(null);
 
   // Mapeia o progresso para largura percentual com um valor mínimo sutil (0.3%)
   // para que a pontinha brilhante fique elegantemente visível desde o início
@@ -36,53 +35,51 @@ export const ReadingProgressBar: React.FC<ReadingProgressBarProps> = ({ currentS
     return `${Math.max(0.3, pct)}%`;
   });
 
-  // Cálculo do progresso de rolagem vertical sem causar re-renders em React
-  const measureProgress = useCallback(() => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-
-    let ratio = 0;
-    if (docHeight > 4) {
-      ratio = Math.min(1, Math.max(0, scrollTop / docHeight));
-    }
-
-    progressMotion.set(ratio);
-
-    const intPercent = Math.round(ratio * 100);
-    if (intPercent !== lastPercentRef.current) {
-      lastPercentRef.current = intPercent;
-      barRef.current?.setAttribute('aria-valuenow', String(intPercent));
-    }
-  }, [progressMotion]);
-
   useEffect(() => {
-    const scheduleMeasure = () => {
-      if (pendingRafRef.current !== null) return;
-      pendingRafRef.current = window.requestAnimationFrame(() => {
-        pendingRafRef.current = null;
-        measureProgress();
-      });
-    };
+    let frame: number | null = null;
+    let heightDirty = true;
+    let scrollRange = 0;
+    const root = document.documentElement;
+    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(invalidateHeight) : null;
 
-    // Atualização imediata na montagem e após estabilização inicial
-    measureProgress();
-    const rafId = window.requestAnimationFrame(measureProgress);
-    const timeoutId = window.setTimeout(measureProgress, 120);
-
-    window.addEventListener('scroll', scheduleMeasure, { passive: true });
-    window.addEventListener('resize', scheduleMeasure, { passive: true });
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      if (pendingRafRef.current !== null) {
-        window.cancelAnimationFrame(pendingRafRef.current);
-        pendingRafRef.current = null;
+    function measure() {
+      frame = null;
+      if (heightDirty || !observer) {
+        scrollRange = root.scrollHeight - window.innerHeight;
+        heightDirty = false;
       }
-      window.clearTimeout(timeoutId);
-      window.removeEventListener('scroll', scheduleMeasure);
-      window.removeEventListener('resize', scheduleMeasure);
+      const ratio = scrollRange > 4 ? Math.min(1, Math.max(0, window.scrollY / scrollRange)) : 0;
+      progressMotion.set(ratio);
+      const percent = Math.round(ratio * 100);
+      if (percent !== lastPercentRef.current) {
+        lastPercentRef.current = percent;
+        barRef.current?.setAttribute('aria-valuenow', String(percent));
+      }
+    }
+
+    function schedule() {
+      if (frame === null) frame = window.requestAnimationFrame(measure);
+    }
+
+    function invalidateHeight() {
+      heightDirty = true;
+      schedule();
+    }
+
+    observer?.observe(document.body);
+    observer?.observe(root);
+    schedule();
+    document.fonts?.addEventListener('loadingdone', invalidateHeight);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', invalidateHeight);
+    return () => {
+      observer?.disconnect();
+      document.fonts?.removeEventListener('loadingdone', invalidateHeight);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', invalidateHeight);
+      if (frame !== null) window.cancelAnimationFrame(frame);
     };
-  }, [measureProgress, currentScreen]);
+  }, [progressMotion, currentScreen]);
 
   return (
     <div
