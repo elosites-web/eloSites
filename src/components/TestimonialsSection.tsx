@@ -739,7 +739,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             duration: prefersReduced ? 0 : 0.45,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="max-w-3xl mx-auto text-center space-y-3 mb-8 sm:mb-10"
+          className="w-full mx-auto text-center space-y-3 mb-8 sm:mb-10"
         >
           <div className="section-kicker inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
@@ -749,7 +749,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           <SplitLines
             as="h2"
             text="O que dizem os clientes que colocaram o site no ar"
-            className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
+            className="font-display text-2xl sm:text-3xl lg:text-[clamp(1.85rem,2.6vw,2.25rem)] font-bold tracking-tight text-white leading-tight"
           />
 
           <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
