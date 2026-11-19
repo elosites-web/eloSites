@@ -84,8 +84,8 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
     >
       {/* Elementos visuais sutis de fundo */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(700px,100%)] h-[400px] bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/3 right-10 w-96 h-96 bg-indigo-600/[0.08] blur-[140px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(700px,100%)] h-[400px] bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-indigo-soft absolute bottom-1/3 right-10 w-96 h-96 bg-indigo-600/[0.08] blur-[140px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto space-y-12 sm:space-y-16">
@@ -226,8 +226,8 @@ export const PaidTrafficPartnershipSection: React.FC<PaidTrafficPartnershipSecti
           <BiReveal direction="up" delay={200}>
             <div className="relative rounded-3xl p-6 sm:p-8 lg:p-10 bg-gradient-to-b from-[#0B1228] via-[#090E23] to-[#050814] border border-blue-500/35 shadow-[0_0_40px_-10px_rgba(59,130,246,0.3)] overflow-hidden">
               {/* Brilho decorativo de fundo */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 blur-[100px] pointer-events-none rounded-full" />
-              <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 blur-[90px] pointer-events-none rounded-full" />
+              <div className="ambient-glow-orb ambient-glow-blue absolute top-0 right-0 w-80 h-80 bg-blue-500/10 blur-[100px] pointer-events-none rounded-full" />
+              <div className="ambient-glow-orb ambient-glow-indigo absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/10 blur-[90px] pointer-events-none rounded-full" />
 
               <div className="relative z-10 space-y-7">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">

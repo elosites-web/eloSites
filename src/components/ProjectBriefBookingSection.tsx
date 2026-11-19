@@ -409,7 +409,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
       className="section-auto-contain pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-20 bg-[#050814] relative border-t border-blue-500/15 overflow-x-clip"
     >
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(720px,100%)] h-[380px] bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 left-1/2 -translate-x-1/2 w-[min(720px,100%)] h-[380px] bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -480,7 +480,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
           >
             <div className="surface-card rounded-3xl p-6 sm:p-10 relative overflow-hidden bracket-panel bg-[#090E23] border border-blue-500/25 shadow-2xl">
             <div
-              className="pointer-events-none absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-500/[0.05] blur-3xl"
+              className="ambient-glow-orb ambient-glow-blue-soft pointer-events-none absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-500/[0.05] blur-3xl"
               style={{ position: 'absolute' }}
               aria-hidden="true"
             />

@@ -1853,6 +1853,100 @@ html[data-in-app="true"] .glass-panel[class*="backdrop-blur"] {
   background-color: rgba(11, 16, 29, 0.94);
 }
 
+/* Tier "none": substitui blobs decorativos com filter: blur() caro por gradientes radiais estáticos equivalentes,
+   reduz sombras pesadas em cards e desativa will-change/animações contínuas não essenciais em aparelhos fracos. */
+html[data-motion-tier="none"] .ambient-glow-orb {
+  -webkit-filter: none !important;
+  filter: none !important;
+  background-color: transparent !important;
+  animation: none !important;
+  background-image: radial-gradient(
+    closest-side,
+    rgba(37, 99, 235, 0.14) 0%,
+    rgba(37, 99, 235, 0.05) 45%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] .ambient-glow-orb.ambient-glow-blue-soft {
+  background-image: radial-gradient(
+    closest-side,
+    rgba(37, 99, 235, 0.1) 0%,
+    rgba(37, 99, 235, 0.035) 48%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] .ambient-glow-orb.ambient-glow-indigo {
+  background-image: radial-gradient(
+    closest-side,
+    rgba(79, 70, 229, 0.13) 0%,
+    rgba(79, 70, 229, 0.045) 45%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] .ambient-glow-orb.ambient-glow-indigo-soft {
+  background-image: radial-gradient(
+    closest-side,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(99, 102, 241, 0.035) 48%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] .ambient-glow-orb.ambient-glow-purple-soft {
+  background-image: radial-gradient(
+    closest-side,
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(139, 92, 246, 0.035) 48%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] .ambient-glow-orb.ambient-glow-cyan-soft {
+  background-image: radial-gradient(
+    closest-side,
+    rgba(6, 182, 212, 0.09) 0%,
+    rgba(6, 182, 212, 0.03) 48%,
+    transparent 100%
+  ) !important;
+}
+
+html[data-motion-tier="none"] article.portfolio-card.bracket-panel::before,
+html[data-motion-tier="none"] article.portfolio-card.bracket-panel::after {
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.18);
+}
+
+html[data-motion-tier="none"] .floating-badge,
+html[data-motion-tier="none"] .section-kicker,
+html[data-motion-tier="none"] .founder-badge,
+html[data-motion-tier="none"] .elo-logo-floating,
+html[data-motion-tier="none"] .animate-subtle-pulse,
+html[data-motion-tier="none"] .animate-gradient-pulse-button,
+html[data-motion-tier="none"] .animate-gradient-pulse-button-offline,
+html[data-motion-tier="none"] .animate-gradient-pulse-aura,
+html[data-motion-tier="none"] .animate-gradient-pulse-aura-offline,
+html[data-motion-tier="none"] .animate-gradient-dot-ping,
+html[data-motion-tier="none"] .animate-gradient-dot-ping-offline,
+html[data-motion-tier="none"] .animate-gradient-dot-glow,
+html[data-motion-tier="none"] .animate-gradient-dot-glow-offline,
+html[data-motion-tier="none"] .brand-logo-entry,
+html[data-motion-tier="none"] .animate-in.fade-in.zoom-in-95,
+html[data-motion-tier="none"] .animate-fade-in-up {
+  animation: none !important;
+  will-change: auto !important;
+}
+
+html[data-motion-tier="none"] .reveal,
+html[data-motion-tier="none"] .sl-inner,
+html[data-motion-tier="none"] .mask-reveal,
+html[data-motion-tier="none"] .breakout-layer-front,
+html[data-motion-tier="none"] .breakout-layer-back,
+html[data-motion-tier="none"] .whatsapp-bubble-interactive {
+  will-change: auto !important;
+}
+
 /* Efeito de rolagem contínua para InfiniteMarquee */
 @keyframes marqueeScroll {
   0% {

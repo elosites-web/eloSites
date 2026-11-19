@@ -53,7 +53,7 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
       className="w-full min-h-screen pt-20 sm:pt-24 lg:pt-28 pb-16 sm:pb-24 px-3 sm:px-6 lg:px-8 relative text-slate-100"
     >
       {/* Luz ambiente de fundo */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-600/[0.05] blur-[160px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-600/[0.05] blur-[160px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 relative z-10">
         {/* Barra superior acessível de controles e navegação rápida */}

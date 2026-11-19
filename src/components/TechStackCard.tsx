@@ -154,11 +154,11 @@ export const TechStackCard: React.FC<TechStackCardProps> = ({ className = '' }) 
 
         {/* Halos de luz ambiente volumétrica ciano e cobalto */}
         <div
-          className="absolute -top-28 -left-28 w-80 h-80 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-cyan-soft absolute -top-28 -left-28 w-80 h-80 bg-cyan-500/10 blur-[110px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
         <div
-          className="absolute -bottom-28 -right-28 w-80 h-80 bg-blue-600/10 blur-[110px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-blue absolute -bottom-28 -right-28 w-80 h-80 bg-blue-600/10 blur-[110px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
 

@@ -350,8 +350,8 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
       className="section-auto-contain pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 bg-[#090D16]/30 backdrop-blur-[0.5px] relative"
     >
       {/* Luz ambiente de fundo */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/[0.08] blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-96 h-96 bg-violet-600/[0.08] blur-[140px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-indigo-soft absolute top-1/4 left-0 w-96 h-96 bg-indigo-500/[0.08] blur-[140px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-purple-soft absolute bottom-10 right-0 w-96 h-96 bg-violet-600/[0.08] blur-[140px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x relative w-full">
         {/* Cabeçalho da Seção / Tela */}

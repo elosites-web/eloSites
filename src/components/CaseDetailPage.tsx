@@ -54,8 +54,8 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
       className="w-full min-h-screen pt-20 sm:pt-24 lg:pt-28 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 relative text-slate-100"
     >
       {/* Luz ambiente de fundo sutil */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-indigo-soft absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
 
       <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 relative z-10">
         {/* Barra superior acessível de navegação (próxima ao topo) */}

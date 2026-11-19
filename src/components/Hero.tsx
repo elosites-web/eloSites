@@ -368,11 +368,11 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
       />
       <motion.div
         style={isReduced ? undefined : { y: orb1Y }}
-        className="absolute top-1/4 right-10 w-[500px] h-[400px] bg-blue-600/12 blur-[140px] rounded-full pointer-events-none"
+        className="ambient-glow-orb ambient-glow-blue absolute top-1/4 right-10 w-[500px] h-[400px] bg-blue-600/12 blur-[140px] rounded-full pointer-events-none"
       />
       <motion.div
         style={isReduced ? undefined : { y: orb2Y }}
-        className="absolute bottom-10 left-10 w-[450px] h-[350px] bg-indigo-600/10 blur-[130px] rounded-full pointer-events-none"
+        className="ambient-glow-orb ambient-glow-indigo absolute bottom-10 left-10 w-[450px] h-[350px] bg-indigo-600/10 blur-[130px] rounded-full pointer-events-none"
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -417,7 +417,8 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   role="button"
                   tabIndex={0}
                   aria-expanded={isPillarsExpanded}
-                  aria-label="Pilares do seu site: clique para ler a explicação simples"
+                  aria-controls="hero-pillars-explanation"
+                  aria-label="Design sob medida Identidade própria Carregamento rápido Sem lentidão Estrutura Preparada para o Google Layout responsivo Para diferentes telas — Pilares do seu site: clique para ler a explicação simples"
                   className="hero-pillars-grid animate-in fade-in zoom-in-95 duration-500 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 pt-2 w-full max-w-xl items-stretch cursor-pointer select-none"
                 >
                   {/* Pilar 1 */}
@@ -480,20 +481,22 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     </div>
                   </div>
 
-                  {/* Contêiner expansível com parágrafo em linguagem simples para leigos (oculto por padrão) */}
-                  <div
-                    aria-hidden={!isPillarsExpanded}
-                    className={`col-span-2 sm:col-span-4 grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-                      isPillarsExpanded
-                        ? 'grid-rows-[1fr] opacity-100 pt-1'
-                        : 'grid-rows-[0fr] opacity-0 pt-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-center">
-                        Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, tem conteúdo organizado para facilitar a leitura pelo Google e funciona bem tanto no celular quanto no computador.
-                      </p>
-                    </div>
+                </div>
+
+                {/* Contêiner expansível com parágrafo em linguagem simples para leigos (oculto por padrão) */}
+                <div
+                  id="hero-pillars-explanation"
+                  aria-hidden={!isPillarsExpanded}
+                  className={`grid transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                    isPillarsExpanded
+                      ? 'grid-rows-[1fr] opacity-100 mt-3 sm:mt-4'
+                      : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-center">
+                      Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, tem conteúdo organizado para facilitar a leitura pelo Google e funciona bem tanto no celular quanto no computador.
+                    </p>
                   </div>
                 </div>
               </BiReveal>
@@ -798,7 +801,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                   initial="hidden"
                   animate={isShowcaseExpanded ? 'visible' : 'hidden'}
                   variants={showcaseSummaryVariants}
-                  className={`grid transition-[grid-template-rows,margin] duration-200 ease-out will-change-[grid-template-rows] ${
+                  className={`grid transition-[grid-template-rows,margin] duration-200 ease-out ${
                     isShowcaseExpanded
                       ? 'grid-rows-[1fr] mt-2.5'
                       : 'grid-rows-[0fr] mt-0 pointer-events-none'

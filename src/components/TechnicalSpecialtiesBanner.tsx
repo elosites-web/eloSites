@@ -125,15 +125,15 @@ export const TechnicalSpecialtiesBanner: React.FC = () => {
       >
         {/* Efeitos de iluminação sutil (azul, ciano e violeta) */}
         <div
-          className="absolute -top-24 -left-24 w-72 h-72 bg-blue-600/[0.08] blur-[90px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-blue-soft absolute -top-24 -left-24 w-72 h-72 bg-blue-600/[0.08] blur-[90px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
         <div
-          className="absolute -bottom-24 -right-24 w-72 h-72 bg-violet-600/[0.08] blur-[90px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-purple-soft absolute -bottom-24 -right-24 w-72 h-72 bg-violet-600/[0.08] blur-[90px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-36 bg-cyan-500/[0.04] blur-[80px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-cyan-soft absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-36 bg-cyan-500/[0.04] blur-[80px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
 

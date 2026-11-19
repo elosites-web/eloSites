@@ -123,8 +123,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
       className="section-auto-contain pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-20 bg-[#090D16]/30 backdrop-blur-[0.5px] relative"
     >
       {/* Luz ambiente de fundo */}
-      <div className="absolute top-1/3 left-0 w-80 h-80 bg-indigo-500/[0.07] blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-purple-500/[0.07] blur-[130px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-indigo-soft absolute top-1/3 left-0 w-80 h-80 bg-indigo-500/[0.07] blur-[130px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-purple-soft absolute bottom-1/4 right-0 w-80 h-80 bg-purple-500/[0.07] blur-[130px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x relative w-full">
         {/* Cabeçalho da Seção */}

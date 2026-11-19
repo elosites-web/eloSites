@@ -51,11 +51,11 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
 
         {/* Efeito de luz ambiente azul/índigo sutil no fundo do card */}
         <div
-          className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-600/10 blur-[90px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-indigo absolute -top-24 -left-24 w-72 h-72 bg-indigo-600/10 blur-[90px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
         <div
-          className="absolute -bottom-24 -right-24 w-72 h-72 bg-blue-600/10 blur-[90px] rounded-full pointer-events-none"
+          className="ambient-glow-orb ambient-glow-blue absolute -bottom-24 -right-24 w-72 h-72 bg-blue-600/10 blur-[90px] rounded-full pointer-events-none"
           aria-hidden="true"
         />
 

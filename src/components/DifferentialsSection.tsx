@@ -72,8 +72,8 @@ export const DifferentialsSection: React.FC<DifferentialsSectionProps> = () => {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent pointer-events-none" />
 
       {/* Luz ambiente de fundo azul elétrico */}
-      <div className="absolute top-1/3 right-0 w-96 h-96 bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-indigo-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 right-0 w-96 h-96 bg-blue-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
+      <div className="ambient-glow-orb ambient-glow-indigo-soft absolute bottom-1/4 left-0 w-96 h-96 bg-indigo-600/[0.08] blur-[150px] rounded-full pointer-events-none" />
 
       <div className="page-shell page-x max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho da Seção de Diferenciais */}

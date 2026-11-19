@@ -38,13 +38,24 @@ export const EloLogo: React.FC<EloLogoProps> = ({
     !isFooter && showTagline
   );
 
+  const logoSizes = {
+    sm: '97px',
+    md: '129px',
+    lg: '161px',
+    menu: '(max-width: 768px) 220px, 280px',
+  }[size];
+
   // Exceção explícita: no rodapé o layout original (alinhado ao início com estilos preexistentes)
   // é rigorosamente preservado conforme especificação
   if (isFooter && showTagline) {
     const footerContent = (
       <div className="elo-logo-floating inline-flex flex-col items-start leading-tight">
         <picture className="inline-flex shrink-0">
-          <source type="image/webp" srcSet="/cartao/logo.webp" />
+          <source
+            type="image/webp"
+            srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+            sizes={logoSizes}
+          />
           <img
             src="/logo-elosites-1360.png"
             alt="ēloSites — Logotipo Oficial"
@@ -86,7 +97,11 @@ export const EloLogo: React.FC<EloLogoProps> = ({
 
   const imgElement = (
     <picture className="inline-flex shrink-0">
-      <source type="image/webp" srcSet="/cartao/logo.webp" />
+      <source
+        type="image/webp"
+        srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+        sizes={logoSizes}
+      />
       <img
         ref={logoRef}
         src="/logo-elosites-1360.png"

@@ -1077,7 +1077,7 @@ export default function App() {
             <div id="apresentacao" className="scroll-mt-24 pointer-events-none" aria-hidden="true" />
 
             {/* Luz ambiente sutil */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
+            <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
 
             <div className="page-shell page-x max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
               <motion.div variants={heroItemVariants}>

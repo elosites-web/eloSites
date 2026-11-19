@@ -23,10 +23,13 @@ export const SplitLines: React.FC<SplitLinesProps> = ({ text, as, className = ''
   const Tag = (as ?? 'h2') as React.ElementType;
   const enabled = React.useRef(getMotionTier() !== 'none').current;
   const containerRef = useRef<HTMLElement | null>(null);
+  const lastWidthRef = useRef<number | null>(null);
   const [lineMap, setLineMap] = useState<number[]>([]);
-  const [visible, setVisible] = useState(false);
+  const [isMeasured, setIsMeasured] = useState(!enabled);
+  const [inView, setInView] = useState(!enabled);
 
   const words = React.useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
+  const visible = !enabled || (inView && isMeasured);
 
   // Agrupa palavras por linha visual para que o stagger seja por linha.
   useLayoutEffect(() => {
@@ -34,52 +37,119 @@ export const SplitLines: React.FC<SplitLinesProps> = ({ text, as, className = ''
     const el = containerRef.current;
     if (!el) return;
 
+    let cancelled = false;
+    let rafId: number | null = null;
+
     const measure = () => {
-      const spans = Array.from(el.querySelectorAll<HTMLElement>('[data-sl-word]'));
-      if (!spans.length) return;
+      if (cancelled) return;
+      const spans = el.querySelectorAll<HTMLElement>('[data-sl-word]');
+      if (!spans.length) {
+        setIsMeasured(true);
+        return;
+      }
+
+      // Lê todos os offsetTop em uma única passagem contígua (sem intercalar escritas no DOM)
       const tops: number[] = [];
-      const map = spans.map((span) => {
-        const top = span.offsetTop;
-        let idx = tops.findIndex((t) => Math.abs(t - top) < 2);
+      const nextMap: number[] = new Array(spans.length);
+      for (let i = 0; i < spans.length; i++) {
+        const top = spans[i].offsetTop;
+        let idx = -1;
+        for (let j = 0; j < tops.length; j++) {
+          if (Math.abs(tops[j] - top) < 2) {
+            idx = j;
+            break;
+          }
+        }
         if (idx === -1) {
           tops.push(top);
           idx = tops.length - 1;
         }
-        return idx;
+        nextMap[i] = idx;
+      }
+
+      setLineMap((prev) => {
+        if (
+          prev.length === nextMap.length &&
+          prev.every((val, index) => val === nextMap[index])
+        ) {
+          return prev;
+        }
+        return nextMap;
       });
-      setLineMap(map);
+      setIsMeasured(true);
     };
 
+    const scheduleMeasure = () => {
+      if (cancelled || typeof window === 'undefined') return;
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        measure();
+      });
+    };
+
+    // Medição inicial síncrona antes da primeira pintura para evitar flash antes da animação
     measure();
-    // Re-mede quando as fontes terminam de carregar (mudam quebras de linha).
-    let cancelled = false;
-    if (typeof document !== 'undefined' && document.fonts?.ready) {
+
+    // Re-mede em rAF apenas se as fontes ainda estiverem carregando (pode alterar quebras de linha).
+    if (
+      typeof document !== 'undefined' &&
+      document.fonts?.ready &&
+      document.fonts.status !== 'loaded'
+    ) {
       document.fonts.ready.then(() => {
-        if (!cancelled) measure();
+        if (!cancelled) scheduleMeasure();
       });
     }
-    const onResize = () => measure();
-    window.addEventListener('resize', onResize, { passive: true });
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver((entries) => {
+        const width = entries[0]?.contentRect?.width;
+        if (
+          typeof width === 'number' &&
+          lastWidthRef.current !== null &&
+          Math.abs(lastWidthRef.current - width) < 1
+        ) {
+          return;
+        }
+        if (typeof width === 'number') {
+          lastWidthRef.current = width;
+        }
+        scheduleMeasure();
+      });
+      ro.observe(el);
+    } else if (typeof window !== 'undefined') {
+      window.addEventListener('resize', scheduleMeasure, { passive: true });
+    }
+
     return () => {
       cancelled = true;
-      window.removeEventListener('resize', onResize);
+      if (rafId !== null && typeof window !== 'undefined') {
+        window.cancelAnimationFrame(rafId);
+      }
+      if (ro) {
+        ro.disconnect();
+      } else if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', scheduleMeasure);
+      }
     };
-  }, [enabled, words.length]);
+  }, [enabled, words]);
 
   useEffect(() => {
     if (!enabled) {
-      setVisible(true);
+      setInView(true);
       return;
     }
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') {
-      setVisible(true);
+      setInView(true);
       return;
     }
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setVisible(true);
+          setInView(true);
           observer.disconnect();
         }
       },

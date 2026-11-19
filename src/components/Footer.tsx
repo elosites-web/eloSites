@@ -161,10 +161,10 @@ export const Footer: React.FC<FooterProps> = ({
                 href={footerWhatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 min-w-0 inline-flex items-center justify-center text-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-300/40 text-white shadow-lg shadow-emerald-950/40 hover:shadow-[0_0_22px_rgba(37,211,102,0.65)] active:scale-[0.97] transition-transform duration-150 text-[11px] sm:text-xs font-semibold tracking-wide cursor-pointer"
+                className="flex-1 min-w-0 inline-flex items-center justify-center text-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-300/60 text-slate-950 shadow-lg shadow-emerald-950/40 hover:shadow-[0_0_22px_rgba(37,211,102,0.65)] active:scale-[0.97] transition-transform duration-150 text-[11px] sm:text-xs font-bold tracking-wide cursor-pointer"
               >
-                <WhatsAppIcon className="w-4 h-4 text-white shrink-0" />
-                <span className="text-white drop-shadow-sm text-center truncate sm:whitespace-normal">Falar no WhatsApp</span>
+                <WhatsAppIcon className="w-4 h-4 text-slate-950 shrink-0" />
+                <span className="text-slate-950 text-center truncate sm:whitespace-normal">Falar no WhatsApp</span>
               </a>
 
               {SITE_CONFIG.email && (
@@ -315,7 +315,7 @@ export const Footer: React.FC<FooterProps> = ({
             type="button"
             onClick={scrollToTop}
             className="inline-flex items-center justify-center text-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer"
-            aria-label="Voltar ao início da página"
+            aria-label="Voltar ao topo da página"
           >
             <span className="text-center">Voltar ao topo</span>
             <ArrowUp className="w-3.5 h-3.5" />
@@ -334,7 +334,11 @@ export const Footer: React.FC<FooterProps> = ({
                 aria-label="ēloSites — Ir para a Página Inicial (Home)"
               >
                 <picture className="inline-flex shrink-0">
-                  <source type="image/webp" srcSet="/cartao/logo.webp" />
+                  <source
+                    type="image/webp"
+                    srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+                    sizes="(min-width: 640px) 65px, 57px"
+                  />
                   <img
                     src="/logo-elosites-1360.png"
                     alt="ēloSites"

@@ -22,9 +22,9 @@ export const FluidRippleFallback: React.FC<FluidRippleFallbackProps> = ({
         isContained ? 'absolute inset-0' : 'fixed inset-0 -z-20'
       } overflow-hidden ${className}`}
     >
-      <div className="absolute top-[-15%] left-[-10%] w-[65vw] h-[65vw] rounded-full bg-blue-600/10 blur-[130px] animate-pulse duration-[8000ms]" />
-      <div className="absolute bottom-[-15%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/10 blur-[140px] animate-pulse duration-[10000ms]" />
-      <div className="absolute top-[35%] left-[25%] w-[45vw] h-[45vw] rounded-full bg-blue-500/[0.08] blur-[150px]" />
+      <div className="ambient-glow-orb ambient-glow-blue absolute top-[-15%] left-[-10%] w-[65vw] h-[65vw] rounded-full bg-blue-600/10 blur-[130px] animate-pulse duration-[8000ms]" />
+      <div className="ambient-glow-orb ambient-glow-indigo absolute bottom-[-15%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/10 blur-[140px] animate-pulse duration-[10000ms]" />
+      <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-[35%] left-[25%] w-[45vw] h-[45vw] rounded-full bg-blue-500/[0.08] blur-[150px]" />
     </div>
   );
 };

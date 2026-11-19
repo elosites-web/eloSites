@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { EloLogo } from './EloLogo';
 import { ScreenId, SCREENS } from '../types';
@@ -110,6 +110,9 @@ export const Header: React.FC<HeaderProps> = ({
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
   const canRun3D = useCanRun3DEffect(isMenuOpen);
 
+  const navMetricsRef = useRef<{ container: number; required: number } | null>(null);
+  const navFitRafRef = useRef<number | null>(null);
+
   // Verificação dinâmica baseada no espaço real disponível vs largura necessária de logo e links
   const checkNavFit = useCallback(() => {
     if (!navContainerRef.current) return;
@@ -117,9 +120,25 @@ export const Header: React.FC<HeaderProps> = ({
     const measuredWidth = measureRef.current ? measureRef.current.scrollWidth : 0;
     // Fallback defensivo (~1030px) caso o elemento de medição ainda não tenha reportado scrollWidth
     const requiredWidth = measuredWidth > 0 ? measuredWidth : 1030;
+    const prev = navMetricsRef.current;
+    if (prev && prev.container === containerWidth && prev.required === requiredWidth) {
+      return;
+    }
+    navMetricsRef.current = { container: containerWidth, required: requiredWidth };
     const fits = canFitNavbar(containerWidth, requiredWidth, { buffer: 24 });
     setCanFitHorizontalNav(fits);
   }, []);
+
+  const scheduleCheckNavFit = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    if (navFitRafRef.current !== null) {
+      window.cancelAnimationFrame(navFitRafRef.current);
+    }
+    navFitRafRef.current = window.requestAnimationFrame(() => {
+      navFitRafRef.current = null;
+      checkNavFit();
+    });
+  }, [checkNavFit]);
 
   // Fecha o menu de navegação de forma segura quando a barra horizontal couber confortavelmente
   useEffect(() => {
@@ -129,27 +148,48 @@ export const Header: React.FC<HeaderProps> = ({
     }
   }, [canFitHorizontalNav, isMenuOpen, setIsMenuOpen]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     checkNavFit();
 
     if (typeof window === 'undefined') return;
-    window.addEventListener('resize', checkNavFit, { passive: true });
-    window.addEventListener('orientationchange', checkNavFit, { passive: true });
+    let cancelled = false;
+
+    window.addEventListener('orientationchange', scheduleCheckNavFit, { passive: true });
 
     let ro: ResizeObserver | null = null;
     if (navContainerRef.current && typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(() => {
-        checkNavFit();
+        scheduleCheckNavFit();
       });
       ro.observe(navContainerRef.current);
+    } else {
+      window.addEventListener('resize', scheduleCheckNavFit, { passive: true });
+    }
+
+    if (
+      typeof document !== 'undefined' &&
+      document.fonts?.ready &&
+      document.fonts.status !== 'loaded'
+    ) {
+      document.fonts.ready.then(() => {
+        if (!cancelled) scheduleCheckNavFit();
+      });
     }
 
     return () => {
-      window.removeEventListener('resize', checkNavFit);
-      window.removeEventListener('orientationchange', checkNavFit);
-      if (ro) ro.disconnect();
+      cancelled = true;
+      if (navFitRafRef.current !== null) {
+        window.cancelAnimationFrame(navFitRafRef.current);
+        navFitRafRef.current = null;
+      }
+      window.removeEventListener('orientationchange', scheduleCheckNavFit);
+      if (ro) {
+        ro.disconnect();
+      } else {
+        window.removeEventListener('resize', scheduleCheckNavFit);
+      }
     };
-  }, [checkNavFit]);
+  }, [checkNavFit, scheduleCheckNavFit]);
 
   // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre,
   // e devolve o foco ao botão de abertura no mobile, ou para a navegação desktop ao redimensionar
