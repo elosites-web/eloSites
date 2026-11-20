@@ -52,6 +52,7 @@
 .tt-partner { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: clamp(1.5rem, 3vw, 3rem); border: 1px solid var(--line); border-radius: 1.5rem; background: url('../assets/truethomaz/grade-ondulada.svg') center/cover, linear-gradient(135deg, #102e54, #071b33 85%); }
 .tt-logo { width: min(100%, 19rem); height: auto; }
 .tt-profile { display: flex; align-items: center; gap: 1.2rem; }
+.tt-portrait { flex: none; width: clamp(5rem, 8vw, 7rem); height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 50%; }
 .tt-profile p { max-width: 15rem; margin-top: .45rem; color: var(--ice); }
 .tt-platforms, .tt-details, .tt-existing { margin-top: clamp(2.75rem, 5vw, 4.5rem); }
 .tt-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .7rem 2rem; margin-bottom: 1.25rem; }
@@ -63,6 +64,7 @@
 .tt-details { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 7vw, 7rem); align-items: start; }
 .tt-services { padding-block: 1rem; }
 .tt-services h2 { margin: 1rem 0; }
+.tt-services .tt-brand { text-transform: none; }
 .tt-services li { display: flex; align-items: baseline; gap: .75rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .tt-services li svg { color: #8a9c73; width: 1rem; height: 1rem; align-self: center; flex: none; }
 .tt-services ul + p { margin-top: 1rem; font-size: .95rem; }

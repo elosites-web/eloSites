@@ -4,6 +4,11 @@ import { WhatsAppIcon } from './WhatsAppIcon';
 import logo from '../assets/truethomaz/truethomaz-bm.svg';
 import './PaidTrafficPartnershipSection.css';
 
+const [portrait] = Object.values(import.meta.glob<string>('../assets/truethomaz/thomaz-perfil.webp', {
+  eager: true,
+  import: 'default',
+}));
+
 const platforms = [
   { name: 'Meta Ads', channel: 'Instagram e Facebook', icon: MetaIcon,
     description: 'Apresente seus produtos ou serviços no feed, nos Stories e nos Reels de quem pode se interessar.' },
@@ -22,7 +27,7 @@ const services = [
 ];
 
 const siteAndAds = whatsappUrl('Olá, ēloSites! Quero um site e gostaria de conhecer a gestão de anúncios em uma plataforma com a TrueThomaz.BM.');
-const adsOnly = whatsappUrl('Olá, ēloSites! Já tenho um site e gostaria de pedir ao Thomaz um orçamento para anunciar.');
+const adsOnly = whatsappUrl('Olá, ēloSites! Já tenho um site e gostaria de um orçamento para anunciar com a TrueThomaz.BM.');
 
 export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?: string }) {
   return (
@@ -39,6 +44,9 @@ export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?
           <aside className="tt-partner" aria-label="Conheça o parceiro">
             <img className="tt-logo" src={logo} alt="TrueThomaz.BM" width="539" height="76" />
             <div className="tt-profile">
+              {portrait && (
+                <img className="tt-portrait" src={portrait} alt="Retrato de Thomaz" width="112" height="112" decoding="async" />
+              )}
               <div>
                 <h2>Thomaz</h2>
                 <p>Profissional parceiro de tráfego pago</p>
@@ -65,10 +73,10 @@ export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?
 
         <div className="tt-details">
           <section className="tt-services" aria-labelledby="tt-services">
-            <p className="tt-label">Serviços do parceiro</p>
-            <h2 id="tt-services">Como Thomaz pode ajudar</h2>
+            <p className="tt-label">Serviços de tráfego pago</p>
+            <h2 id="tt-services">Como a <span className="tt-brand">TrueThomaz.BM</span> pode ajudar</h2>
             <ul>{services.map(service => <li key={service}><Check aria-hidden="true" />{service}</li>)}</ul>
-            <p>Você e Thomaz confirmam as entregas e os limites de cada serviço antes de contratar. A parceria não garante vendas, clientes, faturamento ou posições em buscadores.</p>
+            <p>Antes de contratar, combine com a TrueThomaz.BM as entregas e os limites de cada serviço. A parceria não garante vendas, clientes, faturamento ou posições em buscadores.</p>
           </section>
 
           <section className="tt-offer" aria-labelledby="tt-offer">
@@ -77,7 +85,7 @@ export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?
             <p className="tt-period">Nos 3 primeiros meses</p>
             <h3>Escolha 1 plataforma: Meta Ads, Google Ads ou TikTok Ads</h3>
             <p>Condição exclusiva para clientes que contratam um site com a ēloSites.</p>
-            <p className="tt-terms">*O investimento nos anúncios é pago separadamente. Após os três primeiros meses, condições e valores são negociados diretamente com o parceiro. Mais plataformas ou operações maiores exigem orçamento individual.</p>
+            <p className="tt-terms">*O investimento nos anúncios é pago separadamente. Após os três primeiros meses, condições e valores são negociados diretamente com a TrueThomaz.BM. Mais plataformas ou operações maiores exigem orçamento individual.</p>
             <a id="cta-parceria-trafego-whatsapp" className="tt-cta" href={siteAndAds} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon /><span>Quero um site + anúncios</span><ArrowUpRight aria-hidden="true" />
             </a>
@@ -87,7 +95,7 @@ export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?
         <section className="tt-existing" aria-labelledby="tt-existing">
           <div>
             <h2 id="tt-existing">Já tem um site e precisa apenas de anúncios?</h2>
-            <p>Fale com a ēloSites para solicitar atendimento. O orçamento é negociado diretamente com Thomaz. A condição de R$ 500/mês é exclusiva para quem contrata um site com a ēloSites.</p>
+            <p>Fale com a ēloSites para solicitar atendimento. Você negocia o orçamento diretamente com a TrueThomaz.BM. A condição de R$ 500/mês é exclusiva para quem contrata um site com a ēloSites.</p>
           </div>
           <a className="tt-cta tt-secondary" href={adsOnly} target="_blank" rel="noopener noreferrer">
             <WhatsAppIcon /><span>Já tenho site e quero anunciar</span><ArrowUpRight aria-hidden="true" />
