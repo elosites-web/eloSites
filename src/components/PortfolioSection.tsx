@@ -60,7 +60,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Top Header / Informações */}
         <div className="pb-3.5 sm:pb-4 border-b border-white/[0.06] flex flex-col gap-2.5 w-full">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
+            <span className="section-kicker text-[11px] font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3 py-1 rounded-full font-bold">
               {project.badge}
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs text-emerald-300 font-semibold bg-emerald-950/60 border border-emerald-400/40 px-2.5 py-0.5 rounded-full">
@@ -172,7 +172,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       wrapperClassName="relative w-full h-full overflow-hidden"
                       className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
                       rootMargin="500px 0px 500px 0px"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                      sizes="(max-width: 767px) calc(100vw - 7rem), (max-width: 1280px) calc(50vw - 7rem), 480px"
                       priority={priority}
                     />
                   </div>
@@ -193,7 +193,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       wrapperClassName="relative w-full h-full overflow-hidden"
                       className="w-full h-full object-cover object-top"
                       rootMargin="500px 0px 500px 0px"
-                      sizes="(max-width: 640px) 140px, 170px"
+                      sizes="(max-width: 639px) min(34vw, 132px), 144px"
                     />
                   </div>
                   {/* Badge visual */}
@@ -230,7 +230,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       wrapperClassName="relative w-full h-full overflow-hidden"
                       className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
                       rootMargin="500px 0px 500px 0px"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                      sizes="(max-width: 767px) calc(100vw - 7rem), (max-width: 1280px) calc(50vw - 7rem), 480px"
                       priority={priority}
                     />
                   </div>
@@ -271,7 +271,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 onClick={() => onOpenCase(project.id)}
                 className="cta-primary inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md cursor-pointer group/casebtn"
               >
-                <span>Ver case</span>
+                <span>Ver o projeto</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white transition-transform group-hover/casebtn:translate-x-0.5" />
               </button>
 

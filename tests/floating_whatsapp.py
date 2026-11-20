@@ -1,36 +1,12 @@
 """Run after npm run build: python tests/floating_whatsapp.py (Playwright + Chromium)."""
 from contextlib import contextmanager
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-from shutil import which
-from threading import Thread
 import unittest
 
-from playwright.sync_api import expect, sync_playwright
+from playwright.sync_api import expect
+from site_browser import BrowserSite
 
 
-class StaticFiles(SimpleHTTPRequestHandler):
-    def log_message(self, *args):
-        pass
-
-
-class FloatingWhatsAppTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        dist = Path(__file__).resolve().parents[1] / "dist"
-        cls.server = ThreadingHTTPServer(("127.0.0.1", 0), partial(StaticFiles, directory=dist))
-        Thread(target=cls.server.serve_forever, daemon=True).start()
-        cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch(executable_path=which("chromium"))
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.close()
-        cls.playwright.stop()
-        cls.server.shutdown()
-        cls.server.server_close()
-
+class FloatingWhatsAppTests(BrowserSite):
     @contextmanager
     def session(self, route, mobile=False, motion="reduce"):
         page = self.browser.new_page(has_touch=mobile, is_mobile=mobile, reduced_motion=motion,
@@ -40,8 +16,6 @@ class FloatingWhatsAppTests(unittest.TestCase):
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("console", lambda msg: errors.append(msg.text) if msg.type == "error" else None)
         page.on("request", lambda r: downloads.append(r.url) if "/FloatingWhatsApp-" in r.url else None)
-        # Keep the production app and its chunks real. Isolate the third-party font stylesheet.
-        page.route("https://fonts.googleapis.com/**", lambda route: route.fulfill(content_type="text/css", body=""))
         page.clock.install(time="2026-01-05T12:00:00Z")
         page.clock.pause_at("2026-01-05T12:00:01Z")
         page.add_init_script("""window.bubbleEvents = [];
@@ -216,7 +190,7 @@ class FloatingWhatsAppTests(unittest.TestCase):
                 self.advance(page, 1)
             page.clock.run_for(2000)
             nav = page.get_by_role("navigation", name="Navegação institucional")
-            nav.get_by_role("button", name="Portfólio").dispatch_event("click")
+            nav.get_by_role("link", name="Portfólio").dispatch_event("click")
             page.clock.run_for(1000)
             expect(page.locator("#portfolio")).to_be_attached()
             page.evaluate("location.hash='case/jv-salvaia'")

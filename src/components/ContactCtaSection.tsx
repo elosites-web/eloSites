@@ -69,7 +69,7 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
                   }}
                   className="cta-primary w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-base font-bold text-white shadow-lg cursor-pointer"
                 >
-                  <span className="text-center">Preencher Briefing do Projeto</span>
+                  <span className="text-center">Pedir orçamento pelo formulário</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

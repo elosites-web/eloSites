@@ -4,11 +4,6 @@ import type { ScreenId } from './types';
 export type Loader = () => Promise<unknown>;
 
 export const screenLoaders: Partial<Record<ScreenId, Loader>> = {
-  inicio: () =>
-    Promise.all([
-      import('./components/FounderCard'),
-      import('./components/TechnicalSpecialtiesBanner'),
-    ]),
   servicos: () => import('./components/ServicesSection'),
   'solucoes-web': () => import('./components/ServicesSection'),
   portfolio: () => import('./components/PortfolioSection'),
@@ -25,7 +20,8 @@ export const screenLoaders: Partial<Record<ScreenId, Loader>> = {
     Promise.all([
       import('./components/FaqSection'),
       import('./components/ContactCtaSection'),
-      import('./components/DigitalCardSection'),
+      import('./components/FounderCard'),
+      import('./components/TechnicalSpecialtiesBanner'),
     ]),
 };
 

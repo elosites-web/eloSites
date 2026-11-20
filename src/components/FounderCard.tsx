@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
@@ -7,7 +7,6 @@ import { BiReveal } from './BiReveal';
 
 interface FounderCardProps {
   className?: string;
-  onNavigateToCartao?: () => void;
 }
 
 /**
@@ -15,26 +14,8 @@ interface FounderCardProps {
  * Fiel à referência visual (eu_1d137d4a.JPG): moldura obsidian profunda, cantoneiras técnicas,
  * foto circular com halo luminoso, badge de fundador, headline de impacto, bio e botão de WhatsApp direto.
  */
-export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavigateToCartao }) => {
-  const [isPulsing, setIsPulsing] = useState(false);
+export const FounderCard: React.FC<FounderCardProps> = ({ className = '' }) => {
   const whatsappHref = whatsappUrl('Olá Everton, vi seu perfil na ēloSites e quero tirar dúvidas.');
-
-  const handleNavigateToCartao = () => {
-    setIsPulsing(true);
-    setTimeout(() => setIsPulsing(false), 900);
-    if (onNavigateToCartao) {
-      onNavigateToCartao();
-    } else {
-      if (window.location.hash === '#cartao-digital') {
-        const el = document.getElementById('cartao-digital') || document.getElementById('cartao-de-visitas');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      } else {
-        window.location.hash = 'cartao-digital';
-      }
-    }
-  };
 
   return (
     <BiReveal direction="up" delay={80} className={`w-full ${className}`}>
@@ -61,33 +42,15 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
 
         <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-6 sm:gap-8 lg:gap-10 my-auto">
           {/* COLUNA ESQUERDA: Retrato Circular do Fundador com Halo e Badge (sempre centralizado) */}
-          <div
-            onClick={handleNavigateToCartao}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleNavigateToCartao();
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            title="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
-            aria-label="Ver cartão de visitas digital de Everton Lopes na página FAQ & Contato"
+          <a
+            href="/cartao/"
+            aria-label="Abrir o cartão digital de Everton Lopes"
             className="flex flex-col items-center justify-center shrink-0 self-center pb-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#070b1a] rounded-full group/avatar-col transition-transform duration-200"
           >
             {/* Foto circular com halo gradiente e brilho com zoom/motion/pulse ao passar o mouse ou clicar */}
             <motion.div
               whileHover={{ scale: 1.07 }}
               whileTap={{ scale: 0.95 }}
-              animate={
-                isPulsing
-                  ? {
-                      scale: [1, 1.12, 1.04, 1.08, 1],
-                      rotate: [0, -1.2, 1.2, -0.4, 0],
-                      transition: { duration: 0.85, ease: 'easeOut' },
-                    }
-                  : undefined
-              }
               transition={{ type: 'spring', stiffness: 280, damping: 18 }}
               className="glow-border-animated relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full p-1 bg-gradient-to-tr from-indigo-600/50 via-purple-500/35 to-blue-500/30 shadow-[0_0_35px_rgba(99,102,241,0.28)] hover:shadow-[0_0_55px_rgba(99,102,241,0.65)] active:shadow-[0_0_65px_rgba(129,140,248,0.8)] flex items-center justify-center transition-shadow duration-300 group/avatar select-none"
             >
@@ -95,7 +58,7 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
                 <source type="image/avif" srcSet="/eu-192w.avif 1x, /eu-384w.avif 2x" />
                 <source type="image/webp" srcSet="/eu-192w.webp 1x, /eu-384w.webp 2x" />
                 <img
-                  src="/eu.png"
+                  src="/eu-192w.webp"
                   alt="Everton Lopes — Fundador da ēloSites"
                   width={192}
                   height={192}
@@ -114,30 +77,30 @@ export const FounderCard: React.FC<FounderCardProps> = ({ className = '', onNavi
                 <span className="text-xs font-semibold text-white tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]">Fundador</span>
               </div>
             </motion.div>
-          </div>
+          </a>
 
           {/* COLUNA DIREITA: Kicker, Headline, Bio e Ações */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-3 sm:space-y-4">
             {/* Kicker Pill com estrela */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-xs font-semibold tracking-wider uppercase font-mono">
+            <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-xs font-semibold tracking-wider uppercase font-mono">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" aria-hidden="true" />
               <span>QUEM ESTÁ POR TRÁS DA ēloSites</span>
             </div>
 
             {/* Headline Oficial */}
             <h3 className="font-display text-2xl sm:text-3xl lg:text-[2rem] font-bold text-white tracking-tight leading-tight">
-              Tecnologia, criatividade e propósito em cada projeto.
+              Um site feito por quem conhece o seu negócio.
             </h3>
 
             {/* Parágrafo de Apresentação e Posicionamento */}
             <p className="text-sm sm:text-base text-slate-300/90 leading-relaxed max-w-2xl">
               Sou <strong className="font-bold text-white">Everton Lopes</strong>, fundador da{' '}
-              <strong className="font-bold text-white">ēloSites</strong>. Desenvolvo sites profissionais do zero, pensados para apresentar o seu trabalho com clareza, organizados para facilitar a leitura pelos mecanismos de busca e direcionar o contato de novos clientes pelo WhatsApp.
+              <strong className="font-bold text-white">ēloSites</strong>. Crio seu site do zero. Organizo as páginas para o Google entender o que você oferece e para seu cliente encontrar o botão de WhatsApp. Você recebe os arquivos e os acessos ao final.
             </p>
 
             {/* Linha de Ações centralizada */}
             <div className="pt-2 sm:pt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
-              {/* Botão de WhatsApp Corporativo centralizado */}
+              <a href="/cartao/" className="text-sm text-indigo-200 underline underline-offset-4">Ver meu cartão de contato</a>
               <a
                 href={whatsappHref}
                 target="_blank"

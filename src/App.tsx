@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-import { motion, AnimatePresence, useReducedMotion, type Variants, type Transition } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion, type Variants } from 'motion/react';
 import { SectionErrorBoundary } from './components/SectionErrorBoundary';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -67,10 +67,7 @@ function lazyTracked<P>(
 function isScreenSyncReady(screenId: ScreenId): boolean {
   switch (screenId) {
     case 'inicio':
-      return (
-        resolvedLazyModules.has('FounderCard') &&
-        resolvedLazyModules.has('TechnicalSpecialtiesBanner')
-      );
+      return true;
     case 'servicos':
     case 'solucoes-web':
       return resolvedLazyModules.has('ServicesSection');
@@ -92,7 +89,8 @@ function isScreenSyncReady(screenId: ScreenId): boolean {
       return (
         resolvedLazyModules.has('FaqSection') &&
         resolvedLazyModules.has('ContactCtaSection') &&
-        resolvedLazyModules.has('DigitalCardSection')
+        resolvedLazyModules.has('FounderCard') &&
+        resolvedLazyModules.has('TechnicalSpecialtiesBanner')
       );
     default:
       return false;
@@ -134,11 +132,6 @@ const FaqSection = lazyTracked('FaqSection', () =>
 const ContactCtaSection = lazyTracked('ContactCtaSection', () =>
   import('./components/ContactCtaSection').then((mod) => ({
     default: mod.ContactCtaSection,
-  }))
-);
-const DigitalCardSection = lazyTracked('DigitalCardSection', () =>
-  import('./components/DigitalCardSection').then((mod) => ({
-    default: mod.DigitalCardSection,
   }))
 );
 const PaidTrafficPartnershipSection = lazyTracked('PaidTrafficPartnershipSection', () =>
@@ -778,56 +771,11 @@ export default function App() {
         rawHash === 'cartao-visitas' ||
         rawHash === 'cartao-de-visitas'
       ) {
+        window.location.replace('/cartao/');
+      } else if (['apresentacao', 'sobre', 'fundador', 'card-do-fundador', 'sobre-fundador', 'base-tecnica', 'base-tecnica-especialidades'].includes(rawHash)) {
         currentRouteKeyRef.current = 'faq';
-        setCurrentScreen((prev) => {
-          if (prev !== 'faq') {
-            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'faq');
-            if (nextIdx !== -1 && prevIdx !== -1) {
-              setDirection(nextIdx > prevIdx ? 1 : -1);
-            }
-          }
-          return 'faq';
-        });
-        const candidates =
-          rawHash === 'cartao-de-visitas'
-            ? ['cartao-de-visitas', 'cartao-digital']
-            : ['cartao-digital', 'cartao-de-visitas'];
-        scrollToAnchorWhenReady(candidates);
-      } else if (rawHash === 'apresentacao' || rawHash === 'sobre') {
-        currentRouteKeyRef.current = 'inicio';
-        setCurrentScreen((prev) => {
-          if (prev !== 'inicio') {
-            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
-            if (nextIdx !== -1 && prevIdx !== -1) {
-              setDirection(nextIdx > prevIdx ? 1 : -1);
-            }
-          }
-          return 'inicio';
-        });
-        scrollToAnchorWhenReady(['apresentacao', 'sobre-fundador', 'fundador']);
-      } else if (
-        rawHash === 'fundador' ||
-        rawHash === 'card-do-fundador' ||
-        rawHash === 'sobre-fundador'
-      ) {
-        currentRouteKeyRef.current = 'inicio';
-        setCurrentScreen((prev) => {
-          if (prev !== 'inicio') {
-            const prevIdx = SCREENS.findIndex((s) => s.id === prev);
-            const nextIdx = SCREENS.findIndex((s) => s.id === 'inicio');
-            if (nextIdx !== -1 && prevIdx !== -1) {
-              setDirection(nextIdx > prevIdx ? 1 : -1);
-            }
-          }
-          return 'inicio';
-        });
-        const candidates =
-          rawHash === 'sobre-fundador'
-            ? ['sobre-fundador', 'fundador', 'apresentacao']
-            : ['fundador', 'sobre-fundador', 'apresentacao'];
-        scrollToAnchorWhenReady(candidates);
+        setCurrentScreen('faq');
+        scrollToAnchorWhenReady(rawHash.startsWith('base-tecnica') ? ['base-tecnica'] : ['fundador', 'sobre-fundador']);
       } else if (rawHash === 'sitemap' || rawHash === 'mapa-do-site') {
         setHasMountedSitemap(true);
         setIsSitemapOpen(true);
@@ -862,7 +810,7 @@ export default function App() {
   // Ao trocar de tela institucional pelo menu superior, rodapé ou CTAs, abre sempre no topo (scrollY = 0)
   const navigateToScreen = useCallback(
     (screenId: ScreenId) => {
-      routeVersion.current++;
+      const version = ++routeVersion.current;
       setCatalogStatus('idle');
       setIsMenuOpen(false);
       setActiveProject(null);
@@ -882,6 +830,7 @@ export default function App() {
       lastHandledHashRef.current = screenId;
 
       const applyScreenUpdate = () => {
+        if (routeVersion.current !== version) return;
         setDirection(nextDirection);
         setCurrentScreen(screenId);
       };
@@ -904,20 +853,6 @@ export default function App() {
   const currentIndex = SCREENS.findIndex((s) => s.id === currentScreen);
   const previousScreen = currentIndex > 0 ? SCREENS[currentIndex - 1] : null;
   const nextScreen = currentIndex < SCREENS.length - 1 ? SCREENS[currentIndex + 1] : null;
-
-  const handlePrevious = useCallback(() => {
-    if (previousScreen) {
-      navigateToScreen(previousScreen.id);
-    }
-  }, [previousScreen, navigateToScreen]);
-
-  const handleNext = useCallback(() => {
-    if (nextScreen) {
-      navigateToScreen(nextScreen.id);
-    }
-  }, [nextScreen, navigateToScreen]);
-
-
 
   // Sincronização dinâmica de meta tags OpenGraph, Twitter Cards, Canonical e Title para cada seção/tela/case
   useEffect(() => {
@@ -996,12 +931,12 @@ export default function App() {
     const isHome = currentScreen === 'inicio';
 
     const pageTitle = isHome
-      ? 'ēloSites | Sites profissionais e landing pages'
+      ? 'Criação de sites em Jundiaí para todo o Brasil | ēloSites'
       : `${meta.title} | ēloSites — Sites profissionais e landing pages`;
 
     const pageDesc = isHome
-      ? 'Criação de sites institucionais e landing pages responsivas, organizados para facilitar a compreensão pelos mecanismos de busca e o contato pelo WhatsApp.'
-      : `${meta.description} Desenvolvimento de sites institucionais e landing pages pela ēloSites.`;
+      ? 'Mostre o que você vende e receba pedidos pelo WhatsApp. A ēloSites cria sites e landing pages em Jundiaí (SP) para pequenos negócios de todo o Brasil.'
+      : `${meta.description} Sites feitos em Jundiaí, com atendimento em todo o Brasil.`;
 
     const canonicalUrl = 'https://elosites.ia.br/';
 
@@ -1033,39 +968,6 @@ export default function App() {
 
   const currentMeta = SCREENS[currentIndex] || SCREENS[0];
 
-  // Configuração única de transição Framer Motion para a seção Hero / Início
-  // Garante sincronia e entrada sequencial escalonada (stagger) para melhor performance
-  const heroTransitionConfig: Transition = {
-    duration: prefersReduced ? 0.05 : 0.45,
-    ease: [0.23, 1, 0.32, 1],
-  };
-
-  const heroContainerVariants: Variants = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        ...heroTransitionConfig,
-        staggerChildren: prefersReduced ? 0 : 0.12,
-        delayChildren: prefersReduced ? 0 : 0.04,
-      },
-    },
-  };
-
-  const heroItemVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      y: prefersReduced ? 0 : 18,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: heroTransitionConfig,
-    },
-  };
-
   // Transição discreta de opacidade pura entre telas (sem deslocamento lateral)
   const fadeVariants: Variants = {
     initial: {
@@ -1091,91 +993,26 @@ export default function App() {
   // View Transitions (crossfade) ou AnimatePresence (fallback suave atual).
   const renderActiveScreen = () => (
     <>
-      {/* TELA 01: Início — HERO Institucional com scroll & Apresentação do Fundador */}
+      {/* TELA 01: Início */}
       {currentScreen === 'inicio' && (
-        <motion.div
-          variants={heroContainerVariants}
-          initial={false}
-          animate="visible"
-          className="w-full space-y-0"
-        >
+        <>
           <div ref={heroRef}>
-            <Hero
-              mode="inicio"
-              onNavigateToPortfolio={() => navigateToScreen('portfolio')}
-            />
+            <Hero mode="inicio" onNavigateToPortfolio={() => navigateToScreen('portfolio')} />
           </div>
-
-          <section
-            id="sobre-fundador"
-            aria-labelledby="sobre-fundador-heading"
-            className="section-auto-contain pt-16 pb-20 sm:pt-20 sm:pb-24 lg:pt-24 lg:pb-28 bg-[#050814]/90 border-t border-blue-500/15 relative overflow-hidden"
-          >
-            {/* Âncora dedicada para compatibilidade com #apresentacao */}
-            <div id="apresentacao" className="scroll-mt-24 pointer-events-none" aria-hidden="true" />
-
-            {/* Luz ambiente sutil */}
-            <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
-
-            <div className="page-shell page-x max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
-              <motion.div variants={heroItemVariants}>
-                <div className="text-center max-w-3xl mx-auto space-y-4">
-                  <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-500/30 text-cyan-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
-                    <span>Sobre a ēloSites</span>
-                  </div>
-
-                  <h2
-                    id="sobre-fundador-heading"
-                    className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
-                  >
-                    Presença digital profissional feita com transparência e proximidade.
-                  </h2>
-
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-                    Acreditamos que todo negócio, autônomo ou empresa local merece um site rápido, claro e fácil de navegar. Desenvolvemos cada projeto com atendimento direto, sem termos complicados e com total respeito ao seu investimento.
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div variants={heroItemVariants} id="fundador" className="scroll-mt-24">
-                <SectionErrorBoundary>
-                  <Suspense fallback={<SimpleSectionSkeleton />}>
-                    <FounderCard
-                      onNavigateToCartao={() => {
-                        setIsMenuOpen(false);
-                        setActiveProject(null);
-                        setActiveImageView(null);
-                        currentRouteKeyRef.current = 'faq';
-                        lastHandledHashRef.current = 'cartao-digital';
-                        if (isScreenSyncReady('faq')) {
-                          withViewTransition(() => {
-                            setCurrentScreen('faq');
-                          });
-                        } else {
-                          setCurrentScreen('faq');
-                        }
-                        if (window.location.hash !== '#cartao-digital') {
-                          window.history.pushState(null, '', '#cartao-digital');
-                        }
-                        scrollToAnchorWhenReady(['cartao-digital', 'cartao-de-visitas']);
-                      }}
-                    />
-                  </Suspense>
-                </SectionErrorBoundary>
-              </motion.div>
-
-              {/* Banner de Base Técnica e Especialidades */}
-              <motion.div variants={heroItemVariants}>
-                <SectionErrorBoundary>
-                  <Suspense fallback={<SimpleSectionSkeleton />}>
-                    <TechnicalSpecialtiesBanner />
-                  </Suspense>
-                </SectionErrorBoundary>
-              </motion.div>
+          <section className="home-offer" aria-labelledby="home-offer-title">
+            <div className="home-offer-intro">
+              <h2 id="home-offer-title">O que você recebe?</h2>
+              <p>Um site com o seu nome, suas fotos e um link que você pode mandar para qualquer cliente. Ele abre no celular e no computador.</p>
+              <a href="#portfolio">Ver sites que já entregamos →</a>
+            </div>
+            <div className="home-offer-example">
+              <h3>Do produto à conversa</h3>
+              <p>Imagine que você vende sacos de lixo. Na página, o cliente vê os tamanhos, quantas unidades vêm no pacote e o preço. Toca em “Pedir pelo WhatsApp” e combina o pedido com você.</p>
+              <p>A ēloSites cria as páginas e os botões. Você cuida do pagamento, do estoque e da entrega. Se também quiser anunciar, a gestão de anúncios é contratada à parte.</p>
+              <a href="#servicos">Escolher o formato do meu site →</a>
             </div>
           </section>
-        </motion.div>
+        </>
       )}
 
       {/* TELA 02: Serviços & Condições Comerciais */}
@@ -1269,9 +1106,58 @@ export default function App() {
             <Suspense fallback={<SimpleSectionSkeleton />}>
               <FaqSection />
               <ContactCtaSection onNavigateToOrcamento={() => navigateToScreen('orcamento')} />
-              <DigitalCardSection />
             </Suspense>
           </SectionErrorBoundary>
+          <section
+            id="sobre-fundador"
+            aria-labelledby="sobre-fundador-heading"
+            className="section-auto-contain pt-16 pb-20 sm:pt-20 sm:pb-24 lg:pt-24 lg:pb-28 bg-[#050814]/90 border-t border-blue-500/15 relative overflow-hidden"
+          >
+            {/* Âncora dedicada para compatibilidade com #apresentacao */}
+            <div id="apresentacao" className="scroll-mt-24 pointer-events-none" aria-hidden="true" />
+
+            {/* Luz ambiente sutil */}
+            <div className="ambient-glow-orb ambient-glow-blue-soft absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/[0.06] blur-[140px] rounded-full pointer-events-none" />
+
+            <div className="page-shell page-x max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
+              <div>
+                <div className="text-center max-w-3xl mx-auto space-y-4">
+                  <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-blue-500/30 text-cyan-300 text-xs sm:text-sm font-semibold uppercase shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                    <Sparkles className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+                    <span>Sobre a ēloSites</span>
+                  </div>
+
+                  <h2
+                    id="sobre-fundador-heading"
+                    className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
+                  >
+                    Quem vai criar o seu site?
+                  </h2>
+
+                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+                    Você fala direto com quem cria o site. Em Jundiaí (SP), atendemos pequenos negócios e profissionais de todo o Brasil. Combinamos o que será entregue e quanto custa antes de começar.
+                  </p>
+                </div>
+              </div>
+
+              <div id="fundador" className="scroll-mt-24">
+                <SectionErrorBoundary>
+                  <Suspense fallback={<SimpleSectionSkeleton />}>
+                    <FounderCard />
+                  </Suspense>
+                </SectionErrorBoundary>
+              </div>
+
+              {/* Banner de Base Técnica e Especialidades */}
+              <div id="base-tecnica" className="scroll-mt-24">
+                <SectionErrorBoundary>
+                  <Suspense fallback={<SimpleSectionSkeleton />}>
+                    <TechnicalSpecialtiesBanner />
+                  </Suspense>
+                </SectionErrorBoundary>
+              </div>
+            </div>
+          </section>
         </div>
       )}
     </>
@@ -1315,8 +1201,6 @@ export default function App() {
       <Header
         currentScreen={currentScreen}
         onSelectScreen={navigateToScreen}
-        onPreviousScreen={handlePrevious}
-        onNextScreen={handleNext}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
       />
@@ -1394,6 +1278,14 @@ export default function App() {
               {renderActiveScreen()}
             </motion.div>
           </AnimatePresence>
+        )}
+        {!activeProject && catalogStatus === 'idle' && (
+          <nav className="section-steps" aria-label="Continuar explorando o site">
+            {previousScreen && <a href={`#${previousScreen.id}`}>← {previousScreen.shortTitle}</a>}
+            {nextScreen
+              ? <a className="next-step" href={`#${nextScreen.id}`}>A seguir: {nextScreen.shortTitle} →</a>
+              : <a className="next-step" href="#orcamento">Pedir meu orçamento →</a>}
+          </nav>
         )}
       </main>
 

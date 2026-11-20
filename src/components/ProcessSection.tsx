@@ -31,7 +31,7 @@ export const ProcessSection: React.FC = () => {
       number: '04',
       title: 'Site no ar e publicado',
       description:
-        'Publicamos o site na hospedagem definida, registramos o domínio em seu CPF ou CNPJ quando previsto no orçamento, configuramos os DNS e entregamos arquivos, repositório e acessos.',
+        'Colocamos o site no ar e entregamos os arquivos, o histórico do código e os acessos. Se o endereço do site estiver no orçamento, registramos em seu CPF ou CNPJ e fazemos a ligação com a hospedagem (DNS).',
       icon: Globe2,
     },
   ];
@@ -55,7 +55,7 @@ export const ProcessSection: React.FC = () => {
             </div>
             <SplitLines
               as="h2"
-              text="Quatro etapas. Cada detalhe com revisão humana."
+              text="Do primeiro oi ao site no ar"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">

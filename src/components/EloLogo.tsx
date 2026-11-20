@@ -1,6 +1,8 @@
 import React from 'react';
 import { useLogoTaglineWidth } from './useLogoTaglineWidth';
 
+export const logoSrcSet = '/logo-elosites-64w.webp 64w, /logo-elosites-144w.webp 144w, /logo-elosites-192w.webp 192w, /logo-elosites-288w.webp 288w, /logo-elosites-320w.webp 319w, /logo-elosites-416w.webp 416w, /logo-elosites-480w.webp 480w, /cartao/logo.webp 640w';
+
 interface EloLogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'menu';
@@ -53,11 +55,11 @@ export const EloLogo: React.FC<EloLogoProps> = ({
         <picture className="inline-flex shrink-0">
           <source
             type="image/webp"
-            srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+            srcSet={logoSrcSet}
             sizes={logoSizes}
           />
           <img
-            src="/logo-elosites-1360.png"
+            src="/logo-elosites-320w.webp"
             alt="ēloSites — Logotipo Oficial"
             width={1360}
             height={337}
@@ -99,12 +101,12 @@ export const EloLogo: React.FC<EloLogoProps> = ({
     <picture className="inline-flex shrink-0">
       <source
         type="image/webp"
-        srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+        srcSet={logoSrcSet}
         sizes={logoSizes}
       />
       <img
         ref={logoRef}
-        src="/logo-elosites-1360.png"
+        src="/logo-elosites-320w.webp"
         alt="ēloSites — Logotipo Oficial"
         width={1360}
         height={337}

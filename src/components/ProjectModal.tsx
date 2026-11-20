@@ -108,7 +108,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           <div className="sticky top-0 z-30 p-5 sm:p-6 bg-slate-950/95 backdrop-blur-md border-b border-white/[0.08] flex items-start justify-between gap-4 shrink-0 shadow-lg shadow-black/40">
             <div className="space-y-2 min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-mono uppercase bg-indigo-950/80 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full font-semibold">
+                <span className="section-kicker text-[11px] font-mono uppercase bg-indigo-950/80 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full font-semibold">
                   {project.badge}
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">

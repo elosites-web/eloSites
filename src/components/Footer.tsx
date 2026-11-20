@@ -1,17 +1,10 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { EloLogo } from './EloLogo';
+import { EloLogo, logoSrcSet } from './EloLogo';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { NAVIGATION_ITEMS, SITE_CONFIG, whatsappUrl } from '../types';
 import { Mail, ArrowUp } from 'lucide-react';
 
-const FluidRippleBackground = React.lazy(() =>
-  import('./FluidRippleBackground').then((mod) => ({ default: mod.FluidRippleBackground }))
-);
-
-import { ScreenId } from '../types';
-import { useCanRun3DEffect, getMotionTier, shouldReduceMedia } from '../mediaPrefs';
-import { FluidRippleFallback } from './FluidRippleFallback';
+import type { ScreenId } from '../types';
 
 interface FooterProps {
   onOpenPrivacy: () => void;
@@ -68,45 +61,13 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   const footerRef = React.useRef<HTMLElement>(null);
-  const [shouldLoadEffect, setShouldLoadEffect] = React.useState<boolean>(false);
-  const [isFooterInView, setIsFooterInView] = React.useState<boolean>(false);
-  const canRun3D = useCanRun3DEffect(isFooterInView);
-  const canFloatLinks = !shouldReduceMedia() && getMotionTier() !== 'none';
-
-  // Observa visibilidade do rodapé tanto para carregar Three.js perto da viewport quanto para pausar animações fora de tela
+  const [footerVisible, setFooterVisible] = React.useState(false);
   React.useEffect(() => {
-    const target = footerRef.current;
-    if (!target || typeof IntersectionObserver === 'undefined') {
-      setIsFooterInView(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        const nearViewport = entry.isIntersecting || entry.intersectionRatio > 0;
-        setIsFooterInView(nearViewport);
-      },
-      {
-        root: null,
-        rootMargin: '400px 0px',
-        threshold: 0,
-      }
-    );
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
+    if (!footerRef.current || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => setFooterVisible(entry.isIntersecting));
+    observer.observe(footerRef.current);
+    return () => observer.disconnect();
   }, []);
-
-  React.useEffect(() => {
-    if (isFooterInView && canRun3D && !shouldLoadEffect) {
-      setShouldLoadEffect(true);
-    }
-  }, [isFooterInView, canRun3D, shouldLoadEffect]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -115,29 +76,10 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <footer
       ref={footerRef}
+      data-visible={footerVisible}
       className="relative bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] border-t border-blue-400/30 text-slate-300 text-sm pb-[3px] overflow-hidden"
     >
-      {/* Fundo de grade azul de espaço-tempo sob demanda quando permitido, ou fallback CSS de contingência */}
-      {canRun3D && shouldLoadEffect ? (
-        <React.Suspense
-          fallback={
-            <FluidRippleFallback
-              variant="contained"
-              className="absolute inset-0 z-0 opacity-50 pointer-events-none"
-            />
-          }
-        >
-          <FluidRippleBackground
-            variant="contained"
-            className="absolute inset-0 z-0 opacity-50 pointer-events-none"
-          />
-        </React.Suspense>
-      ) : (
-        <FluidRippleFallback
-          variant="contained"
-          className="absolute inset-0 z-0 opacity-50 pointer-events-none"
-        />
-      )}
+      <div className="nav-ambient" aria-hidden="true" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 pb-16 sm:pb-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
@@ -153,7 +95,7 @@ export const Footer: React.FC<FooterProps> = ({
               <EloLogo size="md" isFooter />
             </button>
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-sm">
-              Desenvolvemos sites profissionais com apresentação clara do seu negócio, estrutura organizada para os mecanismos de busca e acesso facilitado ao contato pelo WhatsApp.
+              Em Jundiaí (SP), criamos sites para negócios de todo o Brasil. Seu cliente vê o que você vende, lê as informações em uma página preparada para o Google e pode pedir um orçamento pelo WhatsApp.
             </p>
             <div className="flex flex-row flex-nowrap items-center gap-2 sm:gap-3 pt-2 w-full max-w-md">
               <a
@@ -180,69 +122,20 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Links Rápidos com efeito de textos flutuantes */}
+          {/* Links de navegação */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-200">
               Navegação
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
-              {NAVIGATION_ITEMS.map((item, index) => {
-                const getScreenFromHref = (href: string): ScreenId => {
-                  const clean = href.replace('#', '').toLowerCase().trim();
-                  if (clean === 'avaliacoes' || clean.includes('avalia') || clean.includes('depoimento') || clean.includes('testemunho')) return 'avaliacoes';
-                  if (clean === 'home' || clean === 'inicio' || clean === 'sobre') return 'inicio';
-                  if (clean === 'servicos' || clean.includes('servico')) return 'servicos';
-                  if (clean === 'portfolio' || clean.includes('portfolio')) return 'portfolio';
-                  if (clean === 'processo' || clean.includes('processo') || clean.includes('como-funciona') || clean.includes('diferencia')) return 'processo';
-                  if (clean === 'orcamento' || clean.includes('orcamento') || clean.includes('briefing')) return 'orcamento';
-                  if (clean === 'parceria-trafego' || clean.includes('parceria') || clean.includes('trafego')) return 'parceria-trafego';
-                  if (clean === 'faq' || clean.includes('faq') || clean.includes('contato')) return 'faq';
-                  return 'inicio';
-                };
-
-                const screenId = getScreenFromHref(item.href);
-                const isActive = currentScreen === screenId;
+              {NAVIGATION_ITEMS.map((item) => {
+                const isActive = item.href === `#${currentScreen}`;
 
                 return (
-                  <motion.li
-                    key={`footer-${item.id}`}
-                    animate={
-                      isFooterInView && canFloatLinks
-                        ? {
-                            y: [-2.5, 2.5, -2.5],
-                            x: [1.2, -1.2, 1.2],
-                            rotate: [-0.18, 0.18, -0.18],
-                          }
-                        : { y: 0, x: 0, rotate: 0 }
-                    }
-                    transition={
-                      isFooterInView && canFloatLinks
-                        ? {
-                            y: {
-                              duration: 6.2 + (index % 3) * 0.7,
-                              repeat: Infinity,
-                              ease: 'easeInOut',
-                              delay: index * 0.12,
-                            },
-                            x: {
-                              duration: 7.0 + (index % 2) * 0.8,
-                              repeat: Infinity,
-                              ease: 'easeInOut',
-                              delay: index * 0.12,
-                            },
-                            rotate: {
-                              duration: 7.8,
-                              repeat: Infinity,
-                              ease: 'easeInOut',
-                              delay: index * 0.1,
-                            },
-                          }
-                        : { duration: 0.2 }
-                    }
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSelectInstitutionalScreen(screenId)}
+                  <li key={item.id}>
+                    <a
+                      href={item.href}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`text-left transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200 relative flex items-center gap-2 py-0.5 cursor-pointer group hover:-translate-y-0.5 hover:translate-x-1 ${
                         isActive
                           ? 'text-cyan-300 font-semibold drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
@@ -250,15 +143,14 @@ export const Footer: React.FC<FooterProps> = ({
                       }`}
                     >
                       {isActive && (
-                        <motion.span
-                          layoutId="footer-active-nav-dot"
-                          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                        <span
+                          aria-hidden="true"
                           className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] shrink-0"
                         />
                       )}
                       <span className="transition-transform duration-200">{item.label}</span>
-                    </button>
-                  </motion.li>
+                    </a>
+                  </li>
                 );
               })}
             </ul>
@@ -336,11 +228,11 @@ export const Footer: React.FC<FooterProps> = ({
                 <picture className="inline-flex shrink-0">
                   <source
                     type="image/webp"
-                    srcSet="/logo-elosites-320w.webp 319w, /cartao/logo.webp 640w"
+                    srcSet={logoSrcSet}
                     sizes="(min-width: 640px) 65px, 57px"
                   />
                   <img
-                    src="/logo-elosites-1360.png"
+                    src="/logo-elosites-320w.webp"
                     alt="ēloSites"
                     width={1360}
                     height={337}

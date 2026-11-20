@@ -87,7 +87,7 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
         {/* Cabeçalho do Estudo de Caso */}
         <header className="p-6 sm:p-8 rounded-2xl bg-[#090e26] border border-blue-500/30 shadow-2xl space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3.5 py-1.5 rounded-full font-bold">
+            <span className="section-kicker text-xs font-mono uppercase bg-blue-950 text-blue-200 border border-blue-400/40 px-3.5 py-1.5 rounded-full font-bold">
               {project.badge}
             </span>
             <div className="flex items-center gap-2">
@@ -188,8 +188,8 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
                     if (srcInfo) {
                       return (
                         <picture className="w-full h-full block">
-                          <source type="image/avif" srcSet={srcInfo.avifSrcSet} sizes="(max-width: 1024px) 100vw, 680px" />
-                          <source type="image/webp" srcSet={srcInfo.webpSrcSet} sizes="(max-width: 1024px) 100vw, 680px" />
+                          <source type="image/avif" srcSet={srcInfo.avifSrcSet} sizes="(max-width: 639px) calc(100vw - 68px), (max-width: 1023px) calc(100vw - 92px), (max-width: 1087px) 57vw, 632px" />
+                          <source type="image/webp" srcSet={srcInfo.webpSrcSet} sizes="(max-width: 639px) calc(100vw - 68px), (max-width: 1023px) calc(100vw - 92px), (max-width: 1087px) 57vw, 632px" />
                           <img
                             src={srcInfo.fallbackSrc}
                             alt={`Screenshot Desktop de ${project.title}`}
@@ -248,8 +248,8 @@ export const CaseDetailPage: React.FC<CaseDetailPageProps> = ({
                     if (srcInfo) {
                       return (
                         <picture className="w-full h-full block">
-                          <source type="image/avif" srcSet={srcInfo.avifSrcSet} sizes="240px" />
-                          <source type="image/webp" srcSet={srcInfo.webpSrcSet} sizes="240px" />
+                          <source type="image/avif" srcSet={srcInfo.avifSrcSet} sizes="218px" />
+                          <source type="image/webp" srcSet={srcInfo.webpSrcSet} sizes="218px" />
                           <img
                             src={srcInfo.fallbackSrc}
                             alt={`Screenshot Mobile de ${project.title}`}

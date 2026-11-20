@@ -1,58 +1,66 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ChevronDown, HelpCircle, Sparkles } from 'lucide-react';
-import { FaqItem, SITE_CONFIG, whatsappUrl } from '../types';
+import { FaqItem, TRAFFIC_PRICE_NOTICE, SITE_CONFIG, whatsappUrl } from '../types';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { SplitLines } from './SplitLines';
 import { BiReveal } from './BiReveal';
 
+const faqs: FaqItem[] = [
+  {
+    id: 'faq-1',
+    question: 'Preciso ter todo o conteúdo pronto?',
+    answer: 'Não. Na primeira conversa e na reunião de materiais, separamos as fotos, os textos, a marca e a lista de serviços que você já tem. Combinamos o que falta para colocar o site no ar.',
+  },
+  {
+    id: 'faq-2',
+    question: 'Quanto tempo leva para o site ficar pronto?',
+    answer: 'Uma página pode ficar pronta em dias. Um site com várias páginas ou mais rodadas de revisão pode levar mais tempo. Combinamos o prazo com você depois de ver o conteúdo e as fotos.',
+  },
+  {
+    id: 'faq-3',
+    question: 'Quanto custa o site e como posso pagar?',
+    answer: 'O preço depende das páginas e do conteúdo. Peça um orçamento pelo WhatsApp. No Pix, você pode pagar metade no início e metade na entrega aprovada, ou pagar tudo à vista com 20% de desconto. No cartão, são até 5 vezes sem juros (entrada e mais 4 parcelas). De 6 a 12 vezes, os juros da operadora ficam com o cliente.',
+  },
+  {
+    id: 'faq-4',
+    question: 'A publicação e a hospedagem estão incluídas?',
+    answer: 'Colocamos o site no ar e fazemos as configurações combinadas. A hospedagem é onde o site fica guardado. Antes de contratar, você vê no orçamento quanto custa manter a hospedagem e usar recursos extras, se forem necessários.',
+  },
+  {
+    id: 'faq-5',
+    question: 'Quem paga pelo endereço do site?',
+    answer: 'O domínio é o endereço, como suaempresa.com.br. Se o registro fizer parte do orçamento, fazemos a compra em seu CPF ou CNPJ, com sua autorização, e ligamos o endereço ao site (DNS). O preço depende do período escolhido. Você recebe os valores e as orientações para renovar.',
+  },
+  {
+    id: 'faq-6',
+    question: 'Quando o site ficar pronto, ele fica comigo?',
+    answer: 'Sim. Você recebe os arquivos, a pasta com o histórico do código (repositório), os acessos e as instruções para publicar e cuidar do site. Quando contratamos o domínio para você, o registro fica no seu CPF ou CNPJ.',
+  },
+  {
+    id: 'faq-7',
+    question: 'Preciso pagar manutenção todo mês?',
+    answer: 'A manutenção é opcional. O plano mensal custa 20% do valor orçado para o projeto e cobre até 4 pedidos simples por mês, como trocar fotos, textos, telefone ou links e fazer pequenos ajustes visuais. Os pedidos não acumulam. Novas páginas, recursos sob medida e mudanças maiores têm orçamento separado. A renovação do domínio e outros servidores também ficam à parte.',
+  },
+  {
+    id: 'faq-8',
+    question: 'Vocês fazem sites só para Jundiaí?',
+    answer: 'A ēloSites fica em Jundiaí, São Paulo, e atende todo o Brasil pela internet. Você pode enviar fotos, aprovar as páginas e falar com Everton pelo WhatsApp.',
+  },
+  {
+    id: 'faq-9',
+    question: 'O que posso vender com uma página? O cliente paga pelo site?',
+    answer: 'Você pode mostrar um produto ou serviço, informar tamanhos e preços e receber pedidos pelo WhatsApp. A ēloSites cria a parte que a pessoa vê e usa (front-end). O pagamento, o estoque e os pedidos combinados na conversa ficam com o seu negócio.',
+  },
+  {
+    id: 'faq-10',
+    question: 'O site já vem com anúncios pagos?',
+    answer: 'O site e os anúncios são serviços separados. Para quem contrata um site com a ēloSites, a TrueThomaz.BM oferece gestão por R$ 500/mês* nos três primeiros meses, em uma plataforma à escolha: Meta Ads, Google Ads ou TikTok Ads. A verba para exibir os anúncios é paga à parte. Após esse período, para mais plataformas ou somente anúncios, peça um orçamento à TrueThomaz.BM.',
+  },
+];
+
 export const FaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const faqs: FaqItem[] = [
-    {
-      id: 'faq-1',
-      question: 'Preciso ter todo o conteúdo pronto?',
-      answer:
-        'Não. Na conversa inicial e na reunião de materiais, organizamos juntos o que já existe — fotos, textos, serviços e identidade. Se faltar alguma coisa, alinhamos o que é essencial para o site ir ao ar com qualidade.',
-    },
-    {
-      id: 'faq-2',
-      question: 'Quanto tempo leva para o site ficar pronto?',
-      answer:
-        'Depende do formato (landing page ou site institucional) e de quanto tempo leva para reunir conteúdos e fotos. O processo é pensado para ser rápido, em dias em vez de meses — sem um prazo absoluto, porque cada projeto tem o próprio ritmo de revisão.',
-    },
-    {
-      id: 'faq-3',
-      question: 'Quanto custa e como é o pagamento?',
-      answer:
-        'Cada projeto tem seu escopo específico, então o valor é definido em um orçamento sob medida após entendermos seu modelo de negócio e necessidades. Para o pagamento, oferecemos 4 modalidades flexíveis: 1) 50% de entrada no início e 50% na entrega e aprovação final (via PIX); 2) 20% de desconto para pagamento integral à vista no fechamento; 3) Até 5x sem juros no cartão de crédito (1 entrada + 4 parcelas fixas); ou 4) Parcelamento estendido de 6x até 12x no cartão de crédito (com repasse das taxas de juros da operadora). Fale com a gente pelo WhatsApp para receber sua proposta detalhada.',
-    },
-    {
-      id: 'faq-4',
-      question: 'A publicação e a hospedagem estão inclusas?',
-      answer:
-        'A ēloSites cuida da publicação inicial e de todas as configurações técnicas previstas no escopo contratado. Eventuais custos recorrentes de hospedagem e recursos adicionais são informados com total transparência no orçamento antes do início, sem promessa de gratuidade ou inclusão permanente de serviços pagos.',
-    },
-    {
-      id: 'faq-5',
-      question: 'O domínio personalizado está incluso?',
-      answer:
-        'Quando incluído no orçamento do projeto, a ēloSites realiza a contratação e o registro do domínio utilizando os dados de CPF ou CNPJ do próprio cliente, mediante autorização, além de configurar os servidores DNS. O custo do registro varia conforme o período escolhido e é repassado e discriminado no orçamento. A renovação do domínio é periódica, e as condições ficam detalhadas no orçamento e na documentação de entrega.',
-    },
-    {
-      id: 'faq-6',
-      question: 'Depois do projeto eu continuo tendo controle do site?',
-      answer:
-        'Sim. Na conclusão do projeto, você recebe os arquivos, o repositório, as informações de publicação, os acessos e as orientações necessárias para administrar a infraestrutura entregue, com o domínio registrado em seu CPF ou CNPJ.',
-    },
-    {
-      id: 'faq-7',
-      question: 'Existe manutenção mensal?',
-      answer:
-        'Sim, e é opcional — o valor é definido em 20% sobre o valor do orçamento do seu projeto, conforme o plano de manutenção combinado. Cobre até 4 solicitações simples por mês (troca de textos, fotos, telefones, links e pequenos ajustes visuais), sem acúmulo entre meses. Novas páginas, recursos exclusivos e mudanças estruturais são orçados à parte. Não inclui anuidade de domínio nem outros servidores.',
-    },
-  ];
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -66,6 +74,13 @@ export const FaqSection: React.FC = () => {
       id="faq"
       className="section-auto-contain pt-24 pb-10 sm:pt-28 sm:pb-12 lg:pt-32 lg:pb-14 bg-[#050814] relative border-t border-blue-500/15 overflow-x-clip"
     >
+      <script type="application/ld+json">{JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: faqs.map(({ question, answer, id }) => ({
+          '@type': 'Question', name: question,
+          acceptedAnswer: { '@type': 'Answer', text: id === 'faq-10' ? answer + ' ' + TRAFFIC_PRICE_NOTICE : answer },
+        })),
+      })}</script>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent pointer-events-none" />
       <div className="page-shell page-x max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -81,7 +96,7 @@ export const FaqSection: React.FC = () => {
                 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance"
               />
               <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-                Respostas diretas sobre pagamento, publicação, domínio, manutenção e controle do site.
+                Veja o que vem com o site, como pagar e quem cuida dele depois da entrega.
               </p>
             </div>
           </BiReveal>
@@ -172,6 +187,11 @@ export const FaqSection: React.FC = () => {
                             className="px-5 pb-5 sm:px-6 sm:pb-6 lg:px-7 lg:pb-7 text-sm sm:text-base text-slate-300 leading-relaxed border-t border-white/[0.06] pt-4"
                           >
                             {faq.answer}
+                            {faq.id === 'faq-10' && (
+                              <span className="price-notice">
+                                <b>*</b> {TRAFFIC_PRICE_NOTICE} <a href="#parceria-trafego">Ver a parceria</a>
+                              </span>
+                            )}
                           </motion.div>
                         </motion.div>
                       )}

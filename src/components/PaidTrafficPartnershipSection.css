@@ -1,44 +1,25 @@
-@font-face {
-  font-family: 'TT Archivo';
-  src: url('../assets/truethomaz/fonts/archivo.woff2') format('woff2');
-  font-weight: 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'TT Work Sans';
-  src: url('../assets/truethomaz/fonts/worksans.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'TT Mono';
-  src: url('../assets/truethomaz/fonts/ibmplexmono.woff2') format('woff2');
-  font-weight: 500;
-  font-display: swap;
-}
-
 .tt-partnership {
-  --night: #071b33;
-  --navy: #0b2644;
+  --night: #090e20;
+  --navy: #10182c;
   --ice: #edf2f9;
-  --muted: #a3b4cb;
+  --muted: #bdcbe0;
   --yellow: #ffde59;
-  --line: #31465f;
+  --line: #303d59;
   background: var(--night);
   color: var(--ice);
-  font: 400 1rem/1.55 'TT Work Sans', sans-serif;
+  font: 400 1rem/1.65 var(--font-sans), sans-serif;
   padding: clamp(6.25rem, 8vw, 8rem) 0 clamp(3rem, 6vw, 6rem);
 }
 .tt-inner { width: min(77rem, 90%); margin-inline: auto; }
 .tt-partnership :is(h1,h2,h3,.tt-price) {
-  font-family: 'TT Archivo', 'Arial Narrow', sans-serif;
-  font-weight: 900; text-transform: uppercase; line-height: 1;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700; letter-spacing: -.035em; line-height: 1.12;
 }
 .tt-partnership h2 { font-size: clamp(1.9rem, 3vw, 3rem); }
 .tt-partnership p { color: var(--muted); }
 .tt-partnership strong { color: var(--ice); }
 .tt-partnership .tt-label, .tt-platform-top span, .tt-partnership .tt-period {
-  font: 500 .75rem/1.4 'TT Mono', monospace;
+  font: 500 .75rem/1.4 var(--font-mono), monospace;
   text-transform: uppercase; letter-spacing: .065em;
 }
 .tt-partnership .tt-label { display: flex; align-items: center; gap: .75rem; color: var(--yellow); }
@@ -46,11 +27,12 @@
 .tt-intro { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: stretch; }
 .tt-lead { align-self: center; }
 .tt-lead h1 { font-size: clamp(3.1rem, 5.1vw, 4.75rem); line-height: 1.07; letter-spacing: -.035em; margin: 1.2rem 0; }
-.tt-lead mark { display: inline-block; padding: 0 .085em .02em; color: var(--night); background: var(--yellow); }
+.tt-lead mark { display: inline-block; padding: 0 .085em .02em; color: #acbfff; background: transparent; }
 .tt-lead > p:not(.tt-label) { max-width: 36rem; }
 .tt-lead h1 + p { font-size: clamp(1.12rem, 1.6vw, 1.36rem); line-height: 1.4; color: var(--ice); margin-bottom: .85rem; }
-.tt-partner { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: clamp(1.5rem, 3vw, 3rem); border: 1px solid var(--line); border-radius: 1.5rem; background: url('../assets/truethomaz/grade-ondulada.svg') center/cover, linear-gradient(135deg, #102e54, #071b33 85%); }
+.tt-partner { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: clamp(1.5rem, 3vw, 3rem); border: 1px solid var(--line); border-radius: 1.5rem; background: url('../assets/truethomaz/grade-ondulada.svg') center/cover, linear-gradient(135deg, #102e54, #090e20 85%); }
 .tt-logo { width: min(100%, 19rem); height: auto; }
+.tt-profile picture { display: block; flex: none; }
 .tt-profile { display: flex; align-items: center; gap: 1.2rem; }
 .tt-portrait { flex: none; width: clamp(5rem, 8vw, 7rem); height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 50%; }
 .tt-profile p { max-width: 15rem; margin-top: .45rem; color: var(--ice); }
@@ -68,19 +50,19 @@
 .tt-services li { display: flex; align-items: baseline; gap: .75rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .tt-services li svg { color: #8a9c73; width: 1rem; height: 1rem; align-self: center; flex: none; }
 .tt-services ul + p { margin-top: 1rem; font-size: .95rem; }
-.tt-offer { border: 1px solid #7a713e; background: var(--navy); border-radius: 1.5rem; padding: clamp(1.35rem, 3vw, 2.7rem); }
+.tt-offer { border: 1px solid #4c5492; background: linear-gradient(145deg, #18223e, var(--navy) 72%); border-radius: 1.5rem; padding: clamp(1.35rem, 3vw, 2.7rem); }
 .tt-offer .tt-price { margin: 1rem 0 .2rem; font-size: clamp(3.3rem, 6vw, 5.4rem); color: var(--ice); letter-spacing: -.025em; }
-.tt-price span { font: 400 1.25rem 'TT Work Sans', sans-serif; text-transform: none; letter-spacing: 0; }
+.tt-price span { font: 400 1.25rem var(--font-sans), sans-serif; text-transform: none; letter-spacing: 0; }
 .tt-offer .tt-period { color: var(--yellow); }
 .tt-offer h3 { margin: 1.5rem 0 .5rem; font-size: 1.5rem; line-height: 1.1; }
 .tt-terms { border-top: 1px solid var(--line); margin: 1rem 0 1.3rem; padding-top: .9rem; font-size: .925rem; }
 .tt-existing { padding-top: 2rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
 .tt-existing h2 { font-size: clamp(1.6rem, 2.5vw, 2.25rem); margin-bottom: .6rem; }
 .tt-existing p { max-width: 43rem; }
-.tt-cta { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; padding: .7rem 1.15rem; border-radius: 100px; text-align: center; background: #54df83; color: #071b33; font-weight: 700; }
+.tt-cta { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; padding: .7rem 1.15rem; border-radius: .8rem; text-align: center; background: #b6c8ff; color: #10152a; font-weight: 700; }
 .tt-cta svg { width: 1.15rem; height: 1.15rem; flex: none; }
-.tt-secondary { color: #8de9ad; border: 1px solid #54996f; background: transparent; }
-.tt-cta:hover { background: #91f4b3; color: var(--night); }
+.tt-secondary { color: #d6e0ff; border: 1px solid #6677a1; background: transparent; }
+.tt-cta:hover { background: #d1ddff; color: var(--night); }
 .tt-cta:focus-visible { outline: 3px solid var(--yellow); outline-offset: 4px; }
 @media (prefers-reduced-motion: no-preference) {
   html[data-motion-tier='full'] .tt-cta { transition: background-color .15s, color .15s; }
@@ -97,3 +79,8 @@
   .tt-section-head { flex-direction: column; }
   .tt-offer .tt-cta, .tt-existing .tt-cta { width: 100%; }
 }
+
+.tt-partner { justify-content: center; gap: 1.75rem; }
+.tt-price sup, .tt-existing sup, .tt-section-head sup, .tt-period sup { color: var(--yellow); font-size: .7em; }
+.tt-partnership .tt-notice { margin: 1rem 0; padding: .75rem 1rem; border-left: 3px solid var(--yellow); border-radius: .45rem; color: #fff0bf; background: #343022; font-size: .875rem; }
+.tt-notice b { color: var(--yellow); }
