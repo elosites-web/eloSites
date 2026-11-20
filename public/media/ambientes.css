@@ -25,6 +25,8 @@
   mask-image: linear-gradient(90deg, transparent, #000 55%);
 }
 @media (max-width: 640px) {
+  #inicio { --cena-pequena: url('/media/ambientes/teclado-320.webp'); }
+  #inicio::before { top: 3.75rem; width: min(60vw, 17rem); height: min(40vw, 11rem); }
   :where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente)::before {
     height: 17rem; opacity: .19;
     background-image: linear-gradient(to top, #050814, transparent), url('/media/circuitos.svg'), var(--cena-pequena);
