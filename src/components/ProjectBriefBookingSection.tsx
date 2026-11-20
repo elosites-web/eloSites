@@ -297,7 +297,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
         .catch(() => {});
     }
 
-    success('Briefing formatado com sucesso!', 'Abrindo seu WhatsApp com o resumo pronto para envio.');
+    success('Seu pedido está pronto!', 'Abrindo seu WhatsApp com o resumo pronto para envio.');
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -417,17 +417,17 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
           <div className="text-center space-y-4 mb-12 sm:mb-16">
             <div className="section-kicker inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-              <span>Planejamento Estratégico & Agendamento</span>
+              <span>Orçamento e conversa</span>
             </div>
 
             <SplitLines
               as="h2"
-              text="Dê o próximo passo para o seu site"
+              text="Quanto custa o seu site?"
               className="font-display text-3xl sm:text-4xl lg:text-[2.85rem] font-bold tracking-[-0.03em] text-white text-balance leading-[1.15]"
             />
 
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed max-w-2xl mx-auto">
-              Preencha um briefing rápido para receber uma proposta personalizada ou escolha um horário para alinharmos tudo em uma chamada online de 30 minutos sem compromisso.
+              Conte o que você vende e o que quer mostrar no site. Enviamos uma proposta para o seu negócio. Se preferir, marque uma conversa online de 30 minutos, sem compromisso.
             </p>
           </div>
 
@@ -497,10 +497,10 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                   <div className="mb-8">
                     <h3 className="font-display text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
                       <FileText className="w-5 h-5 text-blue-400" />
-                      <span>Briefing Estratégico do Projeto</span>
+                      <span>Conte como você imagina o site</span>
                     </h3>
                     <p className="mt-1.5 text-sm text-slate-300/90 leading-relaxed">
-                      Responda essas informações básicas para que possamos entender o seu negócio e preparar um orçamento sob medida.
+                      Conte o que você vende e o que o cliente deve conseguir fazer no seu site. Com essas informações, preparamos seu orçamento.
                     </p>
                   </div>
 
@@ -955,7 +955,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                 }`}
                               >
                                 <WhatsAppIcon className="w-5 h-5 shrink-0" />
-                                <span className="text-center">Enviar Briefing pelo WhatsApp</span>
+                                <span className="text-center">Enviar meu pedido pelo WhatsApp</span>
                               </button>
 
                               <button

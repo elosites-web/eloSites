@@ -4,13 +4,16 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { ToastProvider } from './components/Toast';
 import { ScrollDirectionProvider } from './useScrollDirection';
-import { getMotionTier, isInAppBrowser } from './mediaPrefs';
+import { getMotionTier, isInAppBrowser, saveDataEnabled } from './mediaPrefs';
 import { ThemeProvider } from './themeContext';
+import '../public/fonts/site.css';
+import '../public/media/ambientes.css';
 import './index.css';
 
 // Expõe o tier de movimento ao CSS sem sniffing de navegador espalhado pelo código.
 if (typeof document !== 'undefined') {
   const root = document.documentElement;
+  root.dataset.saveData = String(saveDataEnabled());
   root.dataset.motionTier = getMotionTier();
   root.dataset.inApp = isInAppBrowser() ? 'true' : 'false';
 }

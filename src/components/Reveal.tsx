@@ -127,7 +127,7 @@ export const Reveal: React.FC<RevealProps> = ({
   const mergedStyle: React.CSSProperties = {
     ...style,
     opacity: visible || isReduced ? 1 : 0,
-    transform: visible || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
+    transform: visible || isReduced ? 'none' : transformHidden,
     willChange: !visible && !isReduced ? 'transform, opacity' : 'auto',
     transition: isReduced
       ? 'opacity 0.2s ease-out'

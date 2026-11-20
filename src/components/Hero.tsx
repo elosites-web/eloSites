@@ -299,62 +299,6 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
     isFullMotion ? [0, 42] : isLiteMotion ? [0, 18] : [0, 0]
   );
 
-  // 2. Coluna esquerda (Headline, Pilares e CTAs com movimentação progressiva coordenada)
-  const headlineY = useTransform(
-    smoothProgress,
-    [0, 0.7, 1],
-    isFullMotion ? [0, -28, -48] : isLiteMotion ? [0, -14, -24] : [0, 0, 0]
-  );
-  const headlineOpacity = useTransform(
-    smoothProgress,
-    [0, 0.65, 1],
-    isFullMotion ? [1, 0.95, 0.4] : isLiteMotion ? [1, 0.95, 0.55] : [1, 1, 1]
-  );
-
-  const pillarsY = useTransform(
-    smoothProgress,
-    [0, 0.7, 1],
-    isFullMotion ? [0, -18, -32] : isLiteMotion ? [0, -8, -14] : [0, 0, 0]
-  );
-  const pillarsOpacity = useTransform(
-    smoothProgress,
-    [0, 0.7, 1],
-    isFullMotion ? [1, 0.95, 0.5] : isLiteMotion ? [1, 0.95, 0.65] : [1, 1, 1]
-  );
-
-  const ctaY = useTransform(
-    smoothProgress,
-    [0, 0.7, 1],
-    isFullMotion ? [0, -10, -18] : isLiteMotion ? [0, -4, -8] : [0, 0, 0]
-  );
-  const ctaOpacity = useTransform(
-    smoothProgress,
-    [0, 0.75, 1],
-    isFullMotion ? [1, 0.95, 0.65] : isLiteMotion ? [1, 0.95, 0.75] : [1, 1, 1]
-  );
-
-  // 3. Coluna direita: Mockup do Laptop 3D (Aproximação de escala discreta e inclinação suave)
-  const laptopY = useTransform(
-    smoothProgress,
-    [0, 0.7, 1],
-    isFullMotion ? [0, 32, 54] : isLiteMotion ? [0, 16, 26] : [0, 0, 0]
-  );
-  const laptopScale = useTransform(
-    smoothProgress,
-    [0, 0.5, 1],
-    isFullMotion ? [1, 1.026, 1.01] : isLiteMotion ? [1, 1.014, 1] : [1, 1, 1]
-  );
-  const laptopRotateX = useTransform(
-    smoothProgress,
-    [0, 0.6, 1],
-    isFullMotion ? [0, 2.6, 4.0] : [0, 0, 0]
-  );
-  const laptopOpacity = useTransform(
-    smoothProgress,
-    [0, 0.8, 1],
-    isFullMotion ? [1, 0.96, 0.65] : isLiteMotion ? [1, 0.96, 0.75] : [1, 1, 1]
-  );
-
   return (
     <section
       id="inicio"
@@ -383,7 +327,6 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
             
             {/* Brand Wordmark & Tagline Kicker + Headline Oficial */}
             <motion.div
-              style={isReduced ? undefined : { y: headlineY, opacity: headlineOpacity }}
               className="flex flex-col items-center lg:items-start space-y-6 sm:space-y-7 w-full"
             >
               {/* Brand Wordmark & Tagline Kicker */}
@@ -394,7 +337,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
                   </span>
                   <span className="text-xs sm:text-sm font-medium text-blue-200">
-                    ēloSites | Estúdio de Desenvolvimento Web
+                    ēloSites · Jundiaí, SP
                   </span>
                 </div>
               </BiReveal>
@@ -402,12 +345,14 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
               {/* Headline Oficial com efeito Typewriter dinâmico */}
               <BiReveal direction="left" delay={120}>
                 <TypewriterSlogan mode={mode} />
+                <p className="hero-intro-copy">
+                  Mostre o que você vende e receba pedidos pelo WhatsApp. Criamos sua página com fotos, preços ou serviços, pronta para você divulgar em todo o Brasil.
+                </p>
               </BiReveal>
             </motion.div>
 
             {/* 4 Pilares da ēloSites com deslocamento coordenado */}
             <motion.div
-              style={isReduced ? undefined : { y: pillarsY, opacity: pillarsOpacity }}
               className="w-full flex flex-col items-center lg:items-start"
             >
               <BiReveal direction="up" delay={200} className="w-full max-w-xl">
@@ -495,7 +440,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                 >
                   <div className="overflow-hidden">
                     <p className="hero-pillars-expanded-text rounded-xl bg-[#0b1229] border border-blue-500/20 px-3.5 py-3 text-xs sm:text-[13px] text-slate-200 leading-relaxed text-center">
-                      Em palavras simples: criamos um site com a cara da sua empresa, que abre rápido sem travar, tem conteúdo organizado para facilitar a leitura pelo Google e funciona bem tanto no celular quanto no computador.
+                      Seu site usa suas cores e fotos, abre rápido e funciona no celular e no computador. Organizamos os textos para as pessoas e o Google entenderem o que você vende.
                     </p>
                   </div>
                 </div>
@@ -504,7 +449,6 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
 
             {/* Botões de Ação com Micro-interações e estabilização de scroll */}
             <motion.div
-              style={isReduced ? undefined : { y: ctaY, opacity: ctaOpacity }}
               className="w-full flex flex-col items-center lg:items-start"
             >
               <BiReveal direction="up" delay={300}>
@@ -537,18 +481,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
           <div className="lg:col-span-6 relative mt-6 lg:mt-0">
             <BiReveal direction="right" delay={150}>
               <motion.div
-                style={
-                  isReduced
-                    ? undefined
-                    : {
-                        y: laptopY,
-                        scale: laptopScale,
-                        rotateX: laptopRotateX,
-                        transformPerspective: 1200,
-                        opacity: laptopOpacity,
-                      }
-                }
-                className="relative mx-auto max-w-[540px] lg:max-w-none [transform-style:preserve-3d] rounded-2xl transition-all duration-300"
+                className="relative mx-auto max-w-[540px] lg:max-w-none rounded-2xl"
               >
                 
                 {/* Indicador de Status do Mockup com Abas */}
@@ -830,7 +763,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                             <span>Preparado para o Google</span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-snug">
-                            Conteúdo organizado para facilitar a compreensão das informações pelos mecanismos de busca.
+                            Títulos e textos claros ajudam o Google a entender o que você vende.
                           </p>
                         </div>
 

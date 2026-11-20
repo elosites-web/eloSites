@@ -76,28 +76,28 @@ interface ServiceCategory {
 const SERVICES: ServiceCategory[] = [
   {
     id: 'landing-page',
-    badge: 'Página Única',
-    title: 'Landing Page',
+    badge: 'Página única',
+    title: 'Uma página para vender (landing page)',
     description:
-      'Uma página para apresentar seu negócio, divulgar seus serviços e facilitar o contato com seus clientes.',
+      'Vende um produto ou serviço? Reúna fotos, tamanhos, preços e um botão de pedido em um só lugar. Você envia o link e o cliente chama no WhatsApp.',
     icon: Target,
     highlights: [
       'Apresentação direta do seu trabalho em página única',
       'Botões de WhatsApp em pontos estratégicos para contato imediato',
-      'Formato tradicional ou focado em apresentação de vídeo (VSL)',
+      'Opção de apresentar sua oferta por escrito ou em um vídeo de vendas (VSL)',
       'Design adaptado para celulares, tablets e computadores',
     ],
-    scopeNote: 'Os detalhes, seções e conteúdos específicos de cada projeto são combinados e definidos no orçamento individual.',
-    ctaLabel: 'Pedir proposta de Landing Page',
+    scopeNote: 'Antes de começar, combinamos o que vai na página e quanto vai custar.',
+    ctaLabel: 'Quero uma página para vender',
     ctaId: 'service-cta-landing-page',
     ctaMessage: SITE_CONFIG.landingPageWhatsappMessage,
   },
   {
     id: 'site-institucional',
     badge: 'Múltiplas Páginas',
-    title: 'Site Institucional',
+    title: 'Um site para a sua empresa',
     description:
-      'Um site com páginas e seções para apresentar sua empresa, seus serviços e informações importantes.',
+      'O site institucional tem espaço para sua história, fotos, serviços e contato. Quem chega pode escolher o que quer conhecer.',
     icon: Building2,
     highlights: [
       'Páginas e seções dedicadas (Início, Sobre, Serviços, Contato e Localização)',
@@ -106,7 +106,7 @@ const SERVICES: ServiceCategory[] = [
       'Navegação fluida e adaptada para celulares e computadores',
     ],
     scopeNote: 'A quantidade de páginas e seções é combinada com clareza no orçamento individual.',
-    ctaLabel: 'Pedir proposta de Site Institucional',
+    ctaLabel: 'Quero um site para minha empresa',
     ctaId: 'service-cta-institucional',
     ctaMessage: SITE_CONFIG.siteInstitucionalWhatsappMessage,
   },
@@ -136,11 +136,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             </div>
             <SplitLines
               as="h2"
-              text="Formatos sob medida com pagamento flexível"
+              text="Qual site faz sentido para você?"
               className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-[-0.03em] text-white text-balance leading-tight"
             />
             <p className="text-base sm:text-lg text-slate-300/95 leading-relaxed">
-              Cada projeto recebe um orçamento personalizado considerando escopo, seções e conteúdo necessário. Sem mensalidades surpresa e com opções de parcelamento no cartão ou desconto à vista no PIX.
+              Você escolhe uma página ou um site com várias páginas. O preço depende do conteúdo e do tamanho do projeto. Combinamos tudo antes, com parcelamento no cartão ou desconto à vista no Pix.
             </p>
           </div>
 
@@ -392,7 +392,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         Cada projeto é orçado conforme suas necessidades reais
                       </h4>
                       <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                        Analisamos o objetivo da sua empresa, a quantidade de seções e o escopo de conteúdo para formular uma proposta clara e sem surpresas. Preencha o briefing ou fale diretamente conosco pelo WhatsApp.
+                        O preço depende do que você quer mostrar e de quantas páginas ou seções precisa. Conte sua ideia no formulário ou pelo WhatsApp. Você recebe uma proposta com o valor e o que está incluído.
                       </p>
                     </FadeInBlock>
 
@@ -403,7 +403,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                           onClick={onNavigateToOrcamento}
                           className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-400/40 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-105 cursor-pointer"
                         >
-                          <span className="text-center">Montar Briefing</span>
+                          <span className="text-center">Descrever meu projeto</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       )}

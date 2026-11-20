@@ -17,13 +17,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <!-- Fonts: Plus Jakarta Sans, Space Grotesk & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
-    />
+    <link rel="stylesheet" href="/fonts/site.css" />
+    <link rel="stylesheet" href="/media/ambientes.css" />
 
     <style>
       *, *::before, *::after {
@@ -189,6 +184,11 @@
         text-transform: uppercase;
         margin-bottom: 18px;
         box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
+      }
+
+      @keyframes float-kicker { 50% { translate: 0 -3px; } }
+      @media (prefers-reduced-motion: no-preference) {
+        .badge-kicker { animation: float-kicker 6s ease-in-out infinite; }
       }
 
       .badge-dot {
@@ -465,7 +465,7 @@
       }
     </style>
   </head>
-  <body>
+  <body class="erro-ambiente">
     <!-- Iluminação de fundo -->
     <div class="glow-orb glow-blue" aria-hidden="true"></div>
     <div class="glow-orb glow-violet" aria-hidden="true"></div>
@@ -476,7 +476,8 @@
       <header class="header-brand">
         <a href="/#inicio" class="brand-link" aria-label="ēloSites — Ir para a Página Inicial">
           <img
-            src="/logo-elosites-1360.png"
+            src="/logo-elosites-320w.webp"
+            srcset="/logo-elosites-64w.webp 64w, /logo-elosites-144w.webp 144w, /logo-elosites-192w.webp 192w, /logo-elosites-288w.webp 288w, /logo-elosites-320w.webp 319w, /cartao/logo.webp 640w" sizes="150px"
             alt="ēloSites"
             class="brand-logo"
             width="150"
@@ -547,23 +548,27 @@
                 <!-- Arte Mobile vertical para telas até 767px -->
                 <source
                   media="(max-width: 767px)"
-                  srcset="/assets/404/not_found_mobile.avif"
+                  sizes="(max-width: 600px) 88vw, (max-width: 900px) 500px, 540px"
+                  srcset="/assets/404/not_found_mobile-352w.avif 352w, /assets/404/not_found_mobile-576w.avif 576w, /assets/404/not_found_mobile.avif 896w"
                   type="image/avif"
                 />
                 <source
                   media="(max-width: 767px)"
-                  srcset="/assets/404/not_found_mobile.webp"
+                  sizes="(max-width: 600px) 88vw, (max-width: 900px) 500px, 540px"
+                  srcset="/assets/404/not_found_mobile-352w.webp 352w, /assets/404/not_found_mobile-576w.webp 576w, /assets/404/not_found_mobile.webp 896w"
                   type="image/webp"
                 />
                 <!-- Arte Desktop horizontal para telas a partir de 768px -->
                 <source
                   media="(min-width: 768px)"
-                  srcset="/assets/404/not_found_desktop.avif"
+                  sizes="(max-width: 600px) 88vw, (max-width: 900px) 500px, 540px"
+                  srcset="/assets/404/not_found_desktop-448w.avif 448w, /assets/404/not_found_desktop-800w.avif 800w, /assets/404/not_found_desktop.avif 1376w"
                   type="image/avif"
                 />
                 <source
                   media="(min-width: 768px)"
-                  srcset="/assets/404/not_found_desktop.webp"
+                  sizes="(max-width: 600px) 88vw, (max-width: 900px) 500px, 540px"
+                  srcset="/assets/404/not_found_desktop-448w.webp 448w, /assets/404/not_found_desktop-800w.webp 800w, /assets/404/not_found_desktop.webp 1376w"
                   type="image/webp"
                 />
                 <img

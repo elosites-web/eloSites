@@ -5,67 +5,26 @@ import { ScreenId, SCREENS } from '../types';
 import { preloadScreen } from '../preloadScreens';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { canFitNavbar } from '../navSpace';
-import { useCanRun3DEffect } from '../mediaPrefs';
-import { FluidRippleFallback } from './FluidRippleFallback';
-
-const FluidRippleBackground = React.lazy(() =>
-  import('./FluidRippleBackground').then((mod) => ({ default: mod.FluidRippleBackground }))
-);
 
 interface HeaderProps {
   currentScreen: ScreenId;
   onSelectScreen: (screenId: ScreenId) => void;
-  onPreviousScreen?: () => void;
-  onNextScreen?: () => void;
   isMenuOpen: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
 }
 
-const NAV_ITEMS: { id: ScreenId; label: string }[] = [
-  { id: 'inicio', label: 'Início' },
-  { id: 'servicos', label: 'Serviços' },
-  { id: 'portfolio', label: 'Portfólio' },
-  { id: 'avaliacoes', label: 'Avaliações' },
-  { id: 'processo', label: 'Como Funciona' },
-  { id: 'orcamento', label: 'Orçamento' },
-  { id: 'parceria-trafego', label: 'Tráfego Pago' },
-  { id: 'faq', label: 'FAQ & Contato' },
-];
-
-/**
- * Hook to lock body scrolling when the mobile menu is opened by applying
- * the 'lock-scroll' utility class and document.body.style.overflow = 'hidden',
- * and resetting to 'auto' when closed.
- * Also configures the mobile menu container with the same semi-transparent
- * background style as the WhatsApp bubble (bg-[#090E23]/95 backdrop-blur-md)
- * and adjusts z-index to 49 for proper layering.
- */
-export function useMobileMenuLock(
-  isMenuOpen: boolean,
-  containerRef?: React.RefObject<HTMLDivElement | null>
-) {
+/** Trava a rolagem do documento enquanto o menu está aberto. */
+export function useMobileMenuLock(isMenuOpen: boolean) {
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.classList.add('lock-scroll');
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.classList.remove('lock-scroll');
-      document.body.style.overflow = 'auto';
-    }
-
+    if (!isMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.classList.add('lock-scroll');
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.classList.remove('lock-scroll');
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = previousOverflow;
     };
   }, [isMenuOpen]);
-
-  useEffect(() => {
-    if (isMenuOpen && containerRef?.current) {
-      containerRef.current.style.zIndex = '49';
-      containerRef.current.style.backgroundColor = '#0b163b';
-      containerRef.current.style.opacity = '1';
-    }
-  }, [isMenuOpen, containerRef]);
 
   const menuContainerClassName =
     'fixed inset-0 top-[54px] sm:top-[60px] z-[49] flex flex-col justify-start bg-gradient-to-b from-[#0e1b48] via-[#0b163b] to-[#08112e] select-none overflow-y-auto overscroll-contain transition-opacity duration-200 shadow-2xl shadow-black/90';
@@ -94,21 +53,16 @@ export const Header: React.FC<HeaderProps> = ({
   const navContainerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const firstMenuItemRef = useRef<HTMLButtonElement>(null);
-  const firstDesktopNavItemRef = useRef<HTMLButtonElement>(null);
+  const activeMenuItemRef = useRef<HTMLAnchorElement>(null);
+  const activeDesktopItemRef = useRef<HTMLAnchorElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
-  const savedScrollPositionRef = useRef<number>(0);
   const wasMenuOpenRef = useRef<boolean>(false);
-  const isNavigatingToScreenRef = useRef<boolean>(false);
   const [canFitHorizontalNav, setCanFitHorizontalNav] = useState<boolean>(false);
 
-  // Hook que aplica lock-scroll e document.body.style.overflow = 'hidden'/'auto',
-  // além de aplicar estilo idêntico ao balão do WhatsApp com z-index 49
-  const { menuContainerClassName, menuContainerStyle } = useMobileMenuLock(isMenuOpen, drawerRef);
+  const { menuContainerClassName, menuContainerStyle } = useMobileMenuLock(isMenuOpen);
 
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
-  const canRun3D = useCanRun3DEffect(isMenuOpen);
 
   const navMetricsRef = useRef<{ container: number; required: number } | null>(null);
   const navFitRafRef = useRef<number | null>(null);
@@ -144,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     if (canFitHorizontalNav && isMenuOpen) {
       setIsMenuOpen(false);
-      firstDesktopNavItemRef.current?.focus();
+      activeDesktopItemRef.current?.focus();
     }
   }, [canFitHorizontalNav, isMenuOpen, setIsMenuOpen]);
 
@@ -191,24 +145,22 @@ export const Header: React.FC<HeaderProps> = ({
     };
   }, [checkNavFit, scheduleCheckNavFit]);
 
-  // Gerenciamento de foco: move o foco para o primeiro item quando o menu abre,
+  // Gerenciamento de foco: move o foco para a seção ativa quando o menu abre,
   // e devolve o foco ao botão de abertura no mobile, ou para a navegação desktop ao redimensionar
   useEffect(() => {
     if (isMenuOpen) {
       wasMenuOpenRef.current = true;
-      const timer = setTimeout(() => {
-        firstMenuItemRef.current?.focus();
-      }, 50);
-      return () => clearTimeout(timer);
+      activeMenuItemRef.current?.focus({ preventScroll: true });
+      activeMenuItemRef.current?.scrollIntoView({ block: 'nearest' });
     } else if (wasMenuOpenRef.current) {
       wasMenuOpenRef.current = false;
       if (canFitHorizontalNav) {
-        firstDesktopNavItemRef.current?.focus();
+        activeDesktopItemRef.current?.focus();
       } else {
         menuButtonRef.current?.focus();
       }
     }
-  }, [isMenuOpen, canFitHorizontalNav]);
+  }, [isMenuOpen, canFitHorizontalNav, currentScreen]);
 
   // Focus trap por teclado (Tab e Shift+Tab em ciclo fechado) e tecla Escape para fechamento
   useEffect(() => {
@@ -252,7 +204,6 @@ export const Header: React.FC<HeaderProps> = ({
   }, [isMenuOpen]);
 
   const handleOpenMenu = () => {
-    savedScrollPositionRef.current = window.scrollY || window.pageYOffset || 0;
     setIsMenuOpen(true);
   };
 
@@ -268,6 +219,11 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
+  const selectSection = (event: React.MouseEvent<HTMLAnchorElement>, id: ScreenId) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    onSelectScreen(id);
+  };
 
   // Botão com identidade visual do logotipo ēloSites
   const renderMenuButton = () => (
@@ -329,7 +285,6 @@ export const Header: React.FC<HeaderProps> = ({
                 id="brand-logo-link"
                 onClick={() => {
                   if (isMenuOpen) {
-                    isNavigatingToScreenRef.current = true;
                     setIsMenuOpen(false);
                   }
                   onSelectScreen('inicio');
@@ -352,12 +307,12 @@ export const Header: React.FC<HeaderProps> = ({
                 <EloLogo size="md" />
               </div>
               <nav className="flex items-center gap-1 xl:gap-1.5 shrink-0">
-                {NAV_ITEMS.map((item) => (
+                {SCREENS.map((item) => (
                   <span
                     key={item.id}
-                    className="px-2.5 py-1.5 text-[13px] xl:text-[14px] font-medium"
+                    className="nav-menu-link-item nav-top-link"
                   >
-                    {item.label}
+                    {item.shortTitle}
                   </span>
                 ))}
               </nav>
@@ -369,33 +324,21 @@ export const Header: React.FC<HeaderProps> = ({
                 aria-label="Navegação institucional"
                 className="flex items-center gap-1 xl:gap-1.5 ml-auto shrink-0 z-10"
               >
-                {NAV_ITEMS.map((item, index) => {
+                {SCREENS.map((item) => {
                   const isActive = currentScreen === item.id;
                   return (
-                    <button
+                    <a
                       key={item.id}
-                      ref={index === 0 ? firstDesktopNavItemRef : undefined}
-                      id={index === 0 ? 'desktop-nav-first-item' : undefined}
-                      type="button"
-                      onClick={() => onSelectScreen(item.id)}
+                      href={`#${item.id}`}
+                      ref={isActive ? activeDesktopItemRef : undefined}
+                      onClick={(event) => selectSection(event, item.id)}
                       onPointerEnter={() => preloadScreen(item.id)}
                       onFocus={() => preloadScreen(item.id)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`nav-menu-link-item relative group px-2.5 py-1.5 rounded-lg text-[13px] xl:text-[14px] font-medium transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
-                        isActive
-                          ? 'is-active text-white font-semibold bg-blue-600/20 shadow-[0_0_12px_rgba(59,130,246,0.25)]'
-                          : 'text-slate-300 hover:text-blue-100 hover:bg-blue-500/[0.07] border-transparent hover:border-blue-500/20'
-                      }`}
+                      className="nav-menu-link-item nav-top-link"
                     >
-                      <span className="relative z-10">{item.label}</span>
-                      {/* Sublinhado sutil e suave no hover para links inativos */}
-                      {!isActive && (
-                        <span
-                          className="absolute bottom-1 left-2.5 right-2.5 h-[1.5px] rounded-full bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0 opacity-0 scale-x-50 group-hover:opacity-100 group-hover:scale-x-100 transition-all duration-200 ease-out origin-center pointer-events-none"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </button>
+                      {item.shortTitle}
+                    </a>
                   );
                 })}
               </nav>
@@ -415,32 +358,13 @@ export const Header: React.FC<HeaderProps> = ({
           ref={drawerRef}
           id="multi-screen-navigation-drawer"
           role="dialog"
+          aria-label="Menu de navegação"
           aria-modal="true"
           style={menuContainerStyle}
           className={menuContainerClassName}
           onClick={handleCloseMenu}
         >
-          {/* Fundo animado (Three.js sob demanda com Suspense quando permitido, ou fallback CSS estático) */}
-          {canRun3D ? (
-            <React.Suspense
-              fallback={
-                <FluidRippleFallback
-                  variant="contained"
-                  className="absolute inset-0 z-0 opacity-90 pointer-events-none"
-                />
-              }
-            >
-              <FluidRippleBackground
-                variant="contained"
-                className="absolute inset-0 z-0 opacity-90 pointer-events-none"
-              />
-            </React.Suspense>
-          ) : (
-            <FluidRippleFallback
-              variant="contained"
-              className="absolute inset-0 z-0 opacity-90 pointer-events-none"
-            />
-          )}
+          <div className="nav-ambient" aria-hidden="true" />
 
           {/* Painel de links sobre a página atual */}
           <div
@@ -470,40 +394,17 @@ export const Header: React.FC<HeaderProps> = ({
                     }}
                     className="w-full flex justify-center"
                   >
-                    <button
-                      ref={index === 0 ? firstMenuItemRef : undefined}
-                      type="button"
-                      onClick={() => {
-                        isNavigatingToScreenRef.current = true;
-                        setIsMenuOpen(false);
-                        onSelectScreen(screen.id);
-                      }}
+                    <a
+                      href={`#${screen.id}`}
+                      ref={isActive ? activeMenuItemRef : undefined}
+                      onClick={(event) => selectSection(event, screen.id)}
                       onPointerEnter={() => preloadScreen(screen.id)}
                       onFocus={() => preloadScreen(screen.id)}
-                      onTouchStart={() => preloadScreen(screen.id)}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`nav-menu-link-item group relative w-full max-w-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
-                        isActive
-                          ? 'is-active bg-blue-600/95 text-white shadow-[0_0_20px_rgba(59,130,246,0.6)] font-bold'
-                          : 'bg-[#09112e]/85 hover:bg-[#0f1d4f]/95 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/60 text-slate-100 hover:text-white shadow-md shadow-black/50'
-                      }`}
+                      className="nav-menu-link-item nav-drawer-link"
                     >
-                      {isActive && (
-                        <span
-                          className="w-2 h-2 rounded-full bg-blue-400 shrink-0 shadow-[0_0_8px_#3b82f6]"
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span
-                        className={`font-display text-[17px] sm:text-[18px] tracking-tight ${
-                          isActive
-                            ? 'text-white font-bold'
-                            : 'font-medium text-slate-200 group-hover:text-white'
-                        }`}
-                      >
-                        {screen.shortTitle}
-                      </span>
-                    </button>
+                      {screen.shortTitle}
+                    </a>
                   </motion.li>
                 );
               })}

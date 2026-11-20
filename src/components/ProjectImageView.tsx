@@ -66,13 +66,15 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
               aria-label="Voltar para o Estudo de Caso"
             >
               <ArrowLeft className="w-4 h-4 text-blue-400" />
-              <span>Voltar ao Case</span>
+              <span>Voltar ao projeto</span>
             </button>
 
             {/* Alternador Desktop <-> Mobile */}
             <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-blue-500/20">
               <button
                 type="button"
+                aria-label="Ver versão para computador"
+                aria-pressed={!isMobile}
                 onClick={() => onSwitchType('desktop')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   !isMobile
@@ -86,6 +88,8 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
 
               <button
                 type="button"
+                aria-label="Ver versão para celular"
+                aria-pressed={isMobile}
                 onClick={() => onSwitchType('mobile')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   isMobile
@@ -130,8 +134,8 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
               <div className="rounded-[22px] overflow-hidden bg-black border border-white/[0.1] w-full">
                 {imageSource ? (
                   <picture className="w-full block">
-                    <source type="image/avif" srcSet={imageSource.avifSrcSet} sizes="(max-width: 640px) 100vw, 512px" />
-                    <source type="image/webp" srcSet={imageSource.webpSrcSet} sizes="(max-width: 640px) 100vw, 512px" />
+                    <source type="image/avif" srcSet={imageSource.avifSrcSet} sizes="(max-width: 479px) calc(100vw - 58px), (max-width: 639px) 422px, 482px" />
+                    <source type="image/webp" srcSet={imageSource.webpSrcSet} sizes="(max-width: 479px) calc(100vw - 58px), (max-width: 639px) 422px, 482px" />
                     <img
                       src={imageSource.fallbackSrc}
                       alt={`Captura Mobile completa do site ${project.title}`}
@@ -183,8 +187,8 @@ export const ProjectImageView: React.FC<ProjectImageViewProps> = ({
               <div className="w-full bg-slate-950">
                 {imageSource ? (
                   <picture className="w-full block">
-                    <source type="image/avif" srcSet={imageSource.avifSrcSet} sizes="(max-width: 1280px) 100vw, 1152px" />
-                    <source type="image/webp" srcSet={imageSource.webpSrcSet} sizes="(max-width: 1280px) 100vw, 1152px" />
+                    <source type="image/avif" srcSet={imageSource.avifSrcSet} sizes="(max-width: 639px) calc(100vw - 34px), (max-width: 1023px) calc(100vw - 50px), (max-width: 1215px) calc(100vw - 66px), 1150px" />
+                    <source type="image/webp" srcSet={imageSource.webpSrcSet} sizes="(max-width: 639px) calc(100vw - 34px), (max-width: 1023px) calc(100vw - 50px), (max-width: 1215px) calc(100vw - 66px), 1150px" />
                     <img
                       src={imageSource.fallbackSrc}
                       alt={`Captura Desktop completa do site ${project.title}`}

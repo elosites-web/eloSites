@@ -1,0 +1,38 @@
+/* Cada tela solicita apenas sua fotografia. As camadas decorativas ficam atrás do texto. */
+#inicio { --cena-pequena: url('/media/ambientes/teclado-480.webp'); --cena-grande: url('/media/ambientes/teclado-960.webp'); }
+#servicos { --cena-pequena: url('/media/ambientes/esboco-480.webp'); --cena-grande: url('/media/ambientes/esboco-960.webp'); }
+#portfolio, #case-detail-page, #project-image-view { --cena-pequena: url('/media/ambientes/projetos-480.webp'); --cena-grande: url('/media/ambientes/projetos-960.webp'); }
+#avaliacoes { --cena-pequena: url('/media/ambientes/depoimentos-480.webp'); --cena-grande: url('/media/ambientes/depoimentos-960.webp'); }
+#como-funciona, #diferenciais { --cena-pequena: url('/media/ambientes/processo-480.webp'); --cena-grande: url('/media/ambientes/processo-960.webp'); }
+#briefing-agendamento { --cena-pequena: url('/media/ambientes/orcamento-480.webp'); --cena-grande: url('/media/ambientes/orcamento-960.webp'); }
+#parceria-trafego { --cena-pequena: url('/media/ambientes/anuncios-480.webp'); --cena-grande: url('/media/ambientes/anuncios-960.webp'); }
+#faq, #contato, .cartao-ambiente { --cena-pequena: url('/media/ambientes/contato-480.webp'); --cena-grande: url('/media/ambientes/contato-960.webp'); }
+#sobre-fundador, .erro-ambiente { --cena-pequena: url('/media/ambientes/teclado-480.webp'); --cena-grande: url('/media/ambientes/teclado-960.webp'); }
+
+:where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente) { position: relative; isolation: isolate; }
+:where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto auto;
+  width: min(100%, 70rem);
+  height: min(31rem, 100%);
+  pointer-events: none;
+  opacity: .24;
+  background-image: linear-gradient(to top, #050814, transparent 70%), url('/media/circuitos.svg'), var(--cena-grande);
+  background-size: cover, 26rem auto, cover;
+  background-position: center, right top, center;
+  mask-image: linear-gradient(90deg, transparent, #000 55%);
+}
+@media (max-width: 640px) {
+  #inicio { --cena-pequena: url('/media/ambientes/teclado-320.webp'); }
+  #inicio::before { top: 3.75rem; width: min(60vw, 17rem); height: min(40vw, 11rem); }
+  :where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente)::before {
+    height: 17rem; opacity: .19;
+    background-image: linear-gradient(to top, #050814, transparent), url('/media/circuitos.svg'), var(--cena-pequena);
+  }
+}
+@media (prefers-reduced-data: reduce), (forced-colors: active) {
+  :where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente)::before { display: none; }
+}
+html[data-save-data="true"] :where(#inicio, #servicos, #portfolio, #case-detail-page, #project-image-view, #avaliacoes, #como-funciona, #diferenciais, #briefing-agendamento, #parceria-trafego, #faq, #contato, .cartao-ambiente, #sobre-fundador, .erro-ambiente)::before { display: none; }

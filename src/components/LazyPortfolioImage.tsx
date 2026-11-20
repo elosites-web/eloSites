@@ -37,7 +37,8 @@ export const LazyPortfolioImage: React.FC<LazyPortfolioImageProps> = ({
   const [hasError, setHasError] = useState<boolean>(false);
 
   const responsive = getPortfolioImageSource(src);
-  const effectiveSizes = sizes || responsive?.defaultSizes;
+  const slot = sizes || responsive?.defaultSizes;
+  const effectiveSizes = !priority && slot ? `auto, ${slot}` : slot;
 
   useEffect(() => {
     if (priority) {

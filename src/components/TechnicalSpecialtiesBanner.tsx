@@ -140,7 +140,7 @@ export const TechnicalSpecialtiesBanner: React.FC = () => {
         {/* Cabeçalho do Banner: Título e Frase Curta de Contexto */}
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-5 sm:pb-6 border-b border-white/[0.08]">
           <div className="space-y-1.5 text-left">
-            <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest">
+            <div className="section-kicker inline-flex items-center gap-2 text-[11px] sm:text-xs font-mono font-semibold text-cyan-400 uppercase tracking-widest">
               <Cpu className="w-3.5 h-3.5 text-cyan-400 shrink-0" aria-hidden="true" />
               <span>Base técnica e especialidades</span>
             </div>
@@ -149,11 +149,11 @@ export const TechnicalSpecialtiesBanner: React.FC = () => {
               id="technical-specialties-heading"
               className="font-display text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-tight leading-snug"
             >
-              Tecnologias consagradas e soluções práticas para o seu negócio
+              Como fazemos seu site abrir rápido e ser fácil de usar
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed max-w-2xl font-normal">
-              Desenvolvimento sob medida com ferramentas modernas para garantir carregamento ágil, estabilidade e navegação intuitiva em qualquer dispositivo.
+              Usamos HTML, CSS e React para organizar os textos, mostrar as fotos e fazer os botões funcionarem no celular e no computador. Veja as ferramentas e o que cada uma acrescenta ao seu site.
             </p>
           </div>
 

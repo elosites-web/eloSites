@@ -38,7 +38,7 @@ export const SCREENS: ScreenMeta[] = [
     title: 'Início',
     shortTitle: 'Início',
     badge: 'Início',
-    description: 'Presença profissional estruturada para facilitar a leitura pelos mecanismos de busca e o contato pelo WhatsApp.',
+    description: 'Sites feitos em Jundiaí para pequenos negócios de todo o Brasil, com páginas que apresentam produtos e levam o cliente ao WhatsApp.',
     iconName: 'Sparkles',
   },
   {
@@ -80,7 +80,7 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'orcamento',
     number: '06',
-    title: 'Planejamento Estratégico & Agendamento',
+    title: 'Orçamento e agendamento',
     shortTitle: 'Orçamento',
     badge: 'Orçamento',
     description: 'Dê o próximo passo para o seu site.',
@@ -89,7 +89,7 @@ export const SCREENS: ScreenMeta[] = [
   {
     id: 'parceria-trafego',
     number: '07',
-    title: 'Tráfego Pago (Anúncios na Internet) & Contatos',
+    title: 'Anúncios na internet com a TrueThomaz.BM',
     shortTitle: 'Tráfego Pago',
     badge: 'Tráfego Pago',
     description: 'Anúncios para atrair mais pessoas para o seu site e WhatsApp.',
@@ -105,6 +105,8 @@ export const SCREENS: ScreenMeta[] = [
     iconName: 'HelpCircle',
   },
 ];
+
+export const TRAFFIC_PRICE_NOTICE = 'Valores e condições especiais sujeitos a alterações sem aviso prévio. Confirme a oferta antes de contratar.';
 
 export const PAYMENT_CONDITIONS = {
   customBudgetNotice:

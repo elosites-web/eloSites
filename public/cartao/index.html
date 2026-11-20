@@ -29,9 +29,18 @@
 <meta name="twitter:image:width" content="1200" />
 <meta name="twitter:image:height" content="630" />
 <meta name="twitter:image:alt" content="Cartão digital de Everton Lopes, fundador da ēloSites" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&family=Space+Grotesk:wght@500;700&display=swap" />
+<script>
+  // Em uma primeira visita offline ao cartão, as imagens originais já estão no cache do site.
+  document.addEventListener('error', function (event) {
+    var image = event.target;
+    if (!(image instanceof HTMLImageElement) || !image.hasAttribute('srcset')) return;
+    var picture = image.closest('picture');
+    if (picture) picture.querySelectorAll('source').forEach(function (source) { source.remove(); });
+    image.removeAttribute('srcset');
+  }, true);
+</script>
+<link rel="stylesheet" href="/fonts/site.css" />
+<link rel="stylesheet" href="/media/ambientes.css" />
 <style>
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -125,7 +134,7 @@ body.share-open{overflow:hidden}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{opacity:1;transform:none}}
 </style>
 </head>
-<body>
+<body class="cartao-ambiente">
 <div class="orb o1" aria-hidden="true"></div>
 <div class="orb o2" aria-hidden="true"></div>
 <main>
@@ -136,18 +145,18 @@ body.share-open{overflow:hidden}
 <span class="line-bottom"></span>
 </span>
 </a>
-<img class="logo rise" src="/cartao/logo.webp" width="150" height="37" alt="ēloSites" />
+<img class="logo rise" src="/cartao/logo.webp" srcset="/logo-elosites-64w.webp 64w, /logo-elosites-144w.webp 144w, /logo-elosites-192w.webp 192w, /logo-elosites-288w.webp 288w, /logo-elosites-320w.webp 319w, /logo-elosites-416w.webp 416w, /logo-elosites-480w.webp 480w, /cartao/logo.webp 640w" sizes="150px" width="150" height="37" alt="ēloSites" />
 
 <div class="photo rise" style="animation-delay:.1s">
 <div class="halo" aria-hidden="true"></div>
 <div class="ring" aria-hidden="true"></div>
-<img src="/cartao/eu.webp" width="132" height="132" alt="Everton Lopes, fundador da ēloSites" />
+<picture><source type="image/avif" srcset="/cartao/eu-132w.avif 132w, /cartao/eu-264w.avif 264w" sizes="132px" /><img srcset="/cartao/eu-132w.webp 132w, /cartao/eu-264w.webp 264w, /cartao/eu.webp 520w" sizes="132px" src="/cartao/eu.webp" width="132" height="132" alt="Everton Lopes, fundador da ēloSites" /></picture>
 </div>
 
 <header class="id rise" style="animation-delay:.22s">
 <h1>Everton Lopes</h1>
 <p class="role">Fundador da ēloSites</p>
-<p class="tag">Presença digital estratégica para pequenos negócios e profissionais liberais.</p>
+<p class="tag">Crio sites em Jundiaí para pequenos negócios e profissionais de todo o Brasil. Mostre seu trabalho e receba pedidos pelo WhatsApp.</p>
 </header>
 
 <nav class="stack rise" style="animation-delay:.36s" aria-label="Ações principais">

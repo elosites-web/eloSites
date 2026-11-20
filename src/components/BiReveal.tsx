@@ -141,7 +141,7 @@ export const BiReveal: React.FC<BiRevealProps> = ({
       style={{
         ...style,
         opacity: isInView || isReduced ? 1 : 0,
-        transform: isInView || isReduced ? 'translate3d(0, 0, 0)' : transformHidden,
+        transform: isInView || isReduced ? 'none' : transformHidden,
         willChange: !isInView && !isReduced ? 'transform, opacity' : 'auto',
         transition: isReduced
           ? 'opacity 0.2s ease-out'
