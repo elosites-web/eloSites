@@ -51,7 +51,7 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
                   href={mainWhatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-3 px-6 sm:px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/30 shadow-lg shadow-emerald-950/40 group transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-3 px-6 sm:px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-white bg-emerald-700 hover:bg-emerald-800 border border-emerald-400/30 shadow-lg shadow-emerald-950/40 group transition-all"
                 >
                   <WhatsAppIcon className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
                   <span className="text-center">Falar no WhatsApp</span>
@@ -67,7 +67,7 @@ export const ContactCtaSection: React.FC<ContactCtaSectionProps> = ({ onNavigate
                       window.location.hash = 'orcamento';
                     }
                   }}
-                  className="cta-primary w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-base font-bold text-white shadow-lg cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl border border-indigo-400/60 bg-slate-900 text-base font-bold text-indigo-100 hover:bg-indigo-950 cursor-pointer"
                 >
                   <span className="text-center">Pedir orçamento pelo formulário</span>
                   <ArrowRight className="w-4 h-4" />

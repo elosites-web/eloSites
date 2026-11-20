@@ -948,11 +948,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
                                 type="submit"
                                 disabled={!briefingData.agreedToLgpd}
                                 aria-disabled={!briefingData.agreedToLgpd}
-                                className={`cta-primary inline-flex items-center justify-center text-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-white min-h-12 flex-1 transition-all ${
-                                  !briefingData.agreedToLgpd
-                                    ? 'opacity-40 cursor-not-allowed bg-slate-800 border border-slate-700/60 shadow-none pointer-events-auto'
-                                    : 'pressable'
-                                }`}
+                                className="cta-commercial inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold min-h-12 flex-1"
                               >
                                 <WhatsAppIcon className="w-5 h-5 shrink-0" />
                                 <span className="text-center">Enviar meu pedido pelo WhatsApp</span>

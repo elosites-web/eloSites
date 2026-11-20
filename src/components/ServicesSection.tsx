@@ -401,7 +401,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         <button
                           type="button"
                           onClick={onNavigateToOrcamento}
-                          className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-400/40 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-105 cursor-pointer"
+                          className="cta-commercial w-full sm:w-auto min-h-12 inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold"
                         >
                           <span className="text-center">Descrever meu projeto</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -413,9 +413,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] border border-emerald-400/30 transition-all duration-200 hover:scale-105 shadow-md shadow-emerald-950/40"
+                        className="w-full sm:w-auto min-h-12 sm:min-h-0 inline-flex items-center justify-center text-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-emerald-100 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/70 transition-all duration-200 hover:scale-105"
                       >
-                        <WhatsAppIcon className="w-4 h-4 text-white" />
+                        <WhatsAppIcon className="w-4 h-4" />
                         <span className="text-center">Conversar no WhatsApp</span>
                       </a>
                     </div>

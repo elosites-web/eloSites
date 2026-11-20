@@ -457,7 +457,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                     href={heroWhatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="cta-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-white inline-flex items-center justify-center gap-2.5 shadow-[0_0_24px_rgba(37,99,235,0.45)] hover:shadow-[0_0_36px_rgba(59,130,246,0.65)] cursor-pointer group text-sm sm:text-base"
+                    className="cta-commercial w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold inline-flex items-center justify-center gap-2.5 group text-sm sm:text-base"
                   >
                     <span>Solicitar orçamento</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -619,7 +619,7 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold shadow-md shadow-blue-950/50 cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold shadow-md shadow-blue-950/50 cursor-pointer"
                               >
                                 <span>Solicitar orçamento</span>
                               </a>
