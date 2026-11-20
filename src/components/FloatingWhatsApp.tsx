@@ -1,28 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { SITE_CONFIG, whatsappUrl, ScreenId } from '../types';
+import { SITE_CONFIG, whatsappUrl } from '../types';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { X, ArrowRight } from 'lucide-react';
-
-/**
- * CONSTANTES DE TEMPORIZAÇÃO (em milissegundos)
- * Centralizadas no topo do arquivo para fácil ajuste pelo proprietário.
- */
-export const FLOATING_WHATSAPP_TIMINGS = {
-  // Duração do skeleton loader na transição para visível, prevenindo layout shift e FOUC (700 ms)
-  SKELETON_DURATION_MS: 700,
-  // Tempo após o botão aparecer para iniciar o efeito de pulso gradiente nele e na bolinha (5 s)
-  BUTTON_PULSE_DELAY_MS: 5000,
-  // Tempo após a aparição do botão para o balão abrir (15 s após o botão = 45 s após o load)
-  BUBBLE_APPEAR_DELAY_MS: 15000,
-  // Tempo que o balão permanece visível antes de fechar sozinho (10 s)
-  BUBBLE_VISIBLE_DURATION_MS: 10000,
-  // Intervalo para o balão reaparecer após ser fechado (2 minutos = 120 s)
-  BUBBLE_REAPPEAR_INTERVAL_MS: 120000,
-  // Limite máximo de aparições do balão durante a sessão (Infinity = ciclo contínuo)
-  BUBBLE_MAX_APPEARANCES: Infinity,
-} as const;
+import { WA_TIMINGS, useEligibleTimeout } from '../whatsAppTimers';
 
 // Verificação de horário comercial oficial (Segunda a Sexta, 09:00 - 18:00)
 const isWithinBusinessHours = (): boolean => {
@@ -70,14 +52,43 @@ export const SkeletonFloatingWhatsApp: React.FC<{ className?: string }> = ({ cla
 
 interface FloatingWhatsAppProps {
   onBubbleStateChange?: (isVisible: boolean) => void;
-  currentScreen?: ScreenId;
+  eligible: boolean;
+  open: boolean;
+  held: boolean;
+  onHold: (held: boolean) => void;
+  onClose: () => void;
 }
 
-export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStateChange, currentScreen }) => {
-  const [isSkeletonLoading, setIsSkeletonLoading] = useState(true);
-  const [isPulsing, setIsPulsing] = useState(false);
-  const [isBubbleVisible, setIsBubbleVisible] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
+  onBubbleStateChange, eligible, open, held, onHold, onClose,
+}) => {
+  const [stage, setStage] = useState<'skeleton' | 'button' | 'pulse'>('skeleton');
+  const isSkeletonLoading = stage === 'skeleton';
+  const isPulsing = stage === 'pulse';
+  const advanceStage = useCallback(() => {
+    setStage(previous => previous === 'skeleton' ? 'button' : 'pulse');
+  }, []);
+  useEligibleTimeout(
+    isSkeletonLoading ? WA_TIMINGS.skeleton : WA_TIMINGS.pulseDelay,
+    eligible && !isPulsing,
+    advanceStage,
+  );
+
+  const isBubbleVisible = eligible && open;
+  const isPaused = !eligible || held;
+  const interaction = useRef({ hover: false, focus: false });
+  const hold = (source: 'hover' | 'focus', value: boolean) => {
+    if (!isBubbleVisible) return;
+    interaction.current[source] = value;
+    onHold(interaction.current.hover || interaction.current.focus);
+  };
+  useLayoutEffect(() => {
+    if (!isBubbleVisible) {
+      interaction.current = { hover: false, focus: false };
+      onHold(false);
+    }
+  }, [isBubbleVisible, onHold]);
+
   const [isOnline, setIsOnline] = useState<boolean>(() => isWithinBusinessHours());
 
   // Notifica o rodapé e a aplicação quando o balão do WhatsApp surge ou fecha
@@ -96,171 +107,46 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
 
-  // Refs de controle de temporizadores e estado
-  const skeletonTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const pulseTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const initialBubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const reappearTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const remainingTimeRef = useRef<number>(FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS);
-  const timerStartTimeRef = useRef<number>(0);
-  const appearanceCountRef = useRef<number>(0);
-  const isBubbleVisibleRef = useRef<boolean>(false);
-
-  // Mantém a ref sincronizada para uso seguro em callbacks assíncronos
-  isBubbleVisibleRef.current = isBubbleVisible;
-
   // Atualização periódica do status de atendimento (online / responderemos em breve)
   useEffect(() => {
+    if (!eligible) return;
     setIsOnline(isWithinBusinessHours());
     const interval = setInterval(() => {
       setIsOnline(isWithinBusinessHours());
-    }, 60000);
+    }, WA_TIMINGS.statusRefresh);
     return () => clearInterval(interval);
-  }, []);
-
-  // Limpa com segurança todos os temporizadores pendentes
-  const clearAllTimers = useCallback(() => {
-    if (skeletonTimerRef.current) clearTimeout(skeletonTimerRef.current);
-    if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
-    if (initialBubbleTimerRef.current) clearTimeout(initialBubbleTimerRef.current);
-    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-    if (reappearTimerRef.current) clearTimeout(reappearTimerRef.current);
-  }, []);
-
-  // Forward ref para quebrar dependência circular entre showBubble e closeBubble
-  const showBubbleRef = useRef<() => void>(() => {});
-
-  // Fecha o balão e agenda a próxima aparição no ciclo de 2 minutos
-  const closeBubbleAndScheduleReappear = useCallback(() => {
-    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-    autoCloseTimerRef.current = null;
-
-    setIsBubbleVisible(false);
-    setIsPaused(false);
-
-    if (reappearTimerRef.current) clearTimeout(reappearTimerRef.current);
-
-    if (appearanceCountRef.current < FLOATING_WHATSAPP_TIMINGS.BUBBLE_MAX_APPEARANCES) {
-      reappearTimerRef.current = setTimeout(() => {
-        showBubbleRef.current();
-      }, FLOATING_WHATSAPP_TIMINGS.BUBBLE_REAPPEAR_INTERVAL_MS);
-    }
-  }, []);
-
-  // Inicia o temporizador de auto-fechamento do balão
-  const startAutoCloseCountdown = useCallback(
-    (durationMs: number) => {
-      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-      timerStartTimeRef.current = Date.now();
-      autoCloseTimerRef.current = setTimeout(() => {
-        closeBubbleAndScheduleReappear();
-      }, durationMs);
-    },
-    [closeBubbleAndScheduleReappear]
-  );
-
-  // Exibe o balão e inicia a contagem de visibilidade
-  const showBubble = useCallback(() => {
-    if (appearanceCountRef.current >= FLOATING_WHATSAPP_TIMINGS.BUBBLE_MAX_APPEARANCES) {
-      return;
-    }
-
-    appearanceCountRef.current += 1;
-    setIsBubbleVisible(true);
-    setIsPaused(false);
-    remainingTimeRef.current = FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS;
-    startAutoCloseCountdown(FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS);
-  }, [startAutoCloseCountdown]);
-
-  // Mantém showBubbleRef atualizado com a versão mais recente
-  showBubbleRef.current = showBubble;
-
-  // Pausa a contagem quando o ponteiro está sobre o balão ou o foco está dentro
-  const handlePause = useCallback(() => {
-    if (!isBubbleVisibleRef.current) return;
-    setIsPaused(true);
-
-    if (autoCloseTimerRef.current) {
-      clearTimeout(autoCloseTimerRef.current);
-      autoCloseTimerRef.current = null;
-    }
-
-    const elapsed = Date.now() - timerStartTimeRef.current;
-    remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
-  }, []);
-
-  // Retoma a contagem de onde parou quando o cursor/foco sai do balão
-  const handleResume = useCallback(() => {
-    if (!isBubbleVisibleRef.current || remainingTimeRef.current <= 0) return;
-    setIsPaused(false);
-    startAutoCloseCountdown(remainingTimeRef.current);
-  }, [startAutoCloseCountdown]);
-
-  // Tratamento de foco para acessibilidade (pausa se o foco estiver dentro do balão)
-  const handleBubbleBlur = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
-      if (e.currentTarget.contains(e.relatedTarget as Node)) {
-        return;
-      }
-      handleResume();
-    },
-    [handleResume]
-  );
-
-  // Fechamento manual pelo usuário (botão X ou tecla Escape)
-  const handleManualClose = useCallback(() => {
-    closeBubbleAndScheduleReappear();
-  }, [closeBubbleAndScheduleReappear]);
-
-  // Tecla Escape para fechar quando o foco está no balão
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Escape') {
-        e.stopPropagation();
-        handleManualClose();
-      }
-    },
-    [handleManualClose]
-  );
-
-  // Ao clicar no botão flutuante enquanto o balão está visível
-  const handleButtonClick = useCallback(() => {
-    if (isBubbleVisibleRef.current) {
-      closeBubbleAndScheduleReappear();
-    }
-  }, [closeBubbleAndScheduleReappear]);
-
-  useEffect(() => {
-    skeletonTimerRef.current = setTimeout(() => {
-      setIsSkeletonLoading(false);
-      pulseTimerRef.current = setTimeout(() => setIsPulsing(true), FLOATING_WHATSAPP_TIMINGS.BUTTON_PULSE_DELAY_MS);
-      initialBubbleTimerRef.current = setTimeout(() => showBubbleRef.current(), FLOATING_WHATSAPP_TIMINGS.BUBBLE_APPEAR_DELAY_MS);
-    }, FLOATING_WHATSAPP_TIMINGS.SKELETON_DURATION_MS);
-    return clearAllTimers;
-  }, [clearAllTimers]);
+  }, [eligible]);
 
   const floatingWhatsappUrl = whatsappUrl(SITE_CONFIG.floatingWhatsappMessage);
 
   return (
     <aside
+      style={{ visibility: eligible ? undefined : 'hidden' }}
+      inert={!eligible}
+      aria-hidden={!eligible}
       aria-label="Atendimento rápido via WhatsApp"
       className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] animate-fade-in-up"
     >
       {/* Balão de Pop-up estilo Chat Preview Premium */}
       <AnimatePresence>
-        {isBubbleVisible && (
+        {open && (
           <motion.div
             key="whatsapp-bubble-popup"
             role="region"
             aria-label="Mensagem do WhatsApp"
             tabIndex={-1}
-            onMouseEnter={handlePause}
-            onMouseLeave={handleResume}
-            onFocus={handlePause}
-            onBlur={handleBubbleBlur}
-            onKeyDown={handleKeyDown}
+            onMouseEnter={() => hold('hover', true)}
+            onMouseLeave={() => hold('hover', false)}
+            onFocus={() => hold('focus', true)}
+            onBlur={event => {
+              if (!event.currentTarget.contains(event.relatedTarget)) hold('focus', false);
+            }}
+            onKeyDown={event => {
+              if (event.key === 'Escape') {
+                event.stopPropagation();
+                onClose();
+              }
+            }}
             initial={
               prefersReduced
                 ? { opacity: 0 }
@@ -353,7 +239,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
               {/* Botão Fechar com área de toque e foco visível */}
               <button
                 type="button"
-                onClick={handleManualClose}
+                onClick={onClose}
                 className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0 -mr-0.5 -mt-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 aria-label="Fechar mensagem"
               >
@@ -377,7 +263,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                 href={floatingWhatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleButtonClick}
+                onClick={open ? onClose : undefined}
                 className="w-full inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded py-0.5 group/action"
               >
                 <span>Responder no WhatsApp</span>
@@ -398,7 +284,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                       : 'from-indigo-500/35 to-amber-500/35'
                   }`}
                   style={{
-                    animation: `shrinkProgress ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms linear forwards`,
+                    animation: `shrinkProgress ${WA_TIMINGS.open}ms linear forwards`,
                     animationPlayState: isPaused ? 'paused' : 'running',
                   }}
                 />
@@ -451,7 +337,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                     ? 'Conversar no WhatsApp com a ēloSites (Online agora)'
                     : 'Conversar no WhatsApp com a ēloSites (Fora do horário de atendimento — responderemos em breve)'
                 }
-                onClick={handleButtonClick}
+                onClick={open ? onClose : undefined}
                 initial={
                   prefersReduced
                     ? { opacity: 0 }
@@ -532,15 +418,14 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                   />
 
                   {/* Estado de Ação (Action State): Preenchimento gradual que reflete a barra de progresso do balão */}
-                  {isBubbleVisible && (
+                  {open && (
                     <div
-                      key={`whatsapp-icon-fill-${appearanceCountRef.current}`}
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{
                         clipPath: !prefersReduced ? 'inset(100% 0 0 0)' : 'none',
                         animation: !prefersReduced
-                          ? `whatsappIconFill ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms linear forwards`
-                          : `whatsappIconFadeReduced ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms ease-out forwards`,
+                          ? `whatsappIconFill ${WA_TIMINGS.open}ms linear forwards`
+                          : `whatsappIconFadeReduced ${WA_TIMINGS.open}ms ease-out forwards`,
                         animationPlayState: isPaused ? 'paused' : 'running',
                       }}
                     >

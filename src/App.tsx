@@ -17,6 +17,8 @@ import { ScreenId, SCREENS } from './types';
 import { shouldReduceMedia, getMotionTier } from './mediaPrefs';
 import { withViewTransition, supportsViewTransitions } from './viewTransition';
 import { Sparkles } from 'lucide-react';
+import { useWhatsAppEligibility } from './useWhatsAppEligibility';
+import { useWhatsAppSchedule } from './whatsAppTimers';
 import type { PortfolioProjectData } from './portfolioData';
 
 const CustomCursor = lazy(() =>
@@ -37,25 +39,6 @@ function useFinePointer() {
     return () => query.removeEventListener('change', update);
   }, []);
   return matches;
-}
-
-function useWhatsAppDelay() {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    let timer: number;
-    const schedule = () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
-      const elapsed = navigation?.loadEventStart ? performance.now() - navigation.loadEventStart : 0;
-      timer = window.setTimeout(() => setReady(true), Math.ceil(Math.max(0, 30_000 - elapsed)));
-    };
-    if (document.readyState === 'complete') schedule();
-    else window.addEventListener('load', schedule, { once: true });
-    return () => {
-      window.removeEventListener('load', schedule);
-      window.clearTimeout(timer);
-    };
-  }, []);
-  return ready;
 }
 
 const resolvedLazyModules = new Set<string>();
@@ -195,7 +178,8 @@ export default function App() {
 
   // Estados dedicados de navegação para Case e Captura de Imagem (Substituição de modais por páginas)
   const hasFinePointer = useFinePointer();
-  const whatsAppReady = useWhatsAppDelay();
+  const { heroRef, eligible } = useWhatsAppEligibility();
+  const whatsApp = useWhatsAppSchedule(eligible, isWhatsAppBubbleOpen);
   const [activeProject, setActiveProject] = useState<PortfolioProjectData | null>(null);
   const [catalogStatus, setCatalogStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const routeVersion = useRef(0);
@@ -1115,7 +1099,7 @@ export default function App() {
           animate="visible"
           className="w-full space-y-0"
         >
-          <div>
+          <div ref={heroRef}>
             <Hero
               mode="inicio"
               onNavigateToPortfolio={() => navigateToScreen('portfolio')}
@@ -1435,11 +1419,15 @@ export default function App() {
         />
 
         {/* Botão Flutuante Oficial do WhatsApp */}
-        {whatsAppReady && (
+        {whatsApp.requested && (
           <SectionErrorBoundary>
             <Suspense fallback={null}>
               <FloatingWhatsApp
-                currentScreen={currentScreen}
+                eligible={eligible}
+                open={whatsApp.open}
+                held={whatsApp.held}
+                onHold={whatsApp.setHeld}
+                onClose={whatsApp.close}
                 onBubbleStateChange={setIsWhatsAppBubbleOpen}
               />
             </Suspense>
