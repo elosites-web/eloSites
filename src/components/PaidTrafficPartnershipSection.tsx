@@ -2,12 +2,8 @@ import { ArrowUpRight, Check, Infinity as MetaIcon, Music2, Search } from 'lucid
 import { whatsappUrl } from '../types';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import logo from '../assets/truethomaz/truethomaz-bm.svg';
+import portrait from '../assets/truethomaz/thomaz-perfil.webp';
 import './PaidTrafficPartnershipSection.css';
-
-const [portrait] = Object.values(import.meta.glob<string>('../assets/truethomaz/thomaz-perfil.webp', {
-  eager: true,
-  import: 'default',
-}));
 
 const platforms = [
   { name: 'Meta Ads', channel: 'Instagram e Facebook', icon: MetaIcon,
@@ -44,9 +40,7 @@ export function PaidTrafficPartnershipSection({ id = 'parceria-trafego' }: { id?
           <aside className="tt-partner" aria-label="Conheça o parceiro">
             <img className="tt-logo" src={logo} alt="TrueThomaz.BM" width="539" height="76" />
             <div className="tt-profile">
-              {portrait && (
-                <img className="tt-portrait" src={portrait} alt="Retrato de Thomaz" width="112" height="112" decoding="async" />
-              )}
+              <img className="tt-portrait" src={portrait} alt="Retrato de Thomaz" width="112" height="112" decoding="async" />
               <div>
                 <h2>Thomaz</h2>
                 <p>Profissional parceiro de tráfego pago</p>
