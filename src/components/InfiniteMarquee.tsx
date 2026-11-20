@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -38,6 +38,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
 
   // Armazenamento em refs para loop com requestAnimationFrame livre de re-renders
   const offsetRef = useRef<number>(0);
+  const contentWidthRef = useRef(0);
   const singleWidthRef = useRef<number>(0);
   const isDraggingRef = useRef<boolean>(false);
   const startXRef = useRef<number>(0);
@@ -70,32 +71,31 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
   }, [isDragging]);
 
   // Mede a largura de 1 bloco de itens via ResizeObserver (zero leituras de layout no loop RAF)
-  const updateSingleWidth = useCallback(() => {
-    if (singleSetRef.current) {
-      const rect = singleSetRef.current.getBoundingClientRect();
-      if (rect.width > 0) {
-        singleWidthRef.current = rect.width;
-      }
-    }
-  }, []);
-
   useEffect(() => {
-    updateSingleWidth();
     const target = singleSetRef.current;
-    let observer: ResizeObserver | null = null;
-    if (target && typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(() => {
-        updateSingleWidth();
+    if (!target) return;
+    const saveWidth = (width: number, contentWidth: number) => {
+      if (width > 0) {
+        singleWidthRef.current = width;
+        contentWidthRef.current = contentWidth;
+      }
+    };
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(([entry]) => {
+        const width = entry.borderBoxSize?.[0]?.inlineSize ?? target.getBoundingClientRect().width;
+        saveWidth(width, entry.contentRect.width);
       });
       observer.observe(target);
+      return () => observer.disconnect();
     }
-    const handleResize = () => updateSingleWidth();
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', handleResize);
+    const measure = () => {
+      const width = target.getBoundingClientRect().width;
+      saveWidth(width, width - parseFloat(getComputedStyle(target).paddingRight));
     };
-  }, [updateSingleWidth, items]);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [items, isReduced]);
 
   // Loop contínuo com requestAnimationFrame — pausado completamente fora da viewport ou em aba oculta
   useEffect(() => {
@@ -121,7 +121,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
 
       if (!isDraggingRef.current && singleWidth > 0) {
         // Velocidade base em pixels por segundo
-        const pxPerSec = singleWidth / Math.max(speed, 10);
+        const pxPerSec = contentWidthRef.current / Math.max(speed, 10);
         const effectiveSpeed = isHoveredRef.current ? pxPerSec * 0.35 : pxPerSec;
 
         offsetRef.current += directionRef.current * effectiveSpeed * dt;
@@ -281,7 +281,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
     <div
       ref={isKeyRef ? singleSetRef : undefined}
       aria-hidden={isAriaHidden ? 'true' : undefined}
-      className="flex items-center gap-4 sm:gap-6 shrink-0"
+      className="flex items-center gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0"
     >
       {items.map((item, idx) => (
         <div
@@ -356,7 +356,7 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
       >
         <div
           ref={trackRef}
-          className="flex items-center gap-4 sm:gap-6 will-change-transform whitespace-nowrap"
+          className="flex items-center will-change-transform whitespace-nowrap"
           style={{ width: 'max-content' }}
         >
           {renderItemSet(true, false)}

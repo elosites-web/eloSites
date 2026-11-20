@@ -1,30 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { WhatsAppIcon } from './WhatsAppIcon';
-import { SITE_CONFIG, whatsappUrl, ScreenId } from '../types';
+import { SITE_CONFIG, whatsappUrl } from '../types';
 import { shouldReduceMedia } from '../mediaPrefs';
 import { X, ArrowRight } from 'lucide-react';
-
-/**
- * CONSTANTES DE TEMPORIZAÇÃO (em milissegundos)
- * Centralizadas no topo do arquivo para fácil ajuste pelo proprietário.
- */
-export const FLOATING_WHATSAPP_TIMINGS = {
-  // Tempo após o carregamento completo da página (window 'load') para o botão começar a aparecer (30 s)
-  BUTTON_APPEAR_DELAY_MS: 30000,
-  // Duração do skeleton loader na transição para visível, prevenindo layout shift e FOUC (700 ms)
-  SKELETON_DURATION_MS: 700,
-  // Tempo após o botão aparecer para iniciar o efeito de pulso gradiente nele e na bolinha (5 s)
-  BUTTON_PULSE_DELAY_MS: 5000,
-  // Tempo após a aparição do botão para o balão abrir (15 s após o botão = 45 s após o load)
-  BUBBLE_APPEAR_DELAY_MS: 15000,
-  // Tempo que o balão permanece visível antes de fechar sozinho (10 s)
-  BUBBLE_VISIBLE_DURATION_MS: 10000,
-  // Intervalo para o balão reaparecer após ser fechado (2 minutos = 120 s)
-  BUBBLE_REAPPEAR_INTERVAL_MS: 120000,
-  // Limite máximo de aparições do balão durante a sessão (Infinity = ciclo contínuo)
-  BUBBLE_MAX_APPEARANCES: Infinity,
-} as const;
+import { WA_TIMINGS, useEligibleTimeout } from '../whatsAppTimers';
 
 // Verificação de horário comercial oficial (Segunda a Sexta, 09:00 - 18:00)
 const isWithinBusinessHours = (): boolean => {
@@ -72,15 +52,43 @@ export const SkeletonFloatingWhatsApp: React.FC<{ className?: string }> = ({ cla
 
 interface FloatingWhatsAppProps {
   onBubbleStateChange?: (isVisible: boolean) => void;
-  currentScreen?: ScreenId;
+  eligible: boolean;
+  open: boolean;
+  held: boolean;
+  onHold: (held: boolean) => void;
+  onClose: () => void;
 }
 
-export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStateChange, currentScreen }) => {
-  const [isButtonVisible, setIsButtonVisible] = useState(false);
-  const [isSkeletonLoading, setIsSkeletonLoading] = useState(false);
-  const [isPulsing, setIsPulsing] = useState(false);
-  const [isBubbleVisible, setIsBubbleVisible] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
+  onBubbleStateChange, eligible, open, held, onHold, onClose,
+}) => {
+  const [stage, setStage] = useState<'skeleton' | 'button' | 'pulse'>('skeleton');
+  const isSkeletonLoading = stage === 'skeleton';
+  const isPulsing = stage === 'pulse';
+  const advanceStage = useCallback(() => {
+    setStage(previous => previous === 'skeleton' ? 'button' : 'pulse');
+  }, []);
+  useEligibleTimeout(
+    isSkeletonLoading ? WA_TIMINGS.skeleton : WA_TIMINGS.pulseDelay,
+    eligible && !isPulsing,
+    advanceStage,
+  );
+
+  const isBubbleVisible = eligible && open;
+  const isPaused = !eligible || held;
+  const interaction = useRef({ hover: false, focus: false });
+  const hold = (source: 'hover' | 'focus', value: boolean) => {
+    if (!isBubbleVisible) return;
+    interaction.current[source] = value;
+    onHold(interaction.current.hover || interaction.current.focus);
+  };
+  useLayoutEffect(() => {
+    if (!isBubbleVisible) {
+      interaction.current = { hover: false, focus: false };
+      onHold(false);
+    }
+  }, [isBubbleVisible, onHold]);
+
   const [isOnline, setIsOnline] = useState<boolean>(() => isWithinBusinessHours());
 
   // Notifica o rodapé e a aplicação quando o balão do WhatsApp surge ou fecha
@@ -99,212 +107,46 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
   const systemPrefersReduced = useReducedMotion();
   const prefersReduced = Boolean(systemPrefersReduced || shouldReduceMedia());
 
-  // Refs de controle de temporizadores e estado
-  const buttonTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const skeletonTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const pulseTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const initialBubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const reappearTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const remainingTimeRef = useRef<number>(FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS);
-  const timerStartTimeRef = useRef<number>(0);
-  const appearanceCountRef = useRef<number>(0);
-  const isBubbleVisibleRef = useRef<boolean>(false);
-
-  // Mantém a ref sincronizada para uso seguro em callbacks assíncronos
-  isBubbleVisibleRef.current = isBubbleVisible;
-
   // Atualização periódica do status de atendimento (online / responderemos em breve)
   useEffect(() => {
+    if (!eligible) return;
     setIsOnline(isWithinBusinessHours());
     const interval = setInterval(() => {
       setIsOnline(isWithinBusinessHours());
-    }, 60000);
+    }, WA_TIMINGS.statusRefresh);
     return () => clearInterval(interval);
-  }, []);
-
-  // Limpa com segurança todos os temporizadores pendentes
-  const clearAllTimers = useCallback(() => {
-    if (buttonTimerRef.current) clearTimeout(buttonTimerRef.current);
-    if (skeletonTimerRef.current) clearTimeout(skeletonTimerRef.current);
-    if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
-    if (initialBubbleTimerRef.current) clearTimeout(initialBubbleTimerRef.current);
-    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-    if (reappearTimerRef.current) clearTimeout(reappearTimerRef.current);
-  }, []);
-
-  // Forward ref para quebrar dependência circular entre showBubble e closeBubble
-  const showBubbleRef = useRef<() => void>(() => {});
-
-  // Fecha o balão e agenda a próxima aparição no ciclo de 2 minutos
-  const closeBubbleAndScheduleReappear = useCallback(() => {
-    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-    autoCloseTimerRef.current = null;
-
-    setIsBubbleVisible(false);
-    setIsPaused(false);
-
-    if (reappearTimerRef.current) clearTimeout(reappearTimerRef.current);
-
-    if (appearanceCountRef.current < FLOATING_WHATSAPP_TIMINGS.BUBBLE_MAX_APPEARANCES) {
-      reappearTimerRef.current = setTimeout(() => {
-        showBubbleRef.current();
-      }, FLOATING_WHATSAPP_TIMINGS.BUBBLE_REAPPEAR_INTERVAL_MS);
-    }
-  }, []);
-
-  // Inicia o temporizador de auto-fechamento do balão
-  const startAutoCloseCountdown = useCallback(
-    (durationMs: number) => {
-      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
-      timerStartTimeRef.current = Date.now();
-      autoCloseTimerRef.current = setTimeout(() => {
-        closeBubbleAndScheduleReappear();
-      }, durationMs);
-    },
-    [closeBubbleAndScheduleReappear]
-  );
-
-  // Exibe o balão e inicia a contagem de visibilidade
-  const showBubble = useCallback(() => {
-    if (appearanceCountRef.current >= FLOATING_WHATSAPP_TIMINGS.BUBBLE_MAX_APPEARANCES) {
-      return;
-    }
-
-    appearanceCountRef.current += 1;
-    setIsBubbleVisible(true);
-    setIsPaused(false);
-    remainingTimeRef.current = FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS;
-    startAutoCloseCountdown(FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS);
-  }, [startAutoCloseCountdown]);
-
-  // Mantém showBubbleRef atualizado com a versão mais recente
-  showBubbleRef.current = showBubble;
-
-  // Pausa a contagem quando o ponteiro está sobre o balão ou o foco está dentro
-  const handlePause = useCallback(() => {
-    if (!isBubbleVisibleRef.current) return;
-    setIsPaused(true);
-
-    if (autoCloseTimerRef.current) {
-      clearTimeout(autoCloseTimerRef.current);
-      autoCloseTimerRef.current = null;
-    }
-
-    const elapsed = Date.now() - timerStartTimeRef.current;
-    remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsed);
-  }, []);
-
-  // Retoma a contagem de onde parou quando o cursor/foco sai do balão
-  const handleResume = useCallback(() => {
-    if (!isBubbleVisibleRef.current || remainingTimeRef.current <= 0) return;
-    setIsPaused(false);
-    startAutoCloseCountdown(remainingTimeRef.current);
-  }, [startAutoCloseCountdown]);
-
-  // Tratamento de foco para acessibilidade (pausa se o foco estiver dentro do balão)
-  const handleBubbleBlur = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
-      if (e.currentTarget.contains(e.relatedTarget as Node)) {
-        return;
-      }
-      handleResume();
-    },
-    [handleResume]
-  );
-
-  // Fechamento manual pelo usuário (botão X ou tecla Escape)
-  const handleManualClose = useCallback(() => {
-    closeBubbleAndScheduleReappear();
-  }, [closeBubbleAndScheduleReappear]);
-
-  // Tecla Escape para fechar quando o foco está no balão
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Escape') {
-        e.stopPropagation();
-        handleManualClose();
-      }
-    },
-    [handleManualClose]
-  );
-
-  // Ao clicar no botão flutuante enquanto o balão está visível
-  const handleButtonClick = useCallback(() => {
-    if (isBubbleVisibleRef.current) {
-      closeBubbleAndScheduleReappear();
-    }
-  }, [closeBubbleAndScheduleReappear]);
-
-  // Refatorado com useLayoutEffect para aplicar o estado inicial hidden (display: none / opacity: 0)
-  // antes da primeira pintura, prevenindo piscadas (FOUC) na carga inicial da página
-  useLayoutEffect(() => {
-    // Assegura explicitamente o estado inicial oculto antes de qualquer paint
-    setIsButtonVisible(false);
-    setIsSkeletonLoading(false);
-    setIsPulsing(false);
-    setIsBubbleVisible(false);
-
-    const startInitialSequence = () => {
-      buttonTimerRef.current = setTimeout(() => {
-        // Exibe o skeleton loader primeiro para transição suave e zero layout shift
-        setIsButtonVisible(true);
-        setIsSkeletonLoading(true);
-
-        skeletonTimerRef.current = setTimeout(() => {
-          setIsSkeletonLoading(false);
-
-          // Exatamente 5 segundos após o botão estar carregado: inicia o efeito de pulso gradiente
-          pulseTimerRef.current = setTimeout(() => {
-            setIsPulsing(true);
-          }, FLOATING_WHATSAPP_TIMINGS.BUTTON_PULSE_DELAY_MS);
-
-          // Balão surge 15 segundos após o botão ter aparecido
-          initialBubbleTimerRef.current = setTimeout(() => {
-            showBubbleRef.current();
-          }, FLOATING_WHATSAPP_TIMINGS.BUBBLE_APPEAR_DELAY_MS);
-        }, FLOATING_WHATSAPP_TIMINGS.SKELETON_DURATION_MS);
-      }, FLOATING_WHATSAPP_TIMINGS.BUTTON_APPEAR_DELAY_MS);
-    };
-
-    if (document.readyState === 'complete') {
-      startInitialSequence();
-    } else {
-      window.addEventListener('load', startInitialSequence, { once: true });
-    }
-
-    return () => {
-      window.removeEventListener('load', startInitialSequence);
-      clearAllTimers();
-    };
-  }, [clearAllTimers]);
+  }, [eligible]);
 
   const floatingWhatsappUrl = whatsappUrl(SITE_CONFIG.floatingWhatsappMessage);
 
   return (
     <aside
+      style={{ visibility: eligible ? undefined : 'hidden' }}
+      inert={!eligible}
+      aria-hidden={!eligible}
       aria-label="Atendimento rápido via WhatsApp"
-      style={{
-        display: isButtonVisible ? 'flex' : 'none',
-      }}
-      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] ${
-        !isButtonVisible ? 'hidden opacity-0 pointer-events-none' : 'animate-fade-in-up'
-      }`}
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] animate-fade-in-up"
     >
       {/* Balão de Pop-up estilo Chat Preview Premium */}
       <AnimatePresence>
-        {isBubbleVisible && (
+        {open && (
           <motion.div
             key="whatsapp-bubble-popup"
             role="region"
             aria-label="Mensagem do WhatsApp"
             tabIndex={-1}
-            onMouseEnter={handlePause}
-            onMouseLeave={handleResume}
-            onFocus={handlePause}
-            onBlur={handleBubbleBlur}
-            onKeyDown={handleKeyDown}
+            onMouseEnter={() => hold('hover', true)}
+            onMouseLeave={() => hold('hover', false)}
+            onFocus={() => hold('focus', true)}
+            onBlur={event => {
+              if (!event.currentTarget.contains(event.relatedTarget)) hold('focus', false);
+            }}
+            onKeyDown={event => {
+              if (event.key === 'Escape') {
+                event.stopPropagation();
+                onClose();
+              }
+            }}
             initial={
               prefersReduced
                 ? { opacity: 0 }
@@ -397,7 +239,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
               {/* Botão Fechar com área de toque e foco visível */}
               <button
                 type="button"
-                onClick={handleManualClose}
+                onClick={onClose}
                 className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0 -mr-0.5 -mt-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 aria-label="Fechar mensagem"
               >
@@ -421,7 +263,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                 href={floatingWhatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleButtonClick}
+                onClick={open ? onClose : undefined}
                 className="w-full inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded py-0.5 group/action"
               >
                 <span>Responder no WhatsApp</span>
@@ -442,7 +284,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
                       : 'from-indigo-500/35 to-amber-500/35'
                   }`}
                   style={{
-                    animation: `shrinkProgress ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms linear forwards`,
+                    animation: `shrinkProgress ${WA_TIMINGS.open}ms linear forwards`,
                     animationPlayState: isPaused ? 'paused' : 'running',
                   }}
                 />
@@ -459,152 +301,149 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ onBubbleStat
       </AnimatePresence>
 
       {/* Botão Flutuante Principal com Skeleton Loader na transição de oculto para visível */}
-      {isButtonVisible && (
-        <div className="relative pointer-events-auto w-14 h-14 shrink-0 [contain:layout_style] animate-fade-in-up">
-          <AnimatePresence mode="wait">
-            {isSkeletonLoading ? (
-              <motion.div
-                key="whatsapp-skeleton-loader"
-                initial={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-                animate={prefersReduced ? { opacity: 1 } : { opacity: 1, scale: 1 }}
-                exit={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-                transition={{ duration: prefersReduced ? 0.12 : 0.22, ease: 'easeOut' }}
-              >
-                <SkeletonFloatingWhatsApp />
-              </motion.div>
-            ) : (
-              <div key="whatsapp-interactive-container" className="relative w-14 h-14">
-                {/* Aura de pulso gradiente: intensa quando online, sutil e atenuada fora do horário */}
-                {isPulsing && !prefersReduced && (
-                  <span
-                    className={`rounded-full pointer-events-none -z-10 [contain:strict] ${
-                      isOnline
-                        ? 'absolute -inset-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400 blur-sm animate-gradient-pulse-aura'
-                        : 'absolute -inset-1 bg-gradient-to-r from-indigo-500/30 via-slate-600/25 to-amber-500/20 blur-[3px] animate-gradient-pulse-aura-offline'
-                    }`}
-                    aria-hidden="true"
-                  />
-                )}
-
-                <motion.a
-                  id="floating-whatsapp-btn"
-                  href={floatingWhatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={
+      <div className="relative pointer-events-auto w-14 h-14 shrink-0 [contain:layout_style] animate-fade-in-up">
+        <AnimatePresence mode="wait">
+          {isSkeletonLoading ? (
+            <motion.div
+              key="whatsapp-skeleton-loader"
+              initial={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+              animate={prefersReduced ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+              exit={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+              transition={{ duration: prefersReduced ? 0.12 : 0.22, ease: 'easeOut' }}
+            >
+              <SkeletonFloatingWhatsApp />
+            </motion.div>
+          ) : (
+            <div key="whatsapp-interactive-container" className="relative w-14 h-14">
+              {/* Aura de pulso gradiente: intensa quando online, sutil e atenuada fora do horário */}
+              {isPulsing && !prefersReduced && (
+                <span
+                  className={`rounded-full pointer-events-none -z-10 [contain:strict] ${
                     isOnline
-                      ? 'Conversar no WhatsApp com a ēloSites (Online agora)'
-                      : 'Conversar no WhatsApp com a ēloSites (Fora do horário de atendimento — responderemos em breve)'
-                  }
-                  onClick={handleButtonClick}
-                  initial={
-                    prefersReduced
-                      ? { opacity: 0 }
-                      : { opacity: 0, y: 8 }
-                  }
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: prefersReduced ? 0.2 : 0.36,
-                    ease: 'easeOut',
-                  }}
-                  className={`relative group flex items-center justify-center w-14 h-14 rounded-full text-white transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200 active:scale-95 z-50 select-none ${
-                    isOnline
-                      ? `bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-xl border-2 border-indigo-400/50 hover:shadow-indigo-500/40 ${
-                          isPulsing && !prefersReduced ? 'animate-gradient-pulse-button' : ''
-                        }`
-                      : `bg-gradient-to-r from-slate-900 via-indigo-950/95 to-slate-900 hover:from-indigo-900/90 hover:to-slate-800 shadow-md shadow-black/70 border border-indigo-400/25 hover:border-amber-400/40 hover:shadow-amber-500/15 ${
-                          isPulsing && !prefersReduced ? 'animate-gradient-pulse-button-offline' : ''
-                        }`
+                      ? 'absolute -inset-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400 blur-sm animate-gradient-pulse-aura'
+                      : 'absolute -inset-1 bg-gradient-to-r from-indigo-500/30 via-slate-600/25 to-amber-500/20 blur-[3px] animate-gradient-pulse-aura-offline'
                   }`}
+                  aria-hidden="true"
+                />
+              )}
+
+              <motion.a
+                id="floating-whatsapp-btn"
+                href={floatingWhatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={
+                  isOnline
+                    ? 'Conversar no WhatsApp com a ēloSites (Online agora)'
+                    : 'Conversar no WhatsApp com a ēloSites (Fora do horário de atendimento — responderemos em breve)'
+                }
+                onClick={open ? onClose : undefined}
+                initial={
+                  prefersReduced
+                    ? { opacity: 0 }
+                    : { opacity: 0, y: 8 }
+                }
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: prefersReduced ? 0.2 : 0.36,
+                  ease: 'easeOut',
+                }}
+                className={`relative group flex items-center justify-center w-14 h-14 rounded-full text-white transition-[color,background-color,border-color,box-shadow,opacity,transform,translate,scale,rotate,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,--tw-gradient-stops] duration-200 active:scale-95 z-50 select-none ${
+                  isOnline
+                    ? `bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-xl border-2 border-indigo-400/50 hover:shadow-indigo-500/40 ${
+                        isPulsing && !prefersReduced ? 'animate-gradient-pulse-button' : ''
+                      }`
+                    : `bg-gradient-to-r from-slate-900 via-indigo-950/95 to-slate-900 hover:from-indigo-900/90 hover:to-slate-800 shadow-md shadow-black/70 border border-indigo-400/25 hover:border-amber-400/40 hover:shadow-amber-500/15 ${
+                        isPulsing && !prefersReduced ? 'animate-gradient-pulse-button-offline' : ''
+                      }`
+                }`}
+              >
+                {/* Indicador de Status Online / Fora do Horário */}
+                <span
+                  className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5 pointer-events-none"
+                  title={isOnline ? 'Atendimento online' : 'Fora do horário comercial — responderemos em breve'}
                 >
-                  {/* Indicador de Status Online / Fora do Horário */}
+                  {isPulsing && !prefersReduced && (
+                    <span
+                      className={`absolute inline-flex h-full w-full rounded-full ${
+                        isOnline
+                          ? 'bg-gradient-to-tr from-emerald-400 to-teal-300 animate-gradient-dot-ping'
+                          : 'bg-gradient-to-tr from-amber-400/60 to-yellow-300/50 animate-gradient-dot-ping-offline'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  )}
                   <span
-                    className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5 pointer-events-none"
-                    title={isOnline ? 'Atendimento online' : 'Fora do horário comercial — responderemos em breve'}
+                    className={`relative inline-flex items-center justify-center rounded-full h-3.5 w-3.5 border-2 border-[#090D16] ${
+                      isOnline
+                        ? `bg-emerald-500 ${isPulsing && !prefersReduced ? 'animate-gradient-dot-glow' : ''}`
+                        : `bg-amber-400/90 ${isPulsing && !prefersReduced ? 'animate-gradient-dot-glow-offline' : ''}`
+                    }`}
                   >
-                    {isPulsing && !prefersReduced && (
+                    {/* Núcleo interno sutil indicando modo de espera quando fora do horário */}
+                    {!isOnline && (
                       <span
-                        className={`absolute inline-flex h-full w-full rounded-full ${
-                          isOnline
-                            ? 'bg-gradient-to-tr from-emerald-400 to-teal-300 animate-gradient-dot-ping'
-                            : 'bg-gradient-to-tr from-amber-400/60 to-yellow-300/50 animate-gradient-dot-ping-offline'
-                        }`}
+                        className="w-1.5 h-1.5 rounded-full bg-[#090D16]/75"
                         aria-hidden="true"
                       />
                     )}
-                    <span
-                      className={`relative inline-flex items-center justify-center rounded-full h-3.5 w-3.5 border-2 border-[#090D16] ${
-                        isOnline
-                          ? `bg-emerald-500 ${isPulsing && !prefersReduced ? 'animate-gradient-dot-glow' : ''}`
-                          : `bg-amber-400/90 ${isPulsing && !prefersReduced ? 'animate-gradient-dot-glow-offline' : ''}`
-                      }`}
-                    >
-                      {/* Núcleo interno sutil indicando modo de espera quando fora do horário */}
-                      {!isOnline && (
-                        <span
-                          className="w-1.5 h-1.5 rounded-full bg-[#090D16]/75"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </span>
                   </span>
+                </span>
 
-                  {/* Indicador visual sutil na base do botão quando fora do horário de atendimento */}
-                  {!isOnline && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-[1px] rounded-full bg-[#090E23]/95 border border-amber-400/35 text-[8px] font-medium tracking-tight text-amber-300/90 leading-none shadow-sm whitespace-nowrap pointer-events-none"
-                    >
-                      Ausente
-                    </span>
-                  )}
-
-                  {/* Ícone Oficial do WhatsApp com efeito de preenchimento gradual sincronizado com a barra de progresso do balão */}
-                  <div
-                    className="relative w-7 h-7 flex items-center justify-center transition-transform duration-500 ease-out group-hover:rotate-[360deg] group-hover:scale-110"
+                {/* Indicador visual sutil na base do botão quando fora do horário de atendimento */}
+                {!isOnline && (
+                  <span
                     aria-hidden="true"
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-[1px] rounded-full bg-[#090E23]/95 border border-amber-400/35 text-[8px] font-medium tracking-tight text-amber-300/90 leading-none shadow-sm whitespace-nowrap pointer-events-none"
                   >
-                    {/* Estado de Espera (Waiting State): Base em tom calmo e sutil de espera */}
-                    <WhatsAppIcon
-                      className={`w-7 h-7 transition-colors duration-500 ${
-                        isBubbleVisible
-                          ? 'text-emerald-200/40'
-                          : isOnline
-                          ? 'text-emerald-300'
-                          : 'text-emerald-300/70 group-hover:text-emerald-300/90'
-                      }`}
-                    />
+                    Ausente
+                  </span>
+                )}
 
-                    {/* Estado de Ação (Action State): Preenchimento gradual que reflete a barra de progresso do balão */}
-                    {isBubbleVisible && (
-                      <div
-                        key={`whatsapp-icon-fill-${appearanceCountRef.current}`}
-                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                        style={{
-                          clipPath: !prefersReduced ? 'inset(100% 0 0 0)' : 'none',
-                          animation: !prefersReduced
-                            ? `whatsappIconFill ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms linear forwards`
-                            : `whatsappIconFadeReduced ${FLOATING_WHATSAPP_TIMINGS.BUBBLE_VISIBLE_DURATION_MS}ms ease-out forwards`,
-                          animationPlayState: isPaused ? 'paused' : 'running',
-                        }}
-                      >
-                        <WhatsAppIcon
-                          className={`w-7 h-7 ${
-                            isOnline
-                              ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.75)]'
-                              : 'text-emerald-400/85 drop-shadow-[0_0_4px_rgba(52,211,153,0.4)]'
-                          }`}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </motion.a>
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
+                {/* Ícone Oficial do WhatsApp com efeito de preenchimento gradual sincronizado com a barra de progresso do balão */}
+                <div
+                  className="relative w-7 h-7 flex items-center justify-center transition-transform duration-500 ease-out group-hover:rotate-[360deg] group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  {/* Estado de Espera (Waiting State): Base em tom calmo e sutil de espera */}
+                  <WhatsAppIcon
+                    className={`w-7 h-7 transition-colors duration-500 ${
+                      isBubbleVisible
+                        ? 'text-emerald-200/40'
+                        : isOnline
+                        ? 'text-emerald-300'
+                        : 'text-emerald-300/70 group-hover:text-emerald-300/90'
+                    }`}
+                  />
+
+                  {/* Estado de Ação (Action State): Preenchimento gradual que reflete a barra de progresso do balão */}
+                  {open && (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      style={{
+                        clipPath: !prefersReduced ? 'inset(100% 0 0 0)' : 'none',
+                        animation: !prefersReduced
+                          ? `whatsappIconFill ${WA_TIMINGS.open}ms linear forwards`
+                          : `whatsappIconFadeReduced ${WA_TIMINGS.open}ms ease-out forwards`,
+                        animationPlayState: isPaused ? 'paused' : 'running',
+                      }}
+                    >
+                      <WhatsAppIcon
+                        className={`w-7 h-7 ${
+                          isOnline
+                            ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.75)]'
+                            : 'text-emerald-400/85 drop-shadow-[0_0_4px_rgba(52,211,153,0.4)]'
+                        }`}
+                      />
+                    </div>
+                  )}
+                </div>
+              </motion.a>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
     </aside>
   );
 };
