@@ -1,0 +1,97 @@
+@font-face {
+  font-family: 'TT Archivo';
+  src: url('../assets/truethomaz/fonts/archivo.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Work Sans';
+  src: url('../assets/truethomaz/fonts/worksans.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Mono';
+  src: url('../assets/truethomaz/fonts/ibmplexmono.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+.tt-partnership {
+  --night: #071b33;
+  --navy: #0b2644;
+  --ice: #edf2f9;
+  --muted: #a3b4cb;
+  --yellow: #ffde59;
+  --line: #31465f;
+  background: var(--night);
+  color: var(--ice);
+  font: 400 1rem/1.55 'TT Work Sans', sans-serif;
+  padding: clamp(6.25rem, 8vw, 8rem) 0 clamp(3rem, 6vw, 6rem);
+}
+.tt-inner { width: min(77rem, 90%); margin-inline: auto; }
+.tt-partnership :is(h1,h2,h3,.tt-price) {
+  font-family: 'TT Archivo', 'Arial Narrow', sans-serif;
+  font-weight: 900; text-transform: uppercase; line-height: 1;
+}
+.tt-partnership h2 { font-size: clamp(1.9rem, 3vw, 3rem); }
+.tt-partnership p { color: var(--muted); }
+.tt-partnership strong { color: var(--ice); }
+.tt-partnership .tt-label, .tt-platform-top span, .tt-partnership .tt-period {
+  font: 500 .75rem/1.4 'TT Mono', monospace;
+  text-transform: uppercase; letter-spacing: .065em;
+}
+.tt-partnership .tt-label { display: flex; align-items: center; gap: .75rem; color: var(--yellow); }
+.tt-label::before { content: ''; width: 1.75rem; height: .18rem; background: currentColor; flex: none; }
+.tt-intro { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: stretch; }
+.tt-lead { align-self: center; }
+.tt-lead h1 { font-size: clamp(3.1rem, 5.1vw, 4.75rem); line-height: 1.07; letter-spacing: -.035em; margin: 1.2rem 0; }
+.tt-lead mark { display: inline-block; padding: 0 .085em .02em; color: var(--night); background: var(--yellow); }
+.tt-lead > p:not(.tt-label) { max-width: 36rem; }
+.tt-lead h1 + p { font-size: clamp(1.12rem, 1.6vw, 1.36rem); line-height: 1.4; color: var(--ice); margin-bottom: .85rem; }
+.tt-partner { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: clamp(1.5rem, 3vw, 3rem); border: 1px solid var(--line); border-radius: 1.5rem; background: url('../assets/truethomaz/grade-ondulada.svg') center/cover, linear-gradient(135deg, #102e54, #071b33 85%); }
+.tt-logo { width: min(100%, 19rem); height: auto; }
+.tt-profile { display: flex; align-items: center; gap: 1.2rem; }
+.tt-profile p { max-width: 15rem; margin-top: .45rem; color: var(--ice); }
+.tt-platforms, .tt-details, .tt-existing { margin-top: clamp(2.75rem, 5vw, 4.5rem); }
+.tt-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .7rem 2rem; margin-bottom: 1.25rem; }
+.tt-platform-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+.tt-platform { background: var(--navy); border: 1px solid var(--line); border-radius: 1.1rem; padding: clamp(1.25rem, 2.2vw, 2rem); }
+.tt-platform-top { display: flex; align-items: center; gap: .75rem; color: var(--muted); }
+.tt-platform-top svg { color: var(--yellow); width: 1.65rem; height: 1.65rem; stroke-width: 1.7; }
+.tt-platform h3 { font-size: clamp(1.7rem, 2.7vw, 2.7rem); margin: 1.4rem 0 .65rem; }
+.tt-details { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 7vw, 7rem); align-items: start; }
+.tt-services { padding-block: 1rem; }
+.tt-services h2 { margin: 1rem 0; }
+.tt-services li { display: flex; align-items: baseline; gap: .75rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
+.tt-services li svg { color: #8a9c73; width: 1rem; height: 1rem; align-self: center; flex: none; }
+.tt-services ul + p { margin-top: 1rem; font-size: .95rem; }
+.tt-offer { border: 1px solid #7a713e; background: var(--navy); border-radius: 1.5rem; padding: clamp(1.35rem, 3vw, 2.7rem); }
+.tt-offer .tt-price { margin: 1rem 0 .2rem; font-size: clamp(3.3rem, 6vw, 5.4rem); color: var(--ice); letter-spacing: -.025em; }
+.tt-price span { font: 400 1.25rem 'TT Work Sans', sans-serif; text-transform: none; letter-spacing: 0; }
+.tt-offer .tt-period { color: var(--yellow); }
+.tt-offer h3 { margin: 1.5rem 0 .5rem; font-size: 1.5rem; line-height: 1.1; }
+.tt-terms { border-top: 1px solid var(--line); margin: 1rem 0 1.3rem; padding-top: .9rem; font-size: .925rem; }
+.tt-existing { padding-top: 2rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.tt-existing h2 { font-size: clamp(1.6rem, 2.5vw, 2.25rem); margin-bottom: .6rem; }
+.tt-existing p { max-width: 43rem; }
+.tt-cta { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; padding: .7rem 1.15rem; border-radius: 100px; text-align: center; background: #54df83; color: #071b33; font-weight: 700; }
+.tt-cta svg { width: 1.15rem; height: 1.15rem; flex: none; }
+.tt-secondary { color: #8de9ad; border: 1px solid #54996f; background: transparent; }
+.tt-cta:hover { background: #91f4b3; color: var(--night); }
+.tt-cta:focus-visible { outline: 3px solid var(--yellow); outline-offset: 4px; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion-tier='full'] .tt-cta { transition: background-color .15s, color .15s; }
+}
+@media (max-width: 52rem) {
+  .tt-intro, .tt-details { grid-template-columns: 1fr; gap: 2rem; }
+  .tt-partner { gap: 2.5rem; }
+  .tt-existing { flex-direction: column; align-items: start; }
+}
+@media (max-width: 40rem) {
+  .tt-platform-grid { grid-template-columns: 1fr; }
+  .tt-lead h1 { font-size: clamp(2.65rem, 10.5vw, 4rem); }
+  .tt-platform h3 { margin-top: 1rem; }
+  .tt-section-head { flex-direction: column; }
+  .tt-offer .tt-cta, .tt-existing .tt-cta { width: 100%; }
+}
