@@ -292,7 +292,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+              className="inline-flex items-center justify-center text-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white border border-emerald-300 shadow-md shadow-emerald-950/40 hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] active:shadow-[0_0_28px_rgba(37,211,102,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
               <WhatsAppIcon className="w-3.5 h-3.5 text-white shrink-0" />
               <span className="text-white font-bold tracking-tight text-center">Quero similar</span>
@@ -474,7 +474,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   rel="noopener noreferrer"
                   strength={12}
                   glowColor="rgba(37, 211, 102, 0.45)"
-                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-[#25D366] hover:bg-[#22c55e] border border-emerald-300/50 shadow-lg shadow-emerald-950/60 hover:shadow-[0_0_24px_rgba(37,211,102,0.7)] active:scale-[0.98] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  className="w-full sm:w-auto inline-flex items-center justify-center text-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-emerald-700 hover:bg-emerald-800 border border-emerald-300/50 shadow-lg shadow-emerald-950/60 hover:shadow-[0_0_24px_rgba(37,211,102,0.7)] active:scale-[0.98] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                   ariaLabel="Conversar no WhatsApp"
                 >
                   <WhatsAppIcon className="w-4 h-4 text-white" />

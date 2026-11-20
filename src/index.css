@@ -42,6 +42,13 @@
   --cor-borda: rgba(59, 130, 246, 0.2);
   --cor-borda-hover: rgba(59, 130, 246, 0.45);
 
+  /* Ações de contratação da ēloSites. */
+  --cor-cta-comercial: #ffb454;
+  --cor-cta-comercial-hover: #ffc77e;
+  --cor-cta-comercial-pressionado: #ef9c3e;
+  --cor-cta-comercial-texto: #23170b;
+  --cor-cta-comercial-foco: #ffe2b8;
+
   /* Cor de destaque dinâmica e adaptativa por seção */
   --accent-color: #3b82f6;
   --accent-color-rgb: 59, 130, 246;
@@ -853,7 +860,7 @@ button:not(.text-left):not([class*="text-left"]) > span:not(.text-left):not([cla
 
 /* Botões de CTA Principal - Gradiente Elétrico Cobalto & Azul com efeito Neon Glow Premium */
 .cta-primary {
-  background-image: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #6366f1 100%) !important;
+  background-image: linear-gradient(135deg, #2563eb 0%, #2f6ed6 50%, #595bd8 100%) !important;
   background-color: #2563eb !important;
   color: #ffffff !important;
   border: 1px solid rgba(147, 197, 253, 0.5) !important;
@@ -912,6 +919,54 @@ a[id*="whatsapp"] {
   }
 }
 
+/* O fundo opaco mantém o contraste também sobre vidro e fotografia. */
+:is(a, button).cta-commercial {
+  min-height: 44px;
+  background-color: var(--cor-cta-comercial);
+  color: var(--cor-cta-comercial-texto);
+  border: 1px solid transparent;
+  text-shadow: none;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease),
+              transform var(--dur-press) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cta-commercial:enabled:hover, a.cta-commercial:hover {
+    background-color: var(--cor-cta-comercial-hover);
+  }
+  :is(a, button).cta-commercial:hover > svg { filter: none; }
+}
+
+:is(a, button).cta-commercial:active:not(:disabled) {
+  background-color: var(--cor-cta-comercial-pressionado);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cta-commercial:active:not(:disabled) { transform: translateY(1px); }
+}
+
+.cta-commercial:focus-visible {
+  outline: 2px solid var(--cor-cta-comercial-foco);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--cor-fundo);
+}
+
+button.cta-commercial:disabled {
+  background-color: var(--cor-superficie-elevada);
+  color: #cbd5e1;
+  border-color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  :is(a, button).cta-commercial { border-color: ButtonText; }
+  .cta-commercial:focus-visible { outline-color: Highlight; }
+  button.cta-commercial:disabled { border-color: GrayText; }
+}
+
 /* Rotação dinâmica do ícone dentro de #floating-whatsapp-btn (500ms ease-out exclusivamente no hover ou ao clicar) */
 #floating-whatsapp-btn svg {
   will-change: transform, opacity;
@@ -949,7 +1004,7 @@ a[id*="whatsapp"] {
 }
 
 .high-contrast p,
-.high-contrast span,
+.high-contrast span:where(:not(.cta-commercial > span)),
 .high-contrast li,
 .high-contrast label,
 .high-contrast small {
