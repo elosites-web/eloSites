@@ -42,12 +42,12 @@
   --cor-borda: rgba(59, 130, 246, 0.2);
   --cor-borda-hover: rgba(59, 130, 246, 0.45);
 
-  /* Ações de contratação da ēloSites. */
-  --cor-cta-comercial: #ffb454;
-  --cor-cta-comercial-hover: #ffc77e;
-  --cor-cta-comercial-pressionado: #ef9c3e;
-  --cor-cta-comercial-texto: #23170b;
-  --cor-cta-comercial-foco: #ffe2b8;
+  /* Amarelo da parceria nas decisões de orçamento. */
+  --cor-destaque-comercial: #ffde59;
+  --cor-cta-comercial: var(--cor-destaque-comercial);
+  --cor-cta-comercial-hover: #ffea92;
+  --cor-cta-comercial-pressionado: #f2ca42;
+  --cor-cta-comercial-texto: #10152a;
 
   /* Cor de destaque dinâmica e adaptativa por seção */
   --accent-color: #3b82f6;
@@ -919,6 +919,33 @@ a[id*="whatsapp"] {
   }
 }
 
+.commercial-kicker {
+  color: var(--cor-destaque-comercial);
+  background-color: #071b33;
+  border: 1px solid #303d59;
+  font-family: var(--font-mono);
+}
+
+.section-kicker.commercial-kicker::before {
+  content: '';
+  flex: none;
+  width: 1.25rem;
+  border-top: 2px solid currentColor;
+}
+
+/* Reflexo índigo do logotipo sobre o marinho dos cards da parceria. */
+.surface-card.commercial-panel {
+  background-color: #10182c;
+  background-image: linear-gradient(135deg, rgb(99 102 241 / 12%), transparent 60%);
+}
+
+/* O caminho intermediário usa o azul claro dos botões da parceria. */
+.cta-commercial-ice {
+  --cor-cta-comercial: #b6c8ff;
+  --cor-cta-comercial-hover: #d1ddff;
+  --cor-cta-comercial-pressionado: #acbfff;
+}
+
 /* O fundo opaco mantém o contraste também sobre vidro e fotografia. */
 :is(a, button).cta-commercial {
   min-height: 44px;
@@ -948,7 +975,7 @@ a[id*="whatsapp"] {
 }
 
 .cta-commercial:focus-visible {
-  outline: 2px solid var(--cor-cta-comercial-foco);
+  outline: 2px solid var(--cor-destaque-comercial);
   outline-offset: 3px;
   box-shadow: 0 0 0 3px var(--cor-fundo);
 }

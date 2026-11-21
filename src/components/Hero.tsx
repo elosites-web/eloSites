@@ -331,12 +331,12 @@ const HeroInicioSection: React.FC<HeroInicioSectionProps> = ({
             >
               {/* Brand Wordmark & Tagline Kicker */}
               <BiReveal direction="left" delay={50}>
-                <div className="floating-badge inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-blue-950/50 border border-blue-500/25 shadow-[0_0_20px_-4px_rgba(59,130,246,0.3)] backdrop-blur-md">
+                <div className="commercial-kicker floating-badge inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-current" />
                   </span>
-                  <span className="text-xs sm:text-sm font-medium text-blue-200">
+                  <span className="text-xs sm:text-sm font-medium">
                     ēloSites · Jundiaí, SP
                   </span>
                 </div>

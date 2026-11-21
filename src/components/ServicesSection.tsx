@@ -130,8 +130,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
         {/* Cabeçalho da Seção */}
         <div>
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
-            <div className="section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-white/[0.08] text-indigo-300 text-xs sm:text-sm font-semibold uppercase">
-              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+            <div className="commercial-kicker section-kicker inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold uppercase">
               <span>SERVIÇOS & CONDIÇÕES COMERCIAIS</span>
             </div>
             <SplitLines
@@ -381,10 +380,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
             {/* Bloco de Orçamento Personalizado sob Medida */}
             <BiReveal direction="up" delay={150} className="mt-8 w-full">
               <Interactive3DCard maxTilt={0} className="w-full">
-                <div className="glass-card-interactive surface-card service-card scroll-perf-card relative rounded-2xl bg-[#090E23] border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
+                <div className="glass-card-interactive surface-card commercial-panel service-card scroll-perf-card relative rounded-2xl border border-blue-500/25 hover:border-blue-400/50 p-6 sm:p-8 !mb-0 shadow-2xl shadow-black/80 bracket-panel transition-all">
                   <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
                     <FadeInBlock delay={30} className="space-y-2 text-center lg:text-left">
-                      <div className="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold uppercase">
+                      <div className="inline-flex items-center gap-1.5 font-mono text-xs text-(--cor-destaque-comercial) font-semibold uppercase">
                         <Sparkles className="w-4 h-4" />
                         <span>Orçamento Sob Medida</span>
                       </div>
@@ -401,7 +400,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigateToOr
                         <button
                           type="button"
                           onClick={onNavigateToOrcamento}
-                          className="cta-commercial w-full sm:w-auto min-h-12 inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold"
+                          className="cta-commercial cta-commercial-ice w-full sm:w-auto min-h-12 inline-flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold"
                         >
                           <span className="text-center">Descrever meu projeto</span>
                           <ArrowRight className="w-3.5 h-3.5" />
