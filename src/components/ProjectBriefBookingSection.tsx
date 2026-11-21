@@ -19,7 +19,6 @@ import {
   Copy,
   Check,
   CalendarPlus,
-  Sparkles,
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
@@ -415,8 +414,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center space-y-4 mb-12 sm:mb-16">
-            <div className="section-kicker inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/70 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase shadow-[0_0_15px_rgba(59,130,246,0.25)]">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
+            <div className="commercial-kicker section-kicker inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase">
               <span>Orçamento e conversa</span>
             </div>
 
@@ -478,7 +476,7 @@ export const ProjectBriefBookingSection: React.FC<ProjectBriefBookingSectionProp
             viewport={{ once: true, amount: 0.08, margin: '0px 0px -40px 0px' }}
             className="w-full"
           >
-            <div className="surface-card rounded-3xl p-6 sm:p-10 relative overflow-hidden bracket-panel bg-[#090E23] border border-blue-500/25 shadow-2xl">
+            <div className="surface-card commercial-panel rounded-3xl p-6 sm:p-10 relative overflow-hidden bracket-panel border border-blue-500/25 shadow-2xl">
             <div
               className="ambient-glow-orb ambient-glow-blue-soft pointer-events-none absolute top-0 right-0 w-80 h-80 rounded-full bg-blue-500/[0.05] blur-3xl"
               style={{ position: 'absolute' }}
